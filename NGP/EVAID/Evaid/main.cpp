@@ -5,6 +5,14 @@
 #include "Hero.h"
 #include "resource.h"
 
+static HINSTANCE g_hInst;						// 현재 인스턴스
+static LPCTSTR lpszTitle = TEXT("EVAID TITLE");
+static LPCTSTR lpszClass = TEXT("EVAID CLASS");
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
+
+void CALLBACK TimerProc(HWND hWnd, UINT iMessage, UINT_PTR idEvent, DWORD dwTime);
+
 // 폰트함수
 vector<BYTE> ReadFontOutputFile(LPCTSTR path)
 {
