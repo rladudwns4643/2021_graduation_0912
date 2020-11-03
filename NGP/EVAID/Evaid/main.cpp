@@ -4,13 +4,15 @@
 #include "Table.h"
 #include "Hero.h"
 #include "resource.h"
+#include "Framework.h"
 
-static HINSTANCE g_hInst;						// 현재 인스턴스
-static LPCTSTR lpszTitle = TEXT("EVAID TITLE");
-static LPCTSTR lpszClass = TEXT("EVAID CLASS");
+HINSTANCE g_hInst;						// 현재 인스턴스
+LPCTSTR lpszTitle = TEXT("EVAID TITLE");
+LPCTSTR lpszClass = TEXT("EVAID CLASS");
+
+CFramework framework;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
-
 void CALLBACK TimerProc(HWND hWnd, UINT iMessage, UINT_PTR idEvent, DWORD dwTime);
 
 // 폰트함수
@@ -261,7 +263,7 @@ void OnDraw_1(HDC hDC)
 {
 	if (!Global::getInstance()->isStart)
 	{
-		ResorceTable::getInstance()->img_main_bg_1.Draw(hDC, 0, 0);
+		ResorceTable::getInstance()->img_logo_bg.Draw(hDC, 0, 0);
 	}
 	if (Global::getInstance()->isStart)
 	{
@@ -333,10 +335,6 @@ void OnDraw_1(HDC hDC)
 
 void OnDraw_2(HDC hDC)
 {
-	if (!Global::getInstance()->isStart)
-	{
-		ResorceTable::getInstance()->img_main_bg_2.Draw(hDC, 0, 0);
-	}
 	if (Global::getInstance()->isStart)
 	{
 		RECT temp{ 0, 0, STAGE_WIDTH,CLIENT_HEIGHT };

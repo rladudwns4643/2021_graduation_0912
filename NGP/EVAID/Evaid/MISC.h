@@ -61,6 +61,8 @@ const auto UNSETVAL = -1234;
 #define MaxSkillGauge 10
 #define NormalSkillGaugeIncrement 1
 
+#define FPS			int(1000/50)
+
 class JSize {
 public:
 	int width;
@@ -117,6 +119,15 @@ enum class HERO {
 static int getRandom(int MAX) {
 	return rand() % MAX;
 }
+
+template<typename gdiobj>
+inline bool SafeRelease(gdiobj& target) {
+	if (!target) return false;
+	DeleteObject(target);
+	target = NULL;
+	return true;
+}
+
 
 void GetKeyDown(WPARAM w);
 

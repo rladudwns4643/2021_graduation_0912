@@ -142,21 +142,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Framework.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="Hero.cpp" />
+    <ClCompile Include="LobbyScene.cpp" />
+    <ClCompile Include="LogoScene.cpp" />
     <ClCompile Include="ResorceTable.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Table.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Framework.h" />
+    <ClInclude Include="GameScene.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Hero.h" />
+    <ClInclude Include="LobbyScene.h" />
+    <ClInclude Include="logoScene.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="RankMng.h" />
     <ClInclude Include="ResorceTable.h" />
     <ClInclude Include="MISC.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Table.h" />
   </ItemGroup>
