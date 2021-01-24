@@ -6,6 +6,7 @@
 #include <atomic>
 #include <chrono>
 #include <random>
+#include <array>
 
 using namespace std;
 #include <WS2tcpip.h>
