@@ -46,28 +46,6 @@ void CMesh::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 	}
 }
 
-CTriangleMesh::CTriangleMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) : CMesh(pd3dDevice, pd3dCommandList)
-{
-	// 삼각형 메쉬를 정의한다.
-	m_nVertices = 3;
-	m_nStride = sizeof(CDiffusedVertex);
-	m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
-	// 정점(삼각형의 꼭지점)의 색상은 시계방향 순서대로 빨간색, 녹색, 파란색으로 지정
-	CDiffusedVertex pVertices[3];
-	pVertices[0] = CDiffusedVertex(XMFLOAT3(0.0f, 0.5f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-	pVertices[1] = CDiffusedVertex(XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
-	pVertices[2] = CDiffusedVertex(XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue));
-
-	// 삼각형 메쉬를 리소스(정점 버퍼)로 생성한다.
-	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
-	
-	// 정점 버퍼 뷰를 생성한다.
-	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
-	m_d3dVertexBufferView.StrideInBytes = m_nStride;
-	m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
-}
-
 // 직육면체 메쉬
 CCubeMeshDiffused::CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth, float fHeight, float fDepth) : CMesh(pd3dDevice, pd3dCommandList)
 {
@@ -94,8 +72,8 @@ CCubeMeshDiffused::CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCom
 		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
 
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
-	m_d3dVertexBufferView.StrideInBytes = m_nStride;
 	m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
+	m_d3dVertexBufferView.StrideInBytes = m_nStride;
 
 	// 인덱스 값 주기
 	m_nIndices = 36;
@@ -132,9 +110,95 @@ CCubeMeshDiffused::CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCom
 
 	// 인덱스 버퍼 뷰를 생성한다.
 	m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
-	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
+	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 }
 CCubeMeshDiffused::~CCubeMeshDiffused()
+{
+}
+
+// 환경 오브젝트
+CEnvironmentObject::CEnvironmentObject(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) : CMesh(pd3dDevice, pd3dCommandList)
+{
+	std::string path = "Model\\Tree.mesh";
+
+	std::ifstream fileIn(path);
+
+	std::string ignore;
+	if (fileIn)
+	{
+		fileIn >> ignore >> m_nVertices;
+		fileIn >> ignore >> m_nIndices;
+		fileIn >> ignore >> m_nMaterials;
+
+		// Material Data
+		fileIn >> ignore;
+		for (uint32_t i = 0; i < m_nMaterials; ++i)
+		{
+			Material tempMaterial;
+
+			fileIn >> ignore >> tempMaterial.Name;
+			fileIn >> ignore >> tempMaterial.Ambient.x >> tempMaterial.Ambient.y >> tempMaterial.Ambient.z;
+			fileIn >> ignore >> tempMaterial.DiffuseAlbedo.x >> tempMaterial.DiffuseAlbedo.y >> tempMaterial.DiffuseAlbedo.z >> tempMaterial.DiffuseAlbedo.w;
+			fileIn >> ignore >> tempMaterial.FresnelR0.x >> tempMaterial.FresnelR0.y >> tempMaterial.FresnelR0.z;
+			fileIn >> ignore >> tempMaterial.Specular.x >> tempMaterial.Specular.y >> tempMaterial.Specular.z;
+			fileIn >> ignore >> tempMaterial.Emissive.x >> tempMaterial.Emissive.y >> tempMaterial.Emissive.z;
+			fileIn >> ignore >> tempMaterial.Roughness;
+			fileIn >> ignore;
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					fileIn >> tempMaterial.MatTransform.m[i][j];
+				}
+			}
+		}
+
+		// Vertex Data
+		Vertex* ptVertices = new Vertex[m_nVertices];
+		CDiffusedVertex* pVertices = new CDiffusedVertex[m_nVertices];
+		m_nStride = sizeof(CDiffusedVertex);
+		for (uint32_t i = 0; i < m_nVertices; ++i)
+		{
+			fileIn >> ignore >> ptVertices[i].Pos.x >> ptVertices[i].Pos.y >> ptVertices[i].Pos.z;
+			fileIn >> ignore >> ptVertices[i].Normal.x >> ptVertices[i].Normal.y >> ptVertices[i].Normal.z;
+			fileIn >> ignore >> ptVertices[i].TexC.x >> ptVertices[i].TexC.y;
+			fileIn >> ignore >> ptVertices[i].Tangent.x >> ptVertices[i].Tangent.y >> ptVertices[i].Tangent.z;
+			fileIn >> ignore >> ptVertices[i].Binormal.x >> ptVertices[i].Binormal.y >> ptVertices[i].Binormal.z;
+
+			pVertices[i] = CDiffusedVertex(XMFLOAT3(ptVertices[i].Pos.x, ptVertices[i].Pos.y, ptVertices[i].Pos.z), RANDOM_COLOR);
+
+			std::cout << ptVertices[i].Pos.x << ", " << ptVertices[i].Pos.y << ", " << ptVertices[i].Pos.z << std::endl;
+		}
+
+		m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices,
+			m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT,
+			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
+
+		m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
+		m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
+		m_d3dVertexBufferView.StrideInBytes = m_nStride;
+
+		// Index Data
+		UINT* pnIndices = new UINT[m_nIndices];
+		fileIn >> ignore;
+		for (uint32_t i = 0; i < m_nIndices; ++i)
+		{
+			fileIn >> pnIndices[i];
+		}
+
+		// 인덱스 버퍼를 생성한다.
+		m_pd3dIndexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pnIndices,
+			sizeof(UINT) * m_nIndices, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_INDEX_BUFFER,
+			&m_pd3dIndexUploadBuffer);
+
+		// 인덱스 버퍼 뷰를 생성한다.
+		m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
+		m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
+		m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+	}
+}
+
+CEnvironmentObject::~CEnvironmentObject()
 {
 }

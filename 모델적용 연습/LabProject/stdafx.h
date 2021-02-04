@@ -46,12 +46,24 @@ using Microsoft::WRL::ComPtr;
 
 #pragma comment(lib, "dxguid.lib")
 
+// C 라이브러리
+#include <string>
+#include <iostream>
+#include <vector>
+#include <fstream>
+
+// 콘솔창 띄우기
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+
 // 주 윈도우의 클라이언트 영역크기 설정
 #define FRAME_BUFFER_WIDTH 640
 #define FRAME_BUFFER_HEIGHT 480
 
 // 아래를 주석하면 시작시 창모드로 시작
 #define _WITH_SWAPCHAIN_FULLSCREEN_STATE
+
+// FILLMODE 설정 (WIREFRAM, SOLID)
+extern bool bFillModeWireFrame;
 
 // 버퍼 리소스를 생성하는 함수
 extern ID3D12Resource* CreateBufferResource(ID3D12Device* pd3dDevice,

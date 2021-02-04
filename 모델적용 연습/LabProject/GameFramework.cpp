@@ -304,8 +304,8 @@ void CGameFramework::BuildObjects()
 	m_pCamera = new CCamera();
 	m_pCamera->SetViewport(0, 0, m_nWndClientWidth, m_nWndClientHeight, 0.0f, 1.0f);
 	m_pCamera->SetScissorRect(0, 0, m_nWndClientWidth, m_nWndClientHeight);
-	m_pCamera->GenerateProjectionMatrix(1.0f, 500.0f, float(m_nWndClientWidth) / float(m_nWndClientHeight), 90.0f);
-	m_pCamera->GenerateViewMatrix(XMFLOAT3(0.0f, 15.0f, -25.0f), XMFLOAT3(0.0f, 0.0f,0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f));
+	m_pCamera->GenerateProjectionMatrix(1.0f, 800.0f, float(m_nWndClientWidth) / float(m_nWndClientHeight), 90.0f);
+	m_pCamera->GenerateViewMatrix(XMFLOAT3(0.0f, 400.0f, -500.0f), XMFLOAT3(0.0f, 400.0f,0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f));
 
 	// 씬 객체를 생성하고 씬에 포함될 게임 객체들을 생성한다.
 	m_pScene = new CScene();
@@ -356,9 +356,11 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 				::PostQuitMessage(0);
 				break;
 			case VK_RETURN: break;
-			case VK_F8: break;
 			case VK_F9:
 				ChangeSwapChainState();
+				break;
+			case VK_F8:
+				::bFillModeWireFrame = !::bFillModeWireFrame;
 				break;
 			default: break;
 			}

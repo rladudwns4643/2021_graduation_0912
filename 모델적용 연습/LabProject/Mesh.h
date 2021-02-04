@@ -1,5 +1,68 @@
 #pragma once
 #include "stdafx.h"
+
+struct Vertex
+{
+	Vertex() {}
+	Vertex(
+		const DirectX::XMFLOAT3& p,
+		const DirectX::XMFLOAT3& n,
+		const DirectX::XMFLOAT3& t,
+		const DirectX::XMFLOAT2& uv) :
+		Pos(p),
+		Normal(n),
+		Tangent(t),
+		TexC(uv) {}
+	Vertex(
+		float px, float py, float pz,
+		float nx, float ny, float nz,
+		float tx, float ty, float tz,
+		float u, float v) :
+		Pos(px, py, pz),
+		Normal(nx, ny, nz),
+		Tangent(tx, ty, tz),
+		TexC(u, v) {};
+
+	DirectX::XMFLOAT3 Pos;
+	DirectX::XMFLOAT3 Normal;
+	DirectX::XMFLOAT2 TexC;
+	DirectX::XMFLOAT3 Tangent;
+	DirectX::XMFLOAT3 Binormal;
+
+	bool operator==(const Vertex& other) const
+	{
+		if (Pos.x != other.Pos.x || Pos.y != other.Pos.y || Pos.z != other.Pos.z)
+			return false;
+
+		if (Normal.x != other.Normal.x || Normal.y != other.Normal.y || Normal.z != other.Normal.z)
+			return false;
+
+		if (TexC.x != other.TexC.x || TexC.y != other.TexC.y)
+			return false;
+
+		return true;
+	}
+};
+
+struct Material
+{
+	std::string Name;
+
+	int MatCBIndex = -1;
+	int DiffuseSrvHeapIndex = -1;
+	int NormalSrvHeapIndex = -1;
+
+	// Material constant buffer data used for shading.
+	DirectX::XMFLOAT3 Ambient = { 0.0f, 0.0f, 0.0f };
+	DirectX::XMFLOAT4 DiffuseAlbedo = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DirectX::XMFLOAT3 FresnelR0 = { 0.01f, 0.01f, 0.01f };
+	DirectX::XMFLOAT3 Specular = { 0.01f, 0.01f, 0.01f };
+	DirectX::XMFLOAT3 Emissive = { 0.01f, 0.01f, 0.01f };
+
+	float Roughness = .25f;
+	DirectX::XMFLOAT4X4 MatTransform;
+};
+
 class CMesh
 {
 public:
@@ -42,6 +105,9 @@ protected:
 	//인덱스 버퍼의 인덱스에 더해질 인덱스이다.
 	int m_nBaseVertex = 0;
 
+	// 매트리얼
+	UINT m_nMaterials;
+
 public:
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList);
 };
@@ -81,14 +147,6 @@ public:
 	~CDiffusedVertex() { }
 };
 
-// 삼각형 메쉬
-class CTriangleMesh : public CMesh
-{
-public:
-	CTriangleMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
-	virtual ~CTriangleMesh() { }
-};
-
 // 직육면체 메쉬
 class CCubeMeshDiffused : public CMesh
 {
@@ -96,4 +154,12 @@ public:
 	// 직육면체의 가로, 세로, 깊이의 길이를 지정하여 직육면체 메쉬를 생성한다.
 	CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth = 2.0f, float fHeight = 2.0f, float fDepth = 2.0f);
 	virtual ~CCubeMeshDiffused();
+};
+
+class CEnvironmentObject : public CMesh
+{
+public:
+	// 오브젝트를 파일로 불러와 생성한다.
+	CEnvironmentObject(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual ~CEnvironmentObject();
 };

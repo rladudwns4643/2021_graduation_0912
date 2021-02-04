@@ -12,13 +12,16 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_pd3dGraphicsRootSignature = CreateGraphicsRootSignature(pd3dDevice);
 
 	// 가로x세로x깊이가 12x12x12인 정육면체 메쉬를 생성한다.
-	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
+	//CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
+
+	// 트리 오브젝트 불러오기
+	CEnvironmentObject* pTreeMesh = new CEnvironmentObject(pd3dDevice, pd3dCommandList);
 
 	m_nObjects = 1;
 	m_ppObjects = new CGameObject * [m_nObjects];
 	CRotatingObject* pRotatingObject = new CRotatingObject();
 
-	pRotatingObject->SetMesh(pCubeMesh);
+	pRotatingObject->SetMesh(pTreeMesh);
 	CDiffusedShader* pShader = new CDiffusedShader();
 
 	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
