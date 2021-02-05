@@ -1,7 +1,84 @@
 #pragma once
+//------------------------------------------------------------------
+#define LOBBY_SERVER_PORT	7237
+#define BATTLE_SERVER_PORT	7238
 
-constexpr int MAX_ID_LEN = 50;
-constexpr int MAX_STR_LEN = 255;
+#define LOBBY_SERVER_IP_PUBLIC "59.14.252.78"
+//------------------------------------------------------------------
+
+//------------------------------------------------------------------
+#define MAX_ID_LEN		50
+#define MAX_STR_LEN		255
+//------------------------------------------------------------------
+
+
+//------------------------------------------------------------------
+#define PACKET_TYPE_NON_BUFFERED	0
+#define PACKET_TYPE_BUFFERED		1
+
+#define LC_LOGIN_OK			100
+#define LC_LOGIN_FAIL		101
+#define LC_USERINFO			102
+
+#define CL_LOGIN			200
+#define CL_DUMMY_LOGIN		2000
+#define CL_UPDATE_USER_INFO	201
+//------------------------------------------------------------------
+
+//------------------------------------------------------------------
+#define START_MMR		1000
+//------------------------------------------------------------------
+
+
+#pragma pack(push, 1)
+//-------------------------------L->C-------------------------------
+struct lc_packet_login_ok {
+	BYTE size;
+	BYTE type;
+
+	int id;
+};
+
+struct lc_packet_login_fail {
+	BYTE size;
+	BYTE type;
+};
+
+struct lc_packet_userinfo {
+	BYTE size;
+	BYTE type;
+
+	char id_str[MAX_ID_LEN];
+	int mmr;
+};
+//------------------------------------------------------------------
+
+//-------------------------------C->L-------------------------------
+struct cl_pakcet_login {
+	BYTE size;
+	BYTE type;
+
+	char id[MAX_ID_LEN];
+};
+
+struct cl_packet_dummy_login {
+	BYTE size;
+	BYTE type;
+
+	char id[MAX_ID_LEN];
+	char pw[MAX_ID_LEN];
+};
+
+struct cl_packet_update_user_info {
+	BYTE size;
+	BYTE type;
+
+	int mmr;
+};
+//------------------------------------------------------------------
+#pragma pack (pop)
+
+/*******************************/
 
 #define WORLD_WIDTH		8
 #define WORLD_HEIGHT	8
@@ -15,7 +92,7 @@ constexpr int MAX_STR_LEN = 255;
 #define S2C_MOVE			2
 #define S2C_ENTER			3
 #define S2C_LEAVE			4
-
+/*******************************/
 #pragma pack(push ,1)
 
 struct sc_packet_login_ok {

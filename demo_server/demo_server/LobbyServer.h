@@ -5,22 +5,23 @@
 
 extern std::atomic<int> new_playerID;
 
-enum E_STATUS { ST_FREE, ST_ALLOC, ST_ACTIVE };
-enum E_OP { OP_RECV, OP_SEND, OP_ACCEPT };
-
 struct EXOVER {
 	WSAOVERLAPPED over;
 	WSABUF wsabuf;
 	char io_buf[MAX_BUF_SIZE];
-	E_OP op;
+	bool is_recv;
 };
 
 struct CLIENT {
-	EXOVER m_recv_over;
 	SOCKET m_s;
-	E_STATUS m_status;
+	EXOVER m_recv_over;
+	int id;
+	bool isActive = false;
 
 	char io_buf[MAX_PACKET_SIZE];
+	int m_prev_packet_data;
+	int m_curr_packet_size;
+
 	User* user_info = NULL;
 };
 
@@ -30,7 +31,7 @@ public:
 	~LobbyServer();
 
 	void ClinetAccept(int id);
-	void Worker();
+	void DoWorker();
 	void ProcessPacket(int id, void* buf);
 
 public:
@@ -45,6 +46,7 @@ public:
 	void SendPacket(int id, void* buf);
 
 	void error_display(const char* msg, int err_no);
+	void recv_packet_construct(const int& user_id, DWORD& io_byte);
 
 	std::uniform_int_distribution<int> uid{ 0, 5000 };
 	std::default_random_engine dre;
@@ -61,5 +63,5 @@ private:
 	SOCKET clientSocket;
 
 	short lobbyID;
-	std::array<CLIENT*, MAX_PLAYER + 1> player;
+	std::array<CLIENT*, MAX_PLAYER + 1> userList;
 };

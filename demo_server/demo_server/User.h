@@ -8,15 +8,16 @@ constexpr int UNSETID = -1;
 class User {
 public:
 	User() {
-		id = UNSETID;
+		name = "null";
 		mmr = UNSETMMR;
 		lobbyID = LOBBY_ID;
 		isMatching = false;
+		isAllow = false;
 	}
 	~User() {};
 
-	void SetPlayerLoginOK(int _id) { id = _id; };
-	int GetPlayerID() { return id; };
+	void SetPlayerLoginOK(std::string _name) { name = _name; isAllow = false; };
+	std::string GetPlayerID() { return name; };
 	
 	void SetPlayerMMR(int _mmr) { mmr = _mmr; };
 	int GetPlayerMMR() { return mmr; };
@@ -25,8 +26,9 @@ public:
 	bool GetPlayerMatch() { return isMatching; };
 
 private:
-	int id;
+	std::string name;
 	int mmr;
 	short lobbyID;
 	bool isMatching;
+	bool isAllow;
 };
