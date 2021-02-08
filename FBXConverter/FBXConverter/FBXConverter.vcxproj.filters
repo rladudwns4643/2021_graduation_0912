@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="default">
+      <UniqueIdentifier>{5c82727c-e36e-4958-9f49-4b9fdf237f55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="default\header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="default\source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>default\source</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxLoader.cpp">
+      <Filter>default\source</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper.cpp">
+      <Filter>default\source</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedData.cpp">
+      <Filter>default\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>default\source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FbxLoader.h">
+      <Filter>default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedData.h">
+      <Filter>default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexHash.h">
+      <Filter>default\header</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>default\source</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>default\header</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
