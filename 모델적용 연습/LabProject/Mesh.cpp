@@ -202,3 +202,76 @@ CEnvironmentObject::CEnvironmentObject(ID3D12Device* pd3dDevice, ID3D12GraphicsC
 CEnvironmentObject::~CEnvironmentObject()
 {
 }
+
+CBoundingBoxMeshDiffused::CBoundingBoxMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth, float fHeight, float fDepth) : CMesh(pd3dDevice, pd3dCommandList)
+{
+	//직육면체는 꼭지점(정점)이 8개이다.
+	m_nVertices = 8;
+	m_nStride = sizeof(CDiffusedVertex);
+	m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+
+	float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;
+
+	//정점 버퍼는 직육면체의 꼭지점 8개에 대한 정점 데이터를 가진다.
+
+	XMFLOAT4 fRedColor(1.0f, 0.0f, 0.0f, 1.0f);
+	CDiffusedVertex pVertices[8];
+	pVertices[0] = CDiffusedVertex(XMFLOAT3(-fx, +fy, -fz), fRedColor);
+	pVertices[1] = CDiffusedVertex(XMFLOAT3(+fx, +fy, -fz), fRedColor);
+	pVertices[2] = CDiffusedVertex(XMFLOAT3(+fx, +fy, +fz), fRedColor);
+	pVertices[3] = CDiffusedVertex(XMFLOAT3(-fx, +fy, +fz), fRedColor);
+	pVertices[4] = CDiffusedVertex(XMFLOAT3(-fx, -fy, -fz), fRedColor);
+	pVertices[5] = CDiffusedVertex(XMFLOAT3(+fx, -fy, -fz), fRedColor);
+	pVertices[6] = CDiffusedVertex(XMFLOAT3(+fx, -fy, +fz), fRedColor);
+	pVertices[7] = CDiffusedVertex(XMFLOAT3(-fx, -fy, +fz), fRedColor);
+
+	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices,
+		m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT,
+		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
+
+	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
+	m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
+	m_d3dVertexBufferView.StrideInBytes = m_nStride;
+
+	// 인덱스 값 주기
+	m_nIndices = 24;
+	UINT pnIndices[24];
+	//ⓐ 윗면(Top) 사각형의 앞쪽 라인
+	pnIndices[0] = 0; pnIndices[1] = 1;
+	//ⓑ 윗면(Top) 사각형의 오른쪽 라인
+	pnIndices[2] = 1; pnIndices[3] = 2;
+	//ⓒ 윗면(Top) 사각형의 뒷쪽 라인
+	pnIndices[4] = 2; pnIndices[5] = 3;
+	//ⓓ 윗면(Top) 사각형의 왼쪽 라인
+	pnIndices[6] = 3; pnIndices[7] = 0;
+	//ⓔ 앞면(Front) 사각형의 왼쪽 라인
+	pnIndices[8] = 0; pnIndices[9] = 4;
+	//ⓕ 앞면(Front) 사각형의 오른쪽 라인
+	pnIndices[10] = 1; pnIndices[11] = 5;
+	//ⓖ 뒷면(Back) 사각형의 오른쪽 라인
+	pnIndices[12] = 2; pnIndices[13] = 6;
+	//ⓗ 뒷면(Back) 사각형의 왼쪽 라인
+	pnIndices[14] = 3; pnIndices[15] = 7;
+	//ⓘ 아랫면(Bottom) 사각형의 앞쪽 라인
+	pnIndices[16] = 4; pnIndices[17] = 5;
+	//ⓙ 아랫면(Bottom) 사각형의 오른쪽 라인
+	pnIndices[18] = 5; pnIndices[19] = 6;
+	//ⓚ 아랫면(Bottom) 사각형의 뒷쪽 라인
+	pnIndices[20] = 6; pnIndices[21] = 7;
+	//ⓛ 아랫면(Bottom) 사각형의 왼쪽 라인
+	pnIndices[22] = 7; pnIndices[23] = 4;
+
+	// 인덱스 버퍼를 생성한다.
+	m_pd3dIndexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pnIndices,
+		sizeof(UINT) * m_nIndices, D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_INDEX_BUFFER,
+		&m_pd3dIndexUploadBuffer);
+
+	// 인덱스 버퍼 뷰를 생성한다.
+	m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
+	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
+	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+}
+
+CBoundingBoxMeshDiffused::~CBoundingBoxMeshDiffused()
+{
+}

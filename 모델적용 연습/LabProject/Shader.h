@@ -61,7 +61,7 @@ public:
 	virtual void CreateShader(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dGraphicsRootSignature);
 };
 
-//“CObjectsShader” 클래스는 게임 객체들을 포함하는 셰이더 객체이다.
+// 게임 객체들을 포함하는 쉐이더 객체
 class CObjectsShader : public CShader
 {
 public:
@@ -82,6 +82,32 @@ public:
 
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera);
 
+protected:
+	CGameObject** m_ppObjects = NULL;
+	int m_nObjects = 0;
+};
+
+// 바운딩 박스 쉐이더
+class CBoundingBoxShader : public CShader
+{
+public:
+	CBoundingBoxShader();
+	virtual ~CBoundingBoxShader();
+
+	virtual void BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual void AnimateObjects(float fTimeElapsed);
+	virtual void ReleaseObjects();
+
+	virtual D3D12_INPUT_LAYOUT_DESC CreateInputLayout();
+	virtual D3D12_SHADER_BYTECODE CreateVertexShader(ID3DBlob** ppd3dShaderBlob);
+	virtual D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
+
+	virtual void CreateShader(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dGraphicsRootSignature);
+
+	virtual void ReleaseUploadBuffers();
+
+	virtual void OnPrepareRender(ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera);
 protected:
 	CGameObject** m_ppObjects = NULL;
 	int m_nObjects = 0;

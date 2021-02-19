@@ -11,51 +11,52 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	// 그래픽 루트 시그너쳐를 생성한다.
 	m_pd3dGraphicsRootSignature = CreateGraphicsRootSignature(pd3dDevice);
 
-	m_nShaders = 1;
-	m_pShaders = new CObjectsShader[m_nShaders];
-	m_pShaders[0].CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
-	m_pShaders[0].BuildObjects(pd3dDevice, pd3dCommandList);
+	m_nObjectShaders = 1;
+	m_pObjectShaders = new CObjectsShader[m_nObjectShaders];
+	m_pObjectShaders[0].CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
+	m_pObjectShaders[0].BuildObjects(pd3dDevice, pd3dCommandList);
 
-	//// 트리 오브젝트 불러오기
-	//CEnvironmentObject* pTreeMesh = new CEnvironmentObject(pd3dDevice, pd3dCommandList);
-	//
-	//m_nObjects = 1;
-	//m_ppObjects = new CGameObject * [m_nObjects];
-	//CRotatingObject* pRotatingObject = new CRotatingObject();
-	//
-	//pRotatingObject->SetMesh(pTreeMesh);
-	//CPlayerShader* pShader = new CPlayerShader();
-	//
-	//pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
-	//pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
-	//
-	//pRotatingObject->SetShader(pShader);
-	//
-	//m_ppObjects[0] = pRotatingObject;
+	m_nBoundingBoxShaders = 1;
+	m_pBoundingBoxShaders = new CBoundingBoxShader[m_nBoundingBoxShaders];
+	m_pBoundingBoxShaders[0].CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
+	m_pBoundingBoxShaders[0].BuildObjects(pd3dDevice, pd3dCommandList);
 }
 
 void CScene::ReleaseObjects()
 {
 	if (m_pd3dGraphicsRootSignature) m_pd3dGraphicsRootSignature->Release();
 
-	for (int i = 0; i < m_nShaders; i++)
+	for (int i = 0; i < m_nObjectShaders; i++)
 	{
-		m_pShaders[i].ReleaseShaderVariables();
-		m_pShaders[i].ReleaseObjects();
+		m_pObjectShaders[i].ReleaseShaderVariables();
+		m_pObjectShaders[i].ReleaseObjects();
 	}
+	if (m_pObjectShaders) delete[] m_pObjectShaders;
 
-	if (m_pShaders) delete[] m_pShaders;
+	for (int i = 0; i < m_nBoundingBoxShaders; i++)
+	{
+		m_pBoundingBoxShaders[i].ReleaseShaderVariables();
+		m_pBoundingBoxShaders[i].ReleaseObjects();
+	}
+	if (m_pBoundingBoxShaders) delete[] m_pBoundingBoxShaders;
 }
 void CScene::ReleaseUploadBuffers()
 {
-	for (int i = 0; i < m_nShaders; i++) m_pShaders[i].ReleaseUploadBuffers();
+	for (int i = 0; i < m_nObjectShaders; i++) m_pObjectShaders[i].ReleaseUploadBuffers();
+
+	for (int i = 0; i < m_nBoundingBoxShaders; i++) m_pBoundingBoxShaders[i].ReleaseUploadBuffers();
 }
 
 void CScene::AnimateObjects(float fTimeElapsed)
 {
-	for (int i = 0; i < m_nShaders; i++)
+	for (int i = 0; i < m_nObjectShaders; i++)
 	{
-		m_pShaders[i].AnimateObjects(fTimeElapsed);
+		m_pObjectShaders[i].AnimateObjects(fTimeElapsed);
+	}
+
+	for (int i = 0; i < m_nBoundingBoxShaders; i++)
+	{
+		m_pBoundingBoxShaders[i].AnimateObjects(fTimeElapsed);
 	}
 }
 
@@ -133,9 +134,15 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 
 	if (pCamera) pCamera->UpdateShaderVariables(pd3dCommandList);
 
-	// 쉐이더에서 렌더
-	for (int i = 0; i < m_nShaders; i++)
+	// 오브젝트 쉐이더
+	for (int i = 0; i < m_nObjectShaders; i++)
 	{
-		m_pShaders[i].Render(pd3dCommandList, pCamera);
+		m_pObjectShaders[i].Render(pd3dCommandList, pCamera);
+	}
+
+	// 바운딩박스 쉐이더
+	for (int i = 0; i < m_nBoundingBoxShaders; i++)
+	{
+		m_pBoundingBoxShaders[i].Render(pd3dCommandList, pCamera);
 	}
 }
