@@ -27,9 +27,9 @@ public:
 	ID3D12RootSignature* GetGraphicsRootSignature();
 
 protected:
-	// 씬은 게임 객체들의 집합이다. 게임 객체는 셰이더를 포함한다.
-	CGameObject** m_ppObjects = NULL;
-	int m_nObjects = 0;
+	// 배치(Batch) 처리를 하기 위하여 씬을 셰이더들의 리스트로 표현한다.
+	CObjectsShader* m_pShaders = NULL;
+	int m_nShaders = 0;
 
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
 };

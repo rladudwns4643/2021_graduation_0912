@@ -55,9 +55,13 @@ using Microsoft::WRL::ComPtr;
 // 콘솔창 띄우기
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 
-// 주 윈도우의 클라이언트 영역크기 설정
-#define FRAME_BUFFER_WIDTH 640
-#define FRAME_BUFFER_HEIGHT 480
+// 주 윈도우 크기 설정
+#define FRAME_BUFFER_WIDTH 1280
+#define FRAME_BUFFER_HEIGHT 720
+
+// 컴퓨터 해상도 기준 정중앙 X,Y 좌표
+#define WindowCenterPosX ( GetSystemMetrics( SM_CXSCREEN ) - FRAME_BUFFER_WIDTH )  / 2	// 현재화면의 가로 크기 GetSystemMetrics( SM_CXSCREEN )
+#define WindowCenterPosY ( GetSystemMetrics( SM_CYSCREEN ) - FRAME_BUFFER_HEIGHT ) / 2	// 현재화면의 세로 크기 GetSystemMetrics( SM_CYSCREEN )
 
 // 아래를 주석하면 시작시 창모드로 시작
 #define _WITH_SWAPCHAIN_FULLSCREEN_STATE
@@ -134,7 +138,7 @@ namespace Vector3
 		return(xmf3Result);
 	}
 
-	inline XMFLOAT3 Normalize(XMFLOAT3& xmf3Vector)
+	inline XMFLOAT3 Normalize(const XMFLOAT3& xmf3Vector)
 	{
 		XMFLOAT3 m_xmf3Normal;
 		XMStoreFloat3(&m_xmf3Normal, XMVector3Normalize(XMLoadFloat3(&xmf3Vector)));

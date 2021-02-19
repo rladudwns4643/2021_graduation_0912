@@ -240,7 +240,7 @@ CHeightMapTerrain::CHeightMapTerrain(ID3D12Device* pd3dDevice, ID3D12GraphicsCom
 	m_nLengthBlock = nLengthBlock;
 
 	m_pHeightMap = new CHeightMapGridMesh(pd3dDevice, pd3dCommandList, 0, 0, nWidthBlock, nLengthBlock);
-	SetMesh(0, m_pHeightMap);
+	SetMesh(1, m_pHeightMap);
 	
 	// 지형을 렌더링하기 위한 셰이더를 생성
 	CTerrainShader* pShader = new CTerrainShader();

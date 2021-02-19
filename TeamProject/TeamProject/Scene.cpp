@@ -11,9 +11,6 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	// 그래픽 루트 시그너쳐를 생성
 	m_pd3dGraphicsRootSignature = CreateGraphicsRootSignature(pd3dDevice);
 
-	// 지형생성
-	m_pTerrain = new CHeightMapTerrain(pd3dDevice, pd3dCommandList, m_pd3dGraphicsRootSignature, MAP_WIDTH_BLOCK_NUM, MAP_LENGTH_BLOCK_NUM);
-
 	// 쉐이더 1개 생성 - 쉐이더로 그릴 오브젝트들의 정보가 들어잇음
 	m_nShaders = 1;
 	m_pShaders = new CInstancingShader[m_nShaders];
