@@ -68,8 +68,10 @@ using Microsoft::WRL::ComPtr;
 
 //-------------------------------------------------------------------------------
 // 기준이되는 큐브 크기
-#define STD_CUBE_SIZE 50.0f
-#define STD_PLAYER_CUBE_SIZE STD_CUBE_SIZE * 0.8f
+#define STD_CUBE_SIZE 5.0f
+#define PLAYER_SIZE_X 5.0f
+#define PLAYER_SIZE_Y 9.0f
+#define PLAYER_SIZE_Z 5.0f
 
 // 맵 크기
 #define MAP_WIDTH_BLOCK_NUM 21

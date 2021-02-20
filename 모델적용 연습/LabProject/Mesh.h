@@ -98,11 +98,11 @@ protected:
 	// 인덱스 버퍼는 정점버퍼(배열)에 대한 인덱스를 가진다.
 	D3D12_INDEX_BUFFER_VIEW m_d3dIndexBufferView;
 
-	//인덱스 버퍼에 포함되는 인덱스의 개수이다.
+	// 인덱스 버퍼에 포함되는 인덱스의 개수이다.
 	UINT m_nIndices = 0;
-	//인덱스 버퍼에서 메쉬를 그리기 위해 사용되는 시작 인덱스이다.
+	// 인덱스 버퍼에서 메쉬를 그리기 위해 사용되는 시작 인덱스이다.
 	UINT m_nStartIndex = 0;
-	//인덱스 버퍼의 인덱스에 더해질 인덱스이다.
+	// 인덱스 버퍼의 인덱스에 더해질 인덱스이다.
 	int m_nBaseVertex = 0;
 
 	// 매트리얼
@@ -110,6 +110,7 @@ protected:
 
 public:
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, UINT nInstances);
 };
 
 // 정점을 표현하기 위한 클래스를 선언한다.

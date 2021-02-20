@@ -254,27 +254,50 @@ D3D12_INPUT_LAYOUT_DESC CObjectsShader::CreateInputLayout()
 
 D3D12_SHADER_BYTECODE CObjectsShader::CreateVertexShader(ID3DBlob** ppd3dShaderBlob)
 {
-	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "VSDiffused", "vs_5_1", ppd3dShaderBlob));
+	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "VSInstancing", "vs_5_1", ppd3dShaderBlob));
 }
 D3D12_SHADER_BYTECODE CObjectsShader::CreatePixelShader(ID3DBlob** ppd3dShaderBlob)
 {
-	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "PSDiffused", "ps_5_1", ppd3dShaderBlob));
+	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "PSInstancing", "ps_5_1", ppd3dShaderBlob));
 }
 
 void CObjectsShader::CreateShader(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dGraphicsRootSignature)
 {
 	CShader::CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
 }
+void CObjectsShader::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
+{
+	// 인스턴스 정보를 저장할 정점 버퍼를 업로드 힙 유형으로 생성한다.
+	m_pd3dcbGameObjects = ::CreateBufferResource(pd3dDevice, pd3dCommandList, NULL,
+		sizeof(VS_VB_INSTANCE) * m_nObjects, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, NULL);
+
+	// 정점 버퍼(업로드 힙)에 대한 포인터를 저장한다.
+	m_pd3dcbGameObjects->Map(0, NULL, (void**)&m_pcbMappedGameObjects);
+}
+void CObjectsShader::ReleaseShaderVariables()
+{
+	if (m_pd3dcbGameObjects) m_pd3dcbGameObjects->Unmap(0, NULL);
+	if (m_pd3dcbGameObjects) m_pd3dcbGameObjects->Release();
+}
+
+//인스턴싱 정보(객체의 월드 변환 행렬과 색상)를 정점 버퍼에 복사한다.
+void CObjectsShader::UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList)
+{
+	pd3dCommandList->SetGraphicsRootShaderResourceView(2, m_pd3dcbGameObjects->GetGPUVirtualAddress());
+
+	for (int j = 0; j < m_nObjects; j++)
+	{
+		m_pcbMappedGameObjects[j].m_xmcColor = (j % 2) ? XMFLOAT4(0.5f, 0.0f, 0.0f, 0.0f) : XMFLOAT4(0.0f, 0.0f, 0.5f, 0.0f);
+		XMStoreFloat4x4(&m_pcbMappedGameObjects[j].m_xmf4x4Transform, XMMatrixTranspose(XMLoadFloat4x4(&m_ppObjects[j]->m_xmf4x4World)));
+	}
+}
 
 void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 {
-	//가로x세로x높이가 12x12x12인 정육면체 메쉬를 생성한다.
-	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
-
 	/*x-축, y-축, z-축 양의 방향의 객체 개수이다. 각 값을 1씩 늘리거나 줄이면서 실행할 때 프레임 레이트가 어떻게
 	변하는 가를 살펴보기 바란다.*/
 	int xObjects = 5, yObjects = 5, zObjects = 5, i = 0;
-
+	
 	//x-축, y-축, z-축으로 21개씩 총 21 x 21 x 21 = 9261개의 정육면체를 생성하고 배치한다.
 	m_nObjects = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
 	m_ppObjects = new CGameObject * [m_nObjects];
@@ -289,7 +312,6 @@ void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsComman
 			for (int z = -zObjects; z <= zObjects; z++)
 			{
 				pRotatingObject = new CRotatingObject();
-				pRotatingObject->SetMesh(pCubeMesh);
 				//각 정육면체 객체의 위치를 설정한다.
 				pRotatingObject->SetPosition(fxPitch * x, fyPitch * y, fzPitch * z);
 				pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
@@ -298,8 +320,13 @@ void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsComman
 			}
 		}
 	}
-	CreateShaderVariables(pd3dDevice, pd3dCommandList);
+	//인스턴싱을 사용하여 렌더링하기 위하여 하나의 게임 객체만 메쉬를 가진다.
+	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
+	m_ppObjects[0]->SetMesh(pCubeMesh);
 
+	// 인스턴싱을 위한 버퍼(Structured Buffer)를 생성
+	CreateShaderVariables(pd3dDevice, pd3dCommandList);
+	
 	//// 트리 오브젝트 불러오기
 	//CEnvironmentObject* pTreeMesh = new CEnvironmentObject(pd3dDevice, pd3dCommandList);
 	//
@@ -316,6 +343,7 @@ void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsComman
 	//
 	//CreateShaderVariables(pd3dDevice, pd3dCommandList);
 }
+
 void CObjectsShader::ReleaseObjects()
 {
 	if (m_ppObjects)
@@ -343,15 +371,14 @@ void CObjectsShader::ReleaseUploadBuffers()
 }
 void CObjectsShader::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
 {
+	// 파이프라인 선택
 	CShader::Render(pd3dCommandList, pCamera);
 
-	for (int j = 0; j < m_nObjects; j++)
-	{
-		if (m_ppObjects[j])
-		{
-			m_ppObjects[j]->Render(pd3dCommandList, pCamera);
-		}
-	}
+	// 모든 게임 객체의 인스턴싱 데이터를 버퍼에 저장한다.
+	UpdateShaderVariables(pd3dCommandList);
+
+	// 하나의 정점 데이터를 사용하여 모든 게임 객체(인스턴스)들을 렌더링한다.
+	m_ppObjects[0]->Render(pd3dCommandList, pCamera, m_nObjects);
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------
@@ -494,6 +521,7 @@ void CBoundingBoxShader::OnPrepareRender(ID3D12GraphicsCommandList* pd3dCommandL
 
 void CBoundingBoxShader::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
 {
+	// 파이프라인 선택
 	OnPrepareRender(pd3dCommandList);
 
 	for (int j = 0; j < m_nObjects; j++)

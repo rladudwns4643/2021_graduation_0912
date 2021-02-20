@@ -18,11 +18,12 @@ public:
 	void Release() { if (--m_nReferences <= 0) delete this; }
 
 protected:
-	XMFLOAT4X4 m_xmf4x4World;
 	CMesh* m_pMesh = NULL;
 	CShader* m_pShader = NULL;
 
 public:
+	XMFLOAT4X4 m_xmf4x4World;
+
 	void ReleaseUploadBuffers();
 
 	virtual void SetMesh(CMesh* pMesh);
@@ -60,6 +61,7 @@ public:
 
 	virtual void OnPrepareRender();
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera);
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera, UINT nInstances);
 };
 
 // 회전하는 오브젝트

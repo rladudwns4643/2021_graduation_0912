@@ -2,10 +2,17 @@
 #include "GameObject.h"
 #include "Camera.h"
 
-// 게임 객체의 정보를 셰이더에게 넘겨주기 위한 구조체(상수 버퍼)이다.
+// 게임 객체의 정보를 셰이더에게 넘겨주기 위한 구조체(상수 버퍼)
 struct CB_GAMEOBJECT_INFO
 {
 	XMFLOAT4X4 m_xmf4x4World;
+};
+
+// 인스턴스 정보(게임 객체의 월드 변환 행렬과 객체의 색상)를 위한 구조체
+struct VS_VB_INSTANCE
+{
+	XMFLOAT4X4 m_xmf4x4Transform;
+	XMFLOAT4 m_xmcColor;
 };
 
 // 셰이더 소스 코드를 컴파일하고 그래픽스 상태 객체를 생성한다.
@@ -77,6 +84,9 @@ public:
 	virtual D3D12_SHADER_BYTECODE CreatePixelShader(ID3DBlob** ppd3dShaderBlob);
 
 	virtual void CreateShader(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dGraphicsRootSignature);
+	virtual void CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual void ReleaseShaderVariables();
 
 	virtual void ReleaseUploadBuffers();
 
@@ -85,6 +95,10 @@ public:
 protected:
 	CGameObject** m_ppObjects = NULL;
 	int m_nObjects = 0;
+
+	// 인스턴스 데이터를 포함하는 버퍼와 포인터이다.
+	ID3D12Resource* m_pd3dcbGameObjects = NULL;
+	VS_VB_INSTANCE* m_pcbMappedGameObjects = NULL;
 };
 
 // 바운딩 박스 쉐이더
@@ -108,6 +122,7 @@ public:
 
 	virtual void OnPrepareRender(ID3D12GraphicsCommandList* pd3dCommandList);
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera);
+
 protected:
 	CGameObject** m_ppObjects = NULL;
 	int m_nObjects = 0;

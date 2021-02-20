@@ -276,7 +276,7 @@ void CPlayer::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamer
 CTestPlayer::CTestPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature) : CPlayer()
 {
 	// 플레이어 메쉬를 생성한다.
-	CMesh* pTestPlayerMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, STD_PLAYER_CUBE_SIZE, STD_PLAYER_CUBE_SIZE * 2, STD_PLAYER_CUBE_SIZE);;
+	CMesh* pTestPlayerMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, PLAYER_SIZE_X, PLAYER_SIZE_Y, PLAYER_SIZE_Z);;
 	SetMesh(pTestPlayerMesh);
 
 	// 플레이어의 카메라를 스페이스-쉽 카메라로 변경(생성)
