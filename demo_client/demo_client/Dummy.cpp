@@ -27,8 +27,8 @@ void Dummy::DoWorker()
 		BOOL retval = GetQueuedCompletionStatus(
 			iocp, 
 			&io_size, 
-			reinterpret_cast<PULONG_PTR>(&ci), 
-			reinterpret_cast<LPWSAOVERLAPPED*>(&over), 
+			(PULONG_PTR)&ci, 
+			reinterpret_cast<LPWSAOVERLAPPED*>(&over),
 			INFINITE);
 
 		int client_id = static_cast<int>(ci);
@@ -41,9 +41,11 @@ void Dummy::DoWorker()
 			DisconnectClient(client_id);
 			continue;
 		}
+
+		SERVER_TYPE st = ST_LOBBY;
 		unsigned char* buf = over->io_buf;
-		unsigned int psize = dummy[ci].connectSocket[over->st_type].curr_packet_size;
-		unsigned int pr_size = dummy[ci].connectSocket[over->st_type].prev_packet_data;
+		unsigned int psize = dummy[ci].connectSocket[st].curr_packet_size;
+		unsigned int pr_size = dummy[ci].connectSocket[st].prev_packet_data;
 
 		while (io_size > 0) {
 			if (psize == 0) {
@@ -51,7 +53,7 @@ void Dummy::DoWorker()
 			}
 			if (io_size + pr_size >= psize) { //패킷 완성 가능
 				unsigned char p[MAX_PACKET_SIZE];
-				memcpy(p, dummy[ci].connectSocket[over->st_type].packet_buf, pr_size);
+				memcpy(p, dummy[ci].connectSocket[st].packet_buf, pr_size);
 				memcpy(p + pr_size, buf, psize - pr_size);
 				ProcessPacket(static_cast<int>(ci), p);
 				io_size -= psize - pr_size;
@@ -60,16 +62,16 @@ void Dummy::DoWorker()
 				pr_size = 0;
 			}
 			else {
-				memcpy(dummy[ci].connectSocket[over->st_type].packet_buf + pr_size, buf, io_size);
+				memcpy(dummy[ci].connectSocket[st].packet_buf + pr_size, buf, io_size);
 				pr_size += io_size;
 				io_size = 0;
 			}
 		}
-		dummy[ci].connectSocket[over->st_type].curr_packet_size = psize;
-		dummy[ci].connectSocket[over->st_type].prev_packet_data = pr_size;
+		dummy[ci].connectSocket[st].curr_packet_size = psize;
+		dummy[ci].connectSocket[st].prev_packet_data = pr_size;
 
 		DWORD recv_flag = 0;
-		int ret_recv = WSARecv(dummy[ci].connectSocket[over->st_type].socket, &dummy[ci].connectSocket[over->st_type].recv_over.wsabuf, 1, NULL, &recv_flag, &dummy[ci].connectSocket[over->st_type].recv_over.over, NULL);
+		int ret_recv = WSARecv(dummy[ci].connectSocket[st].socket, &dummy[ci].connectSocket[st].recv_over.wsabuf, 1, NULL, &recv_flag, &dummy[ci].connectSocket[st].recv_over.over, NULL);
 		if (ret_recv == SOCKET_ERROR) {
 			int err_no = WSAGetLastError();
 			if (err_no != WSA_IO_PENDING) error_display("RECV ERROR", err_no);
@@ -110,7 +112,11 @@ void Dummy::ConnectLobbyServer()
 	ServerAddr.sin_port = htons(LOBBY_SERVER_PORT);
 	ServerAddr.sin_addr.S_un.S_addr = inet_addr(LOBBY_SERVER_IP_PUBLIC);
 
-	int ret_con = WSAConnect(dummy[num_connections].connectSocket[ST_LOBBY].socket, reinterpret_cast<sockaddr*>(&ServerAddr), sizeof(ServerAddr), NULL, NULL, NULL, NULL);
+	int ret_con = WSAConnect(
+		dummy[num_connections].connectSocket[ST_LOBBY].socket,
+		(sockaddr*)&ServerAddr,
+		sizeof(ServerAddr),
+		NULL, NULL, NULL, NULL);
 	if (ret_con != 0) {
 		cout << "WSAConnect: ";
 		cout << WSAGetLastError() << endl;
@@ -127,7 +133,12 @@ void Dummy::ConnectLobbyServer()
 
 	DWORD rcv_flag = 0;
 	CreateIoCompletionPort(reinterpret_cast<HANDLE>(dummy[num_connections].connectSocket[ST_LOBBY].socket), iocp, num_connections, 0);
-	int ret_rcv = WSARecv(dummy[num_connections].connectSocket[ST_LOBBY].socket, &dummy[num_connections].connectSocket[ST_LOBBY].recv_over.wsabuf, 1, NULL, &rcv_flag, &dummy[num_connections].connectSocket[ST_LOBBY].recv_over.over, NULL);
+	int ret_rcv = WSARecv(
+		dummy[num_connections].connectSocket[ST_LOBBY].socket,
+		&dummy[num_connections].connectSocket[ST_LOBBY].recv_over.wsabuf,
+		1, NULL, &rcv_flag,
+		&dummy[num_connections].connectSocket[ST_LOBBY].recv_over.over,
+		NULL);
 	if (SOCKET_ERROR == ret_rcv) {
 		int err_no = WSAGetLastError();
 		if (err_no != WSA_IO_PENDING) error_display("RECV ERROR", err_no);
@@ -158,12 +169,10 @@ void Dummy::SendLoginPacket(int id)
 	//cl_pakcet_login pakcet;
 	cl_packet_dummy_login p;
 	p.size = sizeof(p);
-	p.type = CL_LOGIN;
+	p.type = CL_DUMMY_LOGIN;
 	std::string id_str{ "Dummy" };
 	id_str += std::to_string(id);
-	std::string pw{ "pw" };
 	memcpy(p.id, id_str.c_str(), sizeof(char) * MAX_ID_LEN);
-	memcpy(p.pw, id_str.c_str(), sizeof(char) * MAX_ID_LEN);
 	SendPacket(id, &p, ST_LOBBY);
 }
 

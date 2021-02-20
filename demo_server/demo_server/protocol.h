@@ -3,7 +3,7 @@
 #define LOBBY_SERVER_PORT	7237
 #define BATTLE_SERVER_PORT	7238
 
-#define LOBBY_SERVER_IP_PUBLIC "59.14.252.78"
+#define LOBBY_SERVER_IP_PUBLIC "182.229.10.174"
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
@@ -66,7 +66,6 @@ struct cl_packet_dummy_login {
 	BYTE type;
 
 	char id[MAX_ID_LEN];
-	char pw[MAX_ID_LEN];
 };
 
 struct cl_packet_update_user_info {

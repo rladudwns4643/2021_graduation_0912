@@ -7,7 +7,7 @@ extern std::atomic<int> new_playerID;
 
 struct EXOVER {
 	WSAOVERLAPPED over;
-	WSABUF wsabuf;
+	WSABUF wsabuf[1];
 	char io_buf[MAX_BUF_SIZE];
 	bool is_recv;
 };
