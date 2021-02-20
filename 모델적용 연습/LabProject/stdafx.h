@@ -66,6 +66,17 @@ using Microsoft::WRL::ComPtr;
 // 아래를 주석하면 시작시 창모드로 시작
 #define _WITH_SWAPCHAIN_FULLSCREEN_STATE
 
+//-------------------------------------------------------------------------------
+// 기준이되는 큐브 크기
+#define STD_CUBE_SIZE 50.0f
+#define STD_PLAYER_CUBE_SIZE STD_CUBE_SIZE * 0.8f
+
+// 맵 크기
+#define MAP_WIDTH_BLOCK_NUM 21
+#define MAP_LENGTH_BLOCK_NUM 33
+#define MAP_HEIGHT_BLOCK_NUM 3
+//-------------------------------------------------------------------------------
+
 // FILLMODE 설정 (WIREFRAM, SOLID)
 extern bool bFillModeWireFrame;
 
@@ -121,6 +132,13 @@ namespace Vector3
 		return(xmf3Result);
 	}
 
+	inline XMFLOAT3 Subtract(XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2)
+	{
+		XMFLOAT3 xmf3Result;
+		XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) - XMLoadFloat3(&xmf3Vector2));
+		return(xmf3Result);
+	}
+
 	inline float DotProduct(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2)
 	{
 		XMFLOAT3 xmf3Result;
@@ -158,7 +176,14 @@ namespace Vector3
 		return(XMConvertToDegrees(acosf(XMVectorGetX(xmvAngle))));
 	}
 
-	inline float Angle(XMFLOAT3 & xmf3Vector1, XMFLOAT3 & xmf3Vector2)
+	inline float Angle(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2)
+	{
+		XMVECTOR xmvVector1 = XMLoadFloat3(&xmf3Vector1);
+		XMVECTOR xmvVector2 = XMLoadFloat3(&xmf3Vector2);
+		return(Angle(xmvVector1, xmvVector2));
+	}
+
+	inline float Angle(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2)
 	{
 		XMVECTOR xmvVector1 = XMLoadFloat3(&xmf3Vector1);
 		XMVECTOR xmvVector2 = XMLoadFloat3(&xmf3Vector2);

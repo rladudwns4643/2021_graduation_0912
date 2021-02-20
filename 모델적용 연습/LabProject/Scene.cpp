@@ -107,14 +107,12 @@ ID3D12RootSignature* CScene::GetGraphicsRootSignature()
 }
 
 // 마우스
-bool CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM
-	lParam)
+bool CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	return(false);
 }
 // 키보드
-bool CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam,
-	LPARAM lParam)
+bool CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	return(false);
 }
@@ -140,9 +138,13 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 		m_pObjectShaders[i].Render(pd3dCommandList, pCamera);
 	}
 
+	
 	// 바운딩박스 쉐이더
-	for (int i = 0; i < m_nBoundingBoxShaders; i++)
+	if (::bFillModeWireFrame)
 	{
-		m_pBoundingBoxShaders[i].Render(pd3dCommandList, pCamera);
+		for (int i = 0; i < m_nBoundingBoxShaders; i++)
+		{
+			m_pBoundingBoxShaders[i].Render(pd3dCommandList, pCamera);
+		}
 	}
 }

@@ -300,16 +300,14 @@ void CGameFramework::BuildObjects()
 {
 	m_pd3dCommandList->Reset(m_pd3dCommandAllocator, NULL);
 
-	// 카메라 객체를 생성하여 뷰포트, 씨저 사각형, 투영 변환 행렬, 카메라 변환 행렬을 생성하고 설정한다.
-	m_pCamera = new CCamera();
-	m_pCamera->SetViewport(0, 0, m_nWndClientWidth, m_nWndClientHeight, 0.0f, 1.0f);
-	m_pCamera->SetScissorRect(0, 0, m_nWndClientWidth, m_nWndClientHeight);
-	m_pCamera->GenerateProjectionMatrix(1.0f, 800.0f, float(m_nWndClientWidth) / float(m_nWndClientHeight), 90.0f);
-	m_pCamera->GenerateViewMatrix(XMFLOAT3(0.0f, 400.0f, -500.0f), XMFLOAT3(0.0f, 400.0f,0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f));
-
 	// 씬 객체를 생성하고 씬에 포함될 게임 객체들을 생성한다.
 	m_pScene = new CScene();
 	m_pScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList);
+
+	// 카메라 객체를 생성하여 뷰포트, 씨저 사각형, 투영 변환 행렬, 카메라 변환 행렬을 생성하고 설정한다.
+	CTestPlayer* pTestPlayer = new CTestPlayer(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
+	m_pPlayer = pTestPlayer;
+	m_pCamera = m_pPlayer->GetCamera();
 
 	// 씬 객체를 생성하기 위하여 필요한 그래픽 명령 리스트들을 명령 큐에 추가한다.
 	m_pd3dCommandList->Close();
@@ -331,17 +329,27 @@ void CGameFramework::ReleaseObjects()
 		delete m_pScene;
 }
 
+// 마우스 입력 처리
 void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	switch (nMessageID)
 	{
-		case WM_LBUTTONDOWN:
-		case WM_RBUTTONDOWN: break;
-		case WM_LBUTTONUP:
-		case WM_RBUTTONUP: break;
-		case WM_MOUSEMOVE: break;
-		default: break;
-	} 
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+		// 마우스 캡쳐를 하고 현재 마우스 위치를 가져옴
+		::SetCapture(hWnd);
+		::GetCursorPos(&m_ptOldCursorPos);
+		break;
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+		// 마우스 캡쳐를 해제
+		::ReleaseCapture();
+		break;
+	case WM_MOUSEMOVE:
+		break;
+	default:
+		break;
+	}
 }
 
 void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
@@ -352,6 +360,12 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 		{
 			switch (wParam)
 			{
+				// 카메라 모드 변환
+			case VK_F1:
+			case VK_F2:
+			case VK_F3:
+				if (m_pPlayer) m_pCamera = m_pPlayer->ChangeCamera((wParam - VK_F1 + 1), m_GameTimer.GetTimeElapsed());
+				break;
 			case VK_ESCAPE:
 				::PostQuitMessage(0);
 				break;
@@ -393,6 +407,57 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 
 void CGameFramework::ProcessInput()
 {
+	// 키보드의 상태 버퍼 반환
+	static UCHAR pKeysBuffer[256];
+	bool bProcessedByScene = false;
+	if (GetKeyboardState(pKeysBuffer) && m_pScene) bProcessedByScene = m_pScene->ProcessInput(pKeysBuffer);
+	if (!bProcessedByScene)
+	{
+		DWORD dwDirection = 0;
+		if (::GetKeyboardState(pKeysBuffer))
+		{
+			if (pKeysBuffer[0x57] & 0xF0) dwDirection |= DIR_FORWARD;		// 'W'
+			if (pKeysBuffer[0x53] & 0xF0) dwDirection |= DIR_BACKWARD;		// 'S'
+			if (pKeysBuffer[0X41] & 0xF0) dwDirection |= DIR_LEFT;			// 'A'
+			if (pKeysBuffer[0x44] & 0xF0) dwDirection |= DIR_RIGHT;			// 'D'
+			if (pKeysBuffer[VK_PRIOR] & 0xF0) dwDirection |= DIR_UP;		// 'PageUp'
+			if (pKeysBuffer[VK_NEXT] & 0xF0) dwDirection |= DIR_DOWN;		// 'PageDown'
+		}
+
+		// 마우스 캡쳐 관련
+		float cxDelta = 0.0f, cyDelta = 0.0f;
+		POINT ptCursorPos;
+		if (::GetCapture() == m_hWnd)
+		{
+			// 마우스 커서를 화면에서 보이지 않게 한다
+			::SetCursor(NULL);
+
+			// 현재 마우스 커서의 위치를 가져온다
+			::GetCursorPos(&ptCursorPos);
+
+			// 마우스 버튼이 눌린 상태에서 마우스가 움직인 양을 구한다
+			cxDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+			cyDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
+
+			// 마우스 커서의 위치를 마우스가 눌려졌던 위치로 설정
+			::SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+		}
+		// 마우스 또는 키 입력이 있으면 플레이어를 이동하거나(dwDirection) 회전한다(cxDelta 또는 cyDelta).
+		if ((dwDirection != 0) || (cxDelta != 0.0f) || (cyDelta != 0.0f))
+		{
+			if (cxDelta || cyDelta)
+			{
+				if (pKeysBuffer[VK_RBUTTON] & 0xF0)
+					m_pPlayer->Rotate(cyDelta, 0.0f, -cxDelta);
+				else
+					m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
+			}
+			// 플레이어의 이동 속력 설정
+			if (dwDirection) m_pPlayer->Move(dwDirection, m_pPlayer->GetSpeed() * m_GameTimer.GetTimeElapsed(), true);
+		}
+	}
+	// 플레이어를 실제로 이동하고 카메라를 갱신(중력과 마찰력의 영향을 속도 벡터에 적용)
+	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
 }
 
 void CGameFramework::AnimateObjects()
@@ -416,6 +481,8 @@ void CGameFramework::WaitForGpuComplete()
 		::WaitForSingleObject(m_hFenceEvent, INFINITE);
 	}
 }
+
+//#define _WITH_PLAYER_TOP
 
 void CGameFramework::FrameAdvance()
 {
@@ -462,6 +529,14 @@ void CGameFramework::FrameAdvance()
 	if (m_pScene)
 		m_pScene->Render(m_pd3dCommandList, m_pCamera);
 	
+	// 3인칭 카메라일 때 플레이어가 항상 보이도록 렌더링
+#ifdef _WITH_PLAYER_TOP
+	// 렌더 타겟은 그대로 두고 깊이 버퍼를 1.0으로 지우고 플레이어를 렌더링하면 플레이어는 무조건 그려질 것이다.
+	m_pd3dCommandList->ClearDepthStencilView(d3dDsvCPUDescriptorHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
+#endif
+	// 3인칭 카메라일 때 플레이어를 렌더링
+	if (m_pPlayer) m_pPlayer->Render(m_pd3dCommandList, m_pCamera);
+
 	/*현재 렌더 타겟에 대한 렌더링이 끝나기를 기다린다. GPU가 렌더 타겟(버퍼)을
 	더 이상 사용하지 않으면 렌더 타겟 의 상태는 프리젠트 상태(D3D12_RESOURCE_STATE_PRESENT)로 바뀔 것이다.*/
 	d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;

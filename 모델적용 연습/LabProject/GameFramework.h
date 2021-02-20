@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Timer.h"
+#include "Player.h"
 
 class CGameFramework
 {
@@ -79,10 +80,17 @@ public:
 	// 다음 프레임으로 넘기는 함수
 	void MoveToNextFrame();
 
+public:
+	// 플레이어 객체
+	CPlayer* m_pPlayer = NULL;
+	 
+	// 마지막으로 마우스 버튼을 클릭할 때의 마우스 커서의 위치
+	POINT m_ptOldCursorPos;
+
 private:
-	// 다음은 게임 프레임워크에서 사용할 타이머이다.
+	// 다음은 게임 프레임워크에서 사용할 타이머
 	CGameTimer m_GameTimer;
-	// 다음은 프레임 레이트를 주 윈도우의 캡션에 출력하기 위한 문자열이다.
+	// 다음은 프레임 레이트를 주 윈도우의 캡션에 출력하기 위한 문자열
 	_TCHAR m_pszFrameRate[50];
 };
 
