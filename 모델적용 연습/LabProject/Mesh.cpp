@@ -72,7 +72,7 @@ CCubeMesh::CCubeMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCo
 	m_nStride = sizeof(CDiffusedVertex);
 	m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;
+	float fx = fWidth * 0.5f, fy = fHeight, fz = fDepth * 0.5f;
 
 	//정점 버퍼는 직육면체의 꼭지점 8개에 대한 정점 데이터를 가진다.
 	CDiffusedVertex pVertices[8];
@@ -80,10 +80,10 @@ CCubeMesh::CCubeMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCo
 	pVertices[1] = CDiffusedVertex(XMFLOAT3(+fx, +fy, -fz), RANDOM_COLOR);
 	pVertices[2] = CDiffusedVertex(XMFLOAT3(+fx, +fy, +fz), RANDOM_COLOR);
 	pVertices[3] = CDiffusedVertex(XMFLOAT3(-fx, +fy, +fz), RANDOM_COLOR);
-	pVertices[4] = CDiffusedVertex(XMFLOAT3(-fx, -fy, -fz), RANDOM_COLOR);
-	pVertices[5] = CDiffusedVertex(XMFLOAT3(+fx, -fy, -fz), RANDOM_COLOR);
-	pVertices[6] = CDiffusedVertex(XMFLOAT3(+fx, -fy, +fz), RANDOM_COLOR);
-	pVertices[7] = CDiffusedVertex(XMFLOAT3(-fx, -fy, +fz), RANDOM_COLOR);
+	pVertices[4] = CDiffusedVertex(XMFLOAT3(-fx, 0, -fz), RANDOM_COLOR);
+	pVertices[5] = CDiffusedVertex(XMFLOAT3(+fx, 0, -fz), RANDOM_COLOR);
+	pVertices[6] = CDiffusedVertex(XMFLOAT3(+fx, 0, +fz), RANDOM_COLOR);
+	pVertices[7] = CDiffusedVertex(XMFLOAT3(-fx, 0, +fz), RANDOM_COLOR);
 
 	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices,
 		m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT,
@@ -138,7 +138,7 @@ CCubeMesh::~CCubeMesh()
 // 환경 오브젝트
 CEnvironmentObjectMesh::CEnvironmentObjectMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) : CMesh(pd3dDevice, pd3dCommandList)
 {
-	std::string path = "Model\\Cube_01.mesh";
+	std::string path = "Model\\Tile.mesh";
 
 	std::ifstream fileIn(path);
 
@@ -228,20 +228,20 @@ CBoundingBoxMesh::CBoundingBoxMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsComma
 	m_nStride = sizeof(CDiffusedVertex);
 	m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 
-	float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;
+	float fx = fWidth * 0.5f, fy = fHeight, fz = fDepth * 0.5f;
 
 	//정점 버퍼는 직육면체의 꼭지점 8개에 대한 정점 데이터를 가진다.
 
-	XMFLOAT4 fColor(1.0f, 1.0f, 0.0f, 1.0f);
+	XMFLOAT4 fColor(0.0f, 1.0f, 0.0f, 1.0f);
 	CDiffusedVertex pVertices[8];
 	pVertices[0] = CDiffusedVertex(XMFLOAT3(-fx, +fy, -fz), fColor);
 	pVertices[1] = CDiffusedVertex(XMFLOAT3(+fx, +fy, -fz), fColor);
 	pVertices[2] = CDiffusedVertex(XMFLOAT3(+fx, +fy, +fz), fColor);
 	pVertices[3] = CDiffusedVertex(XMFLOAT3(-fx, +fy, +fz), fColor);
-	pVertices[4] = CDiffusedVertex(XMFLOAT3(-fx, -fy, -fz), fColor);
-	pVertices[5] = CDiffusedVertex(XMFLOAT3(+fx, -fy, -fz), fColor);
-	pVertices[6] = CDiffusedVertex(XMFLOAT3(+fx, -fy, +fz), fColor);
-	pVertices[7] = CDiffusedVertex(XMFLOAT3(-fx, -fy, +fz), fColor);
+	pVertices[4] = CDiffusedVertex(XMFLOAT3(-fx, 0, -fz), fColor);
+	pVertices[5] = CDiffusedVertex(XMFLOAT3(+fx, 0, -fz), fColor);
+	pVertices[6] = CDiffusedVertex(XMFLOAT3(+fx, 0, +fz), fColor);
+	pVertices[7] = CDiffusedVertex(XMFLOAT3(-fx, 0, +fz), fColor);
 
 	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices,
 		m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT,

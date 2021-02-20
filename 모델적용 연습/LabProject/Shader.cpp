@@ -402,7 +402,7 @@ void CBoundingBoxShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCo
 				pRotatingObject = new CRotatingObject();
 				pRotatingObject->SetMesh(pBoundingBoxMesh);
 				//각 정육면체 객체의 위치를 설정한다.
-				pRotatingObject->SetPosition(fxPitch * x, fyPitch * y + (STD_CUBE_SIZE / 2), fzPitch * z);
+				pRotatingObject->SetPosition(fxPitch * x, fyPitch * y, fzPitch * z);
 				pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
 				pRotatingObject->SetRotationSpeed(10.0f * (i % 10) + 3.0f);
 				m_ppObjects[i++] = pRotatingObject;
