@@ -373,8 +373,11 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			case VK_F9:
 				ChangeSwapChainState();
 				break;
-			case VK_F8:
+			case VK_F7:
 				::bFillModeWireFrame = !::bFillModeWireFrame;
+				break;
+			case VK_F8:
+				::bShowBoundingBox = !::bShowBoundingBox;
 				break;
 			default: break;
 			}

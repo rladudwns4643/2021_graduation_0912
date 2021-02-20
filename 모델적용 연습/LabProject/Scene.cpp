@@ -143,7 +143,7 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 	}
 	
 	// 바운딩박스 쉐이더
-	if (::bFillModeWireFrame)
+	if (::bShowBoundingBox)
 	{
 		for (int i = 0; i < m_nBoundingBoxShaders; i++)
 		{

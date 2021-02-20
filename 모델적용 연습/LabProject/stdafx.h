@@ -69,9 +69,9 @@ using Microsoft::WRL::ComPtr;
 //-------------------------------------------------------------------------------
 // 기준이되는 큐브 크기
 #define STD_CUBE_SIZE 5.0f
-#define PLAYER_SIZE_X 5.0f
+#define PLAYER_SIZE_X 4.5f
 #define PLAYER_SIZE_Y 9.0f
-#define PLAYER_SIZE_Z 5.0f
+#define PLAYER_SIZE_Z 4.5f
 
 // 맵 크기
 #define MAP_WIDTH_BLOCK_NUM 21
@@ -81,6 +81,9 @@ using Microsoft::WRL::ComPtr;
 
 // FILLMODE 설정 (WIREFRAM, SOLID)
 extern bool bFillModeWireFrame;
+// 바운딩 박스 표시
+extern bool bShowBoundingBox;
+//-------------------------------------------------------------------------------
 
 // 버퍼 리소스를 생성하는 함수
 extern ID3D12Resource* CreateBufferResource(ID3D12Device* pd3dDevice,

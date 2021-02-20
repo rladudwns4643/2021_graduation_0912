@@ -296,8 +296,8 @@ void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsComman
 {
 	/*x-축, y-축, z-축 양의 방향의 객체 개수이다. 각 값을 1씩 늘리거나 줄이면서 실행할 때 프레임 레이트가 어떻게
 	변하는 가를 살펴보기 바란다.*/
-	int xObjects = 5, yObjects = 5, zObjects = 5, i = 0;
-	
+	int xObjects = 1, yObjects = 1, zObjects = 1, i = 0;
+
 	//x-축, y-축, z-축으로 21개씩 총 21 x 21 x 21 = 9261개의 정육면체를 생성하고 배치한다.
 	m_nObjects = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
 	m_ppObjects = new CGameObject * [m_nObjects];
@@ -320,28 +320,14 @@ void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsComman
 			}
 		}
 	}
-	//인스턴싱을 사용하여 렌더링하기 위하여 하나의 게임 객체만 메쉬를 가진다.
-	CCubeMeshDiffused* pCubeMesh = new CCubeMeshDiffused(pd3dDevice, pd3dCommandList, STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
+
+	// 인스턴싱을 사용하여 렌더링하기 위하여 하나의 게임 객체만 메쉬를 가진다.
+	CEnvironmentObjectMesh* pCubeMesh = new CEnvironmentObjectMesh(pd3dDevice, pd3dCommandList);
 	m_ppObjects[0]->SetMesh(pCubeMesh);
 
 	// 인스턴싱을 위한 버퍼(Structured Buffer)를 생성
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
-	
-	//// 트리 오브젝트 불러오기
-	//CEnvironmentObject* pTreeMesh = new CEnvironmentObject(pd3dDevice, pd3dCommandList);
-	//
-	//m_nObjects = 1;
-	//m_ppObjects = new CGameObject * [m_nObjects];
-	//CRotatingObject* pRotatingObject = new CRotatingObject();
-	//
-	//pRotatingObject->SetMesh(pTreeMesh);
-	//pRotatingObject->SetPosition(fxPitch * x, fyPitch * y, fzPitch * z);
-	//pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
-	//pRotatingObject->SetRotationSpeed(10.0f * (i % 10) + 3.0f);
-	//
-	//m_ppObjects[0] = pRotatingObject;
-	//
-	//CreateShaderVariables(pd3dDevice, pd3dCommandList);
+
 }
 
 void CObjectsShader::ReleaseObjects()
@@ -394,11 +380,11 @@ CBoundingBoxShader::~CBoundingBoxShader()
 void CBoundingBoxShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 {
 	//가로x세로x높이가 12x12x12인 정육면체 메쉬를 생성한다.
-	CBoundingBoxMeshDiffused* pBoundingBoxMesh = new CBoundingBoxMeshDiffused(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
+	CBoundingBoxMesh* pBoundingBoxMesh = new CBoundingBoxMesh(pd3dDevice, pd3dCommandList, STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
 
 	/*x-축, y-축, z-축 양의 방향의 객체 개수이다. 각 값을 1씩 늘리거나 줄이면서 실행할 때 프레임 레이트가 어떻게
 	변하는 가를 살펴보기 바란다.*/
-	int xObjects = 5, yObjects = 5, zObjects = 5, i = 0;
+	int xObjects = 1, yObjects = 1, zObjects = 1, i = 0;
 
 	//x-축, y-축, z-축으로 21개씩 총 21 x 21 x 21 = 9261개의 정육면체를 생성하고 배치한다.
 	m_nObjects = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
@@ -416,7 +402,7 @@ void CBoundingBoxShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCo
 				pRotatingObject = new CRotatingObject();
 				pRotatingObject->SetMesh(pBoundingBoxMesh);
 				//각 정육면체 객체의 위치를 설정한다.
-				pRotatingObject->SetPosition(fxPitch * x, fyPitch * y + 310.f, fzPitch * z);
+				pRotatingObject->SetPosition(fxPitch * x, fyPitch * y + (STD_CUBE_SIZE / 2), fzPitch * z);
 				pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
 				pRotatingObject->SetRotationSpeed(10.0f * (i % 10) + 3.0f);
 				m_ppObjects[i++] = pRotatingObject;

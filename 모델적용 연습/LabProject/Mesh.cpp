@@ -65,7 +65,7 @@ void CMesh::Render(ID3D12GraphicsCommandList* pd3dCommandList, UINT nInstances)
 }
 
 // 직육면체 메쉬
-CCubeMeshDiffused::CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth, float fHeight, float fDepth) : CMesh(pd3dDevice, pd3dCommandList)
+CCubeMesh::CCubeMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth, float fHeight, float fDepth) : CMesh(pd3dDevice, pd3dCommandList)
 {
 	//직육면체는 꼭지점(정점)이 8개이다.
 	m_nVertices = 8;
@@ -131,14 +131,14 @@ CCubeMeshDiffused::CCubeMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCom
 	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
 	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 }
-CCubeMeshDiffused::~CCubeMeshDiffused()
+CCubeMesh::~CCubeMesh()
 {
 }
 
 // 환경 오브젝트
-CEnvironmentObject::CEnvironmentObject(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) : CMesh(pd3dDevice, pd3dCommandList)
+CEnvironmentObjectMesh::CEnvironmentObjectMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) : CMesh(pd3dDevice, pd3dCommandList)
 {
-	std::string path = "Model\\Tree.mesh";
+	std::string path = "Model\\Cube_01.mesh";
 
 	std::ifstream fileIn(path);
 
@@ -217,11 +217,11 @@ CEnvironmentObject::CEnvironmentObject(ID3D12Device* pd3dDevice, ID3D12GraphicsC
 	}
 }
 
-CEnvironmentObject::~CEnvironmentObject()
+CEnvironmentObjectMesh::~CEnvironmentObjectMesh()
 {
 }
 
-CBoundingBoxMeshDiffused::CBoundingBoxMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth, float fHeight, float fDepth) : CMesh(pd3dDevice, pd3dCommandList)
+CBoundingBoxMesh::CBoundingBoxMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth, float fHeight, float fDepth) : CMesh(pd3dDevice, pd3dCommandList)
 {
 	//직육면체는 꼭지점(정점)이 8개이다.
 	m_nVertices = 8;
@@ -232,16 +232,16 @@ CBoundingBoxMeshDiffused::CBoundingBoxMeshDiffused(ID3D12Device* pd3dDevice, ID3
 
 	//정점 버퍼는 직육면체의 꼭지점 8개에 대한 정점 데이터를 가진다.
 
-	XMFLOAT4 fRedColor(1.0f, 0.0f, 0.0f, 1.0f);
+	XMFLOAT4 fColor(1.0f, 1.0f, 0.0f, 1.0f);
 	CDiffusedVertex pVertices[8];
-	pVertices[0] = CDiffusedVertex(XMFLOAT3(-fx, +fy, -fz), fRedColor);
-	pVertices[1] = CDiffusedVertex(XMFLOAT3(+fx, +fy, -fz), fRedColor);
-	pVertices[2] = CDiffusedVertex(XMFLOAT3(+fx, +fy, +fz), fRedColor);
-	pVertices[3] = CDiffusedVertex(XMFLOAT3(-fx, +fy, +fz), fRedColor);
-	pVertices[4] = CDiffusedVertex(XMFLOAT3(-fx, -fy, -fz), fRedColor);
-	pVertices[5] = CDiffusedVertex(XMFLOAT3(+fx, -fy, -fz), fRedColor);
-	pVertices[6] = CDiffusedVertex(XMFLOAT3(+fx, -fy, +fz), fRedColor);
-	pVertices[7] = CDiffusedVertex(XMFLOAT3(-fx, -fy, +fz), fRedColor);
+	pVertices[0] = CDiffusedVertex(XMFLOAT3(-fx, +fy, -fz), fColor);
+	pVertices[1] = CDiffusedVertex(XMFLOAT3(+fx, +fy, -fz), fColor);
+	pVertices[2] = CDiffusedVertex(XMFLOAT3(+fx, +fy, +fz), fColor);
+	pVertices[3] = CDiffusedVertex(XMFLOAT3(-fx, +fy, +fz), fColor);
+	pVertices[4] = CDiffusedVertex(XMFLOAT3(-fx, -fy, -fz), fColor);
+	pVertices[5] = CDiffusedVertex(XMFLOAT3(+fx, -fy, -fz), fColor);
+	pVertices[6] = CDiffusedVertex(XMFLOAT3(+fx, -fy, +fz), fColor);
+	pVertices[7] = CDiffusedVertex(XMFLOAT3(-fx, -fy, +fz), fColor);
 
 	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices,
 		m_nStride * m_nVertices, D3D12_HEAP_TYPE_DEFAULT,
@@ -290,6 +290,6 @@ CBoundingBoxMeshDiffused::CBoundingBoxMeshDiffused(ID3D12Device* pd3dDevice, ID3
 	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 }
 
-CBoundingBoxMeshDiffused::~CBoundingBoxMeshDiffused()
+CBoundingBoxMesh::~CBoundingBoxMesh()
 {
 }
