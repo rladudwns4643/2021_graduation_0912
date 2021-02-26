@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Mesh.h"
 
 CMesh::CMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
@@ -138,7 +139,7 @@ CCubeMesh::~CCubeMesh()
 // 환경 오브젝트
 CEnvironmentObjectMesh::CEnvironmentObjectMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) : CMesh(pd3dDevice, pd3dCommandList)
 {
-	std::string path = "Model\\Tile.mesh";
+	std::string path = "Model\\Tree.mesh";
 
 	std::ifstream fileIn(path);
 

@@ -17,8 +17,8 @@ struct INSTANCEDGAMEOBJECTINFO
 	matrix m_mtxGameObject;
 	float4 m_cColor;
 };
-
-StructuredBuffer<INSTANCEDGAMEOBJECTINFO> gGameObjectInfos : register(t0);
+StructuredBuffer<INSTANCEDGAMEOBJECTINFO> gGameObjectInfos : register(t0);	// ¹è¿­°³³ä
+// ConstantBuffer<structureName> Name[Index] :register(b#);
 
 struct VS_INSTANCING_INPUT
 {

@@ -1,8 +1,8 @@
-#include "stdafx.h"
+// pch.cpp: 미리 컴파일된 헤더에 해당하는 소스 파일
+#include "pch.h"
 
 bool bFillModeWireFrame = false;
 bool bShowBoundingBox = false;
-
 
 ID3D12Resource* CreateBufferResource(ID3D12Device* pd3dDevice,
 	ID3D12GraphicsCommandList* pd3dCommandList, void* pData, UINT nBytes, D3D12_HEAP_TYPE d3dHeapType,
@@ -34,9 +34,9 @@ ID3D12Resource* CreateBufferResource(ID3D12Device* pd3dDevice,
 	d3dResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
 	D3D12_RESOURCE_STATES d3dResourceInitialStates = D3D12_RESOURCE_STATE_COPY_DEST;
-	if (d3dHeapType == D3D12_HEAP_TYPE_UPLOAD) 
+	if (d3dHeapType == D3D12_HEAP_TYPE_UPLOAD)
 		d3dResourceInitialStates = D3D12_RESOURCE_STATE_GENERIC_READ;
-	else if (d3dHeapType == D3D12_HEAP_TYPE_READBACK) 
+	else if (d3dHeapType == D3D12_HEAP_TYPE_READBACK)
 		d3dResourceInitialStates = D3D12_RESOURCE_STATE_COPY_DEST;
 
 	HRESULT hResult = pd3dDevice->CreateCommittedResource(&d3dHeapPropertiesDesc,

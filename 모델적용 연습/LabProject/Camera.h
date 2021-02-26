@@ -1,6 +1,4 @@
 #pragma once
-#include "stdafx.h"
-
 // 카메라 상수 버퍼를 위한 구조체
 struct VS_CB_CAMERA_INFO
 {
