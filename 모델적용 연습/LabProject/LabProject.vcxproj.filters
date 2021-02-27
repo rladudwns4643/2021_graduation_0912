@@ -66,6 +66,12 @@
     <ClInclude Include="define.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="d3dUtil.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -111,8 +117,12 @@
     <ClCompile Include="pch.cpp">
       <Filter>headers</Filter>
     </ClCompile>
+    <ClCompile Include="d3dUtil.cpp">
+      <Filter>headers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders.hlsl" />
+    <FxCompile Include="Light.hlsl" />
   </ItemGroup>
 </Project>

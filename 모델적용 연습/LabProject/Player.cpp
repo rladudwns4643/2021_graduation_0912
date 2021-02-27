@@ -5,13 +5,13 @@
 CPlayer::CPlayer() : CGameObject()
 {
 	m_pCamera = NULL;
+
 	m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_xmf3Right = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	m_xmf3Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	m_xmf3Look = XMFLOAT3(0.0f, 0.0f, 1.0f);
 
 	m_xmf3Velocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_fSpeed = 0;
 	m_xmf3Gravity = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_fMaxVelocityXZ = 0.0f;
 	m_fMaxVelocityY = 0.0f;
@@ -27,24 +27,23 @@ CPlayer::CPlayer() : CGameObject()
 CPlayer::~CPlayer()
 {
 	ReleaseShaderVariables();
+
 	if (m_pCamera) delete m_pCamera;
 }
 
 void CPlayer::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 {
-	CGameObject::CreateShaderVariables(pd3dDevice, pd3dCommandList);
-
 	if (m_pCamera) m_pCamera->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 }
-void CPlayer::ReleaseShaderVariables()
-{
-	CGameObject::ReleaseShaderVariables();
 
-	if (m_pCamera) m_pCamera->ReleaseShaderVariables();
-}
 void CPlayer::UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList)
 {
-	CGameObject::UpdateShaderVariables(pd3dCommandList);
+	if (m_pCamera) m_pCamera->UpdateShaderVariables(pd3dCommandList);
+}
+
+void CPlayer::ReleaseShaderVariables()
+{
+	if (m_pCamera) m_pCamera->ReleaseShaderVariables();
 }
 
 void CPlayer::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
@@ -263,17 +262,15 @@ void CPlayer::OnPrepareRender()
 	m_xmf4x4World._42 = m_xmf3Position.y;
 	m_xmf4x4World._43 = m_xmf3Position.z;
 }
+
 void CPlayer::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
 {
 	DWORD nCameraMode = (pCamera) ? pCamera->GetMode() : 0x00;
-	// 카메라 모드가 3인칭이면 플레이어 객체를 렌더링
-	if (nCameraMode == THIRD_PERSON_CAMERA)
-	{
-		if (m_pShader) m_pShader->Render(pd3dCommandList, pCamera);
-		CGameObject::Render(pd3dCommandList, pCamera);
-	}
+	if (nCameraMode == THIRD_PERSON_CAMERA) CGameObject::Render(pd3dCommandList, pCamera);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 CTestPlayer::CTestPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature) : CPlayer()
 {
 	// 플레이어 메쉬를 생성한다.
@@ -286,21 +283,19 @@ CTestPlayer::CTestPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList * p
 	// 플레이어의 위치를 설정
 	XMFLOAT3 fPlayerPos(0.0f, 0.0f, 0.0f);
 	SetPosition(fPlayerPos);
-	// 플레이어 속도를 설정
-	SetSpeed(200.f);
 
 	//// 플레이어의 위치가 변경될 때 지형의 정보에 따라 플레이어의 위치를 변경할 수 있도록 설정
 	//SetPlayerUpdatedContext(pTerrain);
 	//// 카메라의 위치가 변경될 때 지형의 정보에 따라 카메라의 위치를 변경할 수 있도록 설정
 	//SetCameraUpdatedContext(pTerrain);
 
+	CreateShaderVariables(pd3dDevice, pd3dCommandList);
+
 	// 플레이어 메쉬를 렌더링할 때 사용할 셰이더를 생성
 	CPlayerShader* pShader = new CPlayerShader();
 	pShader->CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
+	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 	SetShader(pShader);
-
-	// 플레이어를 위한 셰이더 변수를 생성
-	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 }
 CTestPlayer::~CTestPlayer()
 {
