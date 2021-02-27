@@ -13,6 +13,7 @@
 #include "MathHelper.h"
 #include "define.h"
 #include "global.h"
+#include "d3dUtil.h"
 
 
 // 콘솔창 띄우기
