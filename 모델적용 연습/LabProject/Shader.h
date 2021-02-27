@@ -2,8 +2,15 @@
 #include "GameObject.h"
 #include "Camera.h"
 
-// 게임 객체의 정보를 셰이더에게 넘겨주기 위한 구조체(상수 버퍼)
+// 객체를 렌더링할 때 적용하는 상수 버퍼 데이터
 struct CB_GAMEOBJECT_INFO
+{
+	XMFLOAT4X4 m_xmf4x4World;
+	// 객체에 적용될 재질 번호
+	UINT m_nMaterial;
+};
+// 플레이어 객체를 렌더링할 때 적용하는 상수 버퍼 데이터
+struct CB_PLAYER_INFO
 {
 	XMFLOAT4X4 m_xmf4x4World;
 };

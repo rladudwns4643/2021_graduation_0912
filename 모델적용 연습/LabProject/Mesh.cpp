@@ -139,7 +139,7 @@ CCubeMesh::~CCubeMesh()
 // 환경 오브젝트
 CEnvironmentObjectMesh::CEnvironmentObjectMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) : CMesh(pd3dDevice, pd3dCommandList)
 {
-	std::string path = "Model\\Tree.mesh";
+	std::string path = "Model\\Cube_01.mesh";
 
 	std::ifstream fileIn(path);
 
@@ -175,8 +175,8 @@ CEnvironmentObjectMesh::CEnvironmentObjectMesh(ID3D12Device* pd3dDevice, ID3D12G
 
 		// Vertex Data
 		Vertex* ptVertices = new Vertex[m_nVertices];
-		CDiffusedVertex* pVertices = new CDiffusedVertex[m_nVertices];
-		m_nStride = sizeof(CDiffusedVertex);
+		CIlluminatedVertex* pVertices = new CIlluminatedVertex[m_nVertices];
+		m_nStride = sizeof(CIlluminatedVertex);
 		for (uint32_t i = 0; i < m_nVertices; ++i)
 		{
 			fileIn >> ignore >> ptVertices[i].Pos.x >> ptVertices[i].Pos.y >> ptVertices[i].Pos.z;
@@ -185,7 +185,7 @@ CEnvironmentObjectMesh::CEnvironmentObjectMesh(ID3D12Device* pd3dDevice, ID3D12G
 			fileIn >> ignore >> ptVertices[i].Tangent.x >> ptVertices[i].Tangent.y >> ptVertices[i].Tangent.z;
 			fileIn >> ignore >> ptVertices[i].Binormal.x >> ptVertices[i].Binormal.y >> ptVertices[i].Binormal.z;
 
-			pVertices[i] = CDiffusedVertex(XMFLOAT3(ptVertices[i].Pos.x, ptVertices[i].Pos.y, ptVertices[i].Pos.z), RANDOM_COLOR);
+			pVertices[i] = CIlluminatedVertex(XMFLOAT3(ptVertices[i].Pos.x, ptVertices[i].Pos.y, ptVertices[i].Pos.z), XMFLOAT3(ptVertices[i].Normal.x, ptVertices[i].Normal.y, ptVertices[i].Normal.z));
 
 			std::cout << ptVertices[i].Pos.x << ", " << ptVertices[i].Pos.y << ", " << ptVertices[i].Pos.z << std::endl;
 		}
