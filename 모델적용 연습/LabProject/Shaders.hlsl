@@ -1,5 +1,3 @@
-#include "Light.hlsl"
-
 // 플레이어 객체의 데이터를 위한 상수 버퍼
 cbuffer cbPlayerInfo : register(b0)
 {
@@ -63,6 +61,8 @@ float4 PSPlayer(VS_DIFFUSED_OUTPUT input) : SV_TARGET
 	return(input.color);
 }
 
+#include "Light.hlsl"
+
 // 정점 조명을 사용
 #define _WITH_VERTEX_LIGHTING
 
@@ -83,6 +83,7 @@ struct VS_LIGHTING_OUTPUT
 	float3 normalW : NORMAL;
 #endif
 };
+
 // 정점 쉐이더 함수
 VS_LIGHTING_OUTPUT VSLighting(VS_LIGHTING_INPUT input)
 {
@@ -98,6 +99,7 @@ VS_LIGHTING_OUTPUT VSLighting(VS_LIGHTING_INPUT input)
 #endif
 	return(output);
 }
+
 //픽셀 쉐이더 함수
 float4 PSLighting(VS_LIGHTING_OUTPUT input) : SV_TARGET
 {

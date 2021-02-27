@@ -213,11 +213,20 @@ D3D12_INPUT_LAYOUT_DESC CPlayerShader::CreateInputLayout()
 
 D3D12_SHADER_BYTECODE CPlayerShader::CreateVertexShader(ID3DBlob** ppd3dShaderBlob)
 {
-	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "VSPlayer", "vs_5_1", ppd3dShaderBlob));
+	// CompileShaderFromFile 이거 지워
+	ComPtr<ID3DBlob> cpShader = d3dUtil::CompileShader(L"Shaders.hlsl", nullptr, "VSPlayer", "vs_5_1");
+	D3D12_SHADER_BYTECODE d3dShaderByteCode;
+	d3dShaderByteCode.pShaderBytecode = cpShader->GetBufferPointer();
+	d3dShaderByteCode.BytecodeLength = cpShader->GetBufferSize();
+	return(d3dShaderByteCode);
 }
 D3D12_SHADER_BYTECODE CPlayerShader::CreatePixelShader(ID3DBlob** ppd3dShaderBlob)
 {
-	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "PSPlayer", "ps_5_1", ppd3dShaderBlob));
+	ComPtr<ID3DBlob> cpShader = d3dUtil::CompileShader(L"Shaders.hlsl", nullptr, "PSPlayer", "ps_5_1");
+	D3D12_SHADER_BYTECODE d3dShaderByteCode;
+	d3dShaderByteCode.pShaderBytecode = cpShader->GetBufferPointer();
+	d3dShaderByteCode.BytecodeLength = cpShader->GetBufferSize();
+	return(d3dShaderByteCode);
 }
 
 void CPlayerShader::CreateShader(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dGraphicsRootSignature)
@@ -281,11 +290,19 @@ D3D12_INPUT_LAYOUT_DESC CObjectsShader::CreateInputLayout()
 
 D3D12_SHADER_BYTECODE CObjectsShader::CreateVertexShader(ID3DBlob** ppd3dShaderBlob)
 {
-	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "VSLighting", "vs_5_1", ppd3dShaderBlob));
+	ComPtr<ID3DBlob> cpShader = d3dUtil::CompileShader(L"Shaders.hlsl", nullptr, "VSLighting", "vs_5_1");
+	D3D12_SHADER_BYTECODE d3dShaderByteCode;
+	d3dShaderByteCode.pShaderBytecode = cpShader->GetBufferPointer();
+	d3dShaderByteCode.BytecodeLength = cpShader->GetBufferSize();
+	return(d3dShaderByteCode);
 }
 D3D12_SHADER_BYTECODE CObjectsShader::CreatePixelShader(ID3DBlob** ppd3dShaderBlob)
 {
-	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "PSLighting", "ps_5_1", ppd3dShaderBlob));
+	ComPtr<ID3DBlob> cpShader = d3dUtil::CompileShader(L"Shaders.hlsl", nullptr, "PSLighting", "ps_5_1");
+	D3D12_SHADER_BYTECODE d3dShaderByteCode;
+	d3dShaderByteCode.pShaderBytecode = cpShader->GetBufferPointer();
+	d3dShaderByteCode.BytecodeLength = cpShader->GetBufferSize();
+	return(d3dShaderByteCode);
 }
 
 void CObjectsShader::CreateShader(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dGraphicsRootSignature)
@@ -492,12 +509,20 @@ D3D12_INPUT_LAYOUT_DESC CBoundingBoxShader::CreateInputLayout()
 
 D3D12_SHADER_BYTECODE CBoundingBoxShader::CreateVertexShader(ID3DBlob** ppd3dShaderBlob)
 {
-	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "VSDiffused", "vs_5_1", ppd3dShaderBlob));
+	ComPtr<ID3DBlob> cpShader = d3dUtil::CompileShader(L"Shaders.hlsl", nullptr, "VSDiffused", "vs_5_1");
+	D3D12_SHADER_BYTECODE d3dShaderByteCode;
+	d3dShaderByteCode.pShaderBytecode = cpShader->GetBufferPointer();
+	d3dShaderByteCode.BytecodeLength = cpShader->GetBufferSize();
+	return(d3dShaderByteCode);
 }
 
 D3D12_SHADER_BYTECODE CBoundingBoxShader::CreatePixelShader(ID3DBlob** ppd3dShaderBlob)
 {
-	return(CShader::CompileShaderFromFile(L"Shaders.hlsl", "PSDiffused", "ps_5_1", ppd3dShaderBlob));
+	ComPtr<ID3DBlob> cpShader = d3dUtil::CompileShader(L"Shaders.hlsl", nullptr, "PSDiffused", "ps_5_1");
+	D3D12_SHADER_BYTECODE d3dShaderByteCode;
+	d3dShaderByteCode.pShaderBytecode = cpShader->GetBufferPointer();
+	d3dShaderByteCode.BytecodeLength = cpShader->GetBufferSize();
+	return(d3dShaderByteCode);
 }
 
 void CBoundingBoxShader::CreateShader(ID3D12Device* pd3dDevice, ID3D12RootSignature* pd3dGraphicsRootSignature)
