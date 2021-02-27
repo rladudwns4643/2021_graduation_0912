@@ -246,11 +246,11 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	//	m_pBoundingBoxShaders[i].AnimateObjects(fTimeElapsed);
 	//}
 
-	//if (m_pLights)
-	//{
-	//	m_pLights->m_pLights[1].m_xmf3Position = m_pPlayer->GetPosition();
-	//	m_pLights->m_pLights[1].m_xmf3Direction = m_pPlayer->GetLookVector();
-	//}
+	if (m_pLights)
+	{
+		m_pLights->m_pLights[1].m_xmf3Position = m_pPlayer->GetPosition();
+		m_pLights->m_pLights[1].m_xmf3Direction = m_pPlayer->GetLookVector();
+	}
 }
 
 // ±×¸®±â
