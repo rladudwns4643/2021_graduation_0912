@@ -11,9 +11,8 @@ int main()
 	//boost::asio::deadline_timer timer(io, boost::posix_time::millisec(50));
 	//timer.async_wait(boost::bind(&Dummy::ConnectLobbyServer, g_dummy, boost::asio::placeholders::error, &timer));
 
-	std::thread con_thread(&Dummy::ConnectLobbyServer, g_dummy);
-
 	std::thread worker_thread(&Dummy::DoWorker, g_dummy);
+	std::thread con_thread(&Dummy::ConnectLobbyServer, g_dummy);
 
 	worker_thread.join();
 	delete g_dummy;
