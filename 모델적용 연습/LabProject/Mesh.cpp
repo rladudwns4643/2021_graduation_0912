@@ -3,6 +3,19 @@
 
 CMesh::CMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 {
+	m_nReferences = 0;
+
+	m_pd3dVertexBuffer = NULL;
+	m_pd3dVertexUploadBuffer = NULL;
+
+	m_pd3dIndexBuffer = NULL;
+	m_pd3dIndexUploadBuffer = NULL;
+
+	m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_nSlot = 0;
+	m_nVertices = 0;
+	m_nStride = 0;
+	m_nOffset = 0;
 }
 CMesh::~CMesh()
 {
@@ -44,24 +57,6 @@ void CMesh::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 	else
 	{
 		pd3dCommandList->DrawInstanced(m_nVertices, 1, m_nOffset, 0);
-	}
-}
-
-void CMesh::Render(ID3D12GraphicsCommandList* pd3dCommandList, UINT nInstances)
-{
-	// 메쉬의 프리미티브 유형을 설정한다.
-	pd3dCommandList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
-	// 메쉬의 정점 버퍼 뷰를 설정한다.
-	pd3dCommandList->IASetVertexBuffers(m_nSlot, 1, &m_d3dVertexBufferView);
-
-	if (m_pd3dIndexBuffer)
-	{
-		pd3dCommandList->IASetIndexBuffer(&m_d3dIndexBufferView);
-		pd3dCommandList->DrawIndexedInstanced(m_nIndices, nInstances, 0, 0, 0);
-	}
-	else
-	{
-		pd3dCommandList->DrawInstanced(m_nVertices, nInstances, m_nOffset, 0);
 	}
 }
 
@@ -175,7 +170,7 @@ CEnvironmentObjectMesh::CEnvironmentObjectMesh(ID3D12Device* pd3dDevice, ID3D12G
 
 		// Vertex Data
 		Vertex* ptVertices = new Vertex[m_nVertices];
-		CDiffusedVertex* pVertices = new CDiffusedVertex[m_nVertices];
+		CIlluminatedVertex* pVertices = new CIlluminatedVertex[m_nVertices];
 		m_nStride = sizeof(CDiffusedVertex);
 		for (uint32_t i = 0; i < m_nVertices; ++i)
 		{
@@ -185,9 +180,10 @@ CEnvironmentObjectMesh::CEnvironmentObjectMesh(ID3D12Device* pd3dDevice, ID3D12G
 			fileIn >> ignore >> ptVertices[i].Tangent.x >> ptVertices[i].Tangent.y >> ptVertices[i].Tangent.z;
 			fileIn >> ignore >> ptVertices[i].Binormal.x >> ptVertices[i].Binormal.y >> ptVertices[i].Binormal.z;
 
-			pVertices[i] = CDiffusedVertex(XMFLOAT3(ptVertices[i].Pos.x, ptVertices[i].Pos.y, ptVertices[i].Pos.z), RANDOM_COLOR);
+			pVertices[i] = CIlluminatedVertex(XMFLOAT3(ptVertices[i].Pos.x, ptVertices[i].Pos.y, ptVertices[i].Pos.z), XMFLOAT3(ptVertices[i].Normal.x, ptVertices[i].Normal.y, ptVertices[i].Normal.z));
 
 			std::cout << ptVertices[i].Pos.x << ", " << ptVertices[i].Pos.y << ", " << ptVertices[i].Pos.z << std::endl;
+			std::cout << ptVertices[i].Normal.x << ", " << ptVertices[i].Normal.y << ", " << ptVertices[i].Normal.z << std::endl;
 		}
 
 		m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices,
