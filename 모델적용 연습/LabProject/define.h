@@ -21,3 +21,11 @@
 #define MAP_WIDTH_BLOCK_NUM 21
 #define MAP_LENGTH_BLOCK_NUM 33
 #define MAP_HEIGHT_BLOCK_NUM 3
+
+// 조명 관련
+#define MAX_LIGHTS 8
+#define MAX_MATERIALS 8
+
+#define POINT_LIGHT 1
+#define SPOT_LIGHT 2
+#define DIRECTIONAL_LIGHT 3

@@ -176,8 +176,7 @@ namespace Matrix4x4
 	inline XMFLOAT4X4 Transpose(XMFLOAT4X4& xmmtx4x4Matrix)
 	{
 		XMFLOAT4X4 xmmtx4x4Result;
-		XMStoreFloat4x4(&xmmtx4x4Result,
-			XMMatrixTranspose(XMLoadFloat4x4(&xmmtx4x4Matrix)));
+		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixTranspose(XMLoadFloat4x4(&xmmtx4x4Matrix)));
 		return(xmmtx4x4Result);
 	}
 

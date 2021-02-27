@@ -2,7 +2,42 @@
 #include "Mesh.h"
 #include "Camera.h"
 
+struct CMATERIAL
+{
+	XMFLOAT4 m_xmf4Ambient;
+	XMFLOAT4 m_xmf4Diffuse;
+	XMFLOAT4 m_xmf4Specular; //(r,g,b,a=power)
+	XMFLOAT4 m_xmf4Emissive;
+};
+
 class CShader;
+
+class CMaterial
+{
+public:
+	CMaterial();
+	virtual ~CMaterial();
+
+private:
+	int m_nReferences = 0;
+
+public:
+	void AddRef() { m_nReferences++; }
+	void Release() { if (--m_nReferences <= 0) delete this; }
+
+	// 재질의 기본 색상
+	XMFLOAT4 m_xmf4Albedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	// 재질의 번호
+	UINT m_nReflection = 0;
+
+	// 재질을 적용하여 렌더링을 하기 위한 쉐이더
+	CShader* m_pShader = NULL;
+
+	void SetAlbedo(XMFLOAT4& xmf4Albedo) { m_xmf4Albedo = xmf4Albedo; }
+	void SetReflection(UINT nReflection) { m_nReflection = nReflection; }
+	void SetShader(CShader* pShader);
+};
 
 class CGameObject
 {
@@ -19,15 +54,17 @@ public:
 
 protected:
 	CMesh* m_pMesh = NULL;
-	CShader* m_pShader = NULL;
 
 public:
 	XMFLOAT4X4 m_xmf4x4World;
+	CMaterial* m_pMaterial = NULL;
 
 	void ReleaseUploadBuffers();
 
 	virtual void SetMesh(CMesh* pMesh);
 	virtual void SetShader(CShader* pShader);
+	virtual void SetMaterial(CMaterial* pMaterial);
+	virtual void SetMaterial(UINT nReflection);
 
 	//상수 버퍼를 생성한다.
 	virtual void CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
