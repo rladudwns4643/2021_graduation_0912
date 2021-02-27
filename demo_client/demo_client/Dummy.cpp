@@ -87,7 +87,7 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		int my_id = dummy_count++;
 		dummy[my_id].id = p->id;
 		dummy[my_id].loginok = true;
-		cout << "LOGIN OK" << endl;
+		cout << "LOGIN OK ID: "<< p->id << endl;
 		break;
 	}
 	case LC_LOGIN_FAIL: {
