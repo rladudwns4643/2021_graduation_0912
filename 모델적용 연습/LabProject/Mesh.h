@@ -47,7 +47,6 @@ protected:
 
 public:
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList);
-	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, UINT nInstances);
 };
 
 // 정점을 표현하기 위한 클래스를 선언한다.

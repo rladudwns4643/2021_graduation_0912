@@ -444,7 +444,7 @@ void CBoundingBoxShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCo
 			{
 				pRotatingObject = new CRotatingObject();
 				pRotatingObject->SetMesh(pBoundingBoxMesh);
-				//각 정육면체 객체의 위치를 설정한다.
+				pRotatingObject->SetMaterial(i % MAX_MATERIALS);
 				pRotatingObject->SetPosition(fxPitch * x, fyPitch * y, fzPitch * z);
 				pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
 				pRotatingObject->SetRotationSpeed(10.0f * (i % 10) + 3.0f);
@@ -552,6 +552,8 @@ void CBoundingBoxShader::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCam
 {
 	// 파이프라인 선택
 	OnPrepareRender(pd3dCommandList);
+
+	CShader::Render(pd3dCommandList, pCamera);
 
 	for (int j = 0; j < m_nObjects; j++)
 	{
