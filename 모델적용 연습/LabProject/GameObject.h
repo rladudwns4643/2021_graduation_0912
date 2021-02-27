@@ -54,10 +54,10 @@ public:
 
 protected:
 	CMesh* m_pMesh = NULL;
-	CMaterial* m_pMaterial = NULL;
 
 public:
 	XMFLOAT4X4 m_xmf4x4World;
+	CMaterial* m_pMaterial = NULL;
 
 	void ReleaseUploadBuffers();
 

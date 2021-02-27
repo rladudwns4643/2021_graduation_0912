@@ -271,6 +271,8 @@ void CPlayer::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamer
 		CGameObject::Render(pd3dCommandList, pCamera);
 }
 
+//---------------------------------------------------------------------------------------------
+
 CTestPlayer::CTestPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature) : CPlayer()
 {
 	// 플레이어 메쉬를 생성한다.
@@ -286,6 +288,8 @@ CTestPlayer::CTestPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList * p
 	// 플레이어 속도를 설정
 	SetSpeed(200.f);
 
+	CreateShaderVariables(pd3dDevice, pd3dCommandList);
+
 	//// 플레이어의 위치가 변경될 때 지형의 정보에 따라 플레이어의 위치를 변경할 수 있도록 설정
 	//SetPlayerUpdatedContext(pTerrain);
 	//// 카메라의 위치가 변경될 때 지형의 정보에 따라 카메라의 위치를 변경할 수 있도록 설정
@@ -294,10 +298,8 @@ CTestPlayer::CTestPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList * p
 	// 플레이어 메쉬를 렌더링할 때 사용할 셰이더를 생성
 	CPlayerShader* pShader = new CPlayerShader();
 	pShader->CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
+	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 	SetShader(pShader);
-
-	// 플레이어를 위한 셰이더 변수를 생성
-	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 }
 CTestPlayer::~CTestPlayer()
 {

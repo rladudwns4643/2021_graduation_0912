@@ -85,10 +85,10 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_pObjectShaders[0].CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
 	m_pObjectShaders[0].BuildObjects(pd3dDevice, pd3dCommandList);
 
-	m_nBoundingBoxShaders = 1;
-	m_pBoundingBoxShaders = new CBoundingBoxShader[m_nBoundingBoxShaders];
-	m_pBoundingBoxShaders[0].CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
-	m_pBoundingBoxShaders[0].BuildObjects(pd3dDevice, pd3dCommandList);
+	//m_nBoundingBoxShaders = 1;
+	//m_pBoundingBoxShaders = new CBoundingBoxShader[m_nBoundingBoxShaders];
+	//m_pBoundingBoxShaders[0].CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
+	//m_pBoundingBoxShaders[0].BuildObjects(pd3dDevice, pd3dCommandList);
 
 	BuildLightsAndMaterials();
 
@@ -106,12 +106,12 @@ void CScene::ReleaseObjects()
 	}
 	if (m_pObjectShaders) delete[] m_pObjectShaders;
 
-	for (int i = 0; i < m_nBoundingBoxShaders; i++)
-	{
-		m_pBoundingBoxShaders[i].ReleaseShaderVariables();
-		m_pBoundingBoxShaders[i].ReleaseObjects();
-	}
-	if (m_pBoundingBoxShaders) delete[] m_pBoundingBoxShaders;
+	//for (int i = 0; i < m_nBoundingBoxShaders; i++)
+	//{
+	//	m_pBoundingBoxShaders[i].ReleaseShaderVariables();
+	//	m_pBoundingBoxShaders[i].ReleaseObjects();
+	//}
+	//if (m_pBoundingBoxShaders) delete[] m_pBoundingBoxShaders;
 
 	if (m_pLights) delete m_pLights;
 	if (m_pMaterials) delete m_pMaterials;
@@ -120,7 +120,7 @@ void CScene::ReleaseUploadBuffers()
 {
 	for (int i = 0; i < m_nObjectShaders; i++) m_pObjectShaders[i].ReleaseUploadBuffers();
 
-	for (int i = 0; i < m_nBoundingBoxShaders; i++) m_pBoundingBoxShaders[i].ReleaseUploadBuffers();
+	//for (int i = 0; i < m_nBoundingBoxShaders; i++) m_pBoundingBoxShaders[i].ReleaseUploadBuffers();
 }
 
 void CScene::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
@@ -234,10 +234,10 @@ void CScene::AnimateObjects(float fTimeElapsed)
 		m_pObjectShaders[i].AnimateObjects(fTimeElapsed);
 	}
 
-	for (int i = 0; i < m_nBoundingBoxShaders; i++)
-	{
-		m_pBoundingBoxShaders[i].AnimateObjects(fTimeElapsed);
-	}
+	//for (int i = 0; i < m_nBoundingBoxShaders; i++)
+	//{
+	//	m_pBoundingBoxShaders[i].AnimateObjects(fTimeElapsed);
+	//}
 
 	// 조명의 위치와 방향을 플레이어의 위치와 방향으로 변경
 	if (m_pLights)
@@ -273,11 +273,11 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 	}
 	
 	// 바운딩박스 쉐이더
-	if (::bShowBoundingBox)
-	{
-		for (int i = 0; i < m_nBoundingBoxShaders; i++)
-		{
-			m_pBoundingBoxShaders[i].Render(pd3dCommandList, pCamera);
-		}
-	}
+	//if (::bShowBoundingBox)
+	//{
+	//	for (int i = 0; i < m_nBoundingBoxShaders; i++)
+	//	{
+	//		m_pBoundingBoxShaders[i].Render(pd3dCommandList, pCamera);
+	//	}
+	//}
 }
