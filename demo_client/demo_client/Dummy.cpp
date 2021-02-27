@@ -87,6 +87,7 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		int my_id = dummy_count++;
 		dummy[my_id].id = p->id;
 		dummy[my_id].loginok = true;
+		cout << "LOGIN OK" << endl;
 		break;
 	}
 	case LC_LOGIN_FAIL: {
@@ -161,7 +162,6 @@ void Dummy::DisconnectClient(int id)
 	closesocket(dummy[id].connectSocket[ST_LOBBY].socket);
 	dummy[id].connect = false;
 	std::cout << "Client[" << id << "] Disconnect" << endl;
-
 }
 
 void Dummy::SendLoginPacket(int id)
@@ -174,6 +174,7 @@ void Dummy::SendLoginPacket(int id)
 	id_str += std::to_string(id);
 	memcpy(p.id, id_str.c_str(), sizeof(char) * MAX_ID_LEN);
 	SendPacket(id, &p, ST_LOBBY);
+	cout << "!!" << endl;
 }
 
 void Dummy::SendUpdateUserInfo(int id, int mmr, int winrate)

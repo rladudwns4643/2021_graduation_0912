@@ -48,7 +48,7 @@ void LobbyServer::ClinetAccept(int id) {
 	}
 
 	cout << "user: " << id <<"connect"<< endl;
-	this->ClinetAccept(id + 1);
+	//this->ClinetAccept(id + 1);
 }
 
 void LobbyServer::DoWorker()
@@ -124,6 +124,7 @@ void LobbyServer::DoWorker()
 void LobbyServer::ProcessPacket(int id, void* buf)
 {
 	char* packet = reinterpret_cast<char*>(buf);
+	cout << "ProcessPacket: "<<(int)packet[1] << endl;
 	switch (packet[1]) {		//packet[0] = size/ packet[1] = type
 	case CL_LOGIN:
 	{
@@ -137,6 +138,8 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		User* newUser = new User();
 		newUser->SetPlayerMatch(false);
 		newUser->SetPlayerLoginOK("dummy");
+
+		cout << "GET_DUMMY_LOGIN" << endl;
 
 		SendLoginOKPacket(id);
 		break;
@@ -193,7 +196,7 @@ void LobbyServer::SendPacket(int id, void* buf)
 	char* p = reinterpret_cast<char*>(buf);
 
 	EXOVER* sendover = new EXOVER;
-	ZeroMemory(&sendover, sizeof(sendover));
+	memset(sendover, 0x00, sizeof(EXOVER));
 	sendover->is_recv = false;
 	memcpy(sendover->io_buf, p, p[0]);
 	sendover->wsabuf[0].buf = sendover->io_buf;

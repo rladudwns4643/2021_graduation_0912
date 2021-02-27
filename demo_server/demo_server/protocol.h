@@ -3,7 +3,7 @@
 #define LOBBY_SERVER_PORT	7237
 #define BATTLE_SERVER_PORT	7238
 
-#define LOBBY_SERVER_IP_PUBLIC "182.229.10.174"
+#define LOBBY_SERVER_IP_PUBLIC "121.170.59.45"
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
@@ -16,13 +16,13 @@
 #define PACKET_TYPE_NON_BUFFERED	0
 #define PACKET_TYPE_BUFFERED		1
 
-#define LC_LOGIN_OK			100
-#define LC_LOGIN_FAIL		101
-#define LC_USERINFO			102
+#define LC_LOGIN_OK			10
+#define LC_LOGIN_FAIL		11
+#define LC_USERINFO			12
 
-#define CL_LOGIN			200
-#define CL_DUMMY_LOGIN		2000
-#define CL_UPDATE_USER_INFO	201
+#define CL_LOGIN			20
+#define CL_DUMMY_LOGIN		29
+#define CL_UPDATE_USER_INFO	21
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
