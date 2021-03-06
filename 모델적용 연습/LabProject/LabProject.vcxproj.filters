@@ -72,6 +72,9 @@
     <ClInclude Include="d3dx12.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -118,6 +121,9 @@
       <Filter>headers</Filter>
     </ClCompile>
     <ClCompile Include="d3dUtil.cpp">
+      <Filter>headers</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
       <Filter>headers</Filter>
     </ClCompile>
   </ItemGroup>

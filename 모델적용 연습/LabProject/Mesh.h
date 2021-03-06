@@ -125,10 +125,3 @@ public:
 	CCubeMeshIlluminated(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth = 2.0f, float fHeight = 2.0f, float fDepth = 2.0f);
 	virtual ~CCubeMeshIlluminated();
 };
-
-class CSphereMeshIlluminated : public CMeshIlluminated
-{
-public:
-	CSphereMeshIlluminated(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fRadius = 2.0f, UINT nSlices = 20, UINT nStacks = 20);
-	virtual ~CSphereMeshIlluminated();
-};

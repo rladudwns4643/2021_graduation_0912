@@ -379,9 +379,9 @@ void CObjectsShader::ReleaseShaderVariables()
 
 void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 {
-	//CEnvironmentObjectMesh* pEnvironmentMesh = new CEnvironmentObjectMesh(pd3dDevice, pd3dCommandList);
+	CEnvironmentObjectMesh* pEnvironmentMesh = new CEnvironmentObjectMesh(pd3dDevice, pd3dCommandList);
 
-	CCubeMeshIlluminated* pCubeMesh = new CCubeMeshIlluminated(pd3dDevice, pd3dCommandList, 12.0f, 12.0f, 12.0f);
+	//CCubeMeshIlluminated* pCubeMesh = new CCubeMeshIlluminated(pd3dDevice, pd3dCommandList, STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
 
 	int xObjects = 1, yObjects = 1, zObjects = 1, i = 0;
 
@@ -403,7 +403,7 @@ void CObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsComman
 			{
 				pRotatingObject = new CRotatingObject();
 				pRotatingObject->SetMaterial(i % MAX_MATERIALS);
-				pRotatingObject->SetMesh(pCubeMesh);
+				pRotatingObject->SetMesh(pEnvironmentMesh);
 				pRotatingObject->SetPosition(fxPitch * x, fyPitch * y, fzPitch * z);
 				pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
 				pRotatingObject->SetRotationSpeed(10.0f * (i % 10));
