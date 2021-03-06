@@ -29,3 +29,19 @@
 #define POINT_LIGHT				1
 #define SPOT_LIGHT				2
 #define DIRECTIONAL_LIGHT		3
+
+// 텍스쳐
+#define TEXTURE_INDEX_Texture_01 0
+
+#define TEXTURE_STR_Cube_01 "Texture_01"
+
+
+// 포인터 안전하게 삭제
+#define SAFE_DELETE_PTR(ptr)	\
+{								\
+	if (ptr != nullptr)			\
+	{							\
+		delete ptr;				\
+		ptr = nullptr;			\
+	}							\
+}	

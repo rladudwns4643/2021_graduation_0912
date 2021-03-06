@@ -74,3 +74,13 @@ struct Material
 	float Roughness = .25f;
 	DirectX::XMFLOAT4X4 MatTransform = Matrix4x4::Identity();
 };
+
+struct Texture
+{
+	std::string Name;
+
+	std::wstring Filename;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> Resource = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> UploadHeap = nullptr;
+};

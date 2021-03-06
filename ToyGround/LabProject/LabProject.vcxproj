@@ -150,6 +150,7 @@
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="GraphicsRenderer.h" />
     <ClInclude Include="LabProject.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Mesh.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
@@ -174,6 +176,7 @@
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="LabProject.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="pch.cpp">
