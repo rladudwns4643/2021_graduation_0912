@@ -30,11 +30,19 @@
 #define SPOT_LIGHT				2
 #define DIRECTIONAL_LIGHT		3
 
+// 조명 이름
+#define LIGHT_NAME_DIRECTIONAL "Directional" 
+
 // 텍스쳐
-#define TEXTURE_INDEX_Texture_01 0
+#define TEXTURE_INDEX_Cartoon_CubeWorld_Texture 0
 
-#define TEXTURE_STR_Cube_01 "Texture_01"
+#define TEXTURE_STR_Cartoon_CubeWorld_Texture "Cartoon_CubeWorld_Texture"
 
+//
+#define MESH_GEOID			"geo"
+#define MESH_GEOID_RECT		"rect"
+#define MESH_GEOID_SPHERE	"sphere"
+#define MESH_GEOID_GRID		"grid"
 
 // 포인터 안전하게 삭제
 #define SAFE_DELETE_PTR(ptr)	\
@@ -45,3 +53,23 @@
 		ptr = nullptr;			\
 	}							\
 }	
+
+// 마우스 관련(DPI = Dots Per Inch)
+#define MOUSE_DPI_X 0.2f
+#define MOUSE_DPI_Y 0.2f
+
+// 이동관련 키보드
+#define DIR_FORWARD					0x01
+#define DIR_BACKWARD				0x02
+#define DIR_LEFT					0x04
+#define DIR_RIGHT					0x08
+#define DIR_UP						0x10
+#define DIR_DOWN					0x20
+
+// 카메라 관련
+#define CAMERA_ZNEAR 1.f
+#define CAMERA_ZFAR 5000.f
+
+// enum class
+enum class SceneType { eLobby = 0, eGamePlay = 1, eCount = 2};
+enum class CameraType { eFirst = 0, eThird = 1, eFree = 2 };

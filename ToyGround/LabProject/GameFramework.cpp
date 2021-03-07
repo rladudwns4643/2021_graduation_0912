@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GameFramework.h"
 
-CGameFramework::CGameFramework()
+void CGameFramework::Initialize()
 {
 	m_pdxgiFactory = NULL;
 	m_pdxgiSwapChain = NULL;
@@ -31,8 +31,10 @@ CGameFramework::CGameFramework()
 	m_pPlayer = NULL;
 
 	_tcscpy_s(m_pszFrameRate, _T("LabProject ("));
+
+	m_GameTimer = CGameTimer::GetApp();
 }
-CGameFramework::~CGameFramework()
+void CGameFramework::ShutDown()
 {
 }
 
@@ -345,7 +347,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			case VK_F1:
 			case VK_F2:
 			case VK_F3:
-				if (m_pPlayer) m_pCamera = m_pPlayer->ChangeCamera((wParam - VK_F1 + 1), m_GameTimer.GetTimeElapsed());
+				if (m_pPlayer) m_pCamera = m_pPlayer->ChangeCamera((wParam - VK_F1 + 1), m_GameTimer->GetTimeElapsed());
 				break;
 			case VK_ESCAPE:
 				::PostQuitMessage(0);
@@ -392,9 +394,9 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 		case WM_ACTIVATE:
 		{
 			if (LOWORD(wParam) == WA_INACTIVE)
-				m_GameTimer.Stop();
+				m_GameTimer->Stop();
 			else
-				m_GameTimer.Start();
+				m_GameTimer->Start();
 			break;
 		}
 		case WM_SIZE:
@@ -465,7 +467,7 @@ void CGameFramework::BuildObjects()
 	if (m_pScene) m_pScene->ReleaseUploadBuffers();
 	if (m_pPlayer) m_pPlayer->ReleaseUploadBuffers();
 
-	m_GameTimer.Reset();
+	m_GameTimer->Reset();
 }
 
 void CGameFramework::ReleaseObjects()
@@ -524,16 +526,16 @@ void CGameFramework::ProcessInput()
 					m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
 			}
 			// 플레이어의 이동 속력 설정
-			if (dwDirection) m_pPlayer->Move(dwDirection, 50.0f * m_GameTimer.GetTimeElapsed(), true);
+			if (dwDirection) m_pPlayer->Move(dwDirection, 50.0f * m_GameTimer->GetTimeElapsed(), true);
 		}
 	}
 	// 플레이어를 실제로 이동하고 카메라를 갱신(중력과 마찰력의 영향을 속도 벡터에 적용)
-	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
+	m_pPlayer->Update(m_GameTimer->GetTimeElapsed());
 }
 
 void CGameFramework::AnimateObjects()
 {
-	if (m_pScene) m_pScene->AnimateObjects(m_GameTimer.GetTimeElapsed());
+	if (m_pScene) m_pScene->Update(m_GameTimer->GetTimeElapsed());
 }
 
 void CGameFramework::WaitForGpuComplete()
@@ -572,7 +574,7 @@ void CGameFramework::MoveToNextFrame()
 void CGameFramework::FrameAdvance()
 {
 	// 타이머의 시간이 갱신되도록 하고 프레임 레이트를 계산한다.
-	m_GameTimer.Tick(0.0f);
+	m_GameTimer->Tick(0.0f);
 
 	ProcessInput();
 
@@ -654,6 +656,6 @@ void CGameFramework::FrameAdvance()
 
 	MoveToNextFrame();
 
-	m_GameTimer.GetFrameRate(m_pszFrameRate + 12, 37);
+	m_GameTimer->GetFrameRate(m_pszFrameRate + 12, 37);
 	::SetWindowText(m_hWnd, m_pszFrameRate);
 }

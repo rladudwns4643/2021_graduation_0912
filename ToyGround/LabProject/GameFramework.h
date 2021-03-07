@@ -3,7 +3,7 @@
 #include "Timer.h"
 #include "Player.h"
 
-class CGameFramework
+class CGameFramework : public TemplateSingleton<CGameFramework>
 {
 private:
 	HINSTANCE						m_hInstance;
@@ -42,7 +42,7 @@ private:
 	ID3D12Debug* m_pd3dDebugController;
 #endif
 
-	CGameTimer						m_GameTimer;
+	CGameTimer						* m_GameTimer;
 
 	CScene							* m_pScene = NULL;
 	CPlayer							* m_pPlayer = NULL;
@@ -53,8 +53,8 @@ private:
 	_TCHAR							m_pszFrameRate[50];				// 프레임 레이트를 주 윈도우의 캡션에 출력하기 위한 문자열
 
 public:
-	CGameFramework();
-	~CGameFramework();
+	void Initialize();
+	void ShutDown();
 
 	bool OnCreate(HINSTANCE hInstance, HWND hMainWnd);	// 프레임워크를 초기화하는 함수이다(주 윈도우가 생성되면 호출된다).
 	void OnDestroy();

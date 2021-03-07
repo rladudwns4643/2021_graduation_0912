@@ -1,0 +1,32 @@
+#pragma once
+
+namespace InputHandler
+{
+	extern POINT	g_LastMousePos;
+
+	extern float	g_MouseChangebleX;
+	extern float	g_MouseChangebleY;
+
+	extern bool		g_MoveMouseCallback;
+
+	extern bool		g_LeftMouseCallback;
+	extern bool		g_LeftMouseOverlap;
+
+	extern bool		g_RightMouseCallback;
+	extern bool		g_RightMouseOverlap;
+
+	extern float	g_MouseClickTime;
+}
+
+class Controller abstract
+{
+public:
+	virtual void Update(const float deltaT) = 0;
+
+protected:
+	virtual void HandleInput(const float deltaT) = 0;
+	virtual void MouseCallback() = 0;
+
+	virtual void OnKeyPressed() {};
+	virtual void OnKeyReleased() {};
+};
