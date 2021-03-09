@@ -35,7 +35,6 @@ struct CLIENT {
 
 	std::string name;
 	int mmr = -1;
-	float winrate = 0.f;
 };
 
 class Dummy {
@@ -52,7 +51,9 @@ public:
 	void DisconnectClient(int id);
 
 	void SendLoginPacket(int id);
+	void SendRequestUserInfo(int id);
 	void SendUpdateUserInfo(int id, int mmr, int winrate);
+	void SendAutoMatchPacket(int id);
 
 	void SendPacket(int id, void* packet, SERVER_TYPE st);
 

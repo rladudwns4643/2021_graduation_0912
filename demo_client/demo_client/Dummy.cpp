@@ -87,7 +87,7 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		int my_id = dummy_count++;
 		dummy[my_id].id = p->id;
 		dummy[my_id].loginok = true;
-		cout << "LOGIN OK ID: "<< p->id << endl;
+		SendRequestUserInfo(id);
 		break;
 	}
 	case LC_LOGIN_FAIL: {
@@ -95,7 +95,18 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		break;
 	}
 	case LC_USERINFO: {
+		lc_packet_userinfo* p = reinterpret_cast<lc_packet_userinfo*>(packet);
+		dummy[id].mmr = p->mmr;
+		dummy[id].name = p->id_str;
 
+		cout << dummy[id].mmr << " "<<dummy[id].name << endl;
+		//원래는 버튼으로 오토매칭
+		//SendAutoMatchPacket(id);
+		break;
+	}
+	case LC_MATCHSTART: {
+		//scene change
+		cout << "MATCHSTART" << endl;
 		break;
 	}
 	}
@@ -149,7 +160,7 @@ void Dummy::ConnectLobbyServer()
 	std::cout << "num connection: " << num_connections << std::endl;
 	num_connections++;
 	while (!dummy[num_connections - 1].loginok) {};
-	//SendAutoMatchPacket(num_connections - 1);
+	SendAutoMatchPacket(num_connections - 1);
 }
 
 void Dummy::ConnectBattleServer()
@@ -174,11 +185,30 @@ void Dummy::SendLoginPacket(int id)
 	id_str += std::to_string(id);
 	memcpy(p.id, id_str.c_str(), sizeof(char) * MAX_ID_LEN);
 	SendPacket(id, &p, ST_LOBBY);
-	cout << "!!" << endl;
+}
+
+void Dummy::SendRequestUserInfo(int id)
+{
+	cl_packet_request_userinfo p;
+	p.size = sizeof(p);
+	p.type = CL_REQUEST_USER_INFO;
+	SendPacket(id, &p, ST_LOBBY);
 }
 
 void Dummy::SendUpdateUserInfo(int id, int mmr, int winrate)
 {
+	cl_packet_update_user_info p;
+	p.size = sizeof(p);
+	p.type = CL_UPDATE_USER_INFO;
+	SendPacket(id, &p, ST_LOBBY);
+}
+
+void Dummy::SendAutoMatchPacket(int id) {
+	cl_packet_automatch p;
+	p.size = sizeof(p);
+	p.type = CL_AUTOMATCH;
+
+	SendPacket(id, &p, ST_LOBBY);
 }
 
 void Dummy::SendPacket(int id, void* packet, SERVER_TYPE st)

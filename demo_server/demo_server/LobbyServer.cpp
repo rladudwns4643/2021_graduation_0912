@@ -1,5 +1,6 @@
 #include "LobbyServer.h"
 #include "protocol.h"
+#include "pch.h"
 
 LobbyServer::LobbyServer(short lobby_id)
 {
@@ -126,13 +127,11 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 	char* packet = reinterpret_cast<char*>(buf);
 	cout << "ProcessPacket: "<<(int)packet[1] << endl;
 	switch (packet[1]) {		//packet[0] = size/ packet[1] = type
-	case CL_LOGIN:
-	{
+	case CL_LOGIN:{
 		cout << "GET CL_LOGIN" << endl;
 		break;
 	}
-	case CL_DUMMY_LOGIN:
-	{
+	case CL_DUMMY_LOGIN: {
 		userList[id]->isActive = true;
 		userList[id]->id = id;
 		User* newUser = new User();
@@ -144,9 +143,26 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		SendLoginOKPacket(id);
 		break;
 	}
-	case CL_UPDATE_USER_INFO:
-	{
+	case CL_REQUEST_USER_INFO: {
+		cout << "GET CL_REQUEST_USER_INFO" << endl;
+
+		//do check db info
+		SendUserInfoPacket(id);
+		break;
+	}
+	case CL_UPDATE_USER_INFO: {
 		cout << "GET CL_UPDATE_USER_INFO" << endl;
+		break;
+	}
+	case CL_AUTOMATCH: {
+		cl_packet_automatch p;
+		memcpy(&p, packet, sizeof(p));
+		userList[id]->user_info->SetPlayerMatch(true);
+		if (id == 2) {
+			SendMatchStartPacket(id);
+			SendMatchStartPacket(1/*id*/);
+		}
+		//SendAutoMatchPacket(id, userList[id]->user_info->GetPlayerMMR());
 		break;
 	}
 	}
@@ -183,8 +199,27 @@ void LobbyServer::SendMatchPacket(int id, short roomNo, char is_host)
 {
 }
 
-void LobbyServer::SendUserInfoPacket(int id, int mmr, int winCnt)
-{
+void LobbyServer::SendUserInfoPacket(int id) {
+	lc_packet_userinfo p;
+	p.size = sizeof(p);
+	p.type = LC_USERINFO;
+	
+	memcpy(p.id_str, "kk", 10);//db¿¡¼­ ºÒ·¯¿È
+	p.mmr = MMRDEFAULT + id; //db¿¡¼­ ºÒ·¯¿È
+	
+	SendPacket(id, &p);
+}
+
+void LobbyServer::SendAutoMatchPacket(int id, int mmr) {
+	//
+}
+
+void LobbyServer::SendMatchStartPacket(int id) {
+	lc_packet_startMatch p;
+	p.size = sizeof(p);
+	p.type = LC_MATCHSTART;
+	
+	SendPacket(id, &p);
 }
 
 void LobbyServer::SendCancelAutoMatchSuccess(int id)

@@ -12,17 +12,23 @@
 //------------------------------------------------------------------
 
 
+// BYTE : unsigned char : 0 ~ 255
+
 //------------------------------------------------------------------
 #define PACKET_TYPE_NON_BUFFERED	0
 #define PACKET_TYPE_BUFFERED		1
+ 
+#define LC_LOGIN_OK				10
+#define LC_LOGIN_FAIL			11
+#define LC_USERINFO				12
+#define LC_MATCHSTART			13
 
-#define LC_LOGIN_OK			10
-#define LC_LOGIN_FAIL		11
-#define LC_USERINFO			12
+#define CL_LOGIN				20
+#define CL_DUMMY_LOGIN			99
+#define CL_REQUEST_USER_INFO	21
+#define CL_UPDATE_USER_INFO		22
+#define CL_AUTOMATCH			23
 
-#define CL_LOGIN			20
-#define CL_DUMMY_LOGIN		29
-#define CL_UPDATE_USER_INFO	21
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
@@ -51,6 +57,14 @@ struct lc_packet_userinfo {
 	char id_str[MAX_ID_LEN];
 	int mmr;
 };
+
+struct lc_packet_startMatch {
+	BYTE size;
+	BYTE type;
+
+	BYTE roomNo;
+};
+
 //------------------------------------------------------------------
 
 //-------------------------------C->L-------------------------------
@@ -74,6 +88,16 @@ struct cl_packet_update_user_info {
 
 	int mmr;
 };
+
+struct cl_packet_request_userinfo {
+	BYTE size;
+	BYTE type;
+};
+
+struct cl_packet_automatch {
+	BYTE size;
+	BYTE type;
+};
 //------------------------------------------------------------------
 #pragma pack (pop)
 
@@ -92,58 +116,3 @@ struct cl_packet_update_user_info {
 #define S2C_ENTER			3
 #define S2C_LEAVE			4
 /*******************************/
-#pragma pack(push ,1)
-
-struct sc_packet_login_ok {
-	char size;
-	char type;
-	int id;
-	short x, y;
-	short hp;
-	short level;
-	int	exp;
-};
-
-struct sc_packet_move {
-	char size;
-	char type;
-	int id;
-	short x, y;
-};
-
-constexpr unsigned char O_PLAYER = 0;
-constexpr unsigned char O_NPC = 1;
-
-struct sc_packet_enter {
-	char size;
-	char type;
-	int id;
-	char name[MAX_ID_LEN];
-	char o_type;
-	short x, y;
-};
-
-struct sc_packet_leave {
-	char size;
-	char type;
-	int id;
-};
-
-struct cs_packet_login {
-	char	size;
-	char	type;
-	char	name[MAX_ID_LEN];
-};
-
-constexpr unsigned char D_UP = 0;
-constexpr unsigned char D_DOWN = 1;
-constexpr unsigned char D_LEFT = 2;
-constexpr unsigned char D_RIGHT = 3;
-
-struct cs_packet_move {
-	char	size;
-	char	type;
-	char	direction;
-};
-
-#pragma pack (pop)

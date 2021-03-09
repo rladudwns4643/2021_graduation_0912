@@ -13,3 +13,5 @@ using namespace std;
 #include <MSWSock.h>
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "mswsock.lib")
+
+#define MMRDEFAULT 1000

@@ -40,8 +40,12 @@ public:
 	void SendSignUpOKPacket(int id, int mmr);
 	void SendSignUpFailPacket(int id);
 	void SendMatchPacket(int id, short roomNo, char is_host);
-	void SendUserInfoPacket(int id, int mmr, int winCnt);
+	void SendUserInfoPacket(int id);
 	void SendCancelAutoMatchSuccess(int id);
+	void SendAutoMatchPacket(int id, int mmr);
+	void SendMatchStartPacket(int id);
+
+
 
 	void SendPacket(int id, void* buf);
 
