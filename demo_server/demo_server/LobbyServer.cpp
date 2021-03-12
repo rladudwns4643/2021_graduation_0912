@@ -124,11 +124,15 @@ void LobbyServer::DoWorker()
 
 void LobbyServer::ProcessPacket(int id, void* buf)
 {
-	char* packet = reinterpret_cast<char*>(buf);
+	char* packet = reinterpret_cast<char*>(buf); 
+#ifdef LOG_ON
 	cout << "ProcessPacket: "<<(int)packet[1] << endl;
+#endif
 	switch (packet[1]) {		//packet[0] = size/ packet[1] = type
 	case CL_LOGIN:{
+#ifdef LOG_ON
 		cout << "GET CL_LOGIN" << endl;
+#endif
 		break;
 	}
 	case CL_DUMMY_LOGIN: {
@@ -138,20 +142,25 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		newUser->SetPlayerMatch(false);
 		newUser->SetPlayerLoginOK("dummy");
 
+#ifdef LOG_ON
 		cout << "GET_DUMMY_LOGIN" << endl;
-
+#endif
 		SendLoginOKPacket(id);
 		break;
 	}
 	case CL_REQUEST_USER_INFO: {
+#ifdef LOG_ON
 		cout << "GET CL_REQUEST_USER_INFO" << endl;
+#endif
 
 		//do check db info
 		SendUserInfoPacket(id);
 		break;
 	}
 	case CL_UPDATE_USER_INFO: {
+#ifdef LOG_ON
 		cout << "GET CL_UPDATE_USER_INFO" << endl;
+#endif
 		break;
 	}
 	case CL_AUTOMATCH: {
@@ -204,7 +213,7 @@ void LobbyServer::SendUserInfoPacket(int id) {
 	p.size = sizeof(p);
 	p.type = LC_USERINFO;
 	
-	memcpy(p.id_str, "kk", 10);//db¿¡¼­ ºÒ·¯¿È
+	memcpy(p.id_str, "kkk", 10);//db¿¡¼­ ºÒ·¯¿È
 	p.mmr = MMRDEFAULT + id; //db¿¡¼­ ºÒ·¯¿È
 	
 	SendPacket(id, &p);

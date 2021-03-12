@@ -91,7 +91,9 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		break;
 	}
 	case LC_LOGIN_FAIL: {
+#ifdef LOG_ON
 		cout << "login_fail" << endl;
+#endif
 		break;
 	}
 	case LC_USERINFO: {
@@ -106,7 +108,9 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 	}
 	case LC_MATCHSTART: {
 		//scene change
+#ifdef LOG_ON
 		cout << "MATCHSTART" << endl;
+#endif
 		break;
 	}
 	}
