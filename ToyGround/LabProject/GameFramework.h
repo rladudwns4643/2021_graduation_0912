@@ -42,7 +42,7 @@ private:
 	ID3D12Debug* m_pd3dDebugController;
 #endif
 
-	CGameTimer						* m_GameTimer;
+	GameTimer						* m_GameTimer;
 
 	CScene							* m_pScene = NULL;
 	CPlayer							* m_pPlayer = NULL;

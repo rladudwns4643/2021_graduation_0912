@@ -201,7 +201,7 @@ void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 	geo->DrawArgs[MESH_GEOID_RECT] = boxSubmesh;
 	geo->DrawArgs[MESH_GEOID_GRID] = gridSubmesh;
 	geo->DrawArgs[MESH_GEOID_SPHERE] = sphereSubmesh;
-	geo->DrawArgs["cylinder"] = cylinderSubmesh;
+	geo->DrawArgs[MESH_GEOID_CYLINDER] = cylinderSubmesh;
 
 	m_GeometryMesh[MESH_GEOID] = std::move(geo);
 }
@@ -234,11 +234,9 @@ void AssertsReference::BuildModel(ID3D12Device* pDevice, ID3D12GraphicsCommandLi
 		ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
 		CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
 
-		geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
-			pCommandList, vertices.data(), vbByteSize, geo->VertexBufferUploader);
+		geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice, pCommandList, vertices.data(), vbByteSize, geo->VertexBufferUploader);
 
-		geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
-			pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
+		geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice, pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
 
 		geo->VertexByteStride = sizeof(Vertex);
 		geo->VertexBufferByteSize = vbByteSize;
@@ -246,37 +244,37 @@ void AssertsReference::BuildModel(ID3D12Device* pDevice, ID3D12GraphicsCommandLi
 		geo->IndexBufferByteSize = ibByteSize;
 
 		// Bounds
-		BoundingBox bounds;
-
-		auto iter = m_PropBoundingBox.find(meshName);
-		if (iter != m_PropBoundingBox.end())
-		{
-			bounds = *(m_PropBoundingBox[meshName]);
-		}
-		else
-		{
-			XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
-			XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
-			XMVECTOR vMin = XMLoadFloat3(&vMinf3);
-			XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
-
-			for (auto& p : vertices)
-			{
-				XMVECTOR P = XMLoadFloat3(&p.Pos);
-
-				vMin = XMVectorMin(vMin, P);
-				vMax = XMVectorMax(vMax, P);
-			}
-
-			XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
-			XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
-		}
+		//BoundingBox bounds;
+		//
+		//auto iter = m_PropBoundingBox.find(meshName);
+		//if (iter != m_PropBoundingBox.end())
+		//{
+		//	bounds = *(m_PropBoundingBox[meshName]);
+		//}
+		//else
+		//{
+		//	XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
+		//	XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
+		//	XMVECTOR vMin = XMLoadFloat3(&vMinf3);
+		//	XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
+		//
+		//	for (auto& p : vertices)
+		//	{
+		//		XMVECTOR P = XMLoadFloat3(&p.Pos);
+		//
+		//		vMin = XMVectorMin(vMin, P);
+		//		vMax = XMVectorMax(vMax, P);
+		//	}
+		//
+		//	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
+		//	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
+		//}
 
 		SubmeshGeometry submesh;
 		submesh.IndexCount = indices.size();
 		submesh.StartIndexLocation = 0;
 		submesh.BaseVertexLocation = 0;
-		submesh.Bounds = bounds;
+		//submesh.Bounds = bounds;
 
 		geo->DrawArgs[meshName] = submesh;
 		m_GeometryMesh[meshName] = std::move(geo);

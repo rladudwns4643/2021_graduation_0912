@@ -4,10 +4,6 @@
 #define FRAME_BUFFER_WIDTH 1280
 #define FRAME_BUFFER_HEIGHT 720
 
-// 컴퓨터 해상도 기준 정중앙 X,Y 좌표
-#define WindowCenterPosX ( GetSystemMetrics( SM_CXSCREEN ) - FRAME_BUFFER_WIDTH )  / 2	// 현재화면의 가로 크기 GetSystemMetrics( SM_CXSCREEN )
-#define WindowCenterPosY ( GetSystemMetrics( SM_CYSCREEN ) - FRAME_BUFFER_HEIGHT ) / 2	// 현재화면의 세로 크기 GetSystemMetrics( SM_CYSCREEN )
-
 // 아래를 주석하면 시작시 창모드로 시작
 #define _WITH_SWAPCHAIN_FULLSCREEN_STATE
 
@@ -43,6 +39,7 @@
 #define MESH_GEOID_RECT		"rect"
 #define MESH_GEOID_SPHERE	"sphere"
 #define MESH_GEOID_GRID		"grid"
+#define MESH_GEOID_CYLINDER "cylinder"
 
 // 포인터 안전하게 삭제
 #define SAFE_DELETE_PTR(ptr)	\

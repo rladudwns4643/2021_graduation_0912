@@ -14,6 +14,8 @@
 #include "global.h"
 #include "d3dUtil.h"
 
+// 풀스크린 모드
+#define FULLSCREEN_MODE 0x00FF1
 
 // 콘솔창 띄우기
 #ifdef UNICODE

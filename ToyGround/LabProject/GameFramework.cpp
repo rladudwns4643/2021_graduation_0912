@@ -32,7 +32,7 @@ void CGameFramework::Initialize()
 
 	_tcscpy_s(m_pszFrameRate, _T("LabProject ("));
 
-	m_GameTimer = CGameTimer::GetApp();
+	m_GameTimer = GameTimer::GetApp();
 }
 void CGameFramework::ShutDown()
 {
