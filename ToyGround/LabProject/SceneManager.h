@@ -5,9 +5,6 @@ class Scene;
 class SceneManager : public TemplateSingleton<SceneManager>
 {
 private:
-	friend class Service;
-	friend class LoadingService;
-
 	template<class NewScene>
 	void CreateScene(SceneType sceneType, std::string sceneName)
 	{
@@ -16,7 +13,6 @@ private:
 		scene->Initialize();
 		m_Scenes[static_cast<int>(sceneType)] = scene;
 	}
-
 	void SendEvent(SceneType sceneType, int sEvent);
 	void SendEventArgs(SceneType sceneType, int sEvent, int argsCount, ...);
 
@@ -29,11 +25,6 @@ public:
 	virtual void InitializeScenes();
 	virtual void OnResize();
 
-public:
-	/* ChangeScene
-	@ ChangeScene: 다음 씬으로 넘어감
-	@ ChangeScene(SceneType): 이동하고 싶은 씬으로 이동함
-	*/
 	void	ChangeScene();
 	void	ChangeScene(SceneType sceneType);
 
@@ -42,11 +33,9 @@ public:
 
 	void	UpdateScene(const float& deltaT);
 	void	RenderScene();
-	void	RenderUI();
-	void	WriteShadow();
 
 	Scene* GetCurScene() const;
-	UINT	GetCurSceneIndex() const;
+	UINT   GetCurSceneIndex() const;
 
 private:
 	std::array<Scene*, static_cast<int>(SceneType::eCount)> m_Scenes;
