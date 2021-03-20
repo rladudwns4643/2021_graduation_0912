@@ -160,23 +160,13 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera, Light* light)
 	mMainPassCB.InvRenderTargetSize = XMFLOAT2(1.0f / Core::g_DisplayWidth, 1.0f / Core::g_DisplayHeight);
 	mMainPassCB.NearZ = CAMERA_ZNEAR;
 	mMainPassCB.FarZ = CAMERA_ZFAR;
-	mMainPassCB.TotalTime = Core::g_GameTimer->TotalTime();
-	mMainPassCB.DeltaTime = Core::g_GameTimer->DeltaTime();
+	mMainPassCB.TotalTime = Core::g_GameTimer->GetTotalTime();
+	mMainPassCB.DeltaTime = Core::g_GameTimer->GetTimeElapsed();
 	mMainPassCB.AmbientLight = { 0.6f, 0.6f, 0.6f, 1.0f };
 
 	// Directional Light
 	mMainPassCB.Lights[0].Direction = light->Direction;
 	mMainPassCB.Lights[0].Strength = light->Strength;
-	//mMainPassCB.Lights[1].Direction = mRotatedLightDirections[1];
-	//mMainPassCB.Lights[1].Strength = { 0.4f, 0.4f, 0.4f };
-	//mMainPassCB.Lights[2].Direction = mRotatedLightDirections[2];
-	//mMainPassCB.Lights[2].Strength = { 0.2f, 0.2f, 0.2f };
-	//mMainPassCB.Lights[0].Direction = { -0.57735f, -0.57735f, -0.57735f };
-	//mMainPassCB.Lights[0].Strength = { 0.65f, 0.65f, 0.65f };
-	//mMainPassCB.Lights[1].Direction = { -0.57735f, -0.57735f, 0.57735f };
-	//mMainPassCB.Lights[1].Strength = { 0.4f, 0.4f, 0.4f };
-	//mMainPassCB.Lights[2].Direction = { 0.0f, -0.707f, -0.707f };
-	//mMainPassCB.Lights[2].Strength = { 0.2f, 0.2f, 0.2f };
 
 	auto currPassCB = PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);

@@ -44,33 +44,10 @@ void GraphicsRenderer::SetGraphicsDescriptorHeap()
 void GraphicsRenderer::RenderGraphics()
 {
 	/****************************** Render **********************************/
-	g_CommandList->SetGraphicsRootSignature(m_RenderRS.Get());
-
 	auto matBuffer = GraphicsContext::GetApp()->MaterialBuffer->Resource();
 	g_CommandList->SetGraphicsRootShaderResourceView(1, matBuffer->GetGPUVirtualAddress());
 	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
 	g_CommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
-	auto uiPassCB = GraphicsContext::GetApp()->UIPassCB->Resource();
-	g_CommandList->SetGraphicsRootConstantBufferView(7, uiPassCB->GetGPUVirtualAddress());
-
-	g_CommandList->SetGraphicsRootDescriptorTable(4, m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE skyTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	skyTexDescriptor.Offset(mSkyTexHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-	g_CommandList->SetGraphicsRootDescriptorTable(3, skyTexDescriptor);
-
-}
-
-void GraphicsRenderer::RenderGraphicsShadow()
-{
-	g_CommandList->SetGraphicsRootSignature(m_RenderRS.Get());
-
-	auto matBuffer = GraphicsContext::GetApp()->MaterialBuffer->Resource();
-	g_CommandList->SetGraphicsRootShaderResourceView(1, matBuffer->GetGPUVirtualAddress());
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE shadowTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-	shadowTexDescriptor.Offset(mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
-	g_CommandList->SetGraphicsRootDescriptorTable(6, shadowTexDescriptor);
 }
 
 void GraphicsRenderer::LoadTextures()
@@ -158,13 +135,8 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 
 void GraphicsRenderer::BuildRootSignatures()
 {
-	CD3DX12_DESCRIPTOR_RANGE texTable0;
-	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
-
-	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 148, 2, 0);
-	CD3DX12_DESCRIPTOR_RANGE texTable2;
-	texTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);
+	CD3DX12_DESCRIPTOR_RANGE texTable;
+	texTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[8];
 
@@ -180,18 +152,15 @@ void GraphicsRenderer::BuildRootSignatures()
 	slotRootParameter[0].InitAsShaderResourceView(0, 1); // Instancing
 	slotRootParameter[1].InitAsShaderResourceView(1, 1); // Material
 	slotRootParameter[2].InitAsConstantBufferView(0); // PassCB
-	slotRootParameter[3].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL); // sky / shadow(nullSrv)
-	slotRootParameter[4].InitAsDescriptorTable(1, &texTable1, D3D12_SHADER_VISIBILITY_PIXEL); // textures, blur
-	slotRootParameter[5].InitAsConstantBufferView(1); // bones
-	slotRootParameter[6].InitAsDescriptorTable(1, &texTable2, D3D12_SHADER_VISIBILITY_PIXEL); // shadow
-	slotRootParameter[7].InitAsConstantBufferView(2); // uiPassCBParams
+	slotRootParameter[3].InitAsDescriptorTable(1, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
+
 	// 8: particleVertex SRV
 	// 9: particleStream SRV
 
 	auto staticSamplers = GetStaticSamplers();
 
 	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(8, slotRootParameter,
+	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(4, slotRootParameter,
 		(UINT)staticSamplers.size(), staticSamplers.data(),
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 

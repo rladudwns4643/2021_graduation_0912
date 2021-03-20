@@ -68,22 +68,17 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 	}
 
 	TerminateApplication(app);
-	ioThread.join();
 	//subRenderThread.join();
 }
 
 void Core::TerminateApplication(IGameApp& game)
 {
-	g_Service->Termiante();
-	g_Network->Cleanup();
 	game.Cleanup();
 	g_Core->ShutdownCore();
 
 	// Context Release
 	GameCore::DestroyApp();
 	GameTimer::DestroyApp();
-	Network::DestroyApp();
-	Service::DestroyApp();
 }
 
 void Core::CalculateFrameStats()
@@ -98,7 +93,7 @@ void Core::CalculateFrameStats()
 	frameCnt++;
 
 	// Compute averages over one second period.
-	if ((g_GameTimer->TotalTime() - timeElapsed) >= 1.0f)
+	if ((g_GameTimer->GetTotalTime() - timeElapsed) >= 1.0f)
 	{
 		float fps = (float)frameCnt; // fps = frameCnt / 1
 		float mspf = 1000.0f / fps;
@@ -149,25 +144,11 @@ void GameCore::InitializeCore(IGameApp& game)
 
 	// Execute the initialization commands.
 	ThrowIfFailed(g_CommandList->Close());
-	//ID3D12CommandList* cmdsLists[] = { g_CommandList.Get(),g_LoadingCommandList.Get() };
 	ID3D12CommandList* cmdsLists[] = { g_CommandList.Get() };
 	g_CommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	// Wait until initialization is complete.
 	FlushCommandQueue();
-
-	// Condition_Variable wait
-	// LoadingService::StopService();
-	std::mutex m;
-	{
-		LoadingService::GetApp()->StopService();
-		std::unique_lock<std::mutex> lk(m);
-		g_Loading_cv.wait(lk, []() {return g_Loading_processed; });
-	}
-
-	cout << "finish process" << endl;
-	LoadingService::DestroyApp();
-	loadingThread.join();
 }
 
 bool GameCore::UpdateCore(IGameApp& game)
@@ -178,7 +159,7 @@ bool GameCore::UpdateCore(IGameApp& game)
 	{
 		CalculateFrameStats();
 
-		const float deltaT = g_GameTimer->DeltaTime();
+		const float deltaT = g_GameTimer->GetTimeElapsed();
 
 		game.Update(deltaT);
 
@@ -189,9 +170,6 @@ bool GameCore::UpdateCore(IGameApp& game)
 		ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), Graphics::g_OpaquePSO.Get()));
 
 		m_GraphicsRenderer->SetGraphicsDescriptorHeap();
-
-		m_GraphicsRenderer->RenderGraphicsShadow();
-		game.WriteShadow();
 
 		g_CommandList->RSSetViewports(1, &mScreenViewport);
 		g_CommandList->RSSetScissorRects(1, &mScissorRect);
@@ -208,7 +186,6 @@ bool GameCore::UpdateCore(IGameApp& game)
 
 		m_GraphicsRenderer->RenderGraphics();
 		game.RenderScene();
-		m_GraphicsRenderer->ExecuteBlurEffects();
 
 		g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -222,7 +199,6 @@ bool GameCore::UpdateCore(IGameApp& game)
 
 		// D3D11On12 Device Rendering
 		D3D11DevicePreparePresent();
-		game.RenderUI();
 		D3D11DeviceExecuteCommandList();
 
 		// swap the back and front buffers
@@ -447,7 +423,7 @@ void GameCore::InitMainWindow()
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = g_hAppInst;
-	wc.hIcon = ::LoadIcon(hInstance, MAKEINTRESOURCE(IDI_LABPROJECT));
+	wc.hIcon = ::LoadIcon(g_hAppInst, MAKEINTRESOURCE(107));
 	wc.hCursor = ::LoadCursor(NULL, IDC_ARROW); 
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName = NULL;

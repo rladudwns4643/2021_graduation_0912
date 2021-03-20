@@ -36,7 +36,6 @@ public:
 public:
 	void SetGraphicsDescriptorHeap();
 	void RenderGraphics();
-	void RenderGraphicsShadow();
 
 private:
 	void LoadTextures();

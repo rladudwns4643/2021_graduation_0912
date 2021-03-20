@@ -1,19 +1,15 @@
 #pragma once
 #include "GameObject.h"
+#include "PlayerController.h"
 
-/* Chararcter
-@ Players (Master / Student)
-@ Controller / Animation Parts(GameObject*)
-@ Bone(ContantBuffer)가 필요함
-@ Character는 CharacterParts를 관리하는 매니저 역할
-*/
 class Camera;
 class Character : public GameObject
 {
+	friend class PlayerController;
 
 public:
-	int m_SpawnLoaction;				/* 스폰위치 */
-	std::string m_UserPlayerMeshName;	/* 유저플레이어 메쉬이름 */
+	int m_SpawnLoaction;				// 스폰위치
+	std::string m_UserPlayerMeshName;	// 플레이어 메쉬이름
 
 public:
 	// 캐릭터 상태
@@ -27,16 +23,14 @@ public:
 
 	// 업데이트 + 컴포넌트 업데이트
 	void Update(const float deltaT);
-	void CameraUpdate(const float delteT);
+//	void CameraUpdate(const float delteT);
 
 public:
-	// 캐릭터 게임 컨텐츠 기능
-	bool Transform(std::string meshName, std::string submeshName, UINT matIndex);
-	bool ReleaseTransform();
 
 public:
 	void SetCamera(Camera* myCamera, CameraType cameraType);
 	void SetCamera(CameraType cameraType);
+	void SetController();
 
 	virtual bool	SetMesh(std::string meshName, std::string submeshName) override;
 	void			SetMaterial(int materialIndex);
@@ -54,20 +48,17 @@ public:
 	virtual void	Rotate(float pitch, float yaw, float roll) override;
 
 private:
-	XMFLOAT3	GetThunderBoltDirection(float screenX, float screenY);
-
-	void		PropIntersect(float screenX, float screenY, XMVECTOR& orign, XMVECTOR& direction, string& objName, string& insID);
-	float		CharacterIntersect(Character* character, std::string MeshName, float distance, float screenX, float screenY, XMVECTOR& orign, XMVECTOR& direction, string& objName, string& insID, float wizardDis);
-
 	bool		RayMapTriangleIntersect(XMVECTOR orig, XMVECTOR dir, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, XMVECTOR& P);
 	bool		RayObjTriangleIntersect(XMVECTOR orig, XMVECTOR dir, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, XMVECTOR& P);
 
 public:
 	// 캐릭터 컴포넌트들
-	Camera* m_MyCamera;
+	Camera									*m_MyCamera;
+	std::unique_ptr<PlayerController>		m_PlayerController;
 
 public:
-	float m_HP = 1.f;		// 유저 HP%
+	bool			m_IsThirdCamera = true;
+	float			m_HP = 1.f;		// 유저 HP%
 
 private:
 	// 캐릭터전용 메쉬정보

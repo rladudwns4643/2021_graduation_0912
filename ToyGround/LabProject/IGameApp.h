@@ -14,9 +14,5 @@ public:
 
 	virtual void RenderScene(void) = 0;
 
-	virtual void RenderUI(void) {};
-
-	virtual void WriteShadow(void) {};
-
 	void		Exit();
 };

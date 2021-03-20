@@ -50,6 +50,8 @@ void TOY_GROUND::Cleanup(void)
 
 	// Release References & Manager
 	SceneManager::DestroyApp();
+	AssertsReference::DestroyApp();
+	ApplicationContext::DestroyApp();
 }
 
 void TOY_GROUND::Update(float deltaT)
@@ -57,17 +59,20 @@ void TOY_GROUND::Update(float deltaT)
 	// Cursor
 	InputHandler::ShowMouseCursor();
 
+	// SceneManage
+	if (m_pSceneManager)
+		SceneManager::GetApp()->UpdateScene(deltaT);
+
 	// Camera
-	//m_pCamera->
+	m_pCamera->UpdateViewMatrix();
+	GraphicsContext::GetApp()->UpdateMainPassCB(*m_pCamera, m_pLights[LIGHT_NAME_DIRECTIONAL].get());
 }
 
 
 void TOY_GROUND::RenderScene(void)
 {
-}
-
-void TOY_GROUND::RenderUI(void)
-{
+	if (m_pSceneManager)
+		SceneManager::GetApp()->RenderScene();
 }
 
 void TOY_GROUND::OnResize()
