@@ -4,7 +4,8 @@
 constexpr int MAX_PLAYER = 4;
 constexpr int MAX_ROOM = 50;
 constexpr int MAX_BUFFER = 256;
-
+constexpr int MAX_ID_STR = 10;
+constexpr int MAX_CLIENTS = 5100;
 
 struct EX_OVER {
 	WSAOVERLAPPED		over;
@@ -30,4 +31,12 @@ struct CLIENT {
 	int mmr;
 	int totalGameCnt;
 	int winningGameCnt;
+};
+
+struct EVENT {
+	int id;
+	int target; //
+	std::chrono::high_resolution_clock::time_point start_time;
+	//EVENT_TYPE et;
+	constexpr bool operator<(const EVENT& rhs) const { return start_time > rhs.start_time; }
 };
