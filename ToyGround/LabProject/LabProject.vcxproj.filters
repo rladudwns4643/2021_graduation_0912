@@ -33,9 +33,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="LabProject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -159,9 +156,6 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="LabProject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -245,7 +239,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders.hlsl" />
-    <FxCompile Include="Light.hlsl" />
+    <FxCompile Include="Shaders\Common.hlsl" />
+    <FxCompile Include="Shaders\Contour.hlsl" />
+    <FxCompile Include="Shaders\Default.hlsl" />
+    <FxCompile Include="Shaders\LightingUtil.hlsl" />
   </ItemGroup>
 </Project>

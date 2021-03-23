@@ -15,7 +15,6 @@ protected:
 	std::string m_MeshName;
 	std::string m_InstID;
 	UINT		m_Index;
-	int			m_ServerMeshID;
 
 public:
 	explicit GameObject(std::string meshName, std::string instID);
@@ -24,8 +23,6 @@ public:
 	std::string GetMeshName() const { return m_MeshName; }
 	std::string	GetInstID() const { return m_InstID; }
 	UINT		GetIndex() const { return m_Index; }
-	int			GetServerMeshID() const { return m_ServerMeshID; }
-	void		SetServerMeshID(int serverMeshID) { m_ServerMeshID = serverMeshID; }
 
 	virtual void InitializeTransform();
 	virtual void Update(const float deltaT);

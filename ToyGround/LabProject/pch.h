@@ -16,6 +16,7 @@
 
 // 풀스크린 모드
 #define FULLSCREEN_MODE 0x00FF1
+#define ON_PAUSE 0x00FF2
 
 // 콘솔창 띄우기
 #ifdef UNICODE

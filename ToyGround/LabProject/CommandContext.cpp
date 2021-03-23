@@ -24,7 +24,7 @@ void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 	m_InstanceBuffers[objInfo->m_Type] = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), objInfo->m_InstanceCount, false);
 }
 
-void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isFrustum, bool isParticle)
+void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isFrustum)
 {
 	if (!objInfo) return;
 
@@ -45,8 +45,6 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 			DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
 			DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
 			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
-			data.particleTime = 0.f;
-			data.particleIsLoop = false;
 			
 			// Write the instance data to structured buffer for the visible objects.
 			m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);
@@ -102,9 +100,6 @@ void GraphicsContext::UpdateContour(ObjectInfo* objInfo, std::vector<GameObject*
 
 			DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
 			data.MaterialIndex = ri->m_MaterialIndex;
-
-			data.particleTime = 0.f;
-			data.particleIsLoop = false;
 
 			// Write the instance data to structured buffer for the visible objects.
 			m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);

@@ -162,7 +162,6 @@
     <ClInclude Include="GraphicsRenderer.h" />
     <ClInclude Include="IGameApp.h" />
     <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="LabProject.h" />
     <ClInclude Include="LobbyScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="MathHelper.h" />
@@ -206,7 +205,6 @@
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="IGameApp.cpp" />
     <ClCompile Include="InputHandler.cpp" />
-    <ClCompile Include="LabProject.cpp" />
     <ClCompile Include="LobbyScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MathHelper.cpp" />

@@ -7,8 +7,7 @@ static unsigned int s_currentIndex = 0;
 GameObject::GameObject(std::string meshName, std::string instID) :
 	m_MeshName(meshName),
 	m_InstID(instID),
-	m_Index(s_currentIndex++),
-	m_ServerMeshID(-1)
+	m_Index(s_currentIndex++)
 {
 	m_World = MathHelper::Identity4x4();
 	m_TexTransform = MathHelper::Identity4x4();
