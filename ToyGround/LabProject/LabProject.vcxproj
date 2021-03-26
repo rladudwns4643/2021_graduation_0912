@@ -166,15 +166,12 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MathHelper.h" />
-    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Objectinfo.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneController.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Shader.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Timer.h" />
@@ -210,16 +207,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MathHelper.cpp" />
-    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Objectinfo.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneController.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TOY_GROUND.cpp" />
   </ItemGroup>
