@@ -29,4 +29,10 @@ protected:
 
 	virtual void OnKeyPressed() {};
 	virtual void OnKeyReleased() {};
+
+public:
+	void SetMapName(std::string mapName) { m_MapName = mapName; }
+
+protected:
+	std::string m_MapName;
 };

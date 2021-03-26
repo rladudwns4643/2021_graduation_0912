@@ -144,3 +144,23 @@ namespace ShaderResource
 		UINT MaterialPad2;
 	};
 }
+
+namespace MapTool
+{
+	struct MapInfo
+	{
+		string meshName; // 클라 메시타입 아이디
+		XMFLOAT3 position;
+		XMFLOAT3 rotation;
+		int typeID; // 고유ID
+		std::string textureName;
+	};
+
+	struct PlayerInfo
+	{
+		string playerName;
+		XMFLOAT3 position;
+		float rotY;
+		UINT spawnPos;
+	};
+}

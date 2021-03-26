@@ -31,7 +31,7 @@ public:
 	
 private:
 	void BuildAsserts();
-	void BuildCharactersAndParticles();
+	void BuildCharacters();
 
 public:
 	Camera* m_pCamera;

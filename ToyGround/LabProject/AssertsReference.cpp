@@ -1,6 +1,46 @@
 #include "pch.h"
 #include "AssertsReference.h"
 #include "GeometryGenerator.h"
+#include "Map.h"
+
+Map* AssertsReference::LoadMapInfo()
+{
+	Map* map = new Map;
+	set<string> propTypeSet;
+
+	MapTool::PlayerInfo prePlayerInfo;
+	prePlayerInfo.playerName = "FirstPlayer";
+	prePlayerInfo.position.x = 0.f;
+	prePlayerInfo.position.y = 0.f;
+	prePlayerInfo.position.z = 0.f;
+	prePlayerInfo.rotY = 0.f;
+	prePlayerInfo.spawnPos = 1;
+	map->playerInfoVector.emplace_back(prePlayerInfo);
+
+	MapTool::MapInfo preInfo;
+
+	float tmp;
+	preInfo.meshName = "Cube_01";
+	preInfo.position.x = 0.f;
+	preInfo.position.y = 0.f;
+	preInfo.position.z = 0.f;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 1;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert("Cube_01");
+
+	// propTypeVector: 중복되는 것 없이 에셋이름만 모아놓은 vector
+	for (auto iter = propTypeSet.begin(); iter != propTypeSet.end(); ++iter)
+	{
+		map->propTypeVector.emplace_back(*iter);
+	}
+
+	return map;
+}
 
 void AssertsReference::LoadBB(const char* path)
 {

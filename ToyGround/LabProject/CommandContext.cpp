@@ -30,25 +30,22 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 
 	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
 
-	int visibleInstanceCount = 0;
+	int InstanceCount = 0;
 	for (auto& i : info)
 	{
-		if (rItems[i.second]->m_IsVisible)
-		{
-			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
-			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
-			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
+		XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
+		XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
+		XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 #ifdef FRUSTUM_CULLMODE
-			if (isFrustum && !CACHE_CACHE::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+		if (isFrustum && !CACHE_CACHE::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
 #endif
-			ShaderResource::InstanceData data;
-			DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
-			DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
-			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
-			
-			// Write the instance data to structured buffer for the visible objects.
-			m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);
-		}
+		ShaderResource::InstanceData data;
+		DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
+		DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
+		data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
+
+		// Write the instance data to structured buffer for the visible objects.
+		m_InstanceBuffers[objInfo->m_Type]->CopyData(InstanceCount++, data);
 	}
 }
 
@@ -76,37 +73,6 @@ void GraphicsContext::UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, st
 			m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);
 		}
 	}
-}
-
-void GraphicsContext::UpdateContour(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, string instanceID, GameObject* originObj)
-{
-	if (!objInfo) return;
-
-	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
-	int visibleInstanceCount = 0;
-
-	for (auto& i : info)
-	{
-		auto ri = rItems[i.second];
-		if (ri->GetInstID() == instanceID)
-		{
-			ri->m_IsContour = true;
-
-
-			XMMATRIX world = XMLoadFloat4x4(&originObj->m_World);
-			ShaderResource::InstanceData data;
-			DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
-			XMMATRIX texTransform = XMLoadFloat4x4(&ri->m_TexTransform);
-
-			DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
-			data.MaterialIndex = ri->m_MaterialIndex;
-
-			// Write the instance data to structured buffer for the visible objects.
-			m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);
-
-		}
-	}
-
 }
 
 void GraphicsContext::UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials)
@@ -175,7 +141,7 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 	{
 		auto ri = rItems[i.second];
 
-		if (ri->m_IsVisible && ri->m_ZLayer == zLayer)
+		if (ri->m_ZLayer == zLayer)
 		{
 #ifdef FRUSTUM_CULLMODE
 			if (isFrustum)
@@ -198,7 +164,6 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 			// instanceCount = info.size
 			// info = instance world 행렬을 갖고있는 맵
 			Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCount, info.size(), ri->m_StartIndexLocation, ri->m_BaseVertexLocation, 0);
-			ri->m_IsVisible = ri->m_IsVisibleOnePassCheck;
 		}
 	}
 }
@@ -223,36 +188,6 @@ void GraphicsContext::DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const 
 			Core::g_CommandList->SetGraphicsRootConstantBufferView(5, 0);
 
 			Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCount, info.size(), ri->m_StartIndexLocation, ri->m_BaseVertexLocation, 0);
-		}
-	}
-}
-
-void GraphicsContext::DrawRenderContour(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, string instanceID)
-{
-	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
-
-	for (auto& i : info)
-	{
-		// if (i.second == instanceID)
-		{
-			auto ri = rItems[i.second];
-
-			if (ri->GetInstID() == instanceID)
-				if (ri->m_IsContour)
-				{
-					Core::g_CommandList->IASetVertexBuffers(0, 1, &ri->m_Geo->VertexBufferView());
-					Core::g_CommandList->IASetIndexBuffer(&ri->m_Geo->IndexBufferView());
-					Core::g_CommandList->IASetPrimitiveTopology(ri->m_PrimitiveType);
-
-					auto instanceBuffer = m_InstanceBuffers[ri->GetMeshName()]->Resource();
-					Core::g_CommandList->SetGraphicsRootShaderResourceView(0, instanceBuffer->GetGPUVirtualAddress());
-
-					Core::g_CommandList->SetGraphicsRootConstantBufferView(5, 0);
-
-					// instanceCount = info.size
-					// info = instance world 행렬을 갖고있는 맵
-					Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCount, 1, ri->m_StartIndexLocation, ri->m_BaseVertexLocation, 0);
-				}
 		}
 	}
 }

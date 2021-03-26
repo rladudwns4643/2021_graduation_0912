@@ -57,11 +57,7 @@ public:
 
 public:
 	// 기타 특성값
-	bool m_IsVisible = false;
-	bool m_IsVisibleOnePassCheck = false;
 	bool m_IsCulling = false;
-	bool m_IsChangeable = false;
-	bool m_IsContour = false;
 
 	int m_ZLayer = -1;
 

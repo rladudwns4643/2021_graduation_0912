@@ -9,18 +9,16 @@
 
 #include "GameObject.h"
 #include "Character.h"
+#include "Map.h"
 
 void GameplayScene::Initialize()
 {
 	// Scene-Controller
 	m_SceneController = new GameplayController(this);
+	m_SceneController->SetMapName(MAP_STR_GAME_MAP);
 
 	/* 맵의 오브젝트들 생성 */
-	AppContext->CreateProps(MAP_STR_TOWN);
-	AppContext->CreateContourProps(MAP_STR_TOWN);
-
-	/* Param */
-	m_PenaltyDuration = 0;
+	AppContext->CreateProps(MAP_STR_GAME_MAP);
 }
 
 void GameplayScene::OnResize()
@@ -44,22 +42,10 @@ bool GameplayScene::Enter()
 	// Player Setting
 	// Props Setting
 	m_PlayerID = 0;
+	m_MapName = MAP_STR_GAME_MAP;
 	AppContext->DisplayProps(m_MapName);
 
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_WIZARD, CHARACTER_WIZARD);
-	m_Users[m_PlayerID]->m_IsVisible = true;
-	m_Users[m_PlayerID]->m_IsVisibleOnePassCheck = true;
-
-	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
-	m_Users[1]->m_IsVisible = true;
-	m_Users[1]->m_IsVisibleOnePassCheck = true;
-	m_Users[2] = AppContext->FindObject<Character>(CHARACTER_DRUID, CHARACTER_DRUID);
-	m_Users[2]->m_IsVisible = true;
-	m_Users[2]->m_IsVisibleOnePassCheck = true;
-	m_Users[3] = AppContext->FindObject<Character>(CHARACTER_SORCERER, CHARACTER_SORCERER);
-	m_Users[3]->m_IsVisible = true;
-	m_Users[3]->m_IsVisibleOnePassCheck = true;
-
 
 	///---
 	// Player type, id 등등 세팅
@@ -98,24 +84,18 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	/*Characters*/
 	// 나중에 유저의 메쉬만 업데이트 하는거로 수정할예정
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_WIZARD], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_DRUID], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_BAIRD], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_FEMALE_PEASANT], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_MALE_PEASANT], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_SORCERER], AppContext->m_RItemsVec);
-
+	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_WIZARD], AppContext->m_RItemsVec);
+	
 	/*Materials*/
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
 }
 
 void GameplayScene::Render()
 {
-	//
-	// Main rendering pass.
-	//
+	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
-	/*Props*/
+
+	// Props
 	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
 	{
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);

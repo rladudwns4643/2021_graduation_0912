@@ -8,6 +8,7 @@
 class AssertsReference final : public TemplateSingleton<AssertsReference>
 {
 public:
+	Map* LoadMapInfo();
 	void LoadBB(const char* path);
 	void BuildMaterials();
 

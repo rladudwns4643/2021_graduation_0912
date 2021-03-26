@@ -70,3 +70,16 @@
 // enum class
 enum class SceneType { eLobby = 0, eGamePlay = 1, eCount = 2};
 enum class CameraType { eFirst = 0, eThird = 1, eFree = 2 };
+
+// 맵 디파인값이 연속적이여야함
+#define GAME_MAP			0
+#define TEMP_SECOND_MAP		1 // 두번째 맵
+
+// 인게임 맵
+#define MAP_STR_GAME_MAP	"origin"
+#define MAP_STR_SECONDMAP	"second_map"
+
+// 스폰 위치
+#define SPAWN_RED_TEAM 0
+#define SPAWN_BLUE_TEAM 1
+#define SPAWN_CENTER 2

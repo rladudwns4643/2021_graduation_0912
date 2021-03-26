@@ -23,7 +23,6 @@ public:
 
 	// 업데이트 + 컴포넌트 업데이트
 	void Update(const float deltaT);
-//	void CameraUpdate(const float delteT);
 
 public:
 

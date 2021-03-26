@@ -20,70 +20,6 @@ Character::~Character()
 {
 }
 
-//void Character::CameraUpdate(const float deltaT)
-//{
-//	if (!m_MyCamera || m_MyCamera == NULL)
-//		return;
-//
-//	for (auto& p : originMap->mapInfoVector)
-//	{
-//		GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));	// proptype, typeid
-//		XMFLOAT3 objPos = obj->GetPosition();
-//		if (objPos.y > 1500)
-//			continue;
-//		XMFLOAT3 cameraPos = this->m_MyCamera->GetPosition3f();
-//		XMFLOAT3 objBoundPos3 = obj->m_Geo->DrawArgs[p.meshName].Bounds.Center;
-//
-//		DirectX::XMStoreFloat3(&objBoundPos3, XMVector3Transform(XMLoadFloat3(&objBoundPos3), XMLoadFloat4x4(&obj->m_World)));
-//
-//		BoundingBox bb;
-//		// bb.Center = { tmp._41, tmp._42, tmp._43 };
-//		bb.Center = { objBoundPos3.x, objBoundPos3.y, objBoundPos3.z };
-//		bb.Extents = obj->m_Geo->DrawArgs[p.meshName].Bounds.Extents;
-//
-//		// if(bb.Center.y -)
-//
-//		XMFLOAT3 corners[8] = {};
-//		obj->m_Geo->DrawArgs[p.meshName].Bounds.GetCorners(corners);
-//
-//		for (int i = 0; i < 8; ++i)
-//		{
-//			XMStoreFloat3(&corners[i], XMVector3Transform(XMLoadFloat3(&corners[i]), XMLoadFloat4x4(&obj->m_World)));
-//		}
-//
-//		// cout << "¾Õ¿ÞÀ§" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[6]), XMLoadFloat3(&corners[4]), XMLoadFloat3(&corners[7]));
-//
-//		// cout << "¾Õ¿À¾Æ" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[6]), XMLoadFloat3(&corners[5]), XMLoadFloat3(&corners[4]));
-//
-//		// cout << "¿Þ¿ÞÀ§" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[7]), XMLoadFloat3(&corners[0]), XMLoadFloat3(&corners[3]));
-//
-//		// cout << "¿Þ¿À¾Æ" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[7]), XMLoadFloat3(&corners[4]), XMLoadFloat3(&corners[0]));
-//
-//		// cout << "¿À¿ÞÀ§" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[6]), XMLoadFloat3(&corners[2]), XMLoadFloat3(&corners[5]));
-//
-//		// cout << "¿À¿À¾Æ" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[2]), XMLoadFloat3(&corners[1]), XMLoadFloat3(&corners[5]));
-//
-//		// cout << "µÚ¿ÞÀ§" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[3]), XMLoadFloat3(&corners[1]), XMLoadFloat3(&corners[2]));
-//
-//		// cout << "µÚ¿À¾Æ" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[3]), XMLoadFloat3(&corners[0]), XMLoadFloat3(&corners[1]));
-//
-//		// cout << "À§¿ÞÀ§" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[2]), XMLoadFloat3(&corners[7]), XMLoadFloat3(&corners[3]));
-//
-//		// cout << "À§¿À¾Æ" << endl;
-//		m_MyCamera->IntersectsObject(XMLoadFloat3(&corners[2]), XMLoadFloat3(&corners[6]), XMLoadFloat3(&corners[7]));
-//
-//	}
-//}
-
 void Character::InitializeTransform()
 {
 	GameObject::InitializeTransform();
@@ -248,7 +184,7 @@ bool Character::SetMesh(std::string meshName, std::string submeshName)
 		m_CharacterIndexCount = m_Geo->DrawArgs[submeshName].IndexCount;
 		m_CharacterStartIndexLocation = m_Geo->DrawArgs[submeshName].StartIndexLocation;
 		m_CharacterBaseVertexLocation = m_Geo->DrawArgs[submeshName].BaseVertexLocation;
-		m_CharacterBounds = m_Geo->DrawArgs[meshName].Bounds;
+		//m_CharacterBounds = m_Geo->DrawArgs[meshName].Bounds;
 
 		return true;
 	}

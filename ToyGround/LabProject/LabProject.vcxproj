@@ -164,6 +164,7 @@
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LobbyScene.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Objectinfo.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LobbyScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Objectinfo.cpp" />
@@ -223,7 +225,6 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Common.hlsl" />
-    <FxCompile Include="Shaders\Contour.hlsl" />
     <FxCompile Include="Shaders\Default.hlsl" />
     <FxCompile Include="Shaders\LightingUtil.hlsl" />
   </ItemGroup>

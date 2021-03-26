@@ -3,6 +3,7 @@
 #include "CommandContext.h"
 #include "InputHandler.h"
 #include "SceneManager.h"
+#include "Map.h"
 #include "ApplicationContext.h"
 #include "AssertsReference.h"
 
@@ -31,7 +32,14 @@ void TOY_GROUND::Startup(void)
 	SceneManager::GetApp()->EnterScene(SceneType::eGamePlay);
 
 	// Build GpuResources
+	GraphicsContext::GetApp()->passCount = 2;
 	GraphicsContext::GetApp()->materialCount = AssertsReference::GetApp()->m_Materials.size();
+
+
+	for (auto& p : AppContext->m_RItemsMap)
+	{
+		GraphicsContext::GetApp()->BuildInstanceBuffer(p.second);
+	}
 }
 
 void TOY_GROUND::Cleanup(void)
@@ -39,14 +47,22 @@ void TOY_GROUND::Cleanup(void)
 	// Clear Cameras
 	SAFE_DELETE_PTR(m_pCamera);
 
-	// Clear Maps
-
+	/* Clear Maps */
+	for (auto& p : AppContext->m_Maps)
+	{
+		SAFE_DELETE_PTR(p.second);
+	}
+	AppContext->m_Maps.clear();
 
 	// Clear GameObjects
-
-
-	// Release Commands
-
+	for (auto& p : AppContext->m_RItemsMap)
+	{
+		SAFE_DELETE_PTR(p.second);
+	}
+	for (auto& p : AppContext->m_RItemsVec)
+		SAFE_DELETE_PTR(p);
+	AppContext->m_RItemsVec.clear();
+	AppContext->m_RItemsMap.clear();
 
 	// Release References & Manager
 	SceneManager::DestroyApp();
@@ -86,8 +102,20 @@ void TOY_GROUND::OnResize()
 
 void TOY_GROUND::BuildAsserts()
 {
-	// Build Models
-	AssertsReference::GetApp()->BuildModel(g_Device.Get(), g_CommandList.Get(), "Tree");
+	// Build Maps
+	AppContext->m_Maps[MAP_STR_GAME_MAP] = AssertsReference::GetApp()->LoadMapInfo();
+	AppContext->m_Maps[MAP_STR_GAME_MAP]->propTexture = TEXTURE_INDEX_Cartoon_CubeWorld_Texture;
+
+	// Build Map Models
+	// GameResult씬과 Lobby씬 에셋이 동일하기 때문에 Lobby만 메시를 로드하고, 결과씬은 로드하지 않음.
+	int loadMeshCount = AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector.size();
+
+	loadMeshCount = AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector.size();
+	for (int i = 0; i < loadMeshCount; ++i)
+	{
+		cout << AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector[i] << endl;
+		AssertsReference::GetApp()->BuildModel(g_Device.Get(), g_CommandList.Get(), AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector[i]);
+	}
 
 	// Build GeoMeshes
 	AssertsReference::GetApp()->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
@@ -96,6 +124,7 @@ void TOY_GROUND::BuildAsserts()
 	AssertsReference::GetApp()->BuildMaterials();
 }
 
-void TOY_GROUND::BuildCharactersAndParticles()
+void TOY_GROUND::BuildCharacters()
 {
+	//AppContext->CreateCharacter(CHARACTER_WIZARD, CHARACTER_WIZARD, TEXTURE_STR_Cartoon_CubeWorld_Texture, SPAWN_RED_TEAM);
 }

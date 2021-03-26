@@ -25,11 +25,8 @@ void GameObject::InitializeTransform()
 
 void GameObject::Update(const float deltaT)
 {
-	if (m_IsVisible) {
-		// bounds update
-		XMMATRIX bworld = XMLoadFloat4x4(&m_World);
-		m_Bounds.Transform(m_Bounds, bworld);
-	}
+	XMMATRIX bworld = XMLoadFloat4x4(&m_World);
+	//m_Bounds.Transform(m_Bounds, bworld);
 }
 
 bool GameObject::SetMesh(std::string meshName, std::string submeshName)

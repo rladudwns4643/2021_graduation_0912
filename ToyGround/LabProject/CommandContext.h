@@ -23,9 +23,6 @@ namespace Core
 
 class CommandContext abstract
 {
-protected:
-	void Reset(void);
-
 public:
 	virtual void Release() = 0;
 
@@ -52,15 +49,13 @@ public:
 
 	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isFrustum = false);
 	void UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems); // 사용안함
-	void UpdateContour(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, string instanceID, GameObject* originObjInfo);
 
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
 	void UpdateMainPassCB(Camera& camera, Light* light);
 
 	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer = -1, bool isFrustum = false);
 	void DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const std::vector<GameObject*>& rItems);
-	void DrawRenderContour(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, string instanceID);
-
+	
 public:
 	void SetPipelineState(ID3D12PipelineState* PSO);
 	void SetGraphicsRootSignature(ID3D12RootSignature* RootSignature);

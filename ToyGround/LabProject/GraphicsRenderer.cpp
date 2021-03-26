@@ -10,10 +10,6 @@
 namespace Graphics
 {
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpacityPSO;
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ContourPSO;
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_HPPSO;
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_VertBlurPSO;
 }
 
 using namespace Core;
@@ -44,6 +40,8 @@ void GraphicsRenderer::SetGraphicsDescriptorHeap()
 void GraphicsRenderer::RenderGraphics()
 {
 	/****************************** Render **********************************/
+	g_CommandList->SetGraphicsRootSignature(m_RenderRS.Get());
+
 	auto matBuffer = GraphicsContext::GetApp()->MaterialBuffer->Resource();
 	g_CommandList->SetGraphicsRootShaderResourceView(1, matBuffer->GetGPUVirtualAddress());
 	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
@@ -119,9 +117,6 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 {
 	m_Shaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
-
-	m_Shaders["contourVS"] = d3dUtil::CompileShader(L"Shaders\\Contour.hlsl", nullptr, "VS", "vs_5_1");
-	m_Shaders["contourPS"] = d3dUtil::CompileShader(L"Shaders\\Contour.hlsl", nullptr, "PS", "ps_5_1");
 
 	m_Instancing_InputLayout =
 	{
@@ -254,22 +249,6 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	opaquePsoDesc.DSVFormat = g_DepthStencilFormat;
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&g_OpaquePSO)));
 
-	//
-	// PSO for contour pass.
-	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC contourPsoDesc = opaquePsoDesc;
-	contourPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
-	contourPsoDesc.VS =
-	{
-		reinterpret_cast<BYTE*>(m_Shaders["contourVS"]->GetBufferPointer()),
-		m_Shaders["contourVS"]->GetBufferSize()
-	};
-	contourPsoDesc.PS =
-	{
-		reinterpret_cast<BYTE*>(m_Shaders["contourPS"]->GetBufferPointer()),
-		m_Shaders["contourPS"]->GetBufferSize()
-	};
-	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&contourPsoDesc, IID_PPV_ARGS(&g_ContourPSO)));
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GraphicsRenderer::GetStaticSamplers()

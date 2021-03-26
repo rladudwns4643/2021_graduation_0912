@@ -37,11 +37,10 @@ private:
 	int m_PlayerID;
 
 	// 기타 이벤트 변수들
+	std::string m_MapName;
 	int			m_Timer;
-	short		m_PenaltyDuration;
 
 private:
-	// 쓰레드 이벤트동기화 변수들
 	bool m_IsGameOver = false;
 };
 
