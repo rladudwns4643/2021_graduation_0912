@@ -26,6 +26,7 @@ void TOY_GROUND::Startup(void)
 
 	// Build Asserts
 	BuildAsserts();
+	BuildCharacters();
 
 	// Create Scene
 	SceneManager::GetApp()->InitializeScenes();
@@ -107,7 +108,6 @@ void TOY_GROUND::BuildAsserts()
 	AppContext->m_Maps[MAP_STR_GAME_MAP]->propTexture = TEXTURE_INDEX_Cartoon_CubeWorld_Texture;
 
 	// Build Map Models
-	// GameResult씬과 Lobby씬 에셋이 동일하기 때문에 Lobby만 메시를 로드하고, 결과씬은 로드하지 않음.
 	int loadMeshCount = AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector.size();
 
 	loadMeshCount = AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector.size();
@@ -126,5 +126,5 @@ void TOY_GROUND::BuildAsserts()
 
 void TOY_GROUND::BuildCharacters()
 {
-	//AppContext->CreateCharacter(CHARACTER_WIZARD, CHARACTER_WIZARD, TEXTURE_STR_Cartoon_CubeWorld_Texture, SPAWN_RED_TEAM);
+	AppContext->CreateCharacter(MESH_GEOID, MESH_GEOID_RECT, TEXTURE_STR_Cartoon_CubeWorld_Texture, SPAWN_RED_TEAM);
 }

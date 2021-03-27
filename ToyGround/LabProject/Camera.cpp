@@ -733,29 +733,3 @@ bool Camera::IsInFrustum(const XMMATRIX& invWorld, const BoundingBox& otherBound
 	// Perform the box/frustum intersection test in local space.
 	return (localSpaceFrustum.Contains(otherBounds) != DirectX::DISJOINT);
 }
-
-void Camera::IntersectsObject(XMVECTOR v0, XMVECTOR v1, XMVECTOR v2)
-{
-	if (!m_Owner) return;
-
-	float min = INFINITE;
-	if (TriangleTests::Intersects(XMLoadFloat3(&mPosition), XMLoadFloat3(&mLook),
-		v0, v1, v2, min))
-	{
-		XMFLOAT3 target = { m_Owner->m_World._41, m_Owner->m_World._42, m_Owner->m_World._43 };
-		target.y += m_Owner->m_Bounds.Extents.y;
-		float distance = MathHelper::Length(MathHelper::Subtract(target, mPosition));
-		if (min > 0 && min < distance)
-		{
-			min *= 1.5f;
-			if (min >= distance - 100.f)
-				min = distance - 100.f;
-
-			XMFLOAT3 pos = {};
-			XMStoreFloat3(&pos, DirectX::XMVectorAdd(XMLoadFloat3(&mPosition), XMLoadFloat3(&mLook) * min));
-			mPosition = pos;
-		}
-
-	}
-}
-

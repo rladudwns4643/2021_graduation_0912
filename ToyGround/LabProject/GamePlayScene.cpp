@@ -45,11 +45,10 @@ bool GameplayScene::Enter()
 	m_MapName = MAP_STR_GAME_MAP;
 	AppContext->DisplayProps(m_MapName);
 
-	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_WIZARD, CHARACTER_WIZARD);
+	m_Users[m_PlayerID] = AppContext->FindObject<Character>(MESH_GEOID, MESH_GEOID_RECT);
 
 	///---
 	// Player type, id 등등 세팅
-	// m_Users[]의 SetMapName 호출하여 캐릭터가 속해있는 맵이름 지정
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_pCamera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
 
@@ -101,7 +100,7 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
 	}
 
-	/*Characters*/
+	// Charater
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;

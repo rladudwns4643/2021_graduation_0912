@@ -61,7 +61,7 @@ public:
 	void CreateProps(std::string mapName);
 	void CreateCharacter(std::string meshName, std::string instID, std::string matName, int spawnLocation);
 
-	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 100.f);
+	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
 
 	void DisplayCharacter(std::string mapName, Character* user, int spawnLocation, bool isVisible = true);
 

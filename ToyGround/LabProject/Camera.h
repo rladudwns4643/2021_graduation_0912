@@ -112,7 +112,6 @@ public:
 	void GenerateFrustum();
 	bool IsInFrustum(const XMMATRIX& invWorld, const BoundingBox& otherBounds);
 
-	void IntersectsObject(XMVECTOR v0, XMVECTOR v1, XMVECTOR v2);
 
 private:
 	DirectX::BoundingFrustum m_Frustum;

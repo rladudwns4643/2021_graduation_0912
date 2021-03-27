@@ -18,8 +18,6 @@ private:
 	virtual void HandleInput(const float deltaT) override;
 	virtual void MouseCallback() override;
 
-	bool CheckRoomName();
-
 private:
 	LobbyScene* m_MyScene;
 	std::string m_PickedUIName;

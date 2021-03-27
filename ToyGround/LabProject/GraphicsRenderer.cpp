@@ -133,24 +133,21 @@ void GraphicsRenderer::BuildRootSignatures()
 	CD3DX12_DESCRIPTOR_RANGE texTable;
 	texTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
-	CD3DX12_ROOT_PARAMETER slotRootParameter[8];
+	CD3DX12_ROOT_PARAMETER slotRootParameter[4];
 
 	// 성능 팁 : 사용빈도가 높은것에서 낮은 것의 순서로 나열한다.
 	/* Shader Register*/
 	// Space 0
-	// Texture(t1~8), passCB(b0), passCB(b1)
+	// Texture(t1~8), passCB(b0)
 	// Space 1(구조체)
 	// Instancing(t0), Material(t1)
 
 	/* RootParameter slot*/
-	// 0: Instancing / 1: Material / 2: passCB / 3: texMap / 4: texture / 5: SkinnedData(Bone)
+	// 0: Instancing / 1: Material / 2: passCB / 3: texture
 	slotRootParameter[0].InitAsShaderResourceView(0, 1); // Instancing
 	slotRootParameter[1].InitAsShaderResourceView(1, 1); // Material
 	slotRootParameter[2].InitAsConstantBufferView(0); // PassCB
 	slotRootParameter[3].InitAsDescriptorTable(1, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
-
-	// 8: particleVertex SRV
-	// 9: particleStream SRV
 
 	auto staticSamplers = GetStaticSamplers();
 

@@ -25,9 +25,6 @@ void LobbyController::MouseCallback()
 {
 }
 
-bool LobbyController::CheckRoomName()
-{
-}
 
 GameplayController::GameplayController(GameplayScene* myScene) : m_MyScene(myScene)
 {
@@ -72,13 +69,9 @@ void GameplayController::HandleInput(const float deltaT)
 		}
 	}
 }
-}
 
 void GameplayController::MouseCallback()
 {
-	// if 플레이어가 죽었을때만 작동됨
-	if (m_MyScene->m_IsArriveMyPlayer) return;
-
 	// 마우스 이동
 	if (InputHandler::g_MoveMouseCallback)
 	{

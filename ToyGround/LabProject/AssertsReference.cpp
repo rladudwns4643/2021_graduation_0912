@@ -42,38 +42,6 @@ Map* AssertsReference::LoadMapInfo()
 	return map;
 }
 
-void AssertsReference::LoadBB(const char* path)
-{
-	std::cout << "Start Loading BBs...\n";
-	std::ifstream in(path);
-
-	while (!in.eof())
-	{
-		auto bb = make_unique<BoundingBox>();
-		string name;
-		int bbNum = 0;
-		string tmp;
-
-
-		in >> name >> bbNum;
-		for (int i = 0; i < bbNum; ++i)
-		{
-			in >> bb->Extents.x >> bb->Extents.y >> bb->Extents.z
-				>> bb->Center.x >> bb->Center.y >> bb->Center.z
-				>> tmp >> tmp >> tmp	// look
-				>> tmp >> tmp >> tmp	// up
-				>> tmp >> tmp >> tmp	// right
-				>> tmp >> tmp >> tmp;	// rotation
-
-			m_PropBoundingBox[name] = std::move(bb);
-		}
-
-		in >> tmp; // numBS --> 무조건 0이 나옴
-		in >> tmp; // 구분자 C
-	}
-	std::cout << "Loading BBs Finished.\n";
-}
-
 void AssertsReference::BuildMaterials()
 {
 	auto Cartoon_CubeWorld_Texture  = std::make_unique<Material>();
