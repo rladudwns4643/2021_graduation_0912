@@ -148,6 +148,9 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SocketAddress.h" />
+    <ClInclude Include="SocketUtil.h" />
+    <ClInclude Include="TCPSocket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

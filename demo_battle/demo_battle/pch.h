@@ -23,5 +23,8 @@
 #include <DirectXMath.h>
 #include <cmath>
 
+#include "SocketAddress.h"
+#include "TCPSocket.h"
+#include "SocketUtil.h"
 
 #pragma comment(lib, "Ws2_32.lib")

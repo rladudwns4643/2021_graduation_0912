@@ -99,20 +99,27 @@ struct cl_packet_automatch {
 	BYTE type;
 };
 //------------------------------------------------------------------
+//-------------------------------B->C-------------------------------
+struct PTC_START_INFO {
+	int id;
+	char rule;
+};
+
+struct PTC_VECTOR {
+	float x;
+	float y;
+	float z;
+};
+
+struct PTC_ROOM {
+	short id;
+	char joinable;
+};
+
+
+//------------------------------------------------------------------
+
+
+
+//------------------------------------------------------------------
 #pragma pack (pop)
-
-/*******************************/
-
-#define WORLD_WIDTH		8
-#define WORLD_HEIGHT	8
-
-#define SERVER_PORT		9000
-
-#define C2S_LOGIN	1
-#define C2S_MOVE	2
-
-#define S2C_LOGIN_OK		1
-#define S2C_MOVE			2
-#define S2C_ENTER			3
-#define S2C_LEAVE			4
-/*******************************/
