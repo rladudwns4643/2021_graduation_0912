@@ -13,10 +13,6 @@ private:
 		scene->Initialize();
 		m_Scenes[static_cast<int>(sceneType)] = scene;
 	}
-	void SendEvent(SceneType sceneType, int sEvent);
-	void SendEventArgs(SceneType sceneType, int sEvent, int argsCount, ...);
-
-	XMFLOAT3 argLookCallback = { 0.f,1.f,0.f };
 
 public:
 	explicit SceneManager();

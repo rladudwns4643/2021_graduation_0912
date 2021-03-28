@@ -5,17 +5,6 @@
 #include "LobbyScene.h"
 #include "GameplayScene.h"
 
-// 인자 없을 때 사용.
-void SceneManager::SendEvent(SceneType sceneType, int sEvent)
-{
-	m_Scenes[static_cast<int>(sceneType)]->ProcessEvent(sEvent);
-}
-
-// 인자가 있을 경우 사용
-void SceneManager::SendEventArgs(SceneType sceneType, int sEvent, int argsCount, ...)
-{
-}
-
 SceneManager::SceneManager() : m_CurScene(0)
 {
 }

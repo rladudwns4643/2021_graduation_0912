@@ -29,7 +29,6 @@ void PlayerController::HandleInput(const float deltaT)
 
 	DWORD dir = 0;
 
-
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
 	case CameraType::eFirst:
@@ -42,6 +41,7 @@ void PlayerController::HandleInput(const float deltaT)
 
 		if (dir != 0)
 			m_Owner->Move(dir, speed);
+		break;
 	}
 	break;
 	case CameraType::eFree:

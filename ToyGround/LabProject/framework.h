@@ -46,7 +46,7 @@
 
 // DirectX 런타임 헤더 파일입니다.
 #include "d3dx12.h"
-//#include <d3d11_1.h>
+#include <d3d11_1.h>
 #include <dxgi1_4.h>
 #include <dxgidebug.h>
 #include <D3Dcompiler.h>
@@ -73,6 +73,7 @@
 using namespace std;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
+
 using Microsoft::WRL::ComPtr;
 
 #define AppContext ApplicationContext::GetApp()

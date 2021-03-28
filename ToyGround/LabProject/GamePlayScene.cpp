@@ -82,8 +82,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	/*Characters*/
-	// 나중에 유저의 메쉬만 업데이트 하는거로 수정할예정
-	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_WIZARD], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[MESH_GEOID], AppContext->m_RItemsVec);
 	
 	/*Materials*/
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);

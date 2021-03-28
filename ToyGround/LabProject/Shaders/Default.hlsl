@@ -81,7 +81,9 @@ float4 PS(VertexOut pin) : SV_Target
 
     // Light terms.
     float4 ambient = gAmbientLight*diffuseAlbedo;
-    
+
+    float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
+
     const float shininess = 1.0f - roughness;
     Material mat = { diffuseAlbedo, fresnelR0, shininess };
     float4 directLight = ComputeLighting(gLights, mat, pin.PosW,

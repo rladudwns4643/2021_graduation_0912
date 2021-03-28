@@ -4,8 +4,8 @@ namespace Core
 {
 	extern HWND g_hMainWnd;
 
-	extern int g_iDisplayWidth;
-	extern int g_iDisplayHeight;
+	extern int g_DisplayWidth;
+	extern int g_DisplayHeight;
 }
 
 namespace InputHandler

@@ -90,8 +90,8 @@ namespace InputHandler
 	void OnMouseMove(WPARAM btnState, int x, int y)
 	{
 		// Player Controller
-		if (x != Core::g_iDisplayWidth / 2 &&
-			y != Core::g_iDisplayHeight / 2)
+		if (x != Core::g_DisplayWidth / 2 &&
+			y != Core::g_DisplayHeight / 2)
 		{
 			g_MoveMouseCallback = true;
 		}
@@ -102,8 +102,8 @@ namespace InputHandler
 		// 마우스 좌표이동에 따라 회전각도 구하기
 		if (g_MoveMouseCallback)
 		{
-			float dx = XMConvertToRadians(MOUSE_DPI_X * static_cast<float>(x - Core::g_iDisplayWidth / 2));
-			float dy = XMConvertToRadians(MOUSE_DPI_Y * static_cast<float>(y - Core::g_iDisplayHeight / 2));
+			float dx = XMConvertToRadians(MOUSE_DPI_X * static_cast<float>(x - Core::g_DisplayWidth / 2));
+			float dy = XMConvertToRadians(MOUSE_DPI_Y * static_cast<float>(y - Core::g_DisplayHeight / 2));
 			g_MouseChangebleX = dx;
 			g_MouseChangebleY = dy;
 		}

@@ -407,15 +407,15 @@ void GameCore::D3D11DeviceExecuteCommandList()
 void GameCore::InitMainWindow()
 {
 	WNDCLASS wc;
-	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = MainWndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
+	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.hInstance = g_hAppInst;
-	wc.hIcon = ::LoadIcon(g_hAppInst, MAKEINTRESOURCE(107));
-	wc.hCursor = ::LoadCursor(NULL, IDC_ARROW); 
+	wc.hIcon = LoadIcon(g_hAppInst, MAKEINTRESOURCE(107));
+	wc.hCursor = LoadIcon(g_hAppInst, MAKEINTRESOURCE(129));	
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName = NULL;
+	wc.lpszMenuName = 0;
 	wc.lpszClassName = g_AppName;
 
 	if (!RegisterClass(&wc))
@@ -604,7 +604,8 @@ void GameCore::InitDirect3D()
 			IID_PPV_ARGS(&g_Device)));
 	}
 
-	ThrowIfFailed(g_Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence)));
+	ThrowIfFailed(g_Device->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+		IID_PPV_ARGS(&mFence)));
 
 	mRtvDescriptorSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	mDsvDescriptorSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
@@ -765,10 +766,10 @@ void GameCore::OnResize()
 	mScissorRect = { 0, 0, g_DisplayWidth, g_DisplayHeight };
 
 	// Set Lens
-	if (TOY_GROUND::GetApp())
-	{
-		TOY_GROUND::GetApp()->OnResize();
-	}
+	//if (TOY_GROUND::GetApp())
+	//{
+	//	TOY_GROUND::GetApp()->OnResize();
+	//}
 
 	//InputHandler::ClipCursorToScreen();
 }
@@ -835,9 +836,9 @@ void GameCore::CreateCommandObjects()
 		nullptr,                   // Initial PipelineStateObject
 		IID_PPV_ARGS(g_CommandList.GetAddressOf())));
 
-	// Start off in a closed state.  This is because the first time we refer 
-	// to the command list we will Reset it, and it needs to be closed before
-	// calling Reset.
+	// 닫힌 상태로 시작한. 이후 명령 리스트를 처음 참조할 때 
+	// Reset을 호출하는데, Reset을 호출하려면 명령 리스트가
+	// 닫혀 있어야하기 때문이다.
 	g_CommandList->Close();
 }
 

@@ -23,8 +23,6 @@ class Scene abstract
 {
 protected:
 	friend class SceneManager;
-	virtual void ProcessEvent(int sEvent, int argsCount = 0, ...) {};
-	virtual void UIEvent(int sEvent, int argsCount = 0, ...) {};
 
 public:
 	Scene();
@@ -39,8 +37,6 @@ public:
 
 	virtual void	Update(const float& fDeltaTime) = 0;
 	virtual void	Render() = 0;
-	virtual void	RenderUI() = 0;
-	virtual void	WriteShadow() {};
 
 protected:
 	std::string m_SceneName;
