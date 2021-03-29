@@ -49,11 +49,11 @@ bool GameplayScene::Enter()
 
 	///---
 	// Player type, id 등등 세팅
-	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_pCamera, CameraType::eThird);
+	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
 
 	// 카메라 세팅
-	TOY_GROUND::GetApp()->m_pCamera->CameraInitialize(SceneType::eGamePlay);
+	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
 
 	return false;
 }
@@ -110,12 +110,12 @@ void GameplayScene::Render()
 
 void GameplayScene::ChangeFreeCamera()
 {
-	if (TOY_GROUND::GetApp()->m_pCamera->GetCameraType() == CameraType::eFree) return;
+	if (TOY_GROUND::GetApp()->m_Camera->GetCameraType() == CameraType::eFree) return;
 
 
 	XMFLOAT3 look = m_Users[m_PlayerID]->GetLook();
 	XMFLOAT3 up = m_Users[m_PlayerID]->GetUp();
 	XMFLOAT3 right = m_Users[m_PlayerID]->GetRight();
 
-	TOY_GROUND::GetApp()->m_pCamera->SetCamera(look, up, right);
+	TOY_GROUND::GetApp()->m_Camera->SetCamera(look, up, right);
 }

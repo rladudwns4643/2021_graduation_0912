@@ -38,7 +38,7 @@ void GameplayController::Update(const float deltaT)
 
 void GameplayController::HandleInput(const float deltaT)
 {
-	Camera* camera = TOY_GROUND::GetApp()->m_pCamera;
+	Camera* camera = TOY_GROUND::GetApp()->m_Camera;
 
 
 	if (GetAsyncKeyState('T') & 0x8000) {
@@ -75,8 +75,8 @@ void GameplayController::MouseCallback()
 	// 마우스 이동
 	if (InputHandler::g_MoveMouseCallback)
 	{
-		CameraType cameraType = TOY_GROUND::GetApp()->m_pCamera->GetCameraType();
-		Camera* camera = TOY_GROUND::GetApp()->m_pCamera;
+		CameraType cameraType = TOY_GROUND::GetApp()->m_Camera->GetCameraType();
+		Camera* camera = TOY_GROUND::GetApp()->m_Camera;
 
 		// 1인칭 회전(자전)
 		if (cameraType == CameraType::eFirst)

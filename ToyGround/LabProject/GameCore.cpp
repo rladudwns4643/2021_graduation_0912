@@ -129,7 +129,7 @@ void GameCore::InitializeCore(IGameApp& game)
 
 	InitMainWindow();
 	InitDirect3D();
-	OnResize();
+	//OnResize();
 
 	// FullScreenMode
 #ifdef FULLSCREEN_MODE
@@ -766,10 +766,10 @@ void GameCore::OnResize()
 	mScissorRect = { 0, 0, g_DisplayWidth, g_DisplayHeight };
 
 	// Set Lens
-	//if (TOY_GROUND::GetApp())
-	//{
-	//	TOY_GROUND::GetApp()->OnResize();
-	//}
+	if (TOY_GROUND::GetApp())
+	{
+		TOY_GROUND::GetApp()->OnResize();
+	}
 
 	//InputHandler::ClipCursorToScreen();
 }

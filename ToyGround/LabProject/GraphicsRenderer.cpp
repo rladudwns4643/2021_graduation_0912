@@ -102,7 +102,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 
 	for (UINT i = 0; i < (UINT)tex2DList.size(); ++i)
 	{
-		hDescriptor.Offset(0, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+		hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 
 		srvDesc.Format = tex2DList[i]->GetDesc().Format;
 		srvDesc.Texture2D.MipLevels = tex2DList[i]->GetDesc().MipLevels;

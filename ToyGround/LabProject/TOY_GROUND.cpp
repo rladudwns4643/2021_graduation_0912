@@ -12,7 +12,7 @@ using namespace Core;
 void TOY_GROUND::Startup(void)
 {
 	// Camera
-	m_pCamera = new Camera;
+	m_Camera = new Camera;
 
 	// Lights
 	m_pLights[LIGHT_NAME_DIRECTIONAL] = std::make_unique<Light>();
@@ -33,7 +33,7 @@ void TOY_GROUND::Startup(void)
 	SceneManager::GetApp()->EnterScene(SceneType::eGamePlay);
 
 	// Build GpuResources
-	GraphicsContext::GetApp()->passCount = 2;
+	GraphicsContext::GetApp()->passCount = 1;
 	GraphicsContext::GetApp()->materialCount = AssertsReference::GetApp()->m_Materials.size();
 
 
@@ -46,7 +46,7 @@ void TOY_GROUND::Startup(void)
 void TOY_GROUND::Cleanup(void)
 {
 	// Clear Cameras
-	SAFE_DELETE_PTR(m_pCamera);
+	SAFE_DELETE_PTR(m_Camera);
 
 	/* Clear Maps */
 	for (auto& p : AppContext->m_Maps)
@@ -81,8 +81,8 @@ void TOY_GROUND::Update(float deltaT)
 		SceneManager::GetApp()->UpdateScene(deltaT);
 
 	// Camera
-	m_pCamera->UpdateViewMatrix();
-	GraphicsContext::GetApp()->UpdateMainPassCB(*m_pCamera, m_pLights[LIGHT_NAME_DIRECTIONAL].get());
+	m_Camera->UpdateViewMatrix();
+	GraphicsContext::GetApp()->UpdateMainPassCB(*m_Camera, m_pLights[LIGHT_NAME_DIRECTIONAL].get());
 }
 
 
@@ -94,8 +94,8 @@ void TOY_GROUND::RenderScene(void)
 
 void TOY_GROUND::OnResize()
 {
-	if (m_pCamera)
-		m_pCamera->OnResize();
+	if (m_Camera)
+		m_Camera->OnResize();
 
 	if (m_pSceneManager)
 		m_pSceneManager->OnResize();
@@ -110,7 +110,6 @@ void TOY_GROUND::BuildAsserts()
 	// Build Map Models
 	int loadMeshCount = AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector.size();
 
-	loadMeshCount = AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector.size();
 	for (int i = 0; i < loadMeshCount; ++i)
 	{
 		cout << AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector[i] << endl;
@@ -126,5 +125,5 @@ void TOY_GROUND::BuildAsserts()
 
 void TOY_GROUND::BuildCharacters()
 {
-	AppContext->CreateCharacter(MESH_GEOID, MESH_GEOID_RECT, TEXTURE_STR_Cartoon_CubeWorld_Texture, SPAWN_RED_TEAM);
+	//AppContext->CreateCharacter(MESH_GEOID, MESH_GEOID_RECT, TEXTURE_STR_Cartoon_CubeWorld_Texture, SPAWN_RED_TEAM);
 }

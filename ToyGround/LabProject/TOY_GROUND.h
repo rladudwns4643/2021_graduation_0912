@@ -34,7 +34,7 @@ private:
 	void BuildCharacters();
 
 public:
-	Camera* m_pCamera;
+	Camera* m_Camera;
 	std::map<std::string, std::unique_ptr<Light>> m_pLights;
 
 private:
