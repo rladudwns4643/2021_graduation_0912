@@ -20,7 +20,7 @@ Map* AssertsReference::LoadMapInfo()
 	MapTool::MapInfo preInfo;
 
 	float tmp;
-	preInfo.meshName = "Cube_01";
+	preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
 	preInfo.position.x = 0.f;
 	preInfo.position.y = 0.f;
 	preInfo.position.z = 0.f;
@@ -31,7 +31,7 @@ Map* AssertsReference::LoadMapInfo()
 	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
 
 	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert("Cube_01");
+	propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
 
 	// propTypeVector: 중복되는 것 없이 에셋이름만 모아놓은 vector
 	for (auto iter = propTypeSet.begin(); iter != propTypeSet.end(); ++iter)

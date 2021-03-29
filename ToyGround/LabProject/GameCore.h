@@ -27,7 +27,6 @@ namespace Graphics
 class GameCore : public TemplateSingleton<GameCore>
 {
 	friend class GraphicsRenderer;
-	friend class LoadingService;
 	GraphicsRenderer* m_GraphicsRenderer;
 	GraphicsContext* m_GraphicsContext;
 
@@ -111,7 +110,5 @@ private:
 
 private:
 	POINT										mLastMousePos;
-
-
 };
 

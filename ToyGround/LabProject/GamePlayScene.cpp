@@ -45,7 +45,10 @@ bool GameplayScene::Enter()
 	m_MapName = MAP_STR_GAME_MAP;
 	AppContext->DisplayProps(m_MapName);
 
-	m_Users[m_PlayerID] = AppContext->FindObject<Character>(MESH_GEOID, MESH_GEOID_RECT);
+	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_TEST, CHARACTER_TEST);
+
+	// 카메라 세팅
+	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
 
 	///---
 	// Player type, id 등등 세팅

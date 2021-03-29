@@ -27,11 +27,6 @@
 
 #endif //PCH_H
 
-// FILLMODE 설정 (WIREFRAM, SOLID)
-extern bool bFillModeWireFrame;
-// 바운딩 박스 표시
-extern bool bShowBoundingBox;
-
 // 버퍼 리소스를 생성하는 함수
 extern ID3D12Resource* CreateBufferResource(ID3D12Device* pd3dDevice,
 	ID3D12GraphicsCommandList* pd3dCommandList, void* pData, UINT nBytes,

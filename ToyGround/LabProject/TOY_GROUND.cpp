@@ -125,5 +125,5 @@ void TOY_GROUND::BuildAsserts()
 
 void TOY_GROUND::BuildCharacters()
 {
-	//AppContext->CreateCharacter(MESH_GEOID, MESH_GEOID_RECT, TEXTURE_STR_Cartoon_CubeWorld_Texture, SPAWN_RED_TEAM);
+	AppContext->CreateCharacter(CHARACTER_TEST, CHARACTER_TEST, TEXTURE_STR_Cartoon_CubeWorld_Texture, SPAWN_RED_TEAM);
 }

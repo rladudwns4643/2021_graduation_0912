@@ -11,10 +11,6 @@ using namespace Core;
 
 namespace Core
 {
-	/* Loading Common Assert */
-	std::condition_variable g_Loading_cv;
-	bool g_Loading_processed = false;
-
 	GameCore* g_Core = nullptr;
 	GameTimer* g_GameTimer = nullptr;
 
@@ -129,7 +125,7 @@ void GameCore::InitializeCore(IGameApp& game)
 
 	InitMainWindow();
 	InitDirect3D();
-	//OnResize();
+	OnResize();
 
 	// FullScreenMode
 #ifdef FULLSCREEN_MODE

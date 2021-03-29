@@ -27,9 +27,9 @@ public:
 	virtual void Release() = 0;
 
 protected:
-	ID3D12RootSignature* m_CurGraphicsRootSignature;
-	ID3D12PipelineState* m_CurPipelineState;
-	ID3D12RootSignature* m_CurComputeRootSignature;
+	ID3D12RootSignature* m_CurGraphicsRootSignature = NULL;
+	ID3D12PipelineState* m_CurPipelineState = NULL;
+	ID3D12RootSignature* m_CurComputeRootSignature = NULL;
 };
 
 struct UIInfo

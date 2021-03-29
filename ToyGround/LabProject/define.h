@@ -34,6 +34,12 @@
 
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture "Cartoon_CubeWorld_Texture"
 
+// 캐릭터
+#define CHARACTER_TEST "Tree"
+
+// 오브젝트 메쉬
+#define OBJECT_MESH_STR_CUBE_01 "Cube_01"
+
 //
 #define MESH_GEOID			"geo"
 #define MESH_GEOID_RECT		"rect"

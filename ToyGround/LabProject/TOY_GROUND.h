@@ -34,13 +34,12 @@ private:
 	void BuildCharacters();
 
 public:
-	Camera* m_Camera;
+	Camera* m_Camera = NULL;
 	std::map<std::string, std::unique_ptr<Light>> m_pLights;
 
 private:
-private:
-	SceneManager					*m_pSceneManager;
-	ApplicationContext				*m_pAppContext;
-	AssertsReference				*m_pAssetsRef;
+	SceneManager					*m_pSceneManager = NULL;
+	ApplicationContext				*m_pAppContext = NULL;
+	AssertsReference				*m_pAssetsRef = NULL;
 };
 
