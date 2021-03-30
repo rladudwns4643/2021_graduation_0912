@@ -45,7 +45,7 @@ void GameplayController::HandleInput(const float deltaT)
 		m_MyScene->ChangeFreeCamera();
 	}
 
-	float speed = 300 * deltaT;
+	float speed = 16 * deltaT;
 	if (camera->GetCameraType() == CameraType::eFree)
 	{
 		// ¿Ãµø

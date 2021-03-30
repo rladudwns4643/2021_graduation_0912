@@ -8,14 +8,14 @@ Map* AssertsReference::LoadMapInfo()
 	Map* map = new Map;
 	set<string> propTypeSet;
 
-	MapTool::PlayerInfo prePlayerInfo;
-	prePlayerInfo.playerName = "FirstPlayer";
-	prePlayerInfo.position.x = 0.f;
-	prePlayerInfo.position.y = 0.f;
-	prePlayerInfo.position.z = 0.f;
-	prePlayerInfo.rotY = 0.f;
-	prePlayerInfo.spawnPos = 1;
-	map->playerInfoVector.emplace_back(prePlayerInfo);
+	//MapTool::PlayerInfo prePlayerInfo;
+	//prePlayerInfo.playerName = "FirstPlayer";
+	//prePlayerInfo.position.x = 0.f;
+	//prePlayerInfo.position.y = 0.f;
+	//prePlayerInfo.position.z = 0.f;
+	//prePlayerInfo.rotY = 0.f;
+	//prePlayerInfo.spawnPos = 1;
+	//map->playerInfoVector.emplace_back(prePlayerInfo);
 
 	MapTool::MapInfo preInfo;
 

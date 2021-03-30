@@ -121,52 +121,45 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 		if (dwDirection & DIR_RIGHT)			direction = direction + right;
 		if (dwDirection & DIR_LEFT)				direction = direction - right;
 
-#ifdef DEBUG_CLIENT
-		Move(DIR_FORWARD, fDistance, true);
-#endif
-
 		XMFLOAT3 dir;
 		DirectX::XMStoreFloat3(&dir, direction);
 		dir.y = 0.f;
 		direction = DirectX::XMVector3Normalize(XMLoadFloat3(&dir));
-
+		
 		XMFLOAT3 cLook = m_Look;
 		cLook.y = 0.f;
 		cLook = MathHelper::Normalize(cLook);
-
+		
 		float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(direction, XMLoadFloat3(&cLook)));
-
+		
 		XMFLOAT3 cUp = m_Up;
-		// cUp.y = 0.f;
+		//cUp.y = 0.f;
 		cUp = MathHelper::Normalize(cUp);
-
+		
 		float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&cUp), DirectX::XMVector3Cross(direction, XMLoadFloat3(&cLook))));
-
-
+		
+		
 		float acosValue = 0.f;
-
-		if (cosValue <= -1.f)
-			acosValue = 3.141592;
-		else if (cosValue > 1.f)
-			acosValue = 0.f;
-		else
-			acosValue = acos(cosValue);
-
+		
+		acosValue = acos(cosValue);
+		
 		float degree = XMConvertToDegrees(acosValue);
-
+		
 		if (ccw > 0)	// ccw가 양수이면 방시계로 돌아야함
 			degree = -degree;
-		degree *= 0.2f;
-
+		degree *= 0.85f;
+		
 		bool isChange = false;
-
+		
 		if (fabs(degree) > 1.f)
 		{
 			Rotate(0.f, XMConvertToRadians(degree), 0.f);
 			isChange = true;
 		}
+		else
+			Move(DIR_FORWARD, fDistance, true);
 		degree = 0.f;
-
+		
 		return isChange;
 	}
 	return false;

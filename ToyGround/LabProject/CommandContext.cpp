@@ -37,7 +37,7 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 		XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
 		XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 #ifdef FRUSTUM_CULLMODE
-		if (isFrustum && !CACHE_CACHE::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+		if (isFrustum && !TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
 #endif
 		ShaderResource::InstanceData data;
 		DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
@@ -148,7 +148,7 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 			{
 				XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
 				XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
-				if (!CACHE_CACHE::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+				if (!TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
 			}
 #endif
 

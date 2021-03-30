@@ -47,7 +47,6 @@ void ApplicationContext::CreateSkycube(std::string skycubeName, std::string inst
 	GameObject* sky = CreateObject<GameObject>(skycubeName, instID);
 	sky->SetMesh(MESH_GEOID, MESH_GEOID_SPHERE);
 	sky->m_MaterialIndex = AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
-	// 나중 충돌처리에서 문제가 된다면 변경
 	sky->m_World = MathHelper::Identity4x4();
 	sky->m_TexTransform = MathHelper::Identity4x4();
 
@@ -69,7 +68,7 @@ void ApplicationContext::CreateProps(std::string mapName)
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int spawnLocation)
 {
 	Character* chr = CreateObject<Character>(meshName, instID);
-	chr->SetMesh(MESH_GEOID, MESH_GEOID_CYLINDER);
+	chr->SetMesh(MESH_GEOID, MESH_GEOID_SPHERE);
 	chr->SetMaterial(AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex);
 	chr->m_SpawnLoaction = spawnLocation;
 }

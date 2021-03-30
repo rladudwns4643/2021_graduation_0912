@@ -127,7 +127,7 @@ private:
 	DirectX::XMFLOAT3	mRotation = { 0.f,0.f,0.f };
 	float				mTimeLag = 0.f;
 
-	// Cache frustum properties.
+	// frustum properties.
 	float mNearZ = 0.0f;
 	float mFarZ = 0.0f;
 	float mAspect = 0.0f;
@@ -137,7 +137,7 @@ private:
 
 	bool mViewDirty = true;
 
-	// Cache View/Proj matrices.
+	// View/Proj matrices.
 	DirectX::XMFLOAT4X4 mView = MathHelper::Identity4x4();
 	DirectX::XMFLOAT4X4 mProj = MathHelper::Identity4x4();
 	DirectX::XMFLOAT4X4 mOrtho = MathHelper::Identity4x4();
