@@ -1,10 +1,12 @@
 #pragma once
+#include "Singleton.h"
+
 const ULONG MAX_SAMPLE_COUNT = 50; // 50회의 프레임 처리시간을 누적하여 평균한다.
-class CGameTimer
+class GameTimer : public TemplateSingleton<GameTimer>
 {
 public:
-	CGameTimer();
-	virtual ~CGameTimer();
+	GameTimer();
+	virtual ~GameTimer();
 
 	// 타이머의 시간 갱신
 	void Tick(float fLockFPS = 0.0f);

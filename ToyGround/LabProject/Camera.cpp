@@ -1,346 +1,733 @@
 #include "pch.h"
-#include "Player.h"
 #include "Camera.h"
+#include "Character.h"
 
-CCamera::CCamera()
+void Camera::SetCamera(CameraType cameraType, Character* owner)
 {
-	m_xmf4x4View = Matrix4x4::Identity();
-	m_xmf4x4Projection = Matrix4x4::Identity();
-	m_d3dViewport = { 0, 0, FRAME_BUFFER_WIDTH , FRAME_BUFFER_HEIGHT, 0.0f, 1.0f };
-	m_d3dScissorRect = { 0, 0, FRAME_BUFFER_WIDTH , FRAME_BUFFER_HEIGHT };
-	m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_xmf3Right = XMFLOAT3(1.0f, 0.0f, 0.0f);
-	m_xmf3Look = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	m_xmf3Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	m_fPitch = 0.0f;
-	m_fRoll = 0.0f;
-	m_fYaw = 0.0f;
-	m_xmf3Offset = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_fTimeLag = 0.0f;
-	m_xmf3LookAtWorld = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_nMode = 0x00;
-	m_pPlayer = NULL;
-}
-CCamera::CCamera(CCamera* pCamera)
-{
-	if (pCamera)
+	m_CameraType = cameraType;
+	m_Owner = owner;
+
+	switch (m_CameraType)
 	{
-		// 카메라가 이미 있으면 기존 카메라의 정보를 새로운 카메라에 복사
-		*this = *pCamera;
+	case CameraType::eFirst:
+	case CameraType::eThird:
+		mUp = owner->GetUp();
+		mRight = owner->GetRight();
+		mLook = owner->GetLook();
+		mRight = MathHelper::Normalize(mRight);
+		mLook = MathHelper::Normalize(mLook);
+		break;
+	case CameraType::eFree:
+		mUp = owner->GetUp();
+		mRight = owner->GetRight();
+		mLook = owner->GetLook();
+		mRight = MathHelper::Normalize(mRight);
+		mLook = MathHelper::Normalize(mLook);
+		break;
 	}
-	else
+
+	mViewDirty = true;
+}
+
+void Camera::SetCamera(XMFLOAT3 look, XMFLOAT3 up, XMFLOAT3 right)
+{
+	m_CameraType = CameraType::eFree;
+
+	mUp = up;
+	mRight = right;
+	mLook = look;
+	mRight = MathHelper::Normalize(mRight);
+	mLook = MathHelper::Normalize(mLook);
+
+	mViewDirty = true;
+}
+
+
+CameraType Camera::GetCameraType()
+{
+	return m_CameraType;
+}
+
+void Camera::Initialize()
+{
+	m_Owner = nullptr;
+
+	mPosition = { 0.0f, 0.0f, 0.0f };
+	mRight = { 1.0f, 0.0f, 0.0f };
+	mUp = { 0.0f, 1.0f, 0.0f };
+	mLook = { 0.0f, 0.0f, 1.0f };
+
+	mTarget = { 0.f,0.f,0.f };
+	mOffset = { 0.f,0.f,0.f };
+	mRotation = { 0.f,0.f,0.f };
+	mTimeLag = 0.f;
+
+	mViewDirty = true;
+}
+
+void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
+{
+	switch (m_CameraType)
 	{
-		// 카메라가 없으면 기본 정보를 설정
-		m_xmf4x4View = Matrix4x4::Identity();
-		m_xmf4x4Projection = Matrix4x4::Identity();
-		m_d3dViewport = { 0, 0, FRAME_BUFFER_WIDTH , FRAME_BUFFER_HEIGHT, 0.0f, 1.0f };
-		m_d3dScissorRect = { 0, 0, FRAME_BUFFER_WIDTH , FRAME_BUFFER_HEIGHT };
-		m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		m_xmf3Right = XMFLOAT3(1.0f, 0.0f, 0.0f);
-		m_xmf3Look = XMFLOAT3(0.0f, 0.0f, 1.0f);
-		m_xmf3Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
-		m_fPitch = 0.0f;
-		m_fRoll = 0.0f;
-		m_fYaw = 0.0f;
-		m_xmf3Offset = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		m_fTimeLag = 0.0f;
-		m_xmf3LookAtWorld = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		m_nMode = 0x00;
-		m_pPlayer = NULL;
-	}
-}
-
-void CCamera::SetViewport(int xTopLeft, int yTopLeft, int nWidth, int nHeight, float
-	fMinZ, float fMaxZ)
-{
-	m_d3dViewport.TopLeftX = float(xTopLeft);
-	m_d3dViewport.TopLeftY = float(yTopLeft);
-	m_d3dViewport.Width = float(nWidth);
-	m_d3dViewport.Height = float(nHeight);
-	m_d3dViewport.MinDepth = fMinZ;
-	m_d3dViewport.MaxDepth = fMaxZ;
-}
-void CCamera::SetScissorRect(LONG xLeft, LONG yTop, LONG xRight, LONG yBottom)
-{
-	m_d3dScissorRect.left = xLeft;
-	m_d3dScissorRect.top = yTop;
-	m_d3dScissorRect.right = xRight;
-	m_d3dScissorRect.bottom = yBottom;
-}
-
-void CCamera::GenerateProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance, float fAspectRatio, float fFOVAngle)
-{
-	m_xmf4x4Projection = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(fFOVAngle), fAspectRatio, fNearPlaneDistance, fFarPlaneDistance);
-}
-
-void CCamera::GenerateViewMatrix(XMFLOAT3 xmf3Position, XMFLOAT3 xmf3LookAt, XMFLOAT3 xmf3Up)
-{
-	m_xmf3Position = xmf3Position;
-	m_xmf3LookAtWorld = xmf3LookAt;
-	m_xmf3Up = xmf3Up;
-
-	GenerateViewMatrix();
-}
-
-void CCamera::GenerateViewMatrix()
-{
-	m_xmf4x4View = Matrix4x4::LookAtLH(m_xmf3Position, m_xmf3LookAtWorld, m_xmf3Up);
-}
-
-// 카메라가 변환할 때마다 카메라변환 행렬을 갱신
-void CCamera::RegenerateViewMatrix()
-{
-	// 카메라의 z-축을 기준으로 카메라의 좌표축들이 직교하도록 카메라 변환 행렬을 갱신
-	// 카메라의 z-축 벡터를 정규화
-	m_xmf3Look = Vector3::Normalize(m_xmf3Look);
-	// 카메라의 z-축과 y-축에 수직인 벡터를 x-축으로 설정
-	m_xmf3Right = Vector3::CrossProduct(m_xmf3Up, m_xmf3Look, true);
-	// 카메라의 z-축과 x-축에 수직인 벡터를 y-축으로 설정
-	m_xmf3Up = Vector3::CrossProduct(m_xmf3Look, m_xmf3Right, true);
-
-	m_xmf4x4View._11 = m_xmf3Right.x; m_xmf4x4View._12 = m_xmf3Up.x; m_xmf4x4View._13 = m_xmf3Look.x;
-	m_xmf4x4View._21 = m_xmf3Right.y; m_xmf4x4View._22 = m_xmf3Up.y; m_xmf4x4View._23 = m_xmf3Look.y;
-	m_xmf4x4View._31 = m_xmf3Right.z; m_xmf4x4View._32 = m_xmf3Up.z; m_xmf4x4View._33 = m_xmf3Look.z;
-
-	m_xmf4x4View._41 = -Vector3::DotProduct(m_xmf3Position, m_xmf3Right);
-	m_xmf4x4View._42 = -Vector3::DotProduct(m_xmf3Position, m_xmf3Up);
-	m_xmf4x4View._43 = -Vector3::DotProduct(m_xmf3Position, m_xmf3Look);
-
-	// 카메라 변환 행렬이 바뀔 때마다 절두체를 다시 생성(절두체는 월드 좌표계로 생성)
-	GenerateFrustum();
-}
-
-void CCamera::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
-{
-	UINT ncbElementBytes = ((sizeof(VS_CB_CAMERA_INFO) + 255) & ~255); //256의 배수
-	m_pd3dcbCamera = ::CreateBufferResource(pd3dDevice, pd3dCommandList, NULL, ncbElementBytes, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, NULL);
-
-	m_pd3dcbCamera->Map(0, NULL, (void**)&m_pcbMappedCamera);
-}
-
-// 카메라 변환 행렬을 쉐이더(shader.hlsl)에 넘김, ShaderVariables - 전역 변수(파이프라인에서 사용하는)
-void CCamera::UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList)
-{
-	XMFLOAT4X4 xmf4x4View;
-	XMStoreFloat4x4(&xmf4x4View, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4View)));
-	::memcpy(&m_pcbMappedCamera->m_xmf4x4View, &xmf4x4View, sizeof(XMFLOAT4X4));
-
-	XMFLOAT4X4 xmf4x4Projection;
-	XMStoreFloat4x4(&xmf4x4Projection, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4Projection)));
-	::memcpy(&m_pcbMappedCamera->m_xmf4x4Projection, &xmf4x4Projection, sizeof(XMFLOAT4X4));
-
-	::memcpy(&m_pcbMappedCamera->m_xmf3Position, &m_xmf3Position, sizeof(XMFLOAT3));
-
-	D3D12_GPU_VIRTUAL_ADDRESS d3dGpuVirtualAddress = m_pd3dcbCamera->GetGPUVirtualAddress();
-	pd3dCommandList->SetGraphicsRootConstantBufferView(1, d3dGpuVirtualAddress);
-}
-
-void CCamera::ReleaseShaderVariables()
-{
-	if (m_pd3dcbCamera)
+	case CameraType::eFree:
+	case CameraType::eFirst:
 	{
-		m_pd3dcbCamera->Unmap(0, NULL);
-		m_pd3dcbCamera->Release();
-	}
-}
-
-void CCamera::SetViewportsAndScissorRects(ID3D12GraphicsCommandList* pd3dCommandList)
-{
-	pd3dCommandList->RSSetViewports(1, &m_d3dViewport);
-	pd3dCommandList->RSSetScissorRects(1, &m_d3dScissorRect);
-}
-
-// 절두체 생성(월드 좌표계)
-void CCamera::GenerateFrustum()
-{
-	// 원근 투영 변환 행렬에서 절두체를 생성(절두체는 카메라 좌표계로 표현)
-	m_xmFrustum.CreateFromMatrix(m_xmFrustum, XMLoadFloat4x4(&m_xmf4x4Projection));
-	// 카메라 변환 행렬의 역행렬을 구한다.
-	XMMATRIX xmmtxInversView = XMMatrixInverse(NULL, XMLoadFloat4x4(&m_xmf4x4View));
-	// 절두체를 카메라 변환 행렬의 역행렬로 변환(이제 절두체는 월드 좌표계로 표현)
-	m_xmFrustum.Transform(m_xmFrustum, xmmtxInversView);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CSpaceShipCamera
-CSpaceShipCamera::CSpaceShipCamera(CCamera* pCamera) : CCamera(pCamera)
-{
-	m_nMode = SPACESHIP_CAMERA;
-}
-void CSpaceShipCamera::Rotate(float x, float y, float z)
-{
-	if (m_pPlayer && (x != 0.0f))
-	{
-		// 플레이어의 로컬 x-축에 대한 x 각도의 회전 행렬을 계산
-		XMFLOAT3 xmf3Right = m_pPlayer->GetRightVector();
-		XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), XMConvertToRadians(x));
-
-		// 카메라의 로컬 x-축, y-축, z-축을 회전
-		m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
-		m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, xmmtxRotate);
-		m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-
-		// 카메라의 위치 벡터에서 플레이어의 위치 벡터를 뺀다. 결과는 플레이어 위치를 기준(원점)으로 한 카메라의 위치 벡터
-		m_xmf3Position = Vector3::Subtract(m_xmf3Position, m_pPlayer->GetPosition());
-		// 플레이어의 위치를 중심으로 카메라의 위치 벡터(플레이어를 기준으로 한)를 회전
-		m_xmf3Position = Vector3::TransformCoord(m_xmf3Position, xmmtxRotate);
-		// 회전시킨 카메라의 위치 벡터에 플레이어의 위치를 더하여 카메라의 위치 벡터를 구함
-		m_xmf3Position = Vector3::Add(m_xmf3Position, m_pPlayer->GetPosition());
-	}
-	if (m_pPlayer && (y != 0.0f))
-	{
-		XMFLOAT3 xmf3Up = m_pPlayer->GetUpVector();
-		XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), XMConvertToRadians(y));
-
-		m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
-		m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, xmmtxRotate);
-		m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-
-		m_xmf3Position = Vector3::Subtract(m_xmf3Position, m_pPlayer->GetPosition());
-		m_xmf3Position = Vector3::TransformCoord(m_xmf3Position, xmmtxRotate);
-		m_xmf3Position = Vector3::Add(m_xmf3Position, m_pPlayer->GetPosition());
-	}
-	if (m_pPlayer && (z != 0.0f))
-	{
-		XMFLOAT3 xmf3Look = m_pPlayer->GetLookVector();
-		XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), XMConvertToRadians(z));
-
-		m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
-		m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, xmmtxRotate);
-		m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-
-		m_xmf3Position = Vector3::Subtract(m_xmf3Position, m_pPlayer->GetPosition());
-		m_xmf3Position = Vector3::TransformCoord(m_xmf3Position, xmmtxRotate);
-		m_xmf3Position = Vector3::Add(m_xmf3Position, m_pPlayer->GetPosition());
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CFirstPersonCamera
-CFirstPersonCamera::CFirstPersonCamera(CCamera* pCamera) : CCamera(pCamera)
-{
-	m_nMode = FIRST_PERSON_CAMERA;
-	if (pCamera)
-	{
-		if (pCamera->GetMode() == SPACESHIP_CAMERA)
-		{
-			m_xmf3Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
-			m_xmf3Right.y = 0.0f;
-			m_xmf3Look.y = 0.0f;
-			m_xmf3Right = Vector3::Normalize(m_xmf3Right);
-			m_xmf3Look = Vector3::Normalize(m_xmf3Look);
-		}
-	}
-}
-void CFirstPersonCamera::Rotate(float x, float y, float z)
-{
-	if (x != 0.0f)
-	{
-		// 카메라의 로컬 x-축을 기준으로 회전하는 행렬을 생성(사람의 경우 고개를 끄떡이는 동작)
-		XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Right), XMConvertToRadians(x));
-
-		// 카메라의 로컬 x-축, y-축, z-축을 회전 행렬을 사용하여 회전
-		m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-		m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, xmmtxRotate);
-		m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
-	}
-	if (m_pPlayer && (y != 0.0f))
-	{
-		// 플레이어의 로컬 y-축을 기준으로 회전하는 행렬을 생성
-		XMFLOAT3 xmf3Up = m_pPlayer->GetUpVector();
-		XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), XMConvertToRadians(y));
-
-		// 카메라의 로컬 x-축, y-축, z-축을 회전 행렬을 사용하여 회전
-		m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-		m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, xmmtxRotate);
-		m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
-	}
-	if (m_pPlayer && (z != 0.0f))
-	{
-		// 플레이어의 로컬 z-축을 기준으로 회전하는 행렬을 생성
-		XMFLOAT3 xmf3Look = m_pPlayer->GetLookVector();
-		XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), XMConvertToRadians(z));
-
-		// 카메라의 위치 벡터를 플레이어 좌표계로 표현(오프셋 벡터)
-		m_xmf3Position = Vector3::Subtract(m_xmf3Position, m_pPlayer->GetPosition());
-		// 오프셋 벡터 벡터를 회전
-		m_xmf3Position = Vector3::TransformCoord(m_xmf3Position, xmmtxRotate);
-
-		// 회전한 카메라의 위치를 월드 좌표계로 표현
-		m_xmf3Position = Vector3::Add(m_xmf3Position, m_pPlayer->GetPosition());
-
-		// 카메라의 로컬 x-축, y-축, z-축을 회전
-		m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
-		m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, xmmtxRotate);
-		m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// CThirdPersonCamera
-CThirdPersonCamera::CThirdPersonCamera(CCamera* pCamera) : CCamera(pCamera)
-{
-	m_nMode = THIRD_PERSON_CAMERA;
-	if (pCamera)
-	{
-		if (pCamera->GetMode() == SPACESHIP_CAMERA)
-		{
-			m_xmf3Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
-			m_xmf3Right.y = 0.0f;
-			m_xmf3Look.y = 0.0f;
-			m_xmf3Right = Vector3::Normalize(m_xmf3Right);
-			m_xmf3Look = Vector3::Normalize(m_xmf3Look);
-		}
-	}
-}
-void CThirdPersonCamera::Update(XMFLOAT3& xmf3LookAt, float fTimeElapsed)
-{
-	// 플레이어가 있으면 플레이어의 회전에 따라 3인칭 카메라도 회전해야 함
-	if (m_pPlayer)
-	{
-		XMFLOAT4X4 xmf4x4Rotate = Matrix4x4::Identity();
-		XMFLOAT3 xmf3Right = m_pPlayer->GetRightVector();
-		XMFLOAT3 xmf3Up = m_pPlayer->GetUpVector();
-		XMFLOAT3 xmf3Look = m_pPlayer->GetLookVector();
-
-		// 플레이어의 로컬 x-축, y-축, z-축 벡터로부터 회전 행렬(플레이어와 같은 방향을 나타내는 행렬)을 생성
+		XMFLOAT4X4 xmf4x4Rotate = MathHelper::Identity4x4();
+		XMFLOAT3 xmf3Right = mRight;
+		XMFLOAT3 xmf3Up = mUp;
+		XMFLOAT3 xmf3Look = mLook;
 		xmf4x4Rotate._11 = xmf3Right.x; xmf4x4Rotate._21 = xmf3Up.x; xmf4x4Rotate._31 = xmf3Look.x;
 		xmf4x4Rotate._12 = xmf3Right.y; xmf4x4Rotate._22 = xmf3Up.y; xmf4x4Rotate._32 = xmf3Look.y;
 		xmf4x4Rotate._13 = xmf3Right.z; xmf4x4Rotate._23 = xmf3Up.z; xmf4x4Rotate._33 = xmf3Look.z;
 
-		// 카메라 오프셋 벡터를 회전 행렬로 변환(회전)한다.
-		XMFLOAT3 xmf3Offset = Vector3::TransformCoord(m_xmf3Offset, xmf4x4Rotate);
-		// 회전한 카메라의 위치는 플레이어의 위치에 회전한 카메라 오프셋 벡터를 더한 것
-		XMFLOAT3 xmf3Position = Vector3::Add(m_pPlayer->GetPosition(), xmf3Offset);
-		// 현재의 카메라의 위치에서 회전한 카메라의 위치까지의 방향과 거리를 나타내는 벡터
-		XMFLOAT3 xmf3Direction = Vector3::Subtract(xmf3Position, m_xmf3Position);
+		XMFLOAT3 xmf3Offset = MathHelper::TransformCoord(mOffset, xmf4x4Rotate);
+		XMFLOAT3 xmf3Position = MathHelper::Add(m_Owner->GetPosition(), xmf3Offset);
 
-		float fLength = Vector3::Length(xmf3Direction);
-		xmf3Direction = Vector3::Normalize(xmf3Direction);
 
-		// 카메라가 회전을 따라가는 딜레이 시간 설정
-		float fTimeLagScale = (m_fTimeLag) ? fTimeElapsed * (1.0f / m_fTimeLag) : 1.0f;
+		XMFLOAT4X4 LookAtMat;
+		XMStoreFloat4x4(&LookAtMat, DirectX::XMMatrixLookToLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&GetLook3f()), XMLoadFloat3(&GetUp3f())));
+
+		mRight = XMFLOAT3(LookAtMat._11, LookAtMat._21, LookAtMat._31);
+		mUp = XMFLOAT3(LookAtMat._12, LookAtMat._22, LookAtMat._32);
+		mLook = XMFLOAT3(LookAtMat._13, LookAtMat._23, LookAtMat._33);
+		break;
+	}
+	case CameraType::eThird:
+	{
+		if (!m_Owner) return;
+
+		XMFLOAT4X4 xmf4x4Rotate = MathHelper::Identity4x4();
+		XMFLOAT3 xmf3Right = mRight;
+		XMFLOAT3 xmf3Up = mUp;
+		XMFLOAT3 xmf3Look = mLook;
+		xmf4x4Rotate._11 = xmf3Right.x; xmf4x4Rotate._21 = xmf3Up.x; xmf4x4Rotate._31 = xmf3Look.x;
+		xmf4x4Rotate._12 = xmf3Right.y; xmf4x4Rotate._22 = xmf3Up.y; xmf4x4Rotate._32 = xmf3Look.y;
+		xmf4x4Rotate._13 = xmf3Right.z; xmf4x4Rotate._23 = xmf3Up.z; xmf4x4Rotate._33 = xmf3Look.z;
+
+		XMFLOAT3 xmf3Offset = MathHelper::TransformCoord(mOffset, xmf4x4Rotate);
+		XMFLOAT3 xmf3Position = MathHelper::Add(m_Owner->GetPosition(), xmf3Offset);
+		XMFLOAT3 xmf3Direction = MathHelper::Subtract(xmf3Position, mPosition);
+
+		float fLength = MathHelper::Length(xmf3Direction);
+		xmf3Direction = MathHelper::Normalize(xmf3Direction);
+		float fTimeLagScale = (mTimeLag) ? deltaT * (1.0f / mTimeLag) : 1.0f;
 		float fDistance = fLength * fTimeLagScale;
 		if (fDistance > fLength) fDistance = fLength;
 		if (fLength < 0.01f) fDistance = fLength;
 		if (fDistance > 0)
 		{
-			// 실제로 카메라를 회전하지 않고 이동(회전의 각도가 작은 경우 회전 이동은 선형 이동과 거의 같음)
-			m_xmf3Position = Vector3::Add(m_xmf3Position, xmf3Direction, fDistance);
-
-			// 카메라가 플레이어를 바라보도록 함
-			SetLookAt(xmf3LookAt);
+			mPosition = MathHelper::Add(mPosition, xmf3Direction, fDistance);
+			// LookAt(mPosition, lookAt,m_Owner->GetUp());
 		}
+
+		break;
+	}
+	}
+
+	if (mPosition.y < 0.f)
+		mPosition.y = 10.f;
+	mViewDirty = true;
+}
+
+Camera::Camera(CameraType cameraType) :
+	m_CameraType(cameraType)
+{
+	Initialize();
+	OnResize();
+}
+
+Camera::~Camera()
+{
+}
+
+void Camera::OnResize()
+{
+	if (mFovY == 0.f) mFovY = 0.25f;
+
+	SetLens(mFovY, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
+	GenerateFrustum();
+}
+
+void Camera::CameraInitialize(SceneType sceneType)
+{
+	switch (sceneType)
+	{
+	case SceneType::eLobby:
+		// Set FovY
+		SetLens(0.25f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
+
+		m_Owner = nullptr;
+		mPosition = { 1106.77, 238.978, 471.743 };
+		mRight = { 0.81325, 0.00145013, -0.581913 };
+		mUp = { 0.136672, 0.971549, 0.193427 };
+		mLook = { 0.565637, -0.236835, 0.789913 };
+
+		mTarget = { 0.f,0.f,0.f };
+		mOffset = { 0.f,0.f,0.f };
+		mRotation = { 0, 0, 0 };
+		mTimeLag = 0.f;
+
+		m_CameraType = CameraType::eFree;
+		mViewDirty = true;
+
+		break;
+
+	case SceneType::eGamePlay:
+		// Set FovY
+		SetLens(0.35f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
+
+		if (!m_Owner)	return;
+
+		mUp = m_Owner->GetUp();
+		mRight = m_Owner->GetRight();
+		mLook = m_Owner->GetLook();
+		mRight = MathHelper::Normalize(mRight);
+		mLook = MathHelper::Normalize(mLook);
+
+		m_CameraType = CameraType::eThird;
+		mViewDirty = true;
+
+		break;
+	default:
+		break;
 	}
 }
-void CThirdPersonCamera::SetLookAt(XMFLOAT3& xmf3LookAt)
-{
-	// 현재 카메라의 위치에서 플레이어를 바라보기 위한 카메라 변환 행렬을 생성
-	XMFLOAT3 xmf3PlayerHeadPosition = Vector3::Subtract(m_xmf3Position, XMFLOAT3(0.f, STD_CUBE_SIZE, 0.f));
-	XMFLOAT4X4 mtxLookAt = Matrix4x4::LookAtLH(xmf3PlayerHeadPosition, xmf3LookAt, m_pPlayer->GetUpVector());
 
-	// 카메라 변환 행렬에서 카메라의 x-축, y-축, z-축을 구함
-	m_xmf3Right = XMFLOAT3(mtxLookAt._11, mtxLookAt._21, mtxLookAt._31);
-	m_xmf3Up = XMFLOAT3(mtxLookAt._12, mtxLookAt._22, mtxLookAt._32);
-	m_xmf3Look = XMFLOAT3(mtxLookAt._13, mtxLookAt._23, mtxLookAt._33);
+XMVECTOR Camera::GetPosition()const
+{
+	return XMLoadFloat3(&mPosition);
+}
+
+XMFLOAT3 Camera::GetPosition3f()const
+{
+	return mPosition;
+}
+
+void Camera::SetPosition(float x, float y, float z)
+{
+	mPosition = XMFLOAT3(x, y, z);
+	mViewDirty = true;
+}
+
+void Camera::SetPosition(const XMFLOAT3& v)
+{
+	mPosition = v;
+	mViewDirty = true;
+}
+
+XMVECTOR Camera::GetRight()const
+{
+	return XMLoadFloat3(&mRight);
+}
+
+XMFLOAT3 Camera::GetRight3f()const
+{
+	return mRight;
+}
+
+XMVECTOR Camera::GetUp()const
+{
+	return XMLoadFloat3(&mUp);
+}
+
+XMFLOAT3 Camera::GetUp3f()const
+{
+	return mUp;
+}
+
+XMVECTOR Camera::GetLook()const
+{
+	return XMLoadFloat3(&mLook);
+}
+
+XMFLOAT3 Camera::GetLook3f()const
+{
+	return mLook;
+}
+
+void Camera::SetOffset(DirectX::XMFLOAT3 offset)
+{
+	if (!m_Owner) return;
+
+	mOffset = offset;
+	mPosition.x = m_Owner->GetPosition().x + offset.x;
+	mPosition.y = m_Owner->GetPosition().y + offset.y;
+	mPosition.z = m_Owner->GetPosition().z + offset.z;
+
+	mViewDirty = true;
+}
+
+DirectX::XMFLOAT3& Camera::GetOffset()
+{
+	return mOffset;
+}
+
+XMFLOAT3 Camera::GetRotation()
+{
+	return mRotation;
+}
+
+void Camera::SetRotation(XMFLOAT3 rotation)
+{
+	mRotation = rotation;
+	// cout<< "change - " << mRotation.x << endl;
+}
+
+void Camera::SetTimeLag(float fTimeLag)
+{
+	mTimeLag = fTimeLag;
+	mViewDirty = true;
+}
+
+float Camera::GetNearZ()const
+{
+	return mNearZ;
+}
+
+float Camera::GetFarZ()const
+{
+	return mFarZ;
+}
+
+float Camera::GetAspect()const
+{
+	return mAspect;
+}
+
+float Camera::GetFovY()const
+{
+	return mFovY;
+}
+
+float Camera::GetFovX()const
+{
+	float halfWidth = 0.5f * GetNearWindowWidth();
+	return 2.0f * atan(halfWidth / mNearZ);
+}
+
+float Camera::GetNearWindowWidth()const
+{
+	return mAspect * mNearWindowHeight;
+}
+
+float Camera::GetNearWindowHeight()const
+{
+	return mNearWindowHeight;
+}
+
+float Camera::GetFarWindowWidth()const
+{
+	return mAspect * mFarWindowHeight;
+}
+
+float Camera::GetFarWindowHeight()const
+{
+	return mFarWindowHeight;
+}
+
+void Camera::SetLens(float fovY, float aspect, float zn, float zf)
+{
+	mFovY = fovY;
+	mAspect = aspect;
+	mNearZ = zn;
+	mFarZ = zf;
+
+	mNearWindowHeight = 2.0f * mNearZ * tanf(0.5f * mFovY);
+	mFarWindowHeight = 2.0f * mFarZ * tanf(0.5f * mFovY);
+
+	// Proj
+	XMMATRIX P = DirectX::XMMatrixPerspectiveFovLH(mFovY, mAspect, mNearZ, mFarZ);
+	XMStoreFloat4x4(&mProj, P);
+
+	// Ortho
+	// far = 1.f
+	// near = 0.f
+	XMMATRIX O = DirectX::XMMatrixOrthographicLH(Core::g_DisplayWidth, Core::g_DisplayHeight, 0.f, 1.f);
+	XMStoreFloat4x4(&mOrtho, O);
+
+	mViewDirty = true;
+}
+
+void Camera::SetTarget(const DirectX::XMFLOAT3& lookAt)
+{
+	switch (m_CameraType)
+	{
+	case CameraType::eThird:
+	{
+		XMFLOAT4X4 LookAtMat;
+		XMStoreFloat4x4(&LookAtMat, DirectX::XMMatrixLookAtLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&lookAt), XMLoadFloat3(&m_Owner->GetUp())));
+
+		mRight = XMFLOAT3(LookAtMat._11, LookAtMat._21, LookAtMat._31);
+		mUp = XMFLOAT3(LookAtMat._12, LookAtMat._22, LookAtMat._32);
+		mLook = XMFLOAT3(LookAtMat._13, LookAtMat._23, LookAtMat._33);
+		break;
+	}
+	case CameraType::eFree:
+	{
+		// mRotation 나중에 수정해야함 
+		// mRotation은 각 축에 대해서 얼만큼씩 회전했는지를 가지고 있음 (누적)
+		// degree -> radian으로 바꿈
+		XMVECTOR Up = { 0.f,1.f,0.f };
+		Up = XMVector3Transform(Up, DirectX::XMMatrixRotationQuaternion(XMLoadFloat3(&mRotation)));	// 이거 바꿔야할 수도 있음
+
+		XMFLOAT4X4 LookAtMat;
+		XMStoreFloat4x4(&LookAtMat, DirectX::XMMatrixLookAtLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&lookAt), Up));
+
+		mRight = XMFLOAT3(LookAtMat._11, LookAtMat._21, LookAtMat._31);
+		mUp = XMFLOAT3(LookAtMat._12, LookAtMat._22, LookAtMat._32);
+		mLook = XMFLOAT3(LookAtMat._13, LookAtMat._23, LookAtMat._33);
+		break;
+	}
+	}
+
+	mViewDirty = true;
+}
+
+void Camera::LookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp)
+{
+	XMVECTOR L = XMVector3Normalize(XMVectorSubtract(target, pos));
+	XMVECTOR R = XMVector3Normalize(XMVector3Cross(worldUp, L));
+	XMVECTOR U = XMVector3Cross(L, R);
+
+	DirectX::XMStoreFloat3(&mPosition, pos);
+	DirectX::XMStoreFloat3(&mLook, L);
+	DirectX::XMStoreFloat3(&mRight, R);
+	DirectX::XMStoreFloat3(&mUp, U);
+
+	mViewDirty = true;
+}
+
+void Camera::LookAt(const XMFLOAT3& pos, const XMFLOAT3& target, const XMFLOAT3& up)
+{
+	XMVECTOR P = XMLoadFloat3(&pos);
+	XMVECTOR T = XMLoadFloat3(&target);
+	XMVECTOR U = XMLoadFloat3(&up);
+
+	LookAt(P, T, U);
+
+	mViewDirty = true;
+}
+
+XMMATRIX Camera::GetView()const
+{
+	//assert(!mViewDirty);
+	return XMLoadFloat4x4(&mView);
+}
+
+XMMATRIX Camera::GetProj()const
+{
+	return XMLoadFloat4x4(&mProj);
+}
+
+DirectX::XMMATRIX Camera::GetOrtho() const
+{
+	return XMLoadFloat4x4(&mOrtho);
+}
+
+
+XMFLOAT4X4 Camera::GetView4x4f()const
+{
+	//assert(!mViewDirty);
+	return mView;
+}
+
+XMFLOAT4X4 Camera::GetProj4x4f()const
+{
+	return mProj;
+}
+
+DirectX::XMFLOAT4X4 Camera::GetOrtho4x4f() const
+{
+	return mOrtho;
+}
+
+void Camera::Strafe(float d)
+{
+	// mPosition += d*mRight
+	XMVECTOR s = XMVectorReplicate(d);
+	XMVECTOR r = XMLoadFloat3(&mRight);
+	XMVECTOR p = XMLoadFloat3(&mPosition);
+	DirectX::XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, r, p));
+
+	mViewDirty = true;
+}
+
+void Camera::Walk(float d)
+{
+
+	// mPosition += d*mLook
+	XMVECTOR s = XMVectorReplicate(d);
+	XMVECTOR l = XMLoadFloat3(&mLook);
+	XMVECTOR p = XMLoadFloat3(&mPosition);
+	DirectX::XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
+
+	mViewDirty = true;
+}
+
+void Camera::Up(float d)
+{
+
+	XMVECTOR s = XMVectorReplicate(d);
+	XMVECTOR l = XMLoadFloat3(&mUp);
+	XMVECTOR p = XMLoadFloat3(&mPosition);
+	DirectX::XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
+
+	mViewDirty = true;
+}
+
+void Camera::Move(const XMFLOAT3& xmf3Shift)
+{
+	if (m_CameraType == CameraType::eFree) return;
+
+	mPosition.x += xmf3Shift.x; mPosition.y += xmf3Shift.y; mPosition.z += xmf3Shift.z;
+
+	mViewDirty = true;
+}
+
+
+void Camera::Rotate(float fPitch, float fYaw, float fRoll)
+{
+	switch (m_CameraType)
+	{
+	case CameraType::eFirst:
+	{
+		mRotation.x += (fPitch);
+		mRotation.y += (fYaw);
+		mRotation.z += (fRoll);
+
+		if (fPitch)
+		{
+			XMFLOAT3 xmf3Right = mRight;
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
+			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+		}
+		if (m_Owner && fYaw)
+		{
+			XMFLOAT3 off = mOffset;
+			float distance = sqrtf((mOffset.x * mOffset.x) + (mOffset.z * mOffset.z));
+
+			mPosition = m_Owner->GetPosition();
+
+			XMFLOAT3 xmf3Up = m_Owner->GetUp();
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
+
+			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+
+			mPosition = MathHelper::Add(mPosition, mLook, distance);
+			mPosition.y = mOffset.y;
+		}
+		if (m_Owner && fRoll)
+		{
+			XMFLOAT3 xmf3Look = m_Owner->GetLook();
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
+			XMFLOAT3 xmPos = m_Owner->GetPosition();
+
+			mPosition = MathHelper::Subtract(mPosition, xmPos);
+			mPosition = MathHelper::TransformCoord(mPosition, xmmtxRotate);
+			mPosition = MathHelper::Add(mPosition, m_Owner->GetPosition());
+
+			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+		}
+		break;
+	}
+	case CameraType::eThird:
+	{
+		if (m_Owner && fPitch)
+		{
+			XMFLOAT3 xmf3Right = mRight;
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
+
+			XMFLOAT3 calLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+			XMFLOAT3 upVec = { 0.f, 1.f, 0.f };
+
+			XMVECTOR projVec = XMVectorMultiply(XMVector3Dot(XMLoadFloat3(&calLook), XMLoadFloat3(&upVec)), XMLoadFloat3(&upVec));
+
+
+			float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&calLook), projVec));
+			float acosValue = 0.f;
+			if (cosValue <= -1.f)
+				acosValue = 3.141592;
+			else if (cosValue > 1.f)
+				acosValue = 0.f;
+			else
+				acosValue = acos(cosValue);
+			float degree = XMConvertToDegrees(acosValue);
+
+			float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&mRight), DirectX::XMVector3Cross(XMLoadFloat3(&calLook), (projVec))));
+			if (ccw > 0)	// ccw가 양수이면 방시계로 돌아야함
+				degree = -degree;
+			degree += 90.f;
+
+			// cout << degree << endl;
+
+			// pitch 각도 제한 두기
+			if (degree < 90.f)
+			{
+				mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+				mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+				mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+
+				XMFLOAT3 r = { fPitch, 0.f, 0.f };
+				XMVECTOR q = XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3(&r));
+
+				XMStoreFloat3(&mPosition, XMVector3Rotate(XMLoadFloat3(&mPosition), q));
+			}
+			else if(degree > 170.f)
+;				degree = 170.f;
+		}
+		if (m_Owner && fYaw)
+		{
+			XMFLOAT3 xmf3Up = m_Owner->GetUp();
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
+			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+		}
+		if (m_Owner && fRoll)
+		{
+			XMFLOAT3 xmf3Look = m_Owner->GetLook();
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
+			XMFLOAT3 xmPos = m_Owner->GetPosition();
+
+			mPosition = MathHelper::Subtract(mPosition, xmPos);
+			mPosition = MathHelper::TransformCoord(mPosition, xmmtxRotate);
+			mPosition = MathHelper::Add(mPosition, m_Owner->GetPosition());
+
+			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+		}
+		break;
+	}
+	case CameraType::eFree:
+	{
+		mRotation.x += (fPitch);
+		mRotation.y += (fYaw);
+		mRotation.z += (fRoll);
+
+		if (m_Owner && fPitch)
+		{
+			XMFLOAT3 xmf3Right = mRight;
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
+			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+		}
+		if (m_Owner && fYaw)
+		{
+			XMFLOAT3 xmf3Up = m_Owner->GetUp();
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
+			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+		}
+		break;
+	}
+	}
+	mViewDirty = true;
+}
+
+void Camera::Pitch(float angle)
+{
+	// Rotate up and look vector about the right vector.
+
+	XMMATRIX R = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&mRight), angle);
+
+	XMStoreFloat3(&mUp, XMVector3TransformNormal(XMLoadFloat3(&mUp), R));
+	XMStoreFloat3(&mLook, XMVector3TransformNormal(XMLoadFloat3(&mLook), R));
+
+	mViewDirty = true;
+}
+
+void Camera::RotateY(float angle)
+{
+	// Rotate the basis vectors about the world y-axis.
+
+	XMMATRIX R = DirectX::XMMatrixRotationY(angle);
+
+	XMStoreFloat3(&mRight, XMVector3TransformNormal(XMLoadFloat3(&mRight), R));
+	XMStoreFloat3(&mUp, XMVector3TransformNormal(XMLoadFloat3(&mUp), R));
+	XMStoreFloat3(&mLook, XMVector3TransformNormal(XMLoadFloat3(&mLook), R));
+
+	mViewDirty = true;
+}
+
+void Camera::UpdateViewMatrix()
+{
+	if (mViewDirty)
+	{
+		GenerateFrustum();
+
+		XMVECTOR R = XMLoadFloat3(&mRight);
+		XMVECTOR U = XMLoadFloat3(&mUp);
+		XMVECTOR L = XMLoadFloat3(&mLook);
+		XMVECTOR P = XMLoadFloat3(&mPosition);
+
+		// Keep camera's axes orthogonal to each other and of unit length.
+		L = XMVector3Normalize(L);
+		U = XMVector3Normalize(XMVector3Cross(L, R));
+
+		// U, L already ortho-normal, so no need to normalize cross product.
+		R = XMVector3Cross(U, L);
+
+		// Fill in the view matrix entries.
+		float x = -XMVectorGetX(XMVector3Dot(P, R));
+		float y = -XMVectorGetX(XMVector3Dot(P, U));
+		float z = -XMVectorGetX(XMVector3Dot(P, L));
+
+		XMStoreFloat3(&mRight, R);
+		XMStoreFloat3(&mUp, U);
+		XMStoreFloat3(&mLook, L);
+
+		mView(0, 0) = mRight.x;
+		mView(1, 0) = mRight.y;
+		mView(2, 0) = mRight.z;
+		mView(3, 0) = x;
+
+		mView(0, 1) = mUp.x;
+		mView(1, 1) = mUp.y;
+		mView(2, 1) = mUp.z;
+		mView(3, 1) = y;
+
+		mView(0, 2) = mLook.x;
+		mView(1, 2) = mLook.y;
+		mView(2, 2) = mLook.z;
+		mView(3, 2) = z;
+
+		// 카메라 이동과 회전이 빈번하면 실수 연산의 오차 누적으로 카메라의 축들이 서로 직교하지 않을수있음
+		// 카메라의 이동과 회전을 한 후 축들이 서로 직교하게 만들 필요가 있음
+		mView(0, 3) = 0.0f;
+		mView(1, 3) = 0.0f;
+		mView(2, 3) = 0.0f;
+		mView(3, 3) = 1.0f;
+
+		mViewDirty = false;
+	}
+}
+
+void Camera::GenerateFrustum()
+{
+	m_Frustum.CreateFromMatrix(m_Frustum, XMLoadFloat4x4(&mProj));
+}
+
+bool Camera::IsInFrustum(const XMMATRIX& invWorld, const BoundingBox& otherBounds)
+{
+	XMMATRIX view = XMLoadFloat4x4(&mView);
+	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
+
+	// View space to the object's local space.
+	XMMATRIX viewToLocal = XMMatrixMultiply(invView, invWorld);
+
+	// Transform the camera frustum from view space to the object's local space.
+	BoundingFrustum localSpaceFrustum;
+	m_Frustum.Transform(localSpaceFrustum, viewToLocal);
+
+	// Perform the box/frustum intersection test in local space.
+	return (localSpaceFrustum.Contains(otherBounds) != DirectX::DISJOINT);
 }

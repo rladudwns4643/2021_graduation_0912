@@ -14,6 +14,10 @@
 #include "global.h"
 #include "d3dUtil.h"
 
+// 풀스크린 모드
+//#define FULLSCREEN_MODE 0x00FF1
+//#define ON_PAUSE 0x00FF2
+//#define FRUSTUM_CULLMODE 0x00FF3
 
 // 콘솔창 띄우기
 #ifdef UNICODE
@@ -23,11 +27,6 @@
 #endif
 
 #endif //PCH_H
-
-// FILLMODE 설정 (WIREFRAM, SOLID)
-extern bool bFillModeWireFrame;
-// 바운딩 박스 표시
-extern bool bShowBoundingBox;
 
 // 버퍼 리소스를 생성하는 함수
 extern ID3D12Resource* CreateBufferResource(ID3D12Device* pd3dDevice,
