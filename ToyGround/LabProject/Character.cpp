@@ -147,7 +147,7 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 		
 		if (ccw > 0)	// ccw가 양수이면 방시계로 돌아야함
 			degree = -degree;
-		degree *= 0.85f;
+		degree *= 0.7f;
 		
 		bool isChange = false;
 		

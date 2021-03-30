@@ -18,7 +18,7 @@ void GameplayScene::Initialize()
 	m_SceneController->SetMapName(MAP_STR_GAME_MAP);
 
 	/* SkyCube */
-	AppContext->CreateSkycube("gameplaySky", "gameplaySky", "grasscube1024");
+	AppContext->CreateSkycube("gameplaySky", "gameplaySky", "SkyBox");
 
 	/* 맵의 오브젝트들 생성 */
 	AppContext->CreateProps(MAP_STR_GAME_MAP);
@@ -116,6 +116,10 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
 	}
+
+	/*SkyBox*/
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
 }
 
 void GameplayScene::ChangeFreeCamera()

@@ -30,7 +30,7 @@
 #define LIGHT_NAME_DIRECTIONAL "Directional" 
 
 // ÅØ½ºÃÄ
-#define TEXTURE_INDEX_grasscube1024 0
+#define TEXTURE_INDEX_SkyBox 0
 #define TEXTURE_INDEX_Cartoon_CubeWorld_Texture 1
 
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture "Cartoon_CubeWorld_Texture"

@@ -59,13 +59,13 @@ void GraphicsRenderer::LoadTextures()
 {
 	std::vector<std::string> texNames =
 	{
-		"grasscube1024",
+		"SkyBox",
 		"Cartoon_CubeWorld_Texture",
 	};
 
 	std::vector<std::wstring> texFilenames =
 	{
-		L"./Textures/grasscube1024.dds",
+		L"./Textures/SkyBox.dds",
 		L"./Textures/Cartoon_CubeWorld_Texture.dds",
 	};
 
@@ -105,17 +105,17 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_Cartoon_CubeWorld_Texture]->Resource,
 	};
 
-	auto grasscube1024 = m_Textures["grasscube1024"]->Resource;
+	auto SkyBox = m_Textures["SkyBox"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	// SkyCube
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
 	srvDesc.TextureCube.MostDetailedMip = 0;
-	srvDesc.TextureCube.MipLevels = grasscube1024->GetDesc().MipLevels;
+	srvDesc.TextureCube.MipLevels = SkyBox->GetDesc().MipLevels;
 	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-	srvDesc.Format = grasscube1024->GetDesc().Format;
-	Core::g_Device->CreateShaderResourceView(grasscube1024.Get(), &srvDesc, hDescriptor);
+	srvDesc.Format = SkyBox->GetDesc().Format;
+	Core::g_Device->CreateShaderResourceView(SkyBox.Get(), &srvDesc, hDescriptor);
 
 	// Texture
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
