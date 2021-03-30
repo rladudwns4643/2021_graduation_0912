@@ -75,9 +75,6 @@
     <ClInclude Include="DDSTextureLoader.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsRenderer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Singleton.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -131,9 +128,6 @@
     </ClCompile>
     <ClCompile Include="DDSTextureLoader.cpp">
       <Filter>headers</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsRenderer.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
