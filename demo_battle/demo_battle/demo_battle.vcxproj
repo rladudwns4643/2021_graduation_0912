@@ -140,17 +140,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="battleServer.cpp" />
+    <ClCompile Include="Boundary.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Room.cpp" />
+    <ClCompile Include="WorkerThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="battleServer.h" />
+    <ClInclude Include="Boundary.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="MyThread.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SocketAddress.h" />
     <ClInclude Include="SocketUtil.h" />
     <ClInclude Include="TCPSocket.h" />
+    <ClInclude Include="ThreadHandler.h" />
+    <ClInclude Include="TimerThread.h" />
+    <ClInclude Include="WorkerThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

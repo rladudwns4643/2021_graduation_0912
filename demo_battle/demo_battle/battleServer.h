@@ -1,10 +1,9 @@
 #pragma once
-#include "pch.h"
 #include "Global.h"
 #include "Singleton.h"
-#include "../../demo_server/demo_server/protocol.h"
+#include "ThreadHandler.h"
 
-class ThreadMnr;
+class ThreadHandler;
 
 class BattleServer : public Singleton<BattleServer> {
 public:
@@ -23,28 +22,26 @@ public:
 
 public:
 	void SendPacket(int id, void* buff);
-	void SendAccessOKPacket(int id, char match_type);
-	void SendAccessFailPacket(int id);
+	void SendAutoAccessOKPacket(int id);
+	void SendAutoAccessFailPacket(int id);
 	void SendAutoRoomReadyPacket(int id, int room_no);
 	void SendRoomJoinSuccess(int id, int slot);
 	void SendRoomJoinFail(int id, int code);
-	void SendMapPacket(int id);
-	void SendRoomEnterPacket(int to, int enterer, bool ready, char playerNo, const char* char_type, char* name,
-		int mmr, int catchCnt, float w_rate, int totalCnt, int winCnt, bool isManager);
-	void SendRoomLeavePacket(int to, int from);
+	void SendRoomEnterPacket(int to, int enterer, bool ready, char playerNo, char* name, int mmr, bool isManager);
+	void SendRoomLeavePacket(int to, int leave);
 	void SendGameStartPacket(int id, PTC_START_INFO* player_info);
 	
 	//¿Œ∞‘¿”
 	void SendRoundStartPacket(int id);
 	void SendPlayerRotation(int to, int from, PTC_VECTOR look);
 	void SendLeftTimePacket(int id, char left_time);
-	void SendShootPacket(int id, PTC_VECTOR look);
+	void SendShootPacket(int id, int bullet_id, PTC_VECTOR look);
 	void SendGameOverPacket(int id, int winner_id);
 
 	void SendUpdateUserInfoPacket(const int& id, const int& mmr);
 
 private:
-	ThreadMnr* m_ThreadHandler;
+	ThreadHandler* m_ThreadHandler;
 	SocketUtil m_sockUtil;
 	TCPSocketPtr m_listen;
 

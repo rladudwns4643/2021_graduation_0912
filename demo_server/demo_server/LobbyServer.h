@@ -31,10 +31,12 @@ public:
 	~LobbyServer();
 
 	void ClinetAccept(int id);
+	void BattleServerAccept();
 	void DoWorker();
 	void ProcessPacket(int id, void* buf);
 
 public:
+	// L->C
 	void SendLoginOKPacket(int id);
 	void SendLoginFailPacket(int id);
 	void SendSignUpOKPacket(int id, int mmr);
@@ -45,12 +47,13 @@ public:
 	void SendAutoMatchPacket(int id, int mmr);
 	void SendMatchStartPacket(int id);
 
-
+	void AutoMatch(int id, int mmr);
+	void CancelAutoMatch(int id);
+	void ClientDisconnect(int id);
 
 	void SendPacket(int id, void* buf);
-
 	void error_display(const char* msg, int err_no);
-	void recv_packet_construct(const int& user_id, DWORD& io_byte);
+	//void recv_packet_construct(const int& user_id, DWORD& io_byte);
 
 	std::uniform_int_distribution<int> uid{ 0, 5000 };
 	std::default_random_engine dre;
@@ -65,6 +68,9 @@ private:
 
 	SOCKADDR_IN clientAddr;
 	SOCKET clientSocket;
+
+	SOCKADDR_IN BattleServerAddr;
+	SOCKET BattleServerSocket;
 
 	short lobbyID;
 	std::array<CLIENT*, MAX_PLAYER + 1> userList;

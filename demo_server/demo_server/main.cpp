@@ -8,7 +8,11 @@ LobbyServer* g_lobbyServer;
 std::atomic_int new_user_id{ 0 };	//0Àº ºñ¿öµÒ
 
 int main() {
+
+	wcout.imbue(std::locale("korean"));
+
 	g_lobbyServer = new LobbyServer(LOBBY_ID);
+	g_lobbyServer->BattleServerAccept();
 
 	std::thread worker_thread(&LobbyServer::DoWorker, g_lobbyServer);
 

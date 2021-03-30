@@ -1,7 +1,8 @@
 #pragma once
 #include "pch.h"
 
-//class SocketAddress;
+class SocketAddress;
+class SocketUtil;
 class TCPSocket {
 public:
 	~TCPSocket() {

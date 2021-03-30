@@ -13,8 +13,32 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\BattleServer">
+    <Filter Include="Code">
+      <UniqueIdentifier>{cd65cefd-30b4-4814-88d8-a317acc5f0e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\BattleServer">
       <UniqueIdentifier>{69de2135-4323-4d93-b1fe-c7fb6a68637b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Player">
+      <UniqueIdentifier>{815ffeb6-34e3-4f49-a505-9a919c0dd244}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Socket">
+      <UniqueIdentifier>{68e4261d-ec53-42c6-9771-cd27b05ecbeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread">
+      <UniqueIdentifier>{9ad158ae-cb62-4413-b5aa-fd602c57ba18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Boundary">
+      <UniqueIdentifier>{45983dfd-e1c2-49a9-8147-f25cc8116551}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Object">
+      <UniqueIdentifier>{5fcf9648-70b7-4830-82c6-fc44d5f2db6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Object\Interface">
+      <UniqueIdentifier>{90742168-08ff-4d75-b95c-5b7547c76ab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Room">
+      <UniqueIdentifier>{7bbd72e3-56b3-46f1-8d61-13ab79a9f6fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -22,14 +46,26 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="battleServer.cpp">
-      <Filter>소스 파일\BattleServer</Filter>
+      <Filter>Code\BattleServer</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Code\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Boundary.cpp">
+      <Filter>Code\Boundary</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Code\Object\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Room.cpp">
+      <Filter>Code\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerThread.cpp">
+      <Filter>Code\Thread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Room.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Global.h">
@@ -38,17 +74,41 @@
     <ClInclude Include="Singleton.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SocketAddress.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="battleServer.h">
+      <Filter>Code\BattleServer</Filter>
     </ClInclude>
-    <ClInclude Include="SocketUtil.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="MyThread.h">
+      <Filter>Code\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerThread.h">
+      <Filter>Code\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadHandler.h">
+      <Filter>Code\Thread</Filter>
     </ClInclude>
     <ClInclude Include="TCPSocket.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Code\Socket</Filter>
     </ClInclude>
-    <ClInclude Include="battleServer.h">
-      <Filter>소스 파일\BattleServer</Filter>
+    <ClInclude Include="SocketUtil.h">
+      <Filter>Code\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketAddress.h">
+      <Filter>Code\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Code\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Boundary.h">
+      <Filter>Code\Boundary</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Code\Object\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerThread.h">
+      <Filter>Code\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>Code\Room</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

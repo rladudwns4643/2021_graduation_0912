@@ -16,6 +16,7 @@ LobbyServer::LobbyServer(short lobby_id)
 	::bind(listenSocket, reinterpret_cast<sockaddr*>(&serverAddr), sizeof(SOCKADDR_IN));
 	listen(listenSocket, SOMAXCONN);
 
+	memset(&BattleServerAddr, 0, addrlen);
 	memset(&clientAddr, 0, addrlen);
 	iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
 }
@@ -48,8 +49,39 @@ void LobbyServer::ClinetAccept(int id) {
 		if (WSA_IO_PENDING != err_no) error_display("WSARecv Error: ", err_no);
 	}
 
-	cout << "user: " << id <<"connect"<< endl;
+#ifdef LOG_ON
+	std::cout << "user: " << id << "connect\n";
+#endif
 	//this->ClinetAccept(id + 1);
+}
+
+void LobbyServer::BattleServerAccept() {
+	BattleServerSocket = accept(listenSocket, reinterpret_cast<sockaddr*>(&BattleServerAddr), &addrlen);
+
+	CLIENT* new_btServer = new CLIENT;
+	new_btServer->id = 0;
+	new_btServer->m_s = BattleServerSocket;
+	new_btServer->m_recv_over.wsabuf[0].len = MAX_BUF_SIZE;
+	new_btServer->m_recv_over.wsabuf[0].buf = new_btServer->m_recv_over.io_buf;
+	new_btServer->m_recv_over.is_recv = true;
+	new_btServer->isActive = true;
+	new_btServer->m_curr_packet_size = 0;
+	new_btServer->m_prev_packet_data = 0;
+
+	userList[0] = new_btServer;
+
+	CreateIoCompletionPort(reinterpret_cast<HANDLE>(BattleServerSocket), iocp, 0, 0);
+	memset(&userList[0]->m_recv_over.over, 0, sizeof(WSAOVERLAPPED));
+	flags = 0;
+	int ret = WSARecv(BattleServerSocket, userList[0]->m_recv_over.wsabuf, 1, NULL, &flags, &(userList[0]->m_recv_over.over), NULL);
+	if (ret != 0) {
+		int err = WSAGetLastError();
+		if (err != WSA_IO_PENDING) error_display("WSARecv Error: ", err);
+	};
+
+#ifdef LOG_ON
+	std::cout << "BattleServer Connect\n";
+#endif
 }
 
 void LobbyServer::DoWorker()

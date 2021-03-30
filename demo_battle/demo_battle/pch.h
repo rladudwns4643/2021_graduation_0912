@@ -27,4 +27,7 @@
 #include "TCPSocket.h"
 #include "SocketUtil.h"
 
+#include "MathHelper.h"
+#include "../../demo_server/demo_server/protocol.h"
+
 #pragma comment(lib, "Ws2_32.lib")

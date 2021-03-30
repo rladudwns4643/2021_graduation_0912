@@ -3,10 +3,11 @@
 #include "Singleton.h"
 #include "WorkerThread.h"
 #include "TimerThread.h"
+
 constexpr size_t MAX_WORKERTHREAD = 8;
 
 class MyThread;
-class ThreadMnr {
+class ThreadHandler {
 private:
 	std::vector<MyThread*> threads;
 	void AddThread(MyThread* myThread) {
@@ -15,8 +16,8 @@ private:
 	}
 
 public:
-	ThreadMnr(){}
-	~ThreadMnr() { JoinThreads(); }
+	ThreadHandler(){}
+	~ThreadHandler() { JoinThreads(); }
 
 public:
 	void CreateThreads() {
