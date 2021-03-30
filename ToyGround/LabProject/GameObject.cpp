@@ -39,7 +39,7 @@ bool GameObject::SetMesh(std::string meshName, std::string submeshName)
 	m_StartIndexLocation = m_Geo->DrawArgs[submeshName].StartIndexLocation;
 	m_BaseVertexLocation = m_Geo->DrawArgs[submeshName].BaseVertexLocation;
 	m_PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	m_Bounds = m_Geo->DrawArgs[meshName].Bounds;
+	//m_Bounds = m_Geo->DrawArgs[meshName].Bounds;
 
 	return true;
 }

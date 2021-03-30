@@ -74,7 +74,7 @@ public:
 	UINT m_IndexCount;
 	UINT m_StartIndexLocation;
 	int m_BaseVertexLocation;
-	BoundingBox m_Bounds;
+	//BoundingBox m_Bounds;
 
 	// 재질정보
 	UINT m_MaterialIndex;

@@ -49,14 +49,14 @@ void AssertsReference::BuildMaterials()
 	sky->DiffuseSrvHeapIndex = TEXTURE_INDEX_grasscube1024;
 	sky->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	sky->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
-	sky->Roughness = 1.0f;
+	sky->Roughness = 1.0;
 
 	auto Cartoon_CubeWorld_Texture  = std::make_unique<Material>();
 	Cartoon_CubeWorld_Texture->MatCBIndex = TEXTURE_INDEX_Cartoon_CubeWorld_Texture;
 	Cartoon_CubeWorld_Texture->DiffuseSrvHeapIndex = TEXTURE_INDEX_Cartoon_CubeWorld_Texture;
 	Cartoon_CubeWorld_Texture->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	Cartoon_CubeWorld_Texture->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
-	Cartoon_CubeWorld_Texture->Roughness = 1.0f;
+	Cartoon_CubeWorld_Texture->Roughness = 0.967734f;
 
 	m_Materials["grasscube1024"] = std::move(sky);
 	m_Materials[TEXTURE_STR_Cartoon_CubeWorld_Texture] = std::move(Cartoon_CubeWorld_Texture);

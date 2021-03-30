@@ -121,7 +121,6 @@ void GameplayScene::ChangeFreeCamera()
 {
 	if (TOY_GROUND::GetApp()->m_Camera->GetCameraType() == CameraType::eFree) return;
 
-
 	XMFLOAT3 look = m_Users[m_PlayerID]->GetLook();
 	XMFLOAT3 up = m_Users[m_PlayerID]->GetUp();
 	XMFLOAT3 right = m_Users[m_PlayerID]->GetRight();

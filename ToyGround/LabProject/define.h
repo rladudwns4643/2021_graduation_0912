@@ -4,22 +4,19 @@
 #define FRAME_BUFFER_WIDTH 1280
 #define FRAME_BUFFER_HEIGHT 720
 
-// 아래를 주석하면 시작시 창모드로 시작
-#define _WITH_SWAPCHAIN_FULLSCREEN_STATE
-
 // 기준이되는 큐브 크기
 #define STD_CUBE_SIZE 5.0f
 #define PLAYER_SIZE_X 4.5f
 #define PLAYER_SIZE_Y 9.0f
 #define PLAYER_SIZE_Z 4.5f
 
-// 맵 크기
+// 맵 큐브 개수
 #define MAP_WIDTH_BLOCK_NUM 21
 #define MAP_LENGTH_BLOCK_NUM 33
 #define MAP_HEIGHT_BLOCK_NUM 3
 
 // 스카이박스 크기
-#define SKYBOX_SCALE 5000
+#define SKYBOX_SCALE 5000.f
 
 // 조명
 #define MAX_LIGHTS				8 

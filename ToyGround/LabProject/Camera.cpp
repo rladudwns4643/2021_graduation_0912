@@ -69,6 +69,7 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 {
 	switch (m_CameraType)
 	{
+	case CameraType::eFree:
 	case CameraType::eFirst:
 	{
 		XMFLOAT4X4 xmf4x4Rotate = MathHelper::Identity4x4();
@@ -121,8 +122,6 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 
 		break;
 	}
-	case CameraType::eFree:
-		break;
 	}
 
 	if (mPosition.y < 0.f)
@@ -507,23 +506,20 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 		}
 		if (m_Owner && fYaw)
 		{
-			//if (m_Owner->m_PlayerRole == ROLE_STUDENT)
-			{
-				XMFLOAT3 off = mOffset;
-				float distance = sqrtf((mOffset.x * mOffset.x) + (mOffset.z * mOffset.z));
+			XMFLOAT3 off = mOffset;
+			float distance = sqrtf((mOffset.x * mOffset.x) + (mOffset.z * mOffset.z));
 
-				mPosition = m_Owner->GetPosition();
+			mPosition = m_Owner->GetPosition();
 
-				XMFLOAT3 xmf3Up = m_Owner->GetUp();
-				XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
+			XMFLOAT3 xmf3Up = m_Owner->GetUp();
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
 
-				mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
-				mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
-				mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
 
-				mPosition = MathHelper::Add(mPosition, mLook, distance);
-				mPosition.y = mOffset.y;
-			}
+			mPosition = MathHelper::Add(mPosition, mLook, distance);
+			mPosition.y = mOffset.y;
 		}
 		if (m_Owner && fRoll)
 		{
@@ -571,7 +567,8 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 
 			// cout << degree << endl;
 
-			if (degree < 80.f || degree > 150.f)
+			// pitch 각도 제한 두기
+			if (degree < 90.f)
 			{
 				mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
 				mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
@@ -582,6 +579,8 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 
 				XMStoreFloat3(&mPosition, XMVector3Rotate(XMLoadFloat3(&mPosition), q));
 			}
+			else if(degree > 170.f)
+;				degree = 170.f;
 		}
 		if (m_Owner && fYaw)
 		{
