@@ -41,6 +41,19 @@ XMFLOAT3 ApplicationContext::FindSpawnLocation(std::string mapName, int spawnLoc
 	return XMFLOAT3(0, 0, 0);
 }
 
+void ApplicationContext::CreateSkycube(std::string skycubeName, std::string instID, std::string matName)
+{
+	/* SkyCube */
+	GameObject* sky = CreateObject<GameObject>(skycubeName, instID);
+	sky->SetMesh(MESH_GEOID, MESH_GEOID_SPHERE);
+	sky->m_MaterialIndex = AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
+	// 나중 충돌처리에서 문제가 된다면 변경
+	sky->m_World = MathHelper::Identity4x4();
+	sky->m_TexTransform = MathHelper::Identity4x4();
+
+	sky->Scale(SKYBOX_SCALE, SKYBOX_SCALE, SKYBOX_SCALE);
+}
+
 void ApplicationContext::CreateProps(std::string mapName)
 {
 	std::vector<MapTool::MapInfo> mapInfoVector = m_Maps[mapName]->mapInfoVector;

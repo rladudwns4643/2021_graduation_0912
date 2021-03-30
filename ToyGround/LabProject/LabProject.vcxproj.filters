@@ -230,5 +230,6 @@
     <FxCompile Include="Shaders\Common.hlsl" />
     <FxCompile Include="Shaders\LightingUtil.hlsl" />
     <FxCompile Include="Shaders\Default.hlsl" />
+    <FxCompile Include="Shaders\Sky.hlsl" />
   </ItemGroup>
 </Project>

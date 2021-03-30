@@ -57,7 +57,8 @@ public:
 public:
 	std::string FindMapName(int mapCode) const;
 	XMFLOAT3	FindSpawnLocation(std::string mapName, int spawnLocation);
-	
+
+	void CreateSkycube(std::string skycubeName, std::string instID, std::string matName);
 	void CreateProps(std::string mapName);
 	void CreateCharacter(std::string meshName, std::string instID, std::string matName, int spawnLocation);
 

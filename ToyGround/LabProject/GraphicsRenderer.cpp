@@ -10,6 +10,7 @@
 namespace Graphics
 {
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
 }
 
 using namespace Core;
@@ -46,17 +47,25 @@ void GraphicsRenderer::RenderGraphics()
 	g_CommandList->SetGraphicsRootShaderResourceView(1, matBuffer->GetGPUVirtualAddress());
 	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
 	g_CommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
+
+	g_CommandList->SetGraphicsRootDescriptorTable(4, m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE skyTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	skyTexDescriptor.Offset(mSkyTexHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+	g_CommandList->SetGraphicsRootDescriptorTable(3, skyTexDescriptor);
 }
 
 void GraphicsRenderer::LoadTextures()
 {
 	std::vector<std::string> texNames =
 	{
+		"grasscube1024",
 		"Cartoon_CubeWorld_Texture",
 	};
 
 	std::vector<std::wstring> texFilenames =
 	{
+		L"./Textures/grasscube1024.dds",
 		L"./Textures/Cartoon_CubeWorld_Texture.dds",
 	};
 
@@ -75,11 +84,13 @@ void GraphicsRenderer::LoadTextures()
 
 void GraphicsRenderer::BuildDescriptorHeaps()
 {
+	constexpr int skyboxDescriptorCount = 1;
+
 	//
 	// Create the SRV heap.
 	//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = m_Textures.size();
+	srvHeapDesc.NumDescriptors = m_Textures.size() + skyboxDescriptorCount;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(Core::g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
@@ -94,20 +105,33 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_Cartoon_CubeWorld_Texture]->Resource,
 	};
 
+	auto grasscube1024 = m_Textures["grasscube1024"]->Resource;
+
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	// SkyCube
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+	srvDesc.TextureCube.MostDetailedMip = 0;
+	srvDesc.TextureCube.MipLevels = grasscube1024->GetDesc().MipLevels;
+	srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+	srvDesc.Format = grasscube1024->GetDesc().Format;
+	Core::g_Device->CreateShaderResourceView(grasscube1024.Get(), &srvDesc, hDescriptor);
+
+	// Texture
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
 	for (UINT i = 0; i < (UINT)tex2DList.size(); ++i)
 	{
-		hDescriptor.Offset(0, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+		hDescriptor.Offset(1, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 
 		srvDesc.Format = tex2DList[i]->GetDesc().Format;
 		srvDesc.Texture2D.MipLevels = tex2DList[i]->GetDesc().MipLevels;
 		Core::g_Device->CreateShaderResourceView(tex2DList[i].Get(), &srvDesc, hDescriptor);
 	}
+	mSkyTexHeapIndex = 0;
+
 	auto srvCpuStart = m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	auto srvGpuStart = m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
 	auto dsvCpuStart = GameCore::GetApp()->mDsvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -117,6 +141,9 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 {
 	m_Shaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
+
+	m_Shaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
 
 	m_Instancing_InputLayout =
 	{
@@ -130,10 +157,15 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 
 void GraphicsRenderer::BuildRootSignatures()
 {
-	CD3DX12_DESCRIPTOR_RANGE texTable;
-	texTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
+	// Skybox
+	CD3DX12_DESCRIPTOR_RANGE texTable0;
+	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
-	CD3DX12_ROOT_PARAMETER slotRootParameter[4];
+	// Texture
+	CD3DX12_DESCRIPTOR_RANGE texTable1;
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);
+
+	CD3DX12_ROOT_PARAMETER slotRootParameter[5];
 
 	// 성능 팁 : 사용빈도가 높은것에서 낮은 것의 순서로 나열한다.
 	/* Shader Register*/
@@ -147,12 +179,13 @@ void GraphicsRenderer::BuildRootSignatures()
 	slotRootParameter[0].InitAsShaderResourceView(0, 1); // Instancing
 	slotRootParameter[1].InitAsShaderResourceView(1, 1); // Material
 	slotRootParameter[2].InitAsConstantBufferView(0); // PassCB
-	slotRootParameter[3].InitAsDescriptorTable(1, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
+	slotRootParameter[3].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL); // sky 
+	slotRootParameter[4].InitAsDescriptorTable(1, &texTable1, D3D12_SHADER_VISIBILITY_PIXEL); // Texture
 
 	auto staticSamplers = GetStaticSamplers();
 
 	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(4, slotRootParameter,
+	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(5, slotRootParameter,
 		(UINT)staticSamplers.size(), staticSamplers.data(),
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -246,6 +279,24 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	opaquePsoDesc.DSVFormat = g_DepthStencilFormat;
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&g_OpaquePSO)));
 
+	//
+	// PSO for sky.
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC skyPsoDesc = opaquePsoDesc;
+	skyPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	skyPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	skyPsoDesc.pRootSignature = m_RenderRS.Get();
+	skyPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["skyVS"]->GetBufferPointer()),
+		m_Shaders["skyVS"]->GetBufferSize()
+	};
+	skyPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["skyPS"]->GetBufferPointer()),
+		m_Shaders["skyPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&g_SkyPSO)));
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GraphicsRenderer::GetStaticSamplers()

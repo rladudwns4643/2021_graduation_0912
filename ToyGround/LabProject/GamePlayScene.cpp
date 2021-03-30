@@ -17,6 +17,9 @@ void GameplayScene::Initialize()
 	m_SceneController = new GameplayController(this);
 	m_SceneController->SetMapName(MAP_STR_GAME_MAP);
 
+	/* SkyCube */
+	AppContext->CreateSkycube("gameplaySky", "gameplaySky", "grasscube1024");
+
 	/* 맵의 오브젝트들 생성 */
 	AppContext->CreateProps(MAP_STR_GAME_MAP);
 }
@@ -78,6 +81,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 		p.second->Update(fDeltaTime);
 	}
 
+	/* SkyCube */
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
+
 	/*Props*/
 	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
 	{
@@ -85,7 +91,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	/*Characters*/
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[MESH_GEOID], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_TEST], AppContext->m_RItemsVec);
 	
 	/*Materials*/
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);

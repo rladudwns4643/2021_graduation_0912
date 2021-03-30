@@ -58,6 +58,8 @@ public:
 	/* GpuResource */
 	std::unordered_map<std::string, std::unique_ptr<Texture>> m_Textures;
 
+	UINT mSkyTexHeapIndex = 0;
+
 	// Descriptorheap
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_SrvDescriptorHeap = nullptr;
 };

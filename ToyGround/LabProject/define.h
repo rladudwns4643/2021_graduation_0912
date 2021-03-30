@@ -18,6 +18,9 @@
 #define MAP_LENGTH_BLOCK_NUM 33
 #define MAP_HEIGHT_BLOCK_NUM 3
 
+// 스카이박스 크기
+#define SKYBOX_SCALE 5000
+
 // 조명
 #define MAX_LIGHTS				8 
 #define MAX_MATERIALS			8 
@@ -30,7 +33,8 @@
 #define LIGHT_NAME_DIRECTIONAL "Directional" 
 
 // 텍스쳐
-#define TEXTURE_INDEX_Cartoon_CubeWorld_Texture 0
+#define TEXTURE_INDEX_grasscube1024 0
+#define TEXTURE_INDEX_Cartoon_CubeWorld_Texture 1
 
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture "Cartoon_CubeWorld_Texture"
 
