@@ -1,7 +1,15 @@
 VertexSize 432
 IndexSize 600
-MaterialSize 0
+MaterialSize 1
 Material 
+Name Cube_Bridge
+Ambient 0 0 0
+Diffuse 1 1 1 1
+Fresnel 0.01 0.01 0.01
+Specular 0.01 0.01 0.01
+Emissive 0 0 0
+Roughness 0.25
+MatTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 
 Pos 2.35714 4.17429 2.45
 Normal -0.584262 -0.573863 0.573863
 TexC 0.26601 0.89172

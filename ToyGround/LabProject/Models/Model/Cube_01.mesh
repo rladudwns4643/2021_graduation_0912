@@ -2,7 +2,7 @@ VertexSize 491
 IndexSize 2304
 MaterialSize 1
 Material 
-Name Cube01
+Name Cube_01
 Ambient 0 0 0
 Diffuse 1 1 1 1
 Fresnel 0.01 0.01 0.01

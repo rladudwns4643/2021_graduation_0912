@@ -1,7 +1,15 @@
 VertexSize 459
 IndexSize 486
-MaterialSize 0
+MaterialSize 1
 Material 
+Name Tile_02
+Ambient 0 0 0
+Diffuse 1 1 1 1
+Fresnel 0.01 0.01 0.01
+Specular 0.01 0.01 0.01
+Emissive 0 0 0
+Roughness 0.25
+MatTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 
 Pos -1.51607 0.0471625 -0.768455
 Normal 0.298816 0.464226 0.833789
 TexC 0.534385 0.968315

@@ -8,18 +8,17 @@ Map* AssertsReference::LoadMapInfo()
 	Map* map = new Map;
 	set<string> propTypeSet;
 
-	//MapTool::PlayerInfo prePlayerInfo;
-	//prePlayerInfo.playerName = "FirstPlayer";
-	//prePlayerInfo.position.x = 0.f;
-	//prePlayerInfo.position.y = 0.f;
-	//prePlayerInfo.position.z = 0.f;
-	//prePlayerInfo.rotY = 0.f;
-	//prePlayerInfo.spawnPos = 1;
-	//map->playerInfoVector.emplace_back(prePlayerInfo);
+	MapTool::PlayerInfo prePlayerInfo;
+	prePlayerInfo.playerName = "FirstPlayer";
+	prePlayerInfo.position.x = 0.f;
+	prePlayerInfo.position.y = STD_CUBE_SIZE;
+	prePlayerInfo.position.z = -STD_CUBE_SIZE * 2;
+	prePlayerInfo.rotY = 0.f;
+	prePlayerInfo.spawnPos = 1;
+	map->playerInfoVector.emplace_back(prePlayerInfo);
 
 	MapTool::MapInfo preInfo;
 
-	float tmp;
 	preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
 	preInfo.position.x = 0.f;
 	preInfo.position.y = 0.f;
@@ -32,6 +31,162 @@ Map* AssertsReference::LoadMapInfo()
 
 	map->mapInfoVector.emplace_back(preInfo);
 	propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+
+	preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
+	preInfo.position.x = STD_CUBE_SIZE;
+	preInfo.position.y = 0.f;
+	preInfo.position.z = 0.f;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 2;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+
+	preInfo.meshName = OBJECT_MESH_STR_CUBE_02;
+	preInfo.position.x = -STD_CUBE_SIZE;
+	preInfo.position.y = 0.f;
+	preInfo.position.z = 0.f;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 3;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_CUBE_02);
+
+	preInfo.meshName = OBJECT_MESH_STR_TREE_01;
+	preInfo.position.x = STD_CUBE_SIZE;
+	preInfo.position.y = STD_CUBE_SIZE;
+	preInfo.position.z = 0.f;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 4;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_TREE_01);
+
+	preInfo.meshName = OBJECT_MESH_STR_TREE_02;
+	preInfo.position.x = STD_CUBE_SIZE * 2;
+	preInfo.position.y = STD_CUBE_SIZE * 3;
+	preInfo.position.z = 0.f;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 5;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_TREE_02);
+
+	preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
+	preInfo.position.x = STD_CUBE_SIZE * 2;
+	preInfo.position.y = STD_CUBE_SIZE;
+	preInfo.position.z = 0.f;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 6;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
+
+	preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
+	preInfo.position.x = STD_CUBE_SIZE * 2;
+	preInfo.position.y = 0.f;
+	preInfo.position.z = 0.f;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 7;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
+
+	preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
+	preInfo.position.x = STD_CUBE_SIZE * 2;
+	preInfo.position.y = STD_CUBE_SIZE * 2;
+	preInfo.position.z = 0.f;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 8;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+
+	preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
+	preInfo.position.x = STD_CUBE_SIZE;
+	preInfo.position.y = 0.f;
+	preInfo.position.z = -STD_CUBE_SIZE;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 9;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
+
+	preInfo.meshName = OBJECT_MESH_STR_CUBE_BRIDGE;
+	preInfo.position.x = STD_CUBE_SIZE;
+	preInfo.position.y = 0.8f;
+	preInfo.position.z = -STD_CUBE_SIZE;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 90.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 10;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_CUBE_BRIDGE);
+
+	preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
+	preInfo.position.x = STD_CUBE_SIZE;
+	preInfo.position.y = 0.f;
+	preInfo.position.z = -STD_CUBE_SIZE * 2;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 11;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+
+	preInfo.meshName = OBJECT_MESH_STR_TILE_01;
+	preInfo.position.x = STD_CUBE_SIZE;
+	preInfo.position.y = STD_CUBE_SIZE;
+	preInfo.position.z = -STD_CUBE_SIZE * 2;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 12;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_TILE_01);
+
+	preInfo.meshName = OBJECT_MESH_STR_PLANT_01;
+	preInfo.position.x = 0.f;
+	preInfo.position.y = STD_CUBE_SIZE;
+	preInfo.position.z = 0.f;
+	preInfo.rotation.x = 0.f;
+	preInfo.rotation.y = 0.f;
+	preInfo.rotation.z = 0.f;
+	preInfo.typeID = 13;
+	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+
+	map->mapInfoVector.emplace_back(preInfo);
+	propTypeSet.insert(OBJECT_MESH_STR_PLANT_01);
 
 	// propTypeVector: 중복되는 것 없이 에셋이름만 모아놓은 vector
 	for (auto iter = propTypeSet.begin(); iter != propTypeSet.end(); ++iter)
@@ -68,7 +223,7 @@ void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 	GeometryGenerator::MeshData box = geoGen.CreateBox(1.0f, 1.0f, 1.0f, 2);
 	GeometryGenerator::MeshData grid = geoGen.CreateGrid(0.1f, 0.1f, 2, 2);
 	GeometryGenerator::MeshData sphere = geoGen.CreateSphere(0.5f, 20, 2);
-	GeometryGenerator::MeshData cylinder = geoGen.CreateCylinder(0.5f, 0.3f, 3.0f, 20, 2);
+	GeometryGenerator::MeshData cylinder = geoGen.CreateCylinder(PLAYER_SIZE_X / 2, PLAYER_SIZE_X / 2, PLAYER_SIZE_Y, 20, 2);
 
 	UINT boxVertexOffset = 0;
 	UINT gridVertexOffset = (UINT)box.Vertices.size();

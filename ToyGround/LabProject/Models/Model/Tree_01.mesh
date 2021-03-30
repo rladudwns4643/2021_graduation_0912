@@ -1,7 +1,15 @@
 VertexSize 926
 IndexSize 1488
-MaterialSize 0
+MaterialSize 1
 Material 
+Name Tree_01
+Ambient 0 0 0
+Diffuse 1 1 1 1
+Fresnel 0.01 0.01 0.01
+Specular 0.01 0.01 0.01
+Emissive 0 0 0
+Roughness 0.25
+MatTransform 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 
 Pos -0.781687 14.6095 -0.24212
 Normal 0.843712 0.319876 0.431079
 TexC 0.488219 0.0939254

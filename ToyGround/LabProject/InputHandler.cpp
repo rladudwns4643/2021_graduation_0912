@@ -96,8 +96,6 @@ namespace InputHandler
 			g_MoveMouseCallback = true;
 		}
 
-		// Scene Controller
-
 
 		// 마우스 좌표이동에 따라 회전각도 구하기
 		if (g_MoveMouseCallback)

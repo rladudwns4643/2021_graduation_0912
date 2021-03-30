@@ -68,7 +68,7 @@ void ApplicationContext::CreateProps(std::string mapName)
 void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int spawnLocation)
 {
 	Character* chr = CreateObject<Character>(meshName, instID);
-	chr->SetMesh(MESH_GEOID, MESH_GEOID_SPHERE);
+	chr->SetMesh(MESH_GEOID, MESH_GEOID_CYLINDER);
 	chr->SetMaterial(AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex);
 	chr->m_SpawnLoaction = spawnLocation;
 }

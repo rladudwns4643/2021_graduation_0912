@@ -36,10 +36,21 @@
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture "Cartoon_CubeWorld_Texture"
 
 // 캐릭터
-#define CHARACTER_TEST "Tree"
+#define CHARACTER_TEST "TEST_CHARCTER"
 
 // 오브젝트 메쉬
+#define OBJECT_MESH_STR_TEST_PLAYER "Test_Player"
 #define OBJECT_MESH_STR_CUBE_01 "Cube_01"
+#define OBJECT_MESH_STR_CUBE_02 "Cube_02"
+#define OBJECT_MESH_STR_CUBE_03 "Cube_03"
+#define OBJECT_MESH_STR_CUBE_04 "Cube_04"
+#define OBJECT_MESH_STR_CUBE_BRIDGE "Cube_Bridge"
+#define OBJECT_MESH_STR_PLANT_01 "Plant_01"
+#define OBJECT_MESH_STR_TILE_01 "Tile_01"
+#define OBJECT_MESH_STR_TILE_02 "Tile_02"
+#define OBJECT_MESH_STR_TREE_01 "Tree_01"
+#define OBJECT_MESH_STR_TREE_02 "Tree_02"
+#define OBJECT_MESH_STR_BARREL "Barrel"
 
 //
 #define MESH_GEOID			"geo"

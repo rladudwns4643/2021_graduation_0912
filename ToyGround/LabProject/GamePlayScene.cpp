@@ -57,6 +57,7 @@ bool GameplayScene::Enter()
 	// Player type, id 등등 세팅
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
+	AppContext->DisplayCharacter(m_MapName, m_Users[m_PlayerID], 1);
 
 	// 카메라 세팅
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
