@@ -7,7 +7,7 @@ class SocketAddress {
 public:
 	SocketAddress(unsigned int inAddress, unsigned int inPort) {
 		GetAsSockAddrIn()->sin_family = AF_INET;
-		GetIP4Ref() = htonl(inAddress);
+		GetIP4Ref() = inAddress;
 		GetAsSockAddrIn()->sin_port = htons(inPort);
 	}
 

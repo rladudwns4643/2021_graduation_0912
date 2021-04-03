@@ -30,7 +30,7 @@ public:
 	LobbyServer(short lobby_id);
 	~LobbyServer();
 
-	void ClinetAccept(int id);
+	void ClientAccept(int id);
 	void BattleServerAccept();
 	void DoWorker();
 	void ProcessPacket(int id, void* buf);

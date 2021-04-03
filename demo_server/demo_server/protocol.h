@@ -232,7 +232,6 @@ struct bc_packet_room_entered {
 	int id;
 	bool ready;
 	char player_no;
-	char char_type[3];
 
 	char name[10]; //not used
 	int mmr;

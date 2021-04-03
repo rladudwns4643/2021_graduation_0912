@@ -1,13 +1,16 @@
 #include "battleServer.h"
+#include "extern.h"
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define LOG_ON
 
 BattleServer::BattleServer() {
 	Initialize();
 }
 
 BattleServer::~BattleServer() {
-	m_ThreadHandler->JoinThreads();
+	//m_ThreadHandler->JoinThreads();
 
-	for (int i = 0; i < MAX_CLIENTS; ++i) {
+	for (int i = 0; i < MAX_CLIENT; ++i) {
 		delete SHARED_RESOURCE::g_clients[i];
 		SHARED_RESOURCE::g_clients[i] = nullptr;
 	}
@@ -18,7 +21,7 @@ void BattleServer::Initialize() {
 	//0: lobby_server, 1: m_userid
 
 	//room clear
-	for (int i = 0; i < MAX_ROOM; ++i) SHARED_RESOURCE::g_rooms[i] = -1;
+	//for (int i = 0; i < MAX_ROOM; ++i) SHARED_RESOURCE::g_rooms[i] = -1;
 
 	//wsa init
 	if (!m_sockUtil.StaticInit()) while (true); //error, 일어날일 없음
@@ -29,6 +32,14 @@ void BattleServer::Initialize() {
 	SocketAddress serverAddr{ INADDR_ANY, BATTLE_SERVER_PORT };
 	m_listen->Bind(serverAddr);
 	m_listen->Listen();
+}
+
+void BattleServer::ConncetLobbyServer() {
+	TCPSocketPtr LobbySocket;
+	LobbySocket = m_sockUtil.CreateTCPSocket(SocketAddressFamily::INET);
+	DWORD flags;
+	SocketAddress s{ inet_addr(LOBBY_SERVER_IP_PUBLIC) , LOBBY_SERVER_PORT};
+	cout << LobbySocket->Connect(s) << endl;
 }
 
 void BattleServer::AcceptLobbyServer() {
@@ -62,10 +73,10 @@ void BattleServer::AcceptLobbyServer() {
 }
 
 void BattleServer::Run() {
-	m_ThreadHandler = new ThreadHandler;
+	//m_ThreadHandler = new ThreadHandler;
 
 	//worker, timer threads create
-	m_ThreadHandler->CreateThreads();
+	//m_ThreadHandler->CreateThreads();
 
 	SocketAddress clientAddress;
 	TCPSocketPtr clientSocket;
@@ -76,7 +87,7 @@ void BattleServer::Run() {
 
 		//isConnected == false인 id을 user_id로
 		int user_id;
-		for (int i = LOBBY_SERVER_KEY + 1; i < MAX_CLIENTS; ++i) {
+		for (int i = LOBBY_SERVER_KEY + 1; i < MAX_CLIENT; ++i) {
 			if (!SHARED_RESOURCE::g_clients[i]->isConnected) {
 				user_id = i;
 				break;

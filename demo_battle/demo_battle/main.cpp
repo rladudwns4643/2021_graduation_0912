@@ -1,20 +1,25 @@
+
+
 #include "pch.h"
-//#include "Room.h"
 #include "Global.h"
 #include "battleServer.h"
 
 #define LOG_ON
 
-int main() {
-
-	std::wcout.imbue(std::locale("korean"));
-
-	CreatePlayerSlot(MAX_CLIENTS);
-	BattleServer* battleserver = BattleServer::GetInstance();
-
-	battleserver->AcceptLobbyServer();
-	//battleserver->Run();
+namespace SHARED_RESOURCE {
+	HANDLE g_iocp;
+	//std::array<Room, MAX_ROOM> g_rooms;
+	std::array<CLIENT*, MAX_CLIENT> g_clients;
+	std::priority_queue<EVENT> g_timer_queue;		//우선순위 queue, 내림차순 기준
 }
+
+namespace ATOMIC {
+	std::mutex g_timer_lock;
+	std::mutex g_room_lock;
+	std::mutex g_clients_lock;
+	std::mutex g_msg_lock;
+}
+
 
 void CreatePlayerSlot(int maxslot) {
 #ifdef LOG_ON
@@ -34,3 +39,15 @@ void CreatePlayerSlot(int maxslot) {
 	cout << "CreatePlayerSlot compleat" << endl;
 #endif	
 }
+
+int main() {
+
+	std::wcout.imbue(std::locale("korean"));
+
+	CreatePlayerSlot(MAX_CLIENT);
+	BattleServer* battleserver = BattleServer::GetInstance();
+
+	battleserver->ConncetLobbyServer();
+	battleserver->Run();
+}
+

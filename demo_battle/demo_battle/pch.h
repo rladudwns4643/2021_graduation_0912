@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #pragma once
 
 #include <iostream>
@@ -27,7 +28,7 @@
 #include "TCPSocket.h"
 #include "SocketUtil.h"
 
-#include "MathHelper.h"
+//#include "MathHelper.h"
 #include "../../demo_server/demo_server/protocol.h"
 
 #pragma comment(lib, "Ws2_32.lib")

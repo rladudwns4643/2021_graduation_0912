@@ -2,6 +2,8 @@
 #include "protocol.h"
 #include "pch.h"
 
+#define LOG_ON
+
 LobbyServer::LobbyServer(short lobby_id)
 {
 	lobbyID = lobby_id;
@@ -26,7 +28,7 @@ LobbyServer::~LobbyServer() {
 	WSACleanup();
 }
 
-void LobbyServer::ClinetAccept(int id) {
+void LobbyServer::ClientAccept(int id) {
 	clientSocket = accept(listenSocket, reinterpret_cast<sockaddr*>(&clientAddr), &addrlen);
 	CLIENT* new_user = new CLIENT;
 	new_user->id = id;
@@ -52,7 +54,6 @@ void LobbyServer::ClinetAccept(int id) {
 #ifdef LOG_ON
 	std::cout << "user: " << id << "connect\n";
 #endif
-	//this->ClinetAccept(id + 1);
 }
 
 void LobbyServer::BattleServerAccept() {
@@ -102,7 +103,7 @@ void LobbyServer::DoWorker()
 		}
 
 		//클라이언트에서 closesocket 했을 경우
-		if (io_byte == 0) {
+		if (io_byte == 0 && key != 0) {
 			closesocket(clientSocket);
 			userList[key]->isActive = false;
 			userList[key]->user_info->SetPlayerLoginOK("");
@@ -198,10 +199,12 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 	case CL_AUTOMATCH: {
 		cl_packet_automatch p;
 		memcpy(&p, packet, sizeof(p));
-		userList[id]->user_info->SetPlayerMatch(true);
-		if (id == 2) {
-			SendMatchStartPacket(id);
-			SendMatchStartPacket(1/*id*/);
+		if (id != 0) {
+			userList[id]->user_info->SetPlayerMatch(true);
+			if (id == 2) {
+				SendMatchStartPacket(id);
+				SendMatchStartPacket(1/*id*/);
+			}
 		}
 		//SendAutoMatchPacket(id, userList[id]->user_info->GetPlayerMMR());
 		break;

@@ -13,7 +13,6 @@ public:
 	message ProcPacket(int id, void* buf);
 
 public:
-	bool GetPlayerInfo(const char* id_str, int& mmr);
 	void DisconnectClient(int clientId, SOCKET client);
 	void EraseRoom(int& roomId);
 

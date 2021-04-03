@@ -1,8 +1,4 @@
 #pragma once
-#include "pch.h"
-
-#define LOG_ON
-
 constexpr int EVENT_KEY = 10000;
 constexpr int LOBBY_SERVER_KEY = 0;
 
@@ -10,9 +6,9 @@ constexpr int MAX_PLAYER = 2;
 constexpr int MAX_ROOM = 50;
 constexpr int MAX_BUFFER = 256;
 constexpr int MAX_ID_STR = 10;
-constexpr int MAX_CLIENTS = 5100;
+constexpr int MAX_CLIENT = 5100;
 
-constexpr size_t MAX_LEFT_TIME = 180 + 1; // 초기 남은 시간.
+constexpr size_t MAX_LEFT_TIME = 180 + 1;
 
 enum EVENT_TYPE {
 	EV_TCP_RECV, EV_SEND,
@@ -70,21 +66,3 @@ struct message {
 	char type;
 	PTC_VECTOR vec;
 };
-
-namespace SHARED_RESOURCE {
-	HANDLE g_iocp;
-	std::array<Room, MAX_ROOM> g_rooms;
-	std::array<CLIENT*, MAX_CLIENT> g_clients;
-	std::priority_queue<EVENT> g_timer_queue;		//우선순위 queue, 내림차순 기준
-	
-
-	int spawnX;
-	int spawnY;
-}
-
-namespace ATOMIC {
-	std::mutex g_timer_lock;
-	std::mutex g_room_lock;
-	std::mutex g_clients_lock;
-	std::mutex g_msg_lock;
-}

@@ -1,9 +1,9 @@
 #pragma once
+#include "pch.h"
 #include "Global.h"
 #include "Singleton.h"
-#include "ThreadHandler.h"
 
-class ThreadHandler;
+//class ThreadHandler;
 
 class BattleServer : public Singleton<BattleServer> {
 public:
@@ -11,6 +11,7 @@ public:
 	~BattleServer();
 
 	void Initialize();
+	void ConncetLobbyServer();
 	void AcceptLobbyServer();
 	void Run();
 
@@ -41,11 +42,9 @@ public:
 	void SendUpdateUserInfoPacket(const int& id, const int& mmr);
 
 private:
-	ThreadHandler* m_ThreadHandler;
+	//ThreadHandler* m_ThreadHandler;
 	SocketUtil m_sockUtil;
 	TCPSocketPtr m_listen;
 
 	SOCKADDR_IN m_ServerAddr{};
-
-	ofstream m_logfile{ "LOG.txt", ios::app };
 };
