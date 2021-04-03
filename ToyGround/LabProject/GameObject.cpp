@@ -1,183 +1,196 @@
 #include "pch.h"
 #include "GameObject.h"
-#include "Shader.h"
+#include "AssertsReference.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-CMaterial::CMaterial()
+static unsigned int s_currentIndex = 0;
+
+GameObject::GameObject(std::string meshName, std::string instID) :
+	m_MeshName(meshName),
+	m_InstID(instID),
+	m_Index(s_currentIndex++)
 {
-	m_xmf4Albedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_World = MathHelper::Identity4x4();
+	m_TexTransform = MathHelper::Identity4x4();
 }
 
-CMaterial::~CMaterial()
-{
-	if (m_pShader)
-	{
-		m_pShader->ReleaseShaderVariables();
-		m_pShader->Release();
-	}
-}
-
-void CMaterial::SetShader(CShader* pShader)
-{
-	if (m_pShader) m_pShader->Release();
-	m_pShader = pShader;
-	if (m_pShader) m_pShader->AddRef();
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-CGameObject::CGameObject()
-{
-	m_xmf4x4World = Matrix4x4::Identity();
-}
-
-CGameObject::~CGameObject()
-{
-	if (m_pMesh) m_pMesh->Release();
-	if (m_pMaterial) m_pMaterial->Release();
-}
-
-void CGameObject::SetMesh(CMesh* pMesh)
-{
-	if (m_pMesh) m_pMesh->Release();
-	m_pMesh = pMesh;
-	if (m_pMesh) m_pMesh->AddRef();
-}
-
-void CGameObject::SetShader(CShader* pShader)
-{
-	if (!m_pMaterial)
-	{
-		m_pMaterial = new CMaterial();
-		m_pMaterial->AddRef();
-	}
-	if (m_pMaterial) m_pMaterial->SetShader(pShader);
-}
-
-void CGameObject::SetMaterial(CMaterial* pMaterial)
-{
-	if (m_pMaterial) m_pMaterial->Release();
-	m_pMaterial = pMaterial;
-	if (m_pMaterial) m_pMaterial->AddRef();
-}
-
-void CGameObject::SetMaterial(UINT nReflection)
-{
-	if (!m_pMaterial) m_pMaterial = new CMaterial();
-	m_pMaterial->m_nReflection = nReflection;
-}
-
-void CGameObject::Animate(float fTimeElapsed)
+GameObject::~GameObject()
 {
 }
 
-void CGameObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
+void GameObject::InitializeTransform()
 {
-	OnPrepareRender();
-
-	if (m_pMaterial)
-	{
-		if (m_pMaterial->m_pShader)
-		{
-			m_pMaterial->m_pShader->Render(pd3dCommandList, pCamera);
-			m_pMaterial->m_pShader->UpdateShaderVariable(pd3dCommandList, &m_xmf4x4World);
-		}
-	}
-
-	if (m_pMesh) m_pMesh->Render(pd3dCommandList);
+	m_World = MathHelper::Identity4x4();
+	m_TexTransform = MathHelper::Identity4x4();
 }
 
-void CGameObject::ReleaseUploadBuffers()
+void GameObject::Update(const float deltaT)
 {
-	if (m_pMesh) m_pMesh->ReleaseUploadBuffers();
+	XMMATRIX bworld = XMLoadFloat4x4(&m_World);
+	//m_Bounds.Transform(m_Bounds, bworld);
 }
 
-void CGameObject::Rotate(XMFLOAT3* pxmf3Axis, float fAngle)
+bool GameObject::SetMesh(std::string meshName, std::string submeshName)
 {
-	XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(pxmf3Axis), XMConvertToRadians(fAngle));
-	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
+	if (!AssertsReference::GetApp()->m_GeometryMesh.count(meshName)) return false;
+	if (this == nullptr) return false;
+
+	m_Geo = AssertsReference::GetApp()->m_GeometryMesh[meshName].get();
+	m_IndexCount = m_Geo->DrawArgs[submeshName].IndexCount;
+	m_StartIndexLocation = m_Geo->DrawArgs[submeshName].StartIndexLocation;
+	m_BaseVertexLocation = m_Geo->DrawArgs[submeshName].BaseVertexLocation;
+	m_PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	//m_Bounds = m_Geo->DrawArgs[meshName].Bounds;
+
+	return true;
 }
 
-// 오브젝트 움직이기
-void CGameObject::SetPosition(float x, float y, float z)
+void GameObject::SetPosition(float posX, float posY, float posZ)
 {
-	m_xmf4x4World._41 = x;
-	m_xmf4x4World._42 = y;
-	m_xmf4x4World._43 = z;
+	m_World._41 = posX;
+	m_World._42 = posY;
+	m_World._43 = posZ;
 }
-void CGameObject::SetPosition(XMFLOAT3 xmf3Position)
+
+void GameObject::SetPosition(DirectX::XMFLOAT3 xmPos)
 {
-	SetPosition(xmf3Position.x, xmf3Position.y, xmf3Position.z);
+	SetPosition(xmPos.x, xmPos.y, xmPos.z);
 }
-XMFLOAT3 CGameObject::GetPosition()
+
+void GameObject::SetRight(const DirectX::XMFLOAT3& Right)
 {
-	return(XMFLOAT3(m_xmf4x4World._41, m_xmf4x4World._42, m_xmf4x4World._43));
+	m_World._11 = Right.x;
+	m_World._12 = Right.y;
+	m_World._13 = Right.z;
 }
-// 게임 객체의 로컬 z-축 벡터를 반환한다.
-XMFLOAT3 CGameObject::GetLook()
+
+void GameObject::SetUp(const DirectX::XMFLOAT3& Up)
 {
-	return(Vector3::Normalize(XMFLOAT3(m_xmf4x4World._31, m_xmf4x4World._32, m_xmf4x4World._33)));
+	m_World._21 = Up.x;
+	m_World._22 = Up.y;
+	m_World._23 = Up.z;
 }
-// 게임 객체의 로컬 y-축 벡터를 반환한다.
-XMFLOAT3 CGameObject::GetUp()
+
+void GameObject::SetLook(const DirectX::XMFLOAT3& Look)
 {
-	return(Vector3::Normalize(XMFLOAT3(m_xmf4x4World._21, m_xmf4x4World._22, m_xmf4x4World._23)));
+	m_World._31 = Look.x;
+	m_World._32 = Look.y;
+	m_World._33 = Look.z;
 }
-// 게임 객체의 로컬 x-축 벡터를 반환한다.
-XMFLOAT3 CGameObject::GetRight()
+
+void GameObject::SetMatrixByLook(float x, float y, float z)
 {
-	return(Vector3::Normalize(XMFLOAT3(m_xmf4x4World._11, m_xmf4x4World._12, m_xmf4x4World._13)));
+	XMFLOAT3 look{ x,y,z };
+	XMFLOAT3 up = GetUp();
+	XMFLOAT3 right = MathHelper::CrossProduct(up, look);	//순서가 up look 아니면 look up 둘 중 하나
+
+	m_World._11 = right.x;
+	m_World._12 = right.y;
+	m_World._13 = right.z;
+
+	m_World._31 = x;
+	m_World._32 = y;
+	m_World._33 = z;
 }
-// 게임 객체를 로컬 x-축 방향으로 이동한다.
-void CGameObject::MoveStrafe(float fDistance)
+
+XMFLOAT3 GameObject::GetPosition() const
+{
+	return XMFLOAT3(m_World._41, m_World._42, m_World._43);
+}
+
+XMFLOAT3 GameObject::GetLook() const
+{
+	XMFLOAT3 look = { m_World._31, m_World._32, m_World._33 };
+	return MathHelper::Normalize(look);
+}
+
+XMFLOAT3 GameObject::GetUp() const
+{
+	XMFLOAT3 up = { m_World._21, m_World._22, m_World._23 };
+	return MathHelper::Normalize(up);
+}
+
+XMFLOAT3 GameObject::GetRight() const
+{
+	XMFLOAT3 right = { m_World._11, m_World._12, m_World._13 };
+	return MathHelper::Normalize(right);
+}
+
+void GameObject::MoveStrafe(float fDistance)
 {
 	XMFLOAT3 xmf3Position = GetPosition();
 	XMFLOAT3 xmf3Right = GetRight();
-	xmf3Position = Vector3::Add(xmf3Position, xmf3Right, fDistance);
-	CGameObject::SetPosition(xmf3Position);
+	xmf3Position = MathHelper::Add(xmf3Position, xmf3Right, fDistance);
+	SetPosition(xmf3Position);
 }
-// 게임 객체를 로컬 y-축 방향으로 이동한다.
-void CGameObject::MoveUp(float fDistance)
+
+void GameObject::MoveUp(float fDistance)
 {
 	XMFLOAT3 xmf3Position = GetPosition();
 	XMFLOAT3 xmf3Up = GetUp();
-	xmf3Position = Vector3::Add(xmf3Position, xmf3Up, fDistance);
-	CGameObject::SetPosition(xmf3Position);
+	xmf3Position = MathHelper::Add(xmf3Position, xmf3Up, fDistance);
+	SetPosition(xmf3Position);
 }
-// 게임 객체를 로컬 z-축 방향으로 이동한다.
-void CGameObject::MoveForward(float fDistance)
+
+void GameObject::MoveForward(float fDistance)
 {
 	XMFLOAT3 xmf3Position = GetPosition();
 	XMFLOAT3 xmf3Look = GetLook();
-	xmf3Position = Vector3::Add(xmf3Position, xmf3Look, fDistance);
-	CGameObject::SetPosition(xmf3Position);
-}
-// 게임 객체를 주어진 각도로 회전한다.
-void CGameObject::Rotate(float fPitch, float fYaw, float fRoll)
-{
-	XMMATRIX mtxRotate = XMMatrixRotationRollPitchYaw(XMConvertToRadians(fPitch), XMConvertToRadians(fYaw), XMConvertToRadians(fRoll));
-	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
+	xmf3Position = MathHelper::Add(xmf3Position, xmf3Look, fDistance);
+	SetPosition(xmf3Position);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-CRotatingObject::CRotatingObject()
+void GameObject::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 {
-	m_xmf3RotationAxis = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	m_fRotationSpeed = 15.0f;
+	XMFLOAT3 look = GetLook();
+	XMFLOAT3 right = GetRight();
+	XMFLOAT3 up = GetUp();
+
+	if (dwDirection)
+	{
+		XMFLOAT3 xmf3Shift = XMFLOAT3(0, 0, 0);
+		if (dwDirection & DIR_FORWARD) xmf3Shift = MathHelper::Add(xmf3Shift, look, fDistance);
+		if (dwDirection & DIR_BACKWARD) xmf3Shift = MathHelper::Add(xmf3Shift, look, -fDistance);
+		if (dwDirection & DIR_RIGHT) xmf3Shift = MathHelper::Add(xmf3Shift, right, fDistance);
+		if (dwDirection & DIR_LEFT) xmf3Shift = MathHelper::Add(xmf3Shift, right, -fDistance);
+		if (dwDirection & DIR_UP) xmf3Shift = MathHelper::Add(xmf3Shift, up, fDistance);
+		if (dwDirection & DIR_DOWN) xmf3Shift = MathHelper::Add(xmf3Shift, up, -fDistance);
+
+		Move(xmf3Shift, bUpdateVelocity);
+	}
 }
 
-CRotatingObject::~CRotatingObject()
+void GameObject::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 {
+	XMFLOAT3 pos = MathHelper::Add(GetPosition(), xmf3Shift);
+	SetPosition(pos);
 }
 
-void CRotatingObject::Animate(float fTimeElapsed)
+void GameObject::Rotate(const DirectX::XMFLOAT3& axis, float angle)
 {
-	CGameObject::Rotate(&m_xmf3RotationAxis, m_fRotationSpeed * fTimeElapsed);
+	XMMATRIX RotMat = XMMatrixRotationAxis(XMLoadFloat3(&axis), XMConvertToRadians(angle));
+	XMMATRIX World = XMLoadFloat4x4(&m_World) * RotMat;
+	XMStoreFloat4x4(&m_World, World);
 }
 
-void CRotatingObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
+void GameObject::Rotate(const DirectX::XMFLOAT4& quaternion)
 {
-	CGameObject::Render(pd3dCommandList, pCamera);
+	XMMATRIX RotMat = XMMatrixRotationQuaternion(XMLoadFloat4(&quaternion));
+	XMMATRIX World = XMLoadFloat4x4(&m_World) * RotMat;
+	XMStoreFloat4x4(&m_World, World);
+}
+
+void GameObject::Rotate(float pitch, float yaw, float roll)
+{
+	XMMATRIX R = XMMatrixRotationRollPitchYaw(
+		MathHelper::XMConvertToRadians(pitch),
+		MathHelper::XMConvertToRadians(yaw),
+		MathHelper::XMConvertToRadians(roll));
+	XMStoreFloat4x4(&m_World, XMLoadFloat4x4(&m_World) * R);
+}
+
+void GameObject::Scale(float x, float y, float z)
+{
+	m_World._11 *= x;
+	m_World._22 *= y;
+	m_World._33 *= z;
 }

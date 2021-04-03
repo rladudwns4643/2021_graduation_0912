@@ -1,84 +1,46 @@
 #pragma once
-#include "Timer.h"
-#include "Shader.h"
-#include "Player.h"
+#include "SceneController.h"
 
-struct LIGHT
+namespace Core
 {
-	XMFLOAT4				m_xmf4Ambient;
-	XMFLOAT4				m_xmf4Diffuse;
-	XMFLOAT4				m_xmf4Specular;
-	XMFLOAT3				m_xmf3Position;
-	float 					m_fFalloff;
-	XMFLOAT3				m_xmf3Direction;
-	float 					m_fTheta; //cos(m_fTheta)
-	XMFLOAT3				m_xmf3Attenuation;
-	float					m_fPhi; //cos(m_fPhi)
-	bool					m_bEnable;
-	int						m_nType;
-	float					m_fRange;
-	float					padding;
-};
+	extern Microsoft::WRL::ComPtr<ID3D12Device> g_Device;
+	extern Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> g_CommandList;
 
-struct LIGHTS
-{
-	LIGHT					m_pLights[MAX_LIGHTS];
-	XMFLOAT4				m_xmf4GlobalAmbient;
-};
+	extern int g_DisplayWidth;
+	extern int g_DisplayHeight;
 
-struct MATERIALS
-{
-	MATERIAL				m_pReflections[MAX_MATERIALS];
-};
+	extern bool g_InputSwitch;
+	extern int g_Chating;
+	extern WCHAR g_ChatBuf[256];	// 완성된 문자들 저장
+	extern WCHAR g_TempChatBuf[2];	// 조합 중인 문자를 임시 저장
+}
 
-class CScene
+/* Scenes
+@ 그릴 오브젝트들이 무엇인지를 설계한다.
+@ 오브젝트 생성 및 배치
+*/
+class Scene abstract
 {
+protected:
+	friend class SceneManager;
+
 public:
-	CScene();
-	~CScene();
+	Scene();
+	virtual ~Scene();
 
-	// 씬에서 마우스와 키보드 메시지를 처리한다.
-	bool OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
-	bool OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+	virtual void Initialize() = 0;
+	virtual void OnResize() = 0;
 
-	virtual void CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
-	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList);
-	virtual void ReleaseShaderVariables();
+public:
+	virtual bool	Enter() = 0;
+	virtual void	Exit() = 0;
 
-	void BuildLightsAndMaterials();
-
-	void BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
-	void ReleaseObjects();
-
-	ID3D12RootSignature* CreateGraphicsRootSignature(ID3D12Device* pd3dDevice);
-	ID3D12RootSignature* GetGraphicsRootSignature() { return(m_pd3dGraphicsRootSignature); }
-
-	bool ProcessInput(UCHAR* pKeysBuffer);
-	void AnimateObjects(float fTimeElapsed);
-	void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera);
-
-	void ReleaseUploadBuffers();
-
-	CPlayer						*m_pPlayer = NULL;
+	virtual void	Update(const float& fDeltaTime) = 0;
+	virtual void	Render() = 0;
 
 protected:
-	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
-
-	// 배치(Batch) 처리를 하기 위하여 씬을 셰이더들의 리스트로 표현한다.
-	CObjectsShader				*m_pObjectShaders = NULL;
-	int							m_nObjectShaders = 0;
-
-	CBoundingBoxShader			*m_pBoundingBoxShaders = NULL;
-	int							m_nBoundingBoxShaders = 0;
-
-	LIGHTS						*m_pLights = NULL;
-
-	ID3D12Resource				*m_pd3dcbLights = NULL;
-	LIGHTS						*m_pcbMappedLights = NULL;
-
-	MATERIALS					*m_pMaterials = NULL;
-
-	ID3D12Resource				*m_pd3dcbMaterials = NULL;
-	MATERIAL					*m_pcbMappedMaterials = NULL;
-
+	std::string m_SceneName;
+	Controller* m_SceneController;
+	DirectX::BoundingSphere m_SceneBounds;
 };
+

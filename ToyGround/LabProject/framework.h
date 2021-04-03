@@ -1,6 +1,7 @@
 #pragma once
 
-#include "targetver.h"
+#define _CRT_SECURE_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일
 #include <WindowsX.h>
@@ -11,6 +12,11 @@
 
 #include <WinSock2.h>
 #pragma comment(lib, "ws2_32")
+
+// For Play Video 
+#include <Vfw.h>
+#pragma comment(lib, "vfw32.lib")
+
 
 // C 런타임 헤더 파일입니다.
 #include <stdio.h>
@@ -24,7 +30,7 @@
 #include <float.h>
 #include <cstdint>
 
-// C++ 런타임 헤더 파일 입니다.
+// C++ 런타임 헤더 파일입니다.
 #include <iostream>
 #include <array>
 #include <list>
@@ -48,7 +54,6 @@
 #include "d3dx12.h"
 //#include <d3d11_1.h>
 #include <dxgi1_4.h>
-#include <dxgidebug.h>
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
@@ -58,8 +63,6 @@
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "dxguid.lib")
 
 // D2D (for Render Text)
 #include <d2d1_3.h>
@@ -70,8 +73,19 @@
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "d3d11.lib")
 
+
 using namespace std;
 using namespace DirectX;
+using Microsoft::WRL::ComPtr;
 using namespace DirectX::PackedVector;
 
-using Microsoft::WRL::ComPtr;
+#define AppContext ApplicationContext::GetApp()
+
+#define SAFE_DELETE_PTR(ptr)	\
+{								\
+	if (ptr != nullptr)			\
+	{							\
+		delete ptr;				\
+		ptr = nullptr;			\
+	}							\
+}
