@@ -174,7 +174,7 @@ bool Character::SetMesh(std::string meshName, std::string submeshName)
 		m_CharacterIndexCount = m_Geo->DrawArgs[submeshName].IndexCount;
 		m_CharacterStartIndexLocation = m_Geo->DrawArgs[submeshName].StartIndexLocation;
 		m_CharacterBaseVertexLocation = m_Geo->DrawArgs[submeshName].BaseVertexLocation;
-		//m_CharacterBounds = m_Geo->DrawArgs[meshName].Bounds;
+		m_CharacterBounds = m_Geo->DrawArgs[meshName].Bounds;
 
 		return true;
 	}

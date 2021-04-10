@@ -197,6 +197,33 @@ Map* AssertsReference::LoadMapInfo()
 	return map;
 }
 
+void AssertsReference::CreateBB()
+{
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_02]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_03]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_04]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_BRIDGE]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_PLANT_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_TILE_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_TILE_02]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_TREE_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_TREE_02]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_BARREL]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_03]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_04]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_BRIDGE]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_PLANT_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_TILE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_TILE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_TREE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_TREE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_BARREL]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+}
+
 void AssertsReference::BuildMaterials()
 {
 	auto sky = std::make_unique<Material>();
@@ -416,37 +443,37 @@ void AssertsReference::BuildModel(ID3D12Device* pDevice, ID3D12GraphicsCommandLi
 		geo->IndexBufferByteSize = ibByteSize;
 
 		// Bounds
-		//BoundingBox bounds;
-		//
-		//auto iter = m_PropBoundingBox.find(meshName);
-		//if (iter != m_PropBoundingBox.end())
-		//{
-		//	bounds = *(m_PropBoundingBox[meshName]);
-		//}
-		//else
-		//{
-		//	XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
-		//	XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
-		//	XMVECTOR vMin = XMLoadFloat3(&vMinf3);
-		//	XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
-		//
-		//	for (auto& p : vertices)
-		//	{
-		//		XMVECTOR P = XMLoadFloat3(&p.Pos);
-		//
-		//		vMin = XMVectorMin(vMin, P);
-		//		vMax = XMVectorMax(vMax, P);
-		//	}
-		//
-		//	XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
-		//	XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
-		//}
+		BoundingBox bounds;
+		
+		auto iter = m_PropBoundingBox.find(meshName);
+		if (iter != m_PropBoundingBox.end())
+		{
+			bounds = *(m_PropBoundingBox[meshName]);
+		}
+		else
+		{
+			XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
+			XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
+			XMVECTOR vMin = XMLoadFloat3(&vMinf3);
+			XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
+		
+			for (auto& p : vertices)
+			{
+				XMVECTOR P = XMLoadFloat3(&p.Pos);
+		
+				vMin = XMVectorMin(vMin, P);
+				vMax = XMVectorMax(vMax, P);
+			}
+		
+			XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
+			XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
+		}
 
 		SubmeshGeometry submesh;
 		submesh.IndexCount = indices.size();
 		submesh.StartIndexLocation = 0;
 		submesh.BaseVertexLocation = 0;
-		//submesh.Bounds = bounds;
+		submesh.Bounds = bounds;
 
 		geo->DrawArgs[meshName] = submesh;
 		m_GeometryMesh[meshName] = std::move(geo);
