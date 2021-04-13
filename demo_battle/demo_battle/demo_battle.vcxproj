@@ -141,14 +141,22 @@
   <ItemGroup>
     <ClCompile Include="battleServer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Room.cpp" />
     <ClCompile Include="TCPSocket.cpp" />
+    <ClCompile Include="ThreadHandler.cpp" />
+    <ClCompile Include="WorkerThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="battleServer.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="MyThread.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="extern.h" />
+    <ClInclude Include="Room.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="TCPSocket.h" />
+    <ClInclude Include="ThreadHandler.h" />
+    <ClInclude Include="WorkerThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,12 +1,10 @@
-
-
 #include "pch.h"
 #include "Global.h"
 #include "battleServer.h"
 
 #define LOG_ON
 
-namespace SHARED_RESOURCE {
+namespace SR {
 	HANDLE g_iocp;
 	//std::array<Room, MAX_ROOM> g_rooms;
 	std::array<CLIENT*, MAX_CLIENT> g_clients;
@@ -33,7 +31,7 @@ void CreatePlayerSlot(int maxslot) {
 		player->room_id = -1; //¹Ì ¼³Á¤
 		ZeroMemory(player->packet_buf, MAX_BUFFER);
 		ZeroMemory(player->id_str, sizeof(char) * MAX_ID_STR);
-		SHARED_RESOURCE::g_clients[user_id] = player;
+		SR::g_clients[user_id] = player;
 	}
 #ifdef LOG_ON
 	cout << "CreatePlayerSlot compleat" << endl;

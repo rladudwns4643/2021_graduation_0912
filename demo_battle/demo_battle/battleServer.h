@@ -2,8 +2,9 @@
 #include "pch.h"
 #include "Global.h"
 #include "Singleton.h"
+#include "ThreadHandler.h"
 
-//class ThreadHandler;
+class ThreadHandler;
 
 class BattleServer : public Singleton<BattleServer> {
 public:
@@ -26,7 +27,7 @@ public:
 	void SendAutoAccessOKPacket(int id);
 	void SendAutoAccessFailPacket(int id);
 	void SendAutoRoomReadyPacket(int id, int room_no);
-	void SendRoomJoinSuccess(int id, int slot);
+	void SendRoomJoinSuccess(int id, bool isRoomMnr);
 	void SendRoomJoinFail(int id, int code);
 	void SendRoomEnterPacket(int to, int enterer, bool ready, char playerNo, char* name, int mmr, bool isManager);
 	void SendRoomLeavePacket(int to, int leave);
@@ -42,7 +43,7 @@ public:
 	void SendUpdateUserInfoPacket(const int& id, const int& mmr);
 
 private:
-	//ThreadHandler* m_ThreadHandler;
+	ThreadHandler* m_ThreadHandler;
 	SocketUtil m_sockUtil;
 	TCPSocketPtr m_listen;
 
