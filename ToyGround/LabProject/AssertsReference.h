@@ -9,7 +9,7 @@ class Map;
 class AssertsReference final : public TemplateSingleton<AssertsReference>
 {
 public:
-	Map* LoadMapInfo();
+	Map* LoadMapInfo(string mapName);
 	void CreateBB();
 	void BuildMaterials();
 
@@ -27,5 +27,6 @@ public:
 	std::unordered_map<std::string, std::unique_ptr<GeometryMesh>>	m_GeometryMesh;
 	std::unordered_map<std::string, std::unique_ptr<Material>>	m_Materials;
 	std::map<std::string, std::unique_ptr<BoundingBox>> m_PropBoundingBox;
+	int mapArray[MAP_HEIGHT_BLOCK_NUM][MAP_DEPTH_BLOCK_NUM][MAP_WIDTH_BLOCK_NUM];
 };
 

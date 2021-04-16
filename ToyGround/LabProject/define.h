@@ -12,8 +12,8 @@
 
 // 맵 큐브 개수
 #define MAP_WIDTH_BLOCK_NUM 21
-#define MAP_LENGTH_BLOCK_NUM 33
-#define MAP_HEIGHT_BLOCK_NUM 3
+#define MAP_DEPTH_BLOCK_NUM 33
+#define MAP_HEIGHT_BLOCK_NUM 5
 
 // 스카이박스 크기
 #define SKYBOX_SCALE 5000.f
@@ -39,19 +39,23 @@
 #define CHARACTER_TEST "TEST_CHARCTER"
 
 // 오브젝트 메쉬
-#define OBJECT_MESH_STR_TEST_PLAYER "Test_Player"
-#define OBJECT_MESH_STR_CUBE_01 "Cube_01"
-#define OBJECT_MESH_STR_CUBE_02 "Cube_02"
-#define OBJECT_MESH_STR_CUBE_03 "Cube_03"
-#define OBJECT_MESH_STR_CUBE_04 "Cube_04"
-#define OBJECT_MESH_STR_CUBE_BRIDGE "Cube_Bridge"
-#define OBJECT_MESH_STR_PLANT_01 "Plant_01"
-#define OBJECT_MESH_STR_TILE_01 "Tile_01"
-#define OBJECT_MESH_STR_TILE_02 "Tile_02"
-#define OBJECT_MESH_STR_TREE_01 "Tree_01"
-#define OBJECT_MESH_STR_TREE_02 "Tree_02"
-#define OBJECT_MESH_STR_BARREL "Barrel"
-
+#define OBJECT_MESH_STR_TEST_PLAYER		"Test_Player"
+#define OBJECT_MESH_STR_CUBE_01			"Cube_01"
+#define OBJECT_MESH_STR_CUBE_02			"Cube_02"
+#define OBJECT_MESH_STR_CUBE_03			"Cube_03"
+#define OBJECT_MESH_STR_CUBE_04			"Cube_04"
+#define OBJECT_MESH_STR_CUBE_BRIDGE		"Cube_Bridge"
+#define OBJECT_MESH_STR_PLANT			"Plant"
+#define OBJECT_MESH_STR_TILE_01			"Tile_01"
+#define OBJECT_MESH_STR_TILE_02			"Tile_02"
+#define OBJECT_MESH_STR_TREE_01			"Tree_01"
+#define OBJECT_MESH_STR_TREE_02			"Tree_02"
+#define OBJECT_MESH_STR_BARREL			"Barrel"
+#define OBJECT_MESH_STR_CHEST			"Chest"
+#define OBJECT_MESH_STR_FENCE_01		"Fence_01"
+#define OBJECT_MESH_STR_FENCE_02		"Fence_02"
+#define OBJECT_MESH_STR_GRAVESTONE		"Gravestone"
+#define OBJECT_MESH_STR_LOGS			"Logs"
 //
 #define MESH_GEOID			"geo"
 #define MESH_GEOID_RECT		"rect"
@@ -70,8 +74,8 @@
 }	
 
 // 마우스 관련(DPI = Dots Per Inch)
-#define MOUSE_DPI_X 0.2f
-#define MOUSE_DPI_Y 0.2f
+#define MOUSE_DPI_X 0.3f
+#define MOUSE_DPI_Y 0.3f
 
 // 이동관련 키보드
 #define DIR_FORWARD					0x01

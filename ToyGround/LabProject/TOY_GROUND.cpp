@@ -104,7 +104,7 @@ void TOY_GROUND::OnResize()
 void TOY_GROUND::BuildAsserts()
 {
 	// Build Maps
-	AppContext->m_Maps[MAP_STR_GAME_MAP] = AssertsReference::GetApp()->LoadMapInfo();
+	AppContext->m_Maps[MAP_STR_GAME_MAP] = AssertsReference::GetApp()->LoadMapInfo("FirstMap");
 	AppContext->m_Maps[MAP_STR_GAME_MAP]->propTexture = TEXTURE_INDEX_Cartoon_CubeWorld_Texture;
 
 	// Build Map Models

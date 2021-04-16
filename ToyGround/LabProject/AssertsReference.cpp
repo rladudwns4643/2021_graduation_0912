@@ -3,7 +3,7 @@
 #include "GeometryGenerator.h"
 #include "Map.h"
 
-Map* AssertsReference::LoadMapInfo()
+Map* AssertsReference::LoadMapInfo(string mapName)
 {
 	Map* map = new Map;
 	set<string> propTypeSet;
@@ -11,182 +11,218 @@ Map* AssertsReference::LoadMapInfo()
 	MapTool::PlayerInfo prePlayerInfo;
 	prePlayerInfo.playerName = "FirstPlayer";
 	prePlayerInfo.position.x = 0.f;
-	prePlayerInfo.position.y = STD_CUBE_SIZE;
-	prePlayerInfo.position.z = -STD_CUBE_SIZE * 2;
+	prePlayerInfo.position.y = STD_CUBE_SIZE * 2;
+	prePlayerInfo.position.z = 0.f;
 	prePlayerInfo.rotY = 0.f;
 	prePlayerInfo.spawnPos = 1;
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
-	MapTool::MapInfo preInfo;
+	//-------------------------
+	string path = "Maps\\" + mapName + ".txt";
+	cout << path << endl;
+	std::ifstream fileIn(path);
 
-	preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
-	preInfo.position.x = 0.f;
-	preInfo.position.y = 0.f;
-	preInfo.position.z = 0.f;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 1;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+	if (fileIn)
+	{
+		MapTool::MapInfo preInfo;
+		int rk, ri, rj;
+		int typeIDCount = 0;
 
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+		float startX = -STD_CUBE_SIZE * (MAP_WIDTH_BLOCK_NUM / 2);
+		float startY = 0.f;
+		float startZ = -STD_CUBE_SIZE * (MAP_DEPTH_BLOCK_NUM / 2);
+		float shiftX, shiftY, shiftZ;
 
-	preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
-	preInfo.position.x = STD_CUBE_SIZE;
-	preInfo.position.y = 0.f;
-	preInfo.position.z = 0.f;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 2;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+		for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k)
+		{
+			int floor;
+			fileIn >> floor;
+			cout << floor << endl;
+			for (int i = 0; i < MAP_DEPTH_BLOCK_NUM / 2 + 1; ++i)
+			{
+				for (int j = 0; j < MAP_WIDTH_BLOCK_NUM; ++j)
+				{
+					// 배열에 맵 저장
+					int input;
+					fileIn >> input;
+					cout << input << " ";
+					if (k == 0)
+						continue;
+					rk = MAP_HEIGHT_BLOCK_NUM - k - 1;
+					ri = MAP_DEPTH_BLOCK_NUM - i - 1;
+					rj = MAP_WIDTH_BLOCK_NUM - j - 1;
+					shiftX = 0.f;
+					shiftY = 0.f;
+					shiftZ = 0.f;
 
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+					// 오브젝트 생성
+					switch (input / 10)
+					{
+					case 0:
+					case 1:
+					{
+						preInfo.rotation.y = 0.f;
+						switch (input)
+						{
+						case 1:
+							preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
+							propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+							break;
+						case 2:
+							preInfo.meshName = OBJECT_MESH_STR_CUBE_02;
+							propTypeSet.insert(OBJECT_MESH_STR_CUBE_02);
+							break;
+						case 3:
+							preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
+							propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
+							break;
+						case 4:
+							preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
+							propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
+							break;
+						case 5:
+							preInfo.meshName = OBJECT_MESH_STR_PLANT;
+							propTypeSet.insert(OBJECT_MESH_STR_PLANT);
+							break;
+						case 6:
+							preInfo.meshName = OBJECT_MESH_STR_TILE_01;
+							propTypeSet.insert(OBJECT_MESH_STR_TILE_01);
+							break;
+						case 7:
+							preInfo.meshName = OBJECT_MESH_STR_TILE_02;
+							propTypeSet.insert(OBJECT_MESH_STR_TILE_02);
+							break;
+						case 8:
+							preInfo.meshName = OBJECT_MESH_STR_TREE_01;
+							propTypeSet.insert(OBJECT_MESH_STR_TREE_01);
+							break;
+						case 9:
+							preInfo.meshName = OBJECT_MESH_STR_TREE_02;
+							propTypeSet.insert(OBJECT_MESH_STR_TREE_02);
+							break;
+						case 10:
+							preInfo.meshName = OBJECT_MESH_STR_BARREL;
+							propTypeSet.insert(OBJECT_MESH_STR_BARREL);
+							break;
+						case 11:
+							preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
+							propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
+							preInfo.rotation.y = 0.f;
+							break;
+						}
+						break;
+					}
+					case 2:
+					{
+						if (input % 2)
+							preInfo.rotation.y = 0.f;
+						else
+							preInfo.rotation.y = 90.f;
+						preInfo.meshName = OBJECT_MESH_STR_CUBE_BRIDGE;
+						propTypeSet.insert(OBJECT_MESH_STR_CUBE_BRIDGE);
+						shiftY = -4.f;
+						break;
+					}
+					case 3:
+					{
+						if (input % 2)
+							preInfo.rotation.y = 0.f;
+						else
+							preInfo.rotation.y = 90.f;
+						preInfo.meshName = OBJECT_MESH_STR_LOGS;
+						propTypeSet.insert(OBJECT_MESH_STR_LOGS);
+						break;
+					}
+					case 4:
+					{
+						if (input % 2)
+							preInfo.rotation.y = 90.f;
+						else
+							preInfo.rotation.y = 0.f;
+						preInfo.meshName = OBJECT_MESH_STR_GRAVESTONE;
+						propTypeSet.insert(OBJECT_MESH_STR_GRAVESTONE);
+						break;
+					}
+					case 5:
+					{
+						switch (input)
+						{
+						case 50:
+							preInfo.rotation.y = 0.f;
+							shiftZ = -2.5f;
+							break;
+						case 51:
+							preInfo.rotation.y = 90.f;
+							shiftX = 2.5f;
+							break;
+						case 52:
+							preInfo.rotation.y = 0.f;
+							shiftZ = 2.5f;
+							break;
+						case 53:
+							preInfo.rotation.y = 90.f;
+							shiftX = -2.5f;
+							break;
+						}
+						preInfo.meshName = OBJECT_MESH_STR_FENCE_01;
+						propTypeSet.insert(OBJECT_MESH_STR_FENCE_01);
+						break;
+					}
+					case 6:
+					{
+						switch (input)
+						{
+						case 60:
+							preInfo.rotation.y = 0.f;
+							shiftZ = -2.5f;
+							break;
+						case 61:
+							preInfo.rotation.y = 90.f;
+							shiftX = 2.5f;
+							break;
+						case 62:
+							preInfo.rotation.y = 0.f;
+							shiftZ = 2.5f;
+							break;
+						case 63:
+							preInfo.rotation.y = 90.f;
+							shiftX = -2.5f;
+							break;
+						}
+						preInfo.meshName = OBJECT_MESH_STR_FENCE_02;
+						propTypeSet.insert(OBJECT_MESH_STR_FENCE_02);
+						break;
+					}
+					}
+					if (input != 0)
+					{
+						preInfo.rotation.x = 0.f;
+						preInfo.rotation.z = 0.f;
+						preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
 
-	preInfo.meshName = OBJECT_MESH_STR_CUBE_02;
-	preInfo.position.x = -STD_CUBE_SIZE;
-	preInfo.position.y = 0.f;
-	preInfo.position.z = 0.f;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 3;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+						// 여기 수정
+						preInfo.position.x = startX + (STD_CUBE_SIZE * j) + shiftX;
+						preInfo.position.y = startY + (STD_CUBE_SIZE * k) + shiftY;
+						preInfo.position.z = startZ + (STD_CUBE_SIZE * i) + shiftZ;
+						preInfo.typeID = ++typeIDCount;
+						map->mapInfoVector.emplace_back(preInfo);
+						mapArray[k][i][j] = typeIDCount;
 
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_CUBE_02);
-
-	preInfo.meshName = OBJECT_MESH_STR_TREE_01;
-	preInfo.position.x = STD_CUBE_SIZE;
-	preInfo.position.y = STD_CUBE_SIZE;
-	preInfo.position.z = 0.f;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 4;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_TREE_01);
-
-	preInfo.meshName = OBJECT_MESH_STR_TREE_02;
-	preInfo.position.x = STD_CUBE_SIZE * 2;
-	preInfo.position.y = STD_CUBE_SIZE * 3;
-	preInfo.position.z = 0.f;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 5;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_TREE_02);
-
-	preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
-	preInfo.position.x = STD_CUBE_SIZE * 2;
-	preInfo.position.y = STD_CUBE_SIZE;
-	preInfo.position.z = 0.f;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 6;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
-
-	preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
-	preInfo.position.x = STD_CUBE_SIZE * 2;
-	preInfo.position.y = 0.f;
-	preInfo.position.z = 0.f;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 7;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
-
-	preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
-	preInfo.position.x = STD_CUBE_SIZE * 2;
-	preInfo.position.y = STD_CUBE_SIZE * 2;
-	preInfo.position.z = 0.f;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 8;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
-
-	preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
-	preInfo.position.x = STD_CUBE_SIZE;
-	preInfo.position.y = 0.f;
-	preInfo.position.z = -STD_CUBE_SIZE;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 9;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
-
-	preInfo.meshName = OBJECT_MESH_STR_CUBE_BRIDGE;
-	preInfo.position.x = STD_CUBE_SIZE;
-	preInfo.position.y = 0.8f;
-	preInfo.position.z = -STD_CUBE_SIZE;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 90.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 10;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_CUBE_BRIDGE);
-
-	preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
-	preInfo.position.x = STD_CUBE_SIZE;
-	preInfo.position.y = 0.f;
-	preInfo.position.z = -STD_CUBE_SIZE * 2;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 11;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
-
-	preInfo.meshName = OBJECT_MESH_STR_TILE_01;
-	preInfo.position.x = STD_CUBE_SIZE;
-	preInfo.position.y = STD_CUBE_SIZE;
-	preInfo.position.z = -STD_CUBE_SIZE * 2;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 12;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_TILE_01);
-
-	preInfo.meshName = OBJECT_MESH_STR_PLANT_01;
-	preInfo.position.x = 0.f;
-	preInfo.position.y = STD_CUBE_SIZE;
-	preInfo.position.z = 0.f;
-	preInfo.rotation.x = 0.f;
-	preInfo.rotation.y = 0.f;
-	preInfo.rotation.z = 0.f;
-	preInfo.typeID = 13;
-	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-
-	map->mapInfoVector.emplace_back(preInfo);
-	propTypeSet.insert(OBJECT_MESH_STR_PLANT_01);
+						if (i < MAP_DEPTH_BLOCK_NUM / 2)
+						{
+							preInfo.position.x = -(startX + (STD_CUBE_SIZE * j)) - shiftX;
+							preInfo.position.y = startY + (STD_CUBE_SIZE * k) + shiftY;
+							preInfo.position.z = -(startZ + (STD_CUBE_SIZE * i)) - shiftZ;
+							preInfo.typeID = ++typeIDCount;
+							map->mapInfoVector.emplace_back(preInfo);
+							mapArray[rk][ri][rj] = typeIDCount;
+						}
+					}
+				}
+				cout << endl;
+			}
+		}
+	}
 
 	// propTypeVector: 중복되는 것 없이 에셋이름만 모아놓은 vector
 	for (auto iter = propTypeSet.begin(); iter != propTypeSet.end(); ++iter)
@@ -204,24 +240,34 @@ void AssertsReference::CreateBB()
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_03]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_04]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_BRIDGE]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-	m_PropBoundingBox[OBJECT_MESH_STR_PLANT_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_PLANT]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TILE_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TILE_02]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TREE_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TREE_02]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_BARREL]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CHEST]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_FENCE_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_FENCE_02]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_GRAVESTONE]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_LOGS]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_03]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_04]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_BRIDGE]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-	m_PropBoundingBox[OBJECT_MESH_STR_PLANT_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_PLANT]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TILE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TILE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TREE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TREE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_BARREL]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CHEST]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_FENCE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_FENCE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_GRAVESTONE]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_LOGS]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 }
 
 void AssertsReference::BuildMaterials()
