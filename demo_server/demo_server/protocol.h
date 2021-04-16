@@ -29,6 +29,13 @@
 #define OBJECT_START_INDEX_BULLET	1000
 #define MAX_BULLET_COUNT			20
 
+//------------------------------------------------------------------
+//ROOM JOIN FAIL
+#define ROOM_FAIL_CODE_ROOM_NOT_FOUND	0
+#define ROOM_FAIL_CODE_ROOM_IS_FULL		1
+#define ROOM_FAIL_CODE_ROOM_STARTED		2
+
+//------------------------------------------------------------------
 
 
 //-------------------------------L->C-------------------------------
@@ -215,7 +222,7 @@ struct bc_packet_join_ok {
 	BYTE size;
 	BYTE type;
 
-	char player_no;
+	bool isRoomMnr;
 };
 
 struct bc_packet_join_fail {
@@ -373,30 +380,32 @@ struct bc_packet_updated_user_info {
 #define CB_READY				4
 #define CB_START				5
 
-#define CB_MOVE_KEY_STATUS		6
-#define KEY_W_UP				60
-#define KEY_W_DOWN				61
-#define KEY_A_UP				62
-#define KEY_A_DOWN				63
-#define KEY_S_UP				64
-#define KEY_S_DOWN				65
-#define KEY_D_UP				66
-#define KEY_D_DOWN				67
-#define KEY_JUMP				68
+//#define CB_MOVE_KEY_STATUS		6
+#define CB_KEY_W_UP				60
+#define CB_KEY_W_DOWN			61
+#define CB_KEY_A_UP				62
+#define CB_KEY_A_DOWN			63
+#define CB_KEY_S_UP				64
+#define CB_KEY_S_DOWN			65
+#define CB_KEY_D_UP				66
+#define CB_KEY_D_DOWN			67
+#define CB_KEY_JUMP				68
 
 #define CB_BULLET				7
 #define CB_BULLET_HIT			8
 #define CB_LOOK_VECTOR			9
-#define CB_TEST_TIME			10
-#define CB_TEST_HP				11
+#define CB_TEST_TIME_PLUS		10
+#define CB_TEST_TIME_MINUS		11
 
 #pragma pack(push, 1)
-struct cb_pacekt_login {
+struct cb_packet_login {
 	BYTE size;
 	BYTE type;
 
 	char name[10];
 	int mmr;
+	int totalGameCnt;
+	int winningGameCnt;
 };
 
 struct cb_packet_join {
@@ -451,23 +460,20 @@ struct cb_packet_look_vector {
 	PTC_VECTOR look;
 };
 
-struct cb_test_packet_time {
+struct cb_test_packet_time_plus {
 	BYTE size;
 	BYTE type;
-
-	int time;	// +/-
 };
 
-struct cb_test_packet_hp {
+struct cb_test_packet_time_mimus {
 	BYTE size;
 	BYTE type;
-
-	int hp;
 };
 #pragma pack (pop)
 //------------------------------------------------------------------
 
-//-------------------------------M->L-------------------------------
+//-------------------------------M->L------------------------------- 
+//x
 struct ml_packet_match {
 	BYTE size;
 	BYTE type;
@@ -483,6 +489,15 @@ struct ml_packet_room_ready {
 
 	short id;
 	short room_no;
+};
+//------------------------------------------------------------------
+
+//-------------------------------L->B------------------------------- 
+#define LB_REQUEST_ROOM 0
+
+struct lb_packet_request_room {
+	BYTE size;
+	BYTE type;
 };
 //------------------------------------------------------------------
 

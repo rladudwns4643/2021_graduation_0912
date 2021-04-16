@@ -1,5 +1,6 @@
 #pragma once
 #include "Global.h"
+#include "extern.h"
 #include "MyThread.h"
 
 class TimerThread final : public MyThread {
@@ -11,20 +12,20 @@ public:
 	void ProcThread() override {
 		while (true) {
 			ATOMIC::g_timer_lock.lock();
-			while (SHARED_RESOURCE::g_timer_queue.empty()) {
+			while (SR::g_timer_queue.empty()) {
 				ATOMIC::g_timer_lock.unlock();
 				this_thread::sleep_for(10ms);
 				ATOMIC::g_timer_lock.lock();
 			}
 
-			const EVENT& ev = SHARED_RESOURCE::g_timer_queue.top(); //가장 오래 기다린 event
+			const EVENT& ev = SR::g_timer_queue.top(); //가장 오래 기다린 event
 			if (chrono::high_resolution_clock::now() < ev.event_time) { //현 시간보다 eventTime이 뒤라면(아직 처리하면 안되는 event라면)
 				ATOMIC::g_timer_lock.unlock();
 				this_thread::sleep_for(1ms);
 				continue;
 			}
 			EVENT proc_ev = ev;
-			SHARED_RESOURCE::g_timer_queue.pop();
+			SR::g_timer_queue.pop();
 			ATOMIC::g_timer_lock.unlock();
 
 //			EX_OVER* ex_over = new EX_OVER;

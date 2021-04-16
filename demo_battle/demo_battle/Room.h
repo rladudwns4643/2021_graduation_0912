@@ -12,7 +12,6 @@ public:
 	explicit Room(int room_no, wstring room_name);
 	~Room();
 
-
 public:
 	void Initialize(int room_no);
 	void Reset();
@@ -20,7 +19,6 @@ public:
 	void PushMsg(message&);
 	void Collision();
 	void WorldUpdate();
-
 
 public:
 	bool IsEmpty(); //is Room Empty?
@@ -36,7 +34,7 @@ public:
 
 	bool IsGameStarted();
 	bool IsRoomEnterable() { return m_isEnterable; }
-	bool IsRoundStarted();
+	bool IsRoomStarted();
 
 	void SendLeftTimePacket();
 

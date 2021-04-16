@@ -8,11 +8,11 @@ BattleServer::BattleServer() {
 }
 
 BattleServer::~BattleServer() {
-	//m_ThreadHandler->JoinThreads();
+	m_ThreadHandler->JoinThreads();
 
 	for (int i = 0; i < MAX_CLIENT; ++i) {
-		delete SHARED_RESOURCE::g_clients[i];
-		SHARED_RESOURCE::g_clients[i] = nullptr;
+		delete SR::g_clients[i];
+		SR::g_clients[i] = nullptr;
 	}
 	m_sockUtil.CleanUp();
 }
@@ -27,7 +27,7 @@ void BattleServer::Initialize() {
 	if (!m_sockUtil.StaticInit()) while (true); //error, 일어날일 없음
 
 	//CICP
-	SHARED_RESOURCE::g_iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
+	SR::g_iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
 	m_listen = m_sockUtil.CreateTCPSocket(SocketAddressFamily::INET);
 	SocketAddress serverAddr{ INADDR_ANY, BATTLE_SERVER_PORT };
 	m_listen->Bind(serverAddr);
@@ -61,11 +61,11 @@ void BattleServer::AcceptLobbyServer() {
 	LobbyServer->curr_packet_size = 0;
 	LobbyServer->prev_packet_data = 0;
 
-	SHARED_RESOURCE::g_clients[LOBBY_SERVER_KEY] = LobbyServer;
+	SR::g_clients[LOBBY_SERVER_KEY] = LobbyServer;
 
-	CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket->GetSocket()), SHARED_RESOURCE::g_iocp, LOBBY_SERVER_KEY, 0);
-	memset(&SHARED_RESOURCE::g_clients[LOBBY_SERVER_KEY]->m_recv_over, 0, sizeof(WSAOVERLAPPED));
-	clientSocket->WSAReceive(SHARED_RESOURCE::g_clients[LOBBY_SERVER_KEY]->m_recv_over.wsabuf, 1, NULL, &flags, &SHARED_RESOURCE::g_clients[LOBBY_SERVER_KEY]->m_recv_over.over);
+	CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket->GetSocket()), SR::g_iocp, LOBBY_SERVER_KEY, 0);
+	memset(&SR::g_clients[LOBBY_SERVER_KEY]->m_recv_over, 0, sizeof(WSAOVERLAPPED));
+	clientSocket->WSAReceive(SR::g_clients[LOBBY_SERVER_KEY]->m_recv_over.wsabuf, 1, NULL, &flags, &SR::g_clients[LOBBY_SERVER_KEY]->m_recv_over.over);
 
 #ifdef LOG_ON
 	std::cout << "LOBBY SERVER CONNECTED\n";
@@ -73,10 +73,10 @@ void BattleServer::AcceptLobbyServer() {
 }
 
 void BattleServer::Run() {
-	//m_ThreadHandler = new ThreadHandler;
+	m_ThreadHandler = new ThreadHandler;
 
 	//worker, timer threads create
-	//m_ThreadHandler->CreateThreads();
+	m_ThreadHandler->CreateThreads();
 
 	SocketAddress clientAddress;
 	TCPSocketPtr clientSocket;
@@ -88,11 +88,12 @@ void BattleServer::Run() {
 		//isConnected == false인 id을 user_id로
 		int user_id;
 		for (int i = LOBBY_SERVER_KEY + 1; i < MAX_CLIENT; ++i) {
-			if (!SHARED_RESOURCE::g_clients[i]->isConnected) {
+			if (!SR::g_clients[i]->isConnected) {
 				user_id = i;
 				break;
 			}
 		}
+
 		CLIENT* new_client = new CLIENT;
 		new_client->user_id = user_id;
 		new_client->room_id = -1; //기본값 무소속
@@ -107,13 +108,13 @@ void BattleServer::Run() {
 		new_client->curr_packet_size = 0;
 		new_client->prev_packet_data = 0;
 
-		SHARED_RESOURCE::g_clients[user_id] = new_client;
+		SR::g_clients[user_id] = new_client;
 #ifdef LOG_ON
 		std::cout << user_id << " : accept\n";
 #endif
-		CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket->GetSocket()), SHARED_RESOURCE::g_iocp, user_id, 0);
-		memset(&SHARED_RESOURCE::g_clients[user_id]->m_recv_over.over, 0, sizeof(WSAOVERLAPPED));
-		clientSocket->WSAReceive(SHARED_RESOURCE::g_clients[user_id]->m_recv_over.wsabuf, 1, NULL, &flags, &SHARED_RESOURCE::g_clients[user_id]->m_recv_over.over);
+		CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket->GetSocket()), SR::g_iocp, user_id, 0);
+		memset(&SR::g_clients[user_id]->m_recv_over.over, 0, sizeof(WSAOVERLAPPED));
+		clientSocket->WSAReceive(SR::g_clients[user_id]->m_recv_over.wsabuf, 1, NULL, &flags, &SR::g_clients[user_id]->m_recv_over.over);
 		clientSocket = nullptr;
 	}
 }
@@ -134,7 +135,7 @@ void BattleServer::error_display(const char* msg, int err_no) {
 
 void BattleServer::AddTimer(EVENT& ev) {
 	ATOMIC::g_timer_lock.lock();
-	SHARED_RESOURCE::g_timer_queue.push(ev);
+	SR::g_timer_queue.push(ev);
 	ATOMIC::g_timer_lock.unlock();
 }
 
@@ -152,7 +153,7 @@ void BattleServer::SendPacket(int id, void* buff) {
 	send_over->wsabuf[0].len = packet_size;
 	send_over->wsabuf[0].buf = send_over->net_buf;
 
-	SHARED_RESOURCE::g_clients[id]->m_s->WSASend(send_over->wsabuf, 1, 0, 0, &send_over->over);
+	SR::g_clients[id]->m_s->WSASend(send_over->wsabuf, 1, 0, 0, &send_over->over);
 }
 
 void BattleServer::SendAutoAccessOKPacket(int id) {
@@ -178,11 +179,11 @@ void BattleServer::SendAutoRoomReadyPacket(int id, int room_no) {
 	SendPacket(id, &p);
 }
 
-void BattleServer::SendRoomJoinSuccess(int id, int slot) {
+void BattleServer::SendRoomJoinSuccess(int id, bool isRoomMnr) {
 	bc_packet_join_ok p;
 	p.size = sizeof(p);
 	p.type = BC_JOIN_OK;
-	p.player_no = slot;
+	p.isRoomMnr = isRoomMnr;
 #ifdef LOG_ON
 	std::cout << "send join ok\n";
 #endif

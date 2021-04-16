@@ -242,11 +242,11 @@ bool Room::EnterRoom(int id, bool is_roomMnr) {
 			m_curPlayerNum++;
 			m_players[i]->Enter();
 			m_players[i]->SetID(id);
-			m_players[i]->SetID_STR(SHARED_RESOURCE::g_clients[id]->id_str);
-			m_players[i]->SetMMR(SHARED_RESOURCE::g_clients[id]->mmr);
+			m_players[i]->SetID_STR(SR::g_clients[id]->id_str);
+			m_players[i]->SetMMR(SR::g_clients[id]->mmr);
 			
 			ATOMIC::g_clients_lock.lock();
-			SHARED_RESOURCE::g_clients[id]->room_id = m_roomNo;
+			SR::g_clients[id]->room_id = m_roomNo;
 			ATOMIC::g_clients_lock.unlock();
 
 			if (is_roomMnr) m_RoomMnr = id;
@@ -284,7 +284,7 @@ void Room::AnnounceRoomEnter(int id) {
 
 void Room::LeaveRoom(int id) {
 	ATOMIC::g_clients_lock.lock();
-	SHARED_RESOURCE::g_clients[id]->room_id = -1;
+	SR::g_clients[id]->room_id = -1;
 	ATOMIC::g_clients_lock.unlock();
 
 	int leaverIdx;
@@ -348,7 +348,7 @@ bool Room::IsGameStarted() {
 	return m_isGameStarted;
 }
 
-bool Room::IsRoundStarted() {
+bool Room::IsRoomStarted() {
 	return m_isRoundStarted;
 }
 

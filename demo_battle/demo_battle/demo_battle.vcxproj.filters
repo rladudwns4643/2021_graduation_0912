@@ -19,6 +19,24 @@
     <Filter Include="Code\BattleServer">
       <UniqueIdentifier>{69de2135-4323-4d93-b1fe-c7fb6a68637b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\TCPSocket">
+      <UniqueIdentifier>{5e19c5aa-81fa-4a08-b017-82ad9adf4b60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread">
+      <UniqueIdentifier>{9543fa6b-73d1-47b4-97a3-a0778aedc94a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread\ThreadInterface">
+      <UniqueIdentifier>{12b0ce1b-7bb3-4f85-bb7f-65106b0b13e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread\Handler">
+      <UniqueIdentifier>{877b14d4-b61a-4e84-8303-45ed07d88476}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread\Worker">
+      <UniqueIdentifier>{6ac17e48-2c36-4bad-a1c6-ce6f9e425d0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Room">
+      <UniqueIdentifier>{70b14374-9d5b-43d7-8efd-09df10aa0527}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -28,7 +46,16 @@
       <Filter>Code\BattleServer</Filter>
     </ClCompile>
     <ClCompile Include="TCPSocket.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Code\TCPSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadHandler.cpp">
+      <Filter>Code\Thread\Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkerThread.cpp">
+      <Filter>Code\Thread\Worker</Filter>
+    </ClCompile>
+    <ClCompile Include="Room.cpp">
+      <Filter>Code\Room</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +73,21 @@
     </ClInclude>
     <ClInclude Include="extern.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPSocket.h">
+      <Filter>Code\TCPSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadHandler.h">
+      <Filter>Code\Thread\Handler</Filter>
+    </ClInclude>
+    <ClInclude Include="MyThread.h">
+      <Filter>Code\Thread\ThreadInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkerThread.h">
+      <Filter>Code\Thread\Worker</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>Code\Room</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

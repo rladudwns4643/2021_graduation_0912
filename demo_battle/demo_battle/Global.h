@@ -2,6 +2,8 @@
 constexpr int EVENT_KEY = 10000;
 constexpr int LOBBY_SERVER_KEY = 0;
 
+constexpr int NO_MSG = -1;
+
 constexpr int MAX_PLAYER = 2;
 constexpr int MAX_ROOM = 50;
 constexpr int MAX_BUFFER = 256;

@@ -4,6 +4,7 @@
 #include "Global.h"
 #include "battleServer.h"
 #include "Room.h"
+#include "extern.h"
 
 class WorkerThread : public MyThread {
 public:
