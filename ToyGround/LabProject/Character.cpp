@@ -72,12 +72,45 @@ void Character::SetCamera(CameraType cameraType)
 	switch (cameraType)
 	{
 	case CameraType::eFirst:
+	{
 		m_MyCamera->SetTimeLag(0.f);
-		m_MyCamera->SetOffset(XMFLOAT3(0.0f, 20.0f, 0.0f));
-		m_MyCamera->SetRotation({ 0.f, 0.f, 0.f });
+		m_MyCamera->SetOffset(XMFLOAT3(0.0f, STD_CUBE_SIZE * 0.7, 0.0f));
 
-		m_MyCamera->Rotate(InputHandler::g_MouseChangebleY, InputHandler::g_MouseChangebleX, 0.f);
+		XMVECTOR direction = {};
+		XMFLOAT3 dir;
+		DirectX::XMStoreFloat3(&dir, m_MyCamera->GetLook());
+		dir.y = 0.f;
+		direction = DirectX::XMVector3Normalize(XMLoadFloat3(&dir));
+
+		XMFLOAT3 cLook = m_Look;
+		cLook.y = 0.f;
+		cLook = MathHelper::Normalize(cLook);
+
+		float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(direction, XMLoadFloat3(&cLook)));
+
+		XMFLOAT3 cUp = m_Up;
+		cUp.y = 0.f;
+		//cUp = MathHelper::Normalize(cUp);
+
+		float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&cUp), DirectX::XMVector3Cross(direction, XMLoadFloat3(&cLook))));
+
+		float acosValue = 0.f;
+
+		acosValue = acos(cosValue);
+
+		float degree = XMConvertToDegrees(acosValue);
+
+		if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
+			degree = -degree;
+		degree *= 0.9f;
+
+		if (fabs(degree) > 1.f)
+			Rotate(0.f, XMConvertToRadians(degree), 0.f);
+
+		//m_MyCamera->SetRotation({ 0.f, 0.f, 0.f });
+		//m_MyCamera->Rotate(InputHandler::g_MouseChangebleY, InputHandler::g_MouseChangebleX, 0.f);
 		break;
+	}
 	case CameraType::eThird:
 		m_MyCamera->SetTimeLag(0.0f);
 		m_MyCamera->SetOffset(XMFLOAT3(0.0f, STD_CUBE_SIZE * 1.5f, -STD_CUBE_SIZE * 4.5f));
@@ -138,28 +171,34 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 		
 		float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&cUp), DirectX::XMVector3Cross(direction, XMLoadFloat3(&cLook))));
 		
-		
 		float acosValue = 0.f;
 		
 		acosValue = acos(cosValue);
 		
 		float degree = XMConvertToDegrees(acosValue);
 		
-		if (ccw > 0)	// ccw가 양수이면 방시계로 돌아야함
+		if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
 			degree = -degree;
-		degree *= 0.7f;
+		degree *= 0.9f;
 		
 		bool isChange = false;
 		
-		if (fabs(degree) > 1.f)
+		if (m_MyCamera->GetCameraType() == CameraType::eThird)
 		{
-			Rotate(0.f, XMConvertToRadians(degree), 0.f);
-			isChange = true;
+			if (fabs(degree) > 1.f)
+			{
+				Rotate(0.f, XMConvertToRadians(degree), 0.f);
+				isChange = true;
+			}
+			else
+				Move(DIR_FORWARD, fDistance, true);
+			degree = 0.f;
 		}
 		else
-			Move(DIR_FORWARD, fDistance, true);
-		degree = 0.f;
-		
+		{
+			Move(dwDirection, fDistance, true);
+		}
+
 		return isChange;
 	}
 	return false;

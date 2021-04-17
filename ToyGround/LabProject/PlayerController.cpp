@@ -34,54 +34,38 @@ void PlayerController::HandleInput(const float deltaT)
 	case CameraType::eFirst:
 	case CameraType::eThird:
 	{
-		if (GetAsyncKeyState('W') & 0x8000) dir |= DIR_FORWARD;
+		if (GetAsyncKeyState('W') & 0x8000) dir |= DIR_FORWARD;	
 		if (GetAsyncKeyState('S') & 0x8000) dir |= DIR_BACKWARD;
-		if (GetAsyncKeyState('A') & 0x8000) dir |= DIR_LEFT;
-		if (GetAsyncKeyState('D') & 0x8000) dir |= DIR_RIGHT;
+		if (GetAsyncKeyState('A') & 0x8000) dir |= DIR_LEFT;	
+		if (GetAsyncKeyState('D') & 0x8000) dir |= DIR_RIGHT;	
 
 		if (dir != 0)
 			m_Owner->Move(dir, speed);
 		break;
 	}
 	break;
-	case CameraType::eFree:
-	{
-		if (GetAsyncKeyState('W') & 0x8000) {
-			m_Owner->m_MyCamera->Walk(speed);
-		}
-		if (GetAsyncKeyState('S') & 0x8000) {
-			m_Owner->m_MyCamera->Walk(-speed);
-		}
-		if (GetAsyncKeyState('A') & 0x8000) {
-			m_Owner->m_MyCamera->Strafe(-speed);
-		}
-		if (GetAsyncKeyState('D') & 0x8000) {
-			m_Owner->m_MyCamera->Strafe(speed);
-		}
-		if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
-			m_Owner->m_MyCamera->Up(speed);
-		}
-		if (GetAsyncKeyState('C') & 0x8000) {
-			m_Owner->m_MyCamera->Up(-speed);
-		}
-	}
-	break;
-	}
-
-	if (InputHandler::IsKeyUp('T'))
-	{
-		if (m_Owner->m_IsThirdCamera)
-		{
-			m_Owner->SetCamera(CameraType::eFirst);
-			m_Owner->m_IsThirdCamera = !m_Owner->m_IsThirdCamera;
-			return;
-		}
-		else if (!m_Owner->m_IsThirdCamera)
-		{
-			m_Owner->SetCamera(CameraType::eThird);
-			m_Owner->m_IsThirdCamera = !m_Owner->m_IsThirdCamera;
-			return;
-		}
+	//case CameraType::eFree:
+	//{
+	//	if (GetAsyncKeyState('W') & 0x8000) {
+	//		m_Owner->m_MyCamera->Walk(speed);
+	//	}
+	//	if (GetAsyncKeyState('S') & 0x8000) {
+	//		m_Owner->m_MyCamera->Walk(-speed);
+	//	}
+	//	if (GetAsyncKeyState('A') & 0x8000) {
+	//		m_Owner->m_MyCamera->Strafe(-speed);
+	//	}
+	//	if (GetAsyncKeyState('D') & 0x8000) {
+	//		m_Owner->m_MyCamera->Strafe(speed);
+	//	}
+	//	if (GetAsyncKeyState(VK_SPACE) & 0x8000) {
+	//		m_Owner->m_MyCamera->Up(speed);
+	//	}
+	//	if (GetAsyncKeyState('C') & 0x8000) {
+	//		m_Owner->m_MyCamera->Up(-speed);
+	//	}
+	//}
+	//break;
 	}
 }
 
@@ -123,5 +107,24 @@ void PlayerController::MouseCallback()
 		ClientToScreen(Core::g_hMainWnd, &ptMouse);
 		SetCursorPos(ptMouse.x, ptMouse.y);
 		InputHandler::g_MoveMouseCallback = false;
+	}
+
+	if (InputHandler::g_RightMouseCallback)
+	{
+		if (m_Owner->m_IsThirdCamera)
+		{
+			m_Owner->SetCamera(CameraType::eFirst);
+			m_Owner->m_IsThirdCamera = !m_Owner->m_IsThirdCamera;
+			return;
+		}
+	}
+	else
+	{
+		if (!m_Owner->m_IsThirdCamera)
+		{
+			m_Owner->SetCamera(CameraType::eThird);
+			m_Owner->m_IsThirdCamera = !m_Owner->m_IsThirdCamera;
+			return;
+		}
 	}
 }
