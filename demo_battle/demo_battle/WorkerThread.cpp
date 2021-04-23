@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "WorkerThread.h"
 
 void WorkerThread::InitThread() {

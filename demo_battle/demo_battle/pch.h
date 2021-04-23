@@ -32,3 +32,4 @@
 #include "../../demo_server/demo_server/protocol.h"
 
 #pragma comment(lib, "Ws2_32.lib")
+class MathHelper;

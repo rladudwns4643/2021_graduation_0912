@@ -1,5 +1,8 @@
 #pragma once
 #include "Global.h"
+#include "MathHelper.h"
+#include "Boundary.h"
+#include "pch.h"
 
 class Boundary;
 class Object {
@@ -11,7 +14,7 @@ public:
 	Object& operator=(const Object& other);
 
 public:
-	virtual bool Update(float elapsedTime);
+	virtual bool Update(float elapsedTime, bool is_player);
 	bool BulletUpdate(float elapsedTime);
 	void AddForce(XMFLOAT3 force, float elapsedTime, bool isBullet);
 
@@ -72,12 +75,12 @@ public:
 
 	virtual Object* clone() const { return new Object(*this); }
 
-	void SetuniqueID(int uniq) { m_UniqueID = uniq; }
-	int GetUniqueID() const { return m_UniqueID; }
+	void SetuniqueID(int uniq) { m_uniqueID = uniq; }
+	int GetUniqueID() const { return m_uniqueID; }
 
 	bool IsStopped();
 protected:
-	int m_UniqueID;
+	int m_uniqueID;
 
 	XMFLOAT4X4 m_xmf4x4World;
 	XMFLOAT3 m_PreLook{ 0.f, 0.f, 1.f };

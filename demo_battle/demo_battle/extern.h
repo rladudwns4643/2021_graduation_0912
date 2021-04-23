@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "Global.h"
+#include "Map.h"
+#include "SpawnPosition.h"
 
 class Room;
 //SHARED RESOURCE
@@ -12,8 +14,8 @@ namespace SR {
 	extern std::priority_queue<EVENT> g_timer_queue;		//우선순위 queue, 내림차순 기준
 
 	extern Map g_map;
-	//extern std::map<int, Boundary*> g_boundaries;
-	//extern SpawnPosition g_spawnPos[2];
+	extern std::map<int, Boundary*> g_boundaries;
+	extern SpawnPosition g_spawn_pos;
 }
 
 namespace ATOMIC {

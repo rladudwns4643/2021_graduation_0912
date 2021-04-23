@@ -37,6 +37,36 @@
     <Filter Include="Code\Room">
       <UniqueIdentifier>{70b14374-9d5b-43d7-8efd-09df10aa0527}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\DX">
+      <UniqueIdentifier>{9f98be75-9793-4a0e-82d0-6059844f21e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Boundary">
+      <UniqueIdentifier>{0de8bd11-04d9-4fed-b4de-d62a7fd4ba64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Object">
+      <UniqueIdentifier>{ed422069-e1c5-4a9a-a2c5-6d458ba4859a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Object\Interface">
+      <UniqueIdentifier>{ec4935c5-6294-4a8b-a86d-5f835855406a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread\Timer">
+      <UniqueIdentifier>{edb911e5-7e8e-439a-af45-3ad57d0aac72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Player">
+      <UniqueIdentifier>{ae0099fc-b84b-4eed-bb39-5f628b84b018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Player\Interface">
+      <UniqueIdentifier>{73be7fae-78a0-4f1f-a49a-88a133cf55af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Player\Toy">
+      <UniqueIdentifier>{982ffbd6-b36a-484e-8b1b-4135c2c7f585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Object\Bullet">
+      <UniqueIdentifier>{a7109eef-74ff-4d96-a651-db7e92ffd30f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Object\Character">
+      <UniqueIdentifier>{66c90c78-abf9-4fa4-a916-884bfd6d3c04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,6 +86,33 @@
     </ClCompile>
     <ClCompile Include="Room.cpp">
       <Filter>Code\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper.cpp">
+      <Filter>Code\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Boundary.cpp">
+      <Filter>Code\Boundary</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Code\Object\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Code\Player\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Toy.cpp">
+      <Filter>Code\Player\Toy</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Code\Object\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Code\Object\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +145,36 @@
     </ClInclude>
     <ClInclude Include="Room.h">
       <Filter>Code\Room</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\demo_server\demo_server\protocol.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>Code\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Boundary.h">
+      <Filter>Code\Boundary</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Code\Object\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerThread.h">
+      <Filter>Code\Thread\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Code\Player\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Toy.h">
+      <Filter>Code\Player\Toy</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Code\Object\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Code\Object\Character</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

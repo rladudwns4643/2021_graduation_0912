@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Room.h"
 
 Room::Room(int room_no) {
@@ -10,10 +11,10 @@ Room::Room(int room_no, wstring room_name) {
 }
 
 Room::~Room() {
-	if (m_physics != nullptr) {
-		delete m_physics;
-		m_physics = nullptr;
-	}
+	//if (m_physics != nullptr) {
+	//	delete m_physics;
+	//	m_physics = nullptr;
+	//}
 	if (m_map != nullptr) {
 		delete m_map;
 		m_map = nullptr;
@@ -34,7 +35,7 @@ void Room::Initialize(int room_no) {
 	m_isGameStarted = false;
 	m_isRoundStarted = false;
 	m_leftTime = MAX_LEFT_TIME;
-	m_physics = new Physics();
+	//m_physics = new Physics();
 	m_map = new Map();
 	m_lastUpdate = std::chrono::system_clock::now();
 
@@ -128,14 +129,14 @@ void Room::Update() {
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			if (m_players[i]->GetID() != -1) { //not unset
 				if (!m_players[i]->IsDead()) {
-					auto iter = m_players[i]->GetCurForm();
+					auto iter = m_players[i]->GetCurObject();
 
 					XMFLOAT3 curpos = iter->GetPosition();
 					XMFLOAT3 prepos = iter->GetPrePosition();
 
 					//
 
-					subDistance = Vector3::Subtract(curpos, prepos);
+					subDistance = MathHelper::Subtract(curpos, prepos);
 
 					if (fabs(subDistance.x) >= 0.1f
 						|| fabs(subDistance.y) >= 3.f
@@ -156,11 +157,11 @@ void Room::Update() {
 			}
 		}
 
-		for (auto iter = m_map->m_ObjList[Map::NOTFIXED].begin(); iter->m_map->m_ObjList[Map::NOTFIXED].end(); ++iter) {
+		for (auto iter = m_map->m_obj_list[Map::NOTFIXED].begin(); iter != m_map->m_obj_list[Map::NOTFIXED].end(); ++iter) {
 			XMFLOAT3 curpos = (*iter)->GetPosition();
 			XMFLOAT3 prepos = (*iter)->GetPrePosition();
 
-			subDistance = Vector3::Subtract(curpos, prepos);
+			subDistance = MathHelper::Subtract(curpos, prepos);
 
 			if (fabs(subDistance.x) >= 0.1f
 				|| fabs(subDistance.y) >= 1.f
@@ -182,7 +183,7 @@ void Room::Update() {
 		}
 
 		for (int i = 0; i < m_bullets.size(); ++i) {
-			if (m_bullets[i].isUsed()) {
+			if (m_bullets[i].isShoot()) {
 				XMFLOAT3 pos = m_bullets[i].GetPosition();
 				PTC_VECTOR ptc_pos;
 				ptc_pos.x = pos.x;
@@ -191,7 +192,7 @@ void Room::Update() {
 
 				for (int j = 0; i < MAX_PLAYER; ++j) {
 					if (m_players[j]->GetID() != -1) {
-						PushObjectPositionMsg(m_players[j]->GetID(), m_bullets[i].m_boundaries->GetObjtype(), m_bullets[i].GetUniqueID(), &ptc_pos);
+						PushObjectPositionMsg(m_players[j]->GetID(), m_bullets[i].m_boundaries->GetObjType(), m_bullets[i].GetUniqueID(), &ptc_pos);
 					}
 				}
 			}
@@ -238,7 +239,7 @@ bool Room::EnterRoom(int id, bool is_roomMnr) {
 	if (m_curPlayerNum >= MAX_PLAYER) return false;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
-		if (m_players[i]->isEmpty()) {
+		if (m_players[i]->GetSlotStatus()) {
 			m_curPlayerNum++;
 			m_players[i]->Enter();
 			m_players[i]->SetID(id);
@@ -270,12 +271,11 @@ void Room::AnnounceRoomEnter(int id) {
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		if (!m_players[i]->GetSlotStatus()) {
-			Player& p = m_players[i];
-			if (p->GetID() == m_RoomMnr) {
-				BattleServer::GetInstance()->SendRoomEnterPacket(id, p->GetID(), p->GetReady(), i, p->GetID_STR(), p->GetMMR(), true);
+			if (m_players[i]->GetID() == m_RoomMnr) {
+				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), true);
 			}
 			else {
-				BattleServer::GetInstance()->SendRoomEnterPacket(id, p->GetID(), p->GetReady(), i, p->GetID_STR(), p->GetMMR(), false);
+				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), false);
 			}
 		}
 	}

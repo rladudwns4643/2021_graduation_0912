@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "battleServer.h"
 #include "extern.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
@@ -157,7 +158,7 @@ void BattleServer::SendPacket(int id, void* buff) {
 }
 
 void BattleServer::SendAutoAccessOKPacket(int id) {
-	bc_packet_auto_accept_ok p;
+	bc_packet_accept_ok p;
 	p.size = sizeof(p);
 	p.type = BC_AUTO_ACCEPT_OK;
 	p.id = id;
@@ -165,7 +166,7 @@ void BattleServer::SendAutoAccessOKPacket(int id) {
 }
 
 void BattleServer::SendAutoAccessFailPacket(int id) {
-	bc_packet_auto_accept_fail p;
+	bc_packet_accept_fail p;
 	p.size = sizeof(p);
 	p.type = BC_AUTO_ACCEPT_FAIL;
 	SendPacket(id, &p);

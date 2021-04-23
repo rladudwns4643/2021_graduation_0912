@@ -77,7 +77,7 @@ XMVECTOR MathHelper::RandHemisphereUnitVec3(XMVECTOR n)
 	}
 }
 
-XMFLOAT3 MathHelper::Normalize(XMFLOAT3& xmfVector)
+XMFLOAT3 MathHelper::Normalize(const XMFLOAT3& xmfVector)
 {
 	XMFLOAT3 m_xmf3Normal;
 	XMStoreFloat3(&m_xmf3Normal, XMVector3Normalize(XMLoadFloat3(&xmfVector)));
@@ -91,21 +91,21 @@ XMFLOAT3 MathHelper::Add(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::Add(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2, float fScalar)
+XMFLOAT3 MathHelper::Add(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2, const float fScalar)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) + (XMLoadFloat3(&xmf3Vector2) * fScalar));
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::Subtract(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2)
+XMFLOAT3 MathHelper::Subtract(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) - XMLoadFloat3(&xmf3Vector2));
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::TransformNormal(XMFLOAT3& xmf3Vector, XMMATRIX& xmmtxTransform)
+XMFLOAT3 MathHelper::TransformNormal(const XMFLOAT3& xmf3Vector, const XMMATRIX& xmmtxTransform)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMVector3TransformNormal(XMLoadFloat3(&xmf3Vector), xmmtxTransform));
@@ -113,20 +113,20 @@ XMFLOAT3 MathHelper::TransformNormal(XMFLOAT3& xmf3Vector, XMMATRIX& xmmtxTransf
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::TransformCoord(XMFLOAT3& xmf3Vector, XMMATRIX& xmmtxTransform)
+XMFLOAT3 MathHelper::TransformCoord(const XMFLOAT3& xmf3Vector, const XMMATRIX& xmmtxTransform)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMVector3TransformCoord(XMLoadFloat3(&xmf3Vector), xmmtxTransform));
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::TransformCoord(XMFLOAT3& xmf3Vector, XMFLOAT4X4& xmmtx4x4Matrix)
+XMFLOAT3 MathHelper::TransformCoord(const XMFLOAT3& xmf3Vector, const XMFLOAT4X4& xmmtx4x4Matrix)
 {
 	XMMATRIX xmfMatrix = XMLoadFloat4x4(&xmmtx4x4Matrix);
 	return MathHelper::TransformCoord(xmf3Vector, xmfMatrix);
 }
 
-XMFLOAT3 MathHelper::CrossProduct(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2, bool bNormalize)
+XMFLOAT3 MathHelper::CrossProduct(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2, const bool bNormalize)
 {
 	XMFLOAT3 xmf3Result;
 	if (bNormalize)
@@ -136,14 +136,14 @@ XMFLOAT3 MathHelper::CrossProduct(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2, 
 	return(xmf3Result);
 }
 
-float MathHelper::Length(XMFLOAT3& xmf3Vector)
+float MathHelper::Length(const XMFLOAT3& xmf3Vector)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMVector3Length(XMLoadFloat3(&xmf3Vector)));
 	return(xmf3Result.x);
 }
 
-XMFLOAT4X4 MathHelper::LookAtLH(XMFLOAT3& xmf3EyePosition, XMFLOAT3& xmf3LookAtPosition, XMFLOAT3& xmf3UpDirection)
+XMFLOAT4X4 MathHelper::LookAtLH(const XMFLOAT3& xmf3EyePosition, const XMFLOAT3& xmf3LookAtPosition, const XMFLOAT3& xmf3UpDirection)
 {
 	XMFLOAT4X4 xmmtx4x4Result;
 	XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixLookAtLH(XMLoadFloat3(&xmf3EyePosition), XMLoadFloat3(&xmf3LookAtPosition), XMLoadFloat3(&xmf3UpDirection)));

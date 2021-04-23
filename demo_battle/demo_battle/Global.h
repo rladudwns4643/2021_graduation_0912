@@ -1,16 +1,24 @@
 #pragma once
+#include "MathHelper.h"
+
 constexpr int EVENT_KEY = 10000;
 constexpr int LOBBY_SERVER_KEY = 0;
 
 constexpr int NO_MSG = -1;
 
 constexpr int MAX_PLAYER = 2;
+constexpr int MAX_BULLET = 30;
 constexpr int MAX_ROOM = 50;
 constexpr int MAX_BUFFER = 256;
 constexpr int MAX_ID_STR = 10;
 constexpr int MAX_CLIENT = 5100;
 
 constexpr size_t MAX_LEFT_TIME = 180 + 1;
+
+constexpr float GRAVITY = 0.98f;
+
+//animtime
+constexpr int ANIMTIME_JUMP = 500.f; //юс╫ц
 
 enum EVENT_TYPE {
 	EV_TCP_RECV, EV_SEND,

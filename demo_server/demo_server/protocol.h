@@ -1,4 +1,5 @@
 #pragma once
+#include "../../demo_battle/demo_battle/MathHelper.h"
 //------------------------------------------------------------------
 #define LOBBY_SERVER_PORT	7237
 #define BATTLE_SERVER_PORT	7238
@@ -8,7 +9,7 @@
 
 //------------------------------------------------------------------
 #define MAX_ID_LEN		50
-#define MAX_STR_LEN		255
+#define MAX_STR_LEN		50
 //------------------------------------------------------------------
 
 
@@ -22,21 +23,29 @@
 //------------------------------------------------------------------
 #define START_MMR		1000
 //------------------------------------------------------------------
-
+//OBJECT TYPE
 #define OBJECT_TYPE_TOY				1
 #define OBJECT_TYPE_BULLET			2
 
 #define OBJECT_START_INDEX_BULLET	1000
 #define MAX_BULLET_COUNT			20
+//------------------------------------------------------------------
 
 //------------------------------------------------------------------
 //ROOM JOIN FAIL
 #define ROOM_FAIL_CODE_ROOM_NOT_FOUND	0
 #define ROOM_FAIL_CODE_ROOM_IS_FULL		1
 #define ROOM_FAIL_CODE_ROOM_STARTED		2
-
 //------------------------------------------------------------------
 
+//------------------------------------------------------------------
+//ANIMATION TYPE
+#define ANIM_IDLE		0
+#define ANIM_JUMP		1
+#define ANIM_MOVE		2
+#define ANIM_ATTK		3
+#define ANIM_TEST		4
+//------------------------------------------------------------------
 
 //-------------------------------L->C-------------------------------
 //6
@@ -202,18 +211,18 @@ struct bc_packet_bb {
 	BYTE size;
 	BYTE type;
 
-	//XMFLOAT4X4 mats;
-	//XMFLOAT3 sizes;
+	XMFLOAT4X4 mats;
+	XMFLOAT3 sizes;
 };
 
-struct bc_packet_auto_accept_ok {
+struct bc_packet_accept_ok {
 	BYTE size;
 	BYTE type;
 
 	int id;
 };
 
-struct bc_packet_auto_accept_fail {
+struct bc_packet_accept_fail {
 	BYTE size;
 	BYTE type;
 };
@@ -392,7 +401,6 @@ struct bc_packet_updated_user_info {
 #define CB_KEY_JUMP				68
 
 #define CB_BULLET				7
-#define CB_BULLET_HIT			8
 #define CB_LOOK_VECTOR			9
 #define CB_TEST_TIME_PLUS		10
 #define CB_TEST_TIME_MINUS		11
@@ -443,13 +451,6 @@ struct cb_packet_bullet {
 	BYTE type;
 
 	PTC_VECTOR dir; //look angle
-};
-
-struct cb_packet_bullet_hit {
-	BYTE size;
-	BYTE type;
-
-	char damage;
 };
 
 struct cb_packet_look_vector {

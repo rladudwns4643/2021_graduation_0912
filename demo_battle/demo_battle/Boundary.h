@@ -1,30 +1,28 @@
 #pragma once
 #include "Global.h"
+#include "MathHelper.h"
+#include "pch.h"
 
-constexpr int NONETIYPE = -99;
+constexpr int NONETYPE = -99;
 
 //box, sphere
 
 class Boundary {
 public:
 	Boundary() noexcept;
-	Boundary(int unmBB, int numBS) noexcept;
+	Boundary(int numBB) noexcept;
 	Boundary(const Boundary& other) noexcept;
-	Boundary& operator=(const Boundary& ohter);
+	Boundary& operator=(const Boundary& other);
 	~Boundary();
 
 public:
 	void SetBB(int numBB); //member 변수 set
-	void SetBS(int numBS); 
 
 	int GetObjType() const;
 	void SetObjType(int obj_type);
 
 	int GetNumOfBB() const;
 	void SetNumOfBB(int num_bb);
-
-	int GetNumObBS() const;
-	void SetNumOfBS(int num_bs);
 
 	XMFLOAT3 GetBBRot(int idx) const;
 	void SetBBRot(float x, float y, float z, int idx);
@@ -50,25 +48,16 @@ public:
 	void SetBBRight(float x, float y, float z, int idx);
 	void SetBBRight(XMFLOAT3 xmfRight, int idx);
 
-	XMFLOAT3 GetBSPos(int idx) const;
-	void SetBSPos(float x, float y, float z, int idx);
-	void SetBSPos(XMFLOAT3 xmfPos, int idx);
+	XMFLOAT4X4 GetWorldMatrix(int idx) const;
+	void SetWorldMatrix(const XMFLOAT4X4& mat, int idx);
 
-	float GetBSRad(int idx) const;
-	void SetBSRad(float rad, int idx);
+	void BoundaryMove(float x, float y, float z);
+	void BoundaryMove(XMFLOAT3 distance);
 
 private:
 	int m_obj_type;
-	//SetBB
 	int m_numOfBB;
 	XMFLOAT4X4* m_xmf4x4_BB_world;
 	XMFLOAT3* m_xmf3_BB_size;
-	XMFLOAT3* m_xmf_BB_rot;
-	//~SetBB
-
-	//SetBS
-	int m_numOfBS;
-	XMFLOAT3* m_xmf3_BS;
-	float* m_BS_rad; //반지름
-	//~SetBS
+	XMFLOAT3* m_xmf3_BB_rot;
 };

@@ -3,6 +3,12 @@
 #include "Player.h"
 #include "Global.h"
 #include "battleServer.h"
+#include "Bullet.h"
+#include "Map.h"
+#include "extern.h"
+#include "Toy.h"
+#include "Boundary.h"
+#include "Physics.h"
 
 class Map;
 class Physics;
@@ -92,8 +98,8 @@ private:
 	std::atomic_int	m_curPlayerNum;
 	short			m_ToyNum;
 
-	//std::array<Player*, MAX_PLAYER> m_players;
-	//std::array<Bullet, MAX_BULLET> m_bullets;
+	std::array<Player*, MAX_PLAYER> m_players;
+	std::array<Bullet, MAX_BULLET> m_bullets;
 
 	std::queue<message> m_recvMsgQueue;
 	std::queue<message> m_copiedRecvMsgs;
@@ -108,5 +114,4 @@ private:
 	std::chrono::system_clock::time_point m_lastUpdate;
 	std::chrono::system_clock::time_point m_curUpdate;
 	std::chrono::duration<float> m_elapsedSec;
-
 };
