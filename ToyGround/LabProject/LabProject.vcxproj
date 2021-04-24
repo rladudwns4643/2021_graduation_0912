@@ -143,10 +143,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationController.h" />
     <ClInclude Include="ApplicationContext.h" />
     <ClInclude Include="AssertsReference.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="CharacterParts.h" />
     <ClInclude Include="CommandContext.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="d3dUtil.h" />
@@ -175,6 +177,8 @@
     <ClInclude Include="SceneController.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SkinnedData.h" />
+    <ClInclude Include="SkinnedModelInstance.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TOY_GROUND.h" />
@@ -188,10 +192,12 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationController.cpp" />
     <ClCompile Include="ApplicationContext.cpp" />
     <ClCompile Include="AssertsReference.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CharacterParts.cpp" />
     <ClCompile Include="CommandContext.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
@@ -216,6 +222,8 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneController.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SkinnedData.cpp" />
+    <ClCompile Include="SkinnedModelInstance.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TOY_GROUND.cpp" />
   </ItemGroup>

@@ -248,6 +248,24 @@ void Character::SetPosition(DirectX::XMFLOAT3 xmPos)
 	SetPosition(xmPos.x, xmPos.y, xmPos.z);
 }
 
+void Character::SetAnimationController(SkinnedModelInstance* skinnedModelInst)
+{
+	if (!skinnedModelInst) return;
+
+	m_SkinnedModelInst = skinnedModelInst;
+	m_AnimationController = std::make_unique<AnimationController>(this, m_SkinnedModelInst);
+}
+
+void Character::SetAnimationPlayerState(AnimationController::PlayerState playerState)
+{
+	m_AnimationController->m_PlayerState = playerState;
+}
+
+void Character::SetAnimationKeyState(AnimationController::PlayerState keyState)
+{
+	m_AnimationController->m_KeyState = keyState;
+}
+
 void Character::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 {
 	XMFLOAT3 look = GetLook();

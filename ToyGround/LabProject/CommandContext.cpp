@@ -6,11 +6,16 @@
 #include "Timer.h"
 #include "Camera.h"
 #include "GeometryMesh.h"
+#include "SkinnedModelInstance.h"
 #include "TOY_GROUND.h"
 
 void GraphicsContext::Initialize()
 {
 	// Object Resources
+	for (int i = 0; i < skinnedObjectCount; ++i)
+	{
+		m_SkinnedCBs[i] = std::make_unique<UploadBuffer<ShaderResource::SkinnedConstants>>(Core::g_Device.Get(), 1, true);
+	}
 	PassCB = std::make_unique<UploadBuffer<ShaderResource::PassConstants>>(Core::g_Device.Get(), passCount, true);
 	MaterialBuffer = std::make_unique<UploadBuffer<ShaderResource::MaterialData>>(Core::g_Device.Get(), materialCount, false);
 }
@@ -131,6 +136,19 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera, Light* light)
 
 	auto currPassCB = PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);
+}
+
+void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance)
+{
+	//skinmodelInstance->UpdateSkinnedAnimation(0);
+
+	ShaderResource::SkinnedConstants skinnedConstants;
+	std::copy(
+		std::begin(skinmodelInstance->FinalTransforms),
+		std::end(skinmodelInstance->FinalTransforms),
+		&skinnedConstants.BoneTransforms[0]);
+
+	m_SkinnedCBs[skinnedCBIndex]->CopyData(0, skinnedConstants);
 }
 
 void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer, bool isFrustum)

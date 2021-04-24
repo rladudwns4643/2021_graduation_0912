@@ -43,6 +43,14 @@ struct Vertex
 	}
 };
 
+struct SkinnedVertex : Vertex
+{
+	DirectX::XMFLOAT3 BoneWeights;
+	BYTE BoneIndices[4];
+
+	uint16_t MaterialIndex;
+};
+
 #define MaxLights 16
 struct Light
 {
@@ -141,6 +149,11 @@ namespace ShaderResource
 		UINT MaterialPad0;
 		UINT MaterialPad1;
 		UINT MaterialPad2;
+	};
+
+	struct SkinnedConstants
+	{
+		DirectX::XMFLOAT4X4 BoneTransforms[96];
 	};
 }
 

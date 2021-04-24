@@ -34,9 +34,12 @@
 #define TEXTURE_INDEX_Cartoon_CubeWorld_Texture 1
 
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture "Cartoon_CubeWorld_Texture"
+#define TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A "Polygon_Fantasy_Characters_Texture_01_A"
+
 
 // 캐릭터
 #define CHARACTER_TEST "TEST_CHARCTER"
+enum BoneIndex { Baird = 0, Count };
 
 // 오브젝트 메쉬
 #define OBJECT_MESH_STR_TEST_PLAYER		"Test_Player"
@@ -105,3 +108,20 @@ enum class CameraType { eFirst = 0, eThird = 1, eFree = 2 };
 #define SPAWN_RED_TEAM 0
 #define SPAWN_BLUE_TEAM 1
 #define SPAWN_CENTER 2
+
+// 캐릭터 - 테스트
+#define CHARACTER_BAIRD "BA"
+
+// Animation KeyState
+#define KEY_IDLE "Idle"
+#define KEY_FORWARD "Running"
+#define KEY_BACKWARD "Backward"
+#define KEY_LEFT_STRAFE "Left_Strafe"
+#define KEY_RIGHT_STRAFE "Right_Strafe"
+
+#define KEY_ATTACK "Attack"
+#define KEY_JUMP "Jump"
+
+#define KEY_FIND "Find"
+#define KEY_WIN "Win"
+#define KEY_LOSE "Lose"

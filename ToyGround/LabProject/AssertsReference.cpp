@@ -526,6 +526,140 @@ void AssertsReference::BuildModel(ID3D12Device* pDevice, ID3D12GraphicsCommandLi
 	}
 }
 
+void AssertsReference::BuildSkinnedModel(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName)
+{
+	if (m_GeometryMesh.count(meshName)) {
+		cout << "이미 해당메쉬는 로드되었습니다." << endl;
+	}
+	else
+	{
+		string path = "Models\\SkinnedModel\\" + meshName + "\\" + meshName;
+
+		std::vector<SkinnedVertex> skinnedVertices;
+		std::vector<std::uint32_t> indices;
+		std::vector<Material> materials;
+		std::unique_ptr<SkinnedData> skinnedInfo = make_unique<SkinnedData>();
+
+		LoadMeshFile(skinnedVertices, indices, &materials, path);
+		LoadSkeletonFile(*skinnedInfo, path);
+
+		// Geo CreateDefaultBuffer
+		std::unique_ptr<SkinnedModelInstance> skinnedModelInst = std::make_unique<SkinnedModelInstance>();
+		skinnedModelInst->SkinnedInfo = std::move(skinnedInfo);
+		skinnedModelInst->FinalTransforms.resize(skinnedModelInst->SkinnedInfo->BoneCount());
+		m_SkinnedModelInsts[meshName] = std::move(skinnedModelInst);
+
+		const UINT vbByteSize = (UINT)skinnedVertices.size() * sizeof(SkinnedVertex);
+		const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint32_t);
+
+		auto geo = std::make_unique<GeometryMesh>();
+		geo->Name = meshName;
+
+		ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+		CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), skinnedVertices.data(), vbByteSize);
+
+		ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+		CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+		geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+			pCommandList, skinnedVertices.data(), vbByteSize, geo->VertexBufferUploader);
+
+		geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+			pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
+
+		geo->VertexByteStride = sizeof(SkinnedVertex);
+		geo->VertexBufferByteSize = vbByteSize;
+		geo->IndexFormat = DXGI_FORMAT_R32_UINT;
+		geo->IndexBufferByteSize = ibByteSize;
+
+		// Bounds
+		XMFLOAT3 vMinf3(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
+		XMFLOAT3 vMaxf3(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
+		XMVECTOR vMin = XMLoadFloat3(&vMinf3);
+		XMVECTOR vMax = XMLoadFloat3(&vMaxf3);
+
+		for (auto& p : skinnedVertices)
+		{
+			XMVECTOR P = XMLoadFloat3(&p.Pos);
+
+			vMin = XMVectorMin(vMin, P);
+			vMax = XMVectorMax(vMax, P);
+		}
+
+		BoundingBox bounds;
+		XMStoreFloat3(&bounds.Center, 0.5f * (vMin + vMax));
+		XMStoreFloat3(&bounds.Extents, 0.5f * (vMax - vMin));
+
+		SubmeshGeometry submesh;
+		submesh.IndexCount = indices.size();
+		submesh.StartIndexLocation = 0;
+		submesh.BaseVertexLocation = 0;
+		submesh.Bounds = bounds;
+		geo->DrawArgs[meshName] = submesh;
+
+		m_GeometryMesh[meshName] = std::move(geo);
+	}
+}
+
+void AssertsReference::BuildSkinnedModelAnimation(std::string meshName, const std::string clipName)
+{
+	if (!m_SkinnedModelInsts.count(meshName))
+	{
+		cout << "LoadModelAnimation: None MeshName" << endl;
+	}
+	else
+	{
+		string path = "Models\\SkinnedModel\\" + meshName + "\\" + meshName;
+		LoadAnimationFile(*m_SkinnedModelInsts[meshName]->SkinnedInfo, path, clipName);
+	}
+}
+
+void AssertsReference::BuildSkinnedModelSubMesh(std::string meshName, const std::string submeshName)
+{
+	if (!m_SkinnedModelInsts.count(meshName))
+	{
+		cout << "BuildSkinnedModelSubMesh: None MeshName" << endl;
+	}
+	else
+	{
+		auto vSubmeshOffset = m_SkinnedModelInsts[meshName]->SkinnedInfo->GetSubmeshOffset();
+		auto vBoneName = m_SkinnedModelInsts[meshName]->SkinnedInfo->GetBoneName();
+
+		// submeshName의 객체가 있는지 예외처리
+		bool checkIsSubmeshName = false;
+		for (auto& boneName : vBoneName)
+		{
+			if (boneName == submeshName) checkIsSubmeshName = true;
+		}
+
+		// submesh 추가
+		if (!checkIsSubmeshName)
+		{
+			cout << "BuildSkinnedModelSubMesh: None submeshName" << endl;
+		}
+		else
+		{
+			// caculate submesh offset
+			UINT indexCount = 0;
+			UINT startIndexLocation = 0;
+			for (int i = 0; i < vBoneName.size(); ++i)
+			{
+				startIndexLocation = vSubmeshOffset[i];
+				indexCount += startIndexLocation;
+
+				if (vBoneName[i] == submeshName) break;
+			}
+
+			SubmeshGeometry submesh;
+			submesh.IndexCount = indexCount;
+			submesh.StartIndexLocation = startIndexLocation;
+			submesh.BaseVertexLocation = 0;
+
+			m_GeometryMesh[meshName]->DrawArgs[submeshName] = submesh;
+		}
+	}
+}
+
 bool AssertsReference::LoadMeshFile(std::vector<Vertex>& outVertexVector, std::vector<uint32_t>& outIndexVector, std::vector<Material>* outMaterial, std::string path)
 {
 	path += ".mesh";
@@ -591,6 +725,192 @@ bool AssertsReference::LoadMeshFile(std::vector<Vertex>& outVertexVector, std::v
 			outIndexVector.push_back(index);
 		}
 
+		return true;
+	}
+
+	return false;
+}
+
+bool AssertsReference::LoadMeshFile(std::vector<SkinnedVertex>& outVertexVector, std::vector<uint32_t>& outIndexVector, std::vector<Material>* outMaterial, std::string path)
+{
+	path += ".mesh";
+	std::ifstream fileIn(path);
+
+	uint32_t vertexSize, indexSize;
+	uint32_t materialSize;
+
+	std::string ignore;
+	if (fileIn)
+	{
+		fileIn >> ignore >> vertexSize;
+		fileIn >> ignore >> indexSize;
+		fileIn >> ignore >> materialSize;
+
+		if (vertexSize == 0 || indexSize == 0)
+			return false;
+
+		if (outMaterial != nullptr)
+		{
+			// Material Data
+			fileIn >> ignore;
+			for (uint32_t i = 0; i < materialSize; ++i)
+			{
+				Material tempMaterial;
+
+				fileIn >> ignore >> tempMaterial.Name;
+				fileIn >> ignore >> tempMaterial.Ambient.x >> tempMaterial.Ambient.y >> tempMaterial.Ambient.z;
+				fileIn >> ignore >> tempMaterial.DiffuseAlbedo.x >> tempMaterial.DiffuseAlbedo.y >> tempMaterial.DiffuseAlbedo.z >> tempMaterial.DiffuseAlbedo.w;
+				fileIn >> ignore >> tempMaterial.FresnelR0.x >> tempMaterial.FresnelR0.y >> tempMaterial.FresnelR0.z;
+				fileIn >> ignore >> tempMaterial.Specular.x >> tempMaterial.Specular.y >> tempMaterial.Specular.z;
+				fileIn >> ignore >> tempMaterial.Emissive.x >> tempMaterial.Emissive.y >> tempMaterial.Emissive.z;
+				fileIn >> ignore >> tempMaterial.Roughness;
+				fileIn >> ignore;
+				for (int i = 0; i < 4; ++i)
+				{
+					for (int j = 0; j < 4; ++j)
+					{
+						fileIn >> tempMaterial.MatTransform.m[i][j];
+					}
+				}
+				(*outMaterial).push_back(tempMaterial);
+			}
+		}
+
+		// Vertex Data
+		for (uint32_t i = 0; i < vertexSize; ++i)
+		{
+			SkinnedVertex vertex;
+			int temp[4];
+			fileIn >> ignore >> vertex.Pos.x >> vertex.Pos.y >> vertex.Pos.z;
+			fileIn >> ignore >> vertex.Normal.x >> vertex.Normal.y >> vertex.Normal.z;
+			fileIn >> ignore >> vertex.TexC.x >> vertex.TexC.y;
+			fileIn >> ignore >> vertex.Tangent.x >> vertex.Tangent.y >> vertex.Tangent.z;
+			fileIn >> ignore >> vertex.Binormal.x >> vertex.Binormal.y >> vertex.Binormal.z;
+			fileIn >> ignore >> vertex.BoneWeights.x >> vertex.BoneWeights.y >> vertex.BoneWeights.z;
+			fileIn >> ignore >> temp[0] >> temp[1] >> temp[2] >> temp[3];
+
+			for (int j = 0; j < 4; ++j)
+			{
+				vertex.BoneIndices[j] = temp[j];
+			}
+			// push_back
+			outVertexVector.push_back(vertex);
+		}
+
+		// Index Data
+		fileIn >> ignore;
+		for (uint32_t i = 0; i < indexSize; ++i)
+		{
+			uint32_t index;
+			fileIn >> index;
+			outIndexVector.push_back(index);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+bool AssertsReference::LoadSkeletonFile(SkinnedData& outSkinnedData, std::string path)
+{
+	path += ".skeleton";
+	std::ifstream fileIn(path);
+
+	uint32_t boneSize;
+
+	std::string ignore;
+	if (fileIn)
+	{
+		fileIn >> ignore >> boneSize;
+
+		if (boneSize == 0)
+			return false;
+
+		// Bone Data
+		// Bone Hierarchy
+		fileIn >> ignore;
+		std::vector<int> boneHierarchy;
+		for (uint32_t i = 0; i < boneSize; ++i)
+		{
+			int tempBoneHierarchy;
+			fileIn >> tempBoneHierarchy;
+			boneHierarchy.push_back(tempBoneHierarchy);
+		}
+
+		fileIn >> ignore;
+		for (uint32_t i = 0; i < boneSize; ++i)
+		{
+			std::string tempBoneName;
+			fileIn >> tempBoneName;
+
+			outSkinnedData.SetBoneName(tempBoneName);
+		}
+		// Bone Offset
+		fileIn >> ignore;
+		std::vector<DirectX::XMFLOAT4X4> boneOffsets;
+		for (uint32_t i = 0; i < boneSize; ++i)
+		{
+			DirectX::XMFLOAT4X4 tempBoneOffset;
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					fileIn >> tempBoneOffset.m[i][j];
+				}
+			}
+			boneOffsets.push_back(tempBoneOffset);
+		}
+		// Bone Submesh Offset
+		fileIn >> ignore;
+		std::vector<int> boneSubmeshOffset;
+		for (uint32_t i = 0; i < boneSize; ++i)
+		{
+			int tempBoneSubmeshOffset;
+			fileIn >> tempBoneSubmeshOffset;
+			outSkinnedData.SetSubmeshOffset(tempBoneSubmeshOffset);
+		}
+
+		outSkinnedData.Set(
+			boneHierarchy,
+			boneOffsets);
+
+		return true;
+	}
+
+	return false;
+}
+
+bool AssertsReference::LoadAnimationFile(SkinnedData& outSkinnedData, std::string& path, const std::string clipName)
+{
+	path = path + "_" + clipName + ".anim";
+	std::ifstream fileIn(path);
+
+	AnimationClip animation;
+	uint32_t boneAnimationSize, keyframeSize;
+
+	std::string ignore;
+	if (fileIn)
+	{
+		fileIn >> ignore >> boneAnimationSize;
+		fileIn >> ignore >> keyframeSize;
+
+		for (uint32_t i = 0; i < boneAnimationSize; ++i)
+		{
+			BoneAnimation boneAnim;
+			for (uint32_t j = 0; j < keyframeSize; ++j)
+			{
+				Keyframe key;
+				fileIn >> key.TimePos;
+				fileIn >> key.Translation.x >> key.Translation.y >> key.Translation.z;
+				fileIn >> key.Scale.x >> key.Scale.y >> key.Scale.z;
+				fileIn >> key.RotationQuat.x >> key.RotationQuat.y >> key.RotationQuat.z >> key.RotationQuat.w;
+				boneAnim.Keyframes.push_back(key);
+			}
+			animation.BoneAnimations.push_back(boneAnim);
+		}
+
+		outSkinnedData.SetAnimation(animation, clipName);
 		return true;
 	}
 
