@@ -48,7 +48,7 @@ bool GameplayScene::Enter()
 	m_MapName = MAP_STR_GAME_MAP;
 	AppContext->DisplayProps(m_MapName);
 
-	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_TEST, CHARACTER_TEST);
+	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
 
 	// 카메라 세팅
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
@@ -92,7 +92,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	}
 
 	/*Characters*/
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_TEST], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_BAIRD], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Baird, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_BAIRD].get());
 	
 	/*Materials*/
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
@@ -113,7 +114,7 @@ void GameplayScene::Render()
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
-		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
+		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
 	}
 

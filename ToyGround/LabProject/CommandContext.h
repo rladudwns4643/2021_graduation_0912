@@ -2,6 +2,7 @@
 #include "Singleton.h"
 #include "UploadBuffer.h"
 
+class SkinnedModelInstance;
 class GameObject;
 class ObjectInfo;
 class Camera;
@@ -53,6 +54,8 @@ public:
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
 	void UpdateMainPassCB(Camera& camera, Light* light);
 
+	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
+
 	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer = -1, bool isFrustum = false);
 	void DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const std::vector<GameObject*>& rItems);
 	
@@ -67,9 +70,10 @@ public:
 
 	std::unique_ptr<UploadBuffer<ShaderResource::PassConstants>>	PassCB = nullptr;
 	std::map<string, std::unique_ptr<UploadBuffer<ShaderResource::InstanceData>>> m_InstanceBuffers;
+	std::array< std::unique_ptr<UploadBuffer<ShaderResource::SkinnedConstants>>, BoneIndex::Count> m_SkinnedCBs;
 	std::unique_ptr<UploadBuffer<ShaderResource::MaterialData>>		MaterialBuffer = nullptr;
 
-	UINT passCount; UINT materialCount;
+	UINT passCount; UINT materialCount; UINT skinnedObjectCount;
 
 private:
 	//DirectX::BoundingSphere mSceneBounds;

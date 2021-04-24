@@ -34,6 +34,7 @@ void TOY_GROUND::Startup(void)
 
 	// Build GpuResources
 	GraphicsContext::GetApp()->passCount = 1;
+	GraphicsContext::GetApp()->skinnedObjectCount = BoneIndex::Count;
 	GraphicsContext::GetApp()->materialCount = AssertsReference::GetApp()->m_Materials.size();
 
 
@@ -119,11 +120,19 @@ void TOY_GROUND::BuildAsserts()
 	// Build GeoMeshes
 	AssertsReference::GetApp()->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());
 
+	// Build SkinnedModel
+	AssertsReference::GetApp()->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), CHARACTER_BAIRD);
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_BAIRD, "Idle");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_BAIRD, "Running");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_BAIRD, "Jump");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_BAIRD, "Win");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_BAIRD, "Lose");
+
 	// Build Materials
 	AssertsReference::GetApp()->BuildMaterials();
 }
 
 void TOY_GROUND::BuildCharacters()
 {
-	AppContext->CreateCharacter(CHARACTER_TEST, CHARACTER_TEST, TEXTURE_STR_Cartoon_CubeWorld_Texture, SPAWN_RED_TEAM);
+	AppContext->CreateCharacter(CHARACTER_BAIRD, CHARACTER_BAIRD, TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A, BoneIndex::Baird);
 }

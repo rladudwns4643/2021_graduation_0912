@@ -126,6 +126,18 @@
     <ClInclude Include="GeometryGenerator.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="SkinnedData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedModelInstance.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterParts.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -223,6 +235,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedData.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedModelInstance.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterParts.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -63,33 +63,35 @@ HRESULT FbxLoader::LoadFBX(
 	if (pFbxRootNode)
 	{
 		// Skeleton Bone Hierarchy Index
+		std::cout << "루트 자식수: " << pFbxRootNode->GetChildCount() << std::endl;
+		for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
+		{
+			FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
+		
+			FbxNodeAttribute* pFbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
+			if (pFbxNodeAttribute)
+			{
+				FbxNodeAttribute::EType AttributeType = pFbxNodeAttribute->GetAttributeType();
+		
+				if (AttributeType == FbxNodeAttribute::eSkeleton) GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
+			}
+		}
+
 		//for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
 		//{
 		//	FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
 		//
-		//	FbxNodeAttribute* pFbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
-		//	if (pFbxNodeAttribute)
-		//	{
-		//		FbxNodeAttribute::EType AttributeType = pFbxNodeAttribute->GetAttributeType();
+		//	FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
+		//	FbxNodeAttribute::EType AttributeType = pMesh->GetAttributeType();
+		//	if (!pMesh || !AttributeType) { continue; }
 		//
-		//		if (AttributeType == FbxNodeAttribute::eSkeleton) GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
+		//	switch (AttributeType)
+		//	{
+		//	case FbxNodeAttribute::eSkeleton:
+		//		GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
+		//		break;
 		//	}
 		//}
-
-		for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
-		{
-			FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
-			FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
-			FbxNodeAttribute::EType AttributeType = pMesh->GetAttributeType();
-			if (!pMesh || !AttributeType) { continue; }
-
-			switch (AttributeType)
-			{
-			case FbxNodeAttribute::eSkeleton:
-				GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
-				break;
-			}
-		}
 
 		// Bone offset, Control point, Vertex, Index Data
 		// And Animation Data

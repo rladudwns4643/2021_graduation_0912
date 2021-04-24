@@ -1,5 +1,6 @@
 #pragma once
 
+class SkinnedModelInstance;
 class GeometryMesh;
 class GameObject
 {
@@ -79,5 +80,9 @@ public:
 	// 재질정보
 	UINT m_MaterialIndex;
 	UINT m_OriginMatIndex;
+
+	// 애니메이션 정보
+	SkinnedModelInstance* m_SkinnedModelInst;
+	UINT m_SkinnedCBIndex = -1;
 };
 

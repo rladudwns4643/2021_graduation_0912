@@ -1,11 +1,14 @@
 #pragma once
 #include "GameObject.h"
 #include "PlayerController.h"
+#include "AnimationController.h"
 
 class Camera;
+class CharacterParts;
 class Character : public GameObject
 {
 	friend class PlayerController;
+	friend class CharacterParts;
 
 public:
 	int m_SpawnLoaction;				// 스폰위치
@@ -37,6 +40,9 @@ public:
 	void SetPosition(float posX, float posY, float posZ);
 	void SetPosition(DirectX::XMFLOAT3 xmPos);
 
+	void SetAnimationController(SkinnedModelInstance* skinnedModelInst);
+	void SetAnimationPlayerState(AnimationController::PlayerState playerState);
+	void SetAnimationKeyState(AnimationController::PlayerState keyState);
 
 public:
 	// 이동 & 회전
@@ -54,6 +60,8 @@ public:
 	// 캐릭터 컴포넌트들
 	Camera									*m_MyCamera;
 	std::unique_ptr<PlayerController>		m_PlayerController;
+	std::unique_ptr<AnimationController>	m_AnimationController;
+	std::map<std::string, CharacterParts*>	m_Parts;
 
 public:
 	bool			m_IsThirdCamera = true;

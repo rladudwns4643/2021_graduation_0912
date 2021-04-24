@@ -65,12 +65,14 @@ void ApplicationContext::CreateProps(std::string mapName)
 	}
 }
 
-void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int spawnLocation)
+void ApplicationContext::CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex)
 {
 	Character* chr = CreateObject<Character>(meshName, instID);
-	chr->SetMesh(MESH_GEOID, MESH_GEOID_CYLINDER);
+	chr->SetMesh(meshName, meshName);
 	chr->SetMaterial(AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex);
-	chr->m_SpawnLoaction = spawnLocation;
+	chr->SetAnimationController(AssertsReference::GetApp()->m_SkinnedModelInsts[meshName].get());
+	chr->m_SkinnedCBIndex = skinnedCBIndex;
+	chr->m_SpawnLoaction = skinnedCBIndex;
 }
 
 void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float scaleValue)
