@@ -30,11 +30,6 @@ void Bullet::Initialize() {
 	m_boundaries->SetBBPos(GetPosition(), numBB - 1);
 	m_boundaries->SetBBSize(size, numBB - 1);
 
-	//BS 쓸일이 있을까?
-	m_boundaries->SetBS(numBB);
-	m_boundaries->SetBSPos(GetPosition(), numBB - 1);
-	m_boundaries->SetBSRad(0.f, 0);
-
 	m_boundaries->SetObjType(OBJECT_TYPE_BULLET);
 }
 

@@ -66,7 +66,7 @@ bool Object::Update(float elapsedTime, bool is_player) {
 	if (m_isApplyGravity) {
 		fricAcc = {
 			frictionX / m_mass,
-			-GRAVITY / pow(elapsedTime, 2),
+			-GRAVITY / (float)pow(elapsedTime, 2),
 			frictionZ / m_mass
 		};
 	}
@@ -219,16 +219,7 @@ XMFLOAT3 Object::GetRotation() const {
 }
 
 XMFLOAT4 Object::GetRotationQuaternion() const {
-	XMFLOAT3 dot;
-	XMStoreFloat3(&dot, XMVector3Dot(XMLoadFloat3(&m_PreLook), XMLoadFloat3(&GetLook())));
-	float cos{ dot.x };
-	float angle{ acos(cos) };
-	XMFLOAT3 w = MathHelper::Normalize(MathHelper::CrossProduct(m_PreLook, GetLook()));
-	XMFLOAT4 quat;
-
-	if (angle == 0) return quat;
-	else XMStoreFloat4(&quat, XMQuaternionRotationAxis(XMLoadFloat3(&w), angle));
-	return quat;
+	return MathHelper::QuatFromTwoVectors(m_PreLook, GetLook());
 }
 
 XMFLOAT3 Object::GetVelocity() const {

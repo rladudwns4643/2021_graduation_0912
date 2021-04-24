@@ -1,8 +1,7 @@
 #pragma once
-
 #include <thread>
 
-class MyThread{
+class MyThread {
 public:
 	virtual ~MyThread() {};
 
@@ -13,4 +12,4 @@ public:
 
 protected:
 	std::thread mythread;
-}
+};

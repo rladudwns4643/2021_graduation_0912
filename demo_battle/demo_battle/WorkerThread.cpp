@@ -21,8 +21,9 @@ void WorkerThread::ProcThread() {
 		}
 
 		SOCKET clientSocket;
-		if (key == EVENT_KEY);
-		else if (key == LOBBY_SERVER_KEY) {
+		int evkey = static_cast<int>(key);
+		if (evkey == EVENT_KEY);
+		else if (evkey == LOBBY_SERVER_KEY) {
 #ifdef LOG_ON
 			std::cout << "MatchMakingServerKey Return\n";
 #endif
