@@ -46,7 +46,8 @@ Character::Character(Object& cur, const Boundary* new_bb) {
 		//make 
 		XMFLOAT4X4 result_quat_to_mat;
 		result_quat = XMQuaternionMultiply(bb_rot_quat, obj_rot_quat);
-		MathHelper::QuatToMatrix(&MathHelper::XMVector4ToFloat4(result_quat), &result_quat_to_mat);
+		XMFLOAT4 tmp = MathHelper::XMVector4ToFloat4(result_quat);
+		MathHelper::QuatToMatrix(&tmp, &result_quat_to_mat);
 
 		XMFLOAT3 bb_pos{ m_boundaries->GetBBPos(i) };
 		result_quat_to_mat._41 += bb_pos.x;

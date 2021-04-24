@@ -1,10 +1,10 @@
 #pragma once
 #include "MathHelper.h"
 
+constexpr int NO_MSG = -1;
+
 constexpr int EVENT_KEY = 10000;
 constexpr int LOBBY_SERVER_KEY = 0;
-
-constexpr int NO_MSG = -1;
 
 constexpr int MAX_PLAYER = 2;
 constexpr int MAX_BULLET = 30;
@@ -15,7 +15,7 @@ constexpr int MAX_CLIENT = 5100;
 
 constexpr size_t MAX_LEFT_TIME = 180 + 1;
 
-constexpr float GRAVITY = 0.98f;
+constexpr float GRAVITY = 0.980f;
 
 //animtime
 constexpr int ANIMTIME_JUMP = 500.f; //임시
@@ -23,12 +23,10 @@ constexpr int ANIMTIME_JUMP = 500.f; //임시
 enum EVENT_TYPE {
 	EV_TCP_RECV, EV_SEND,
 	EV_UPDATE, EV_TICK, EV_FLUSH_MSG,
-	EV_PENALTY_CHECK, EV_PENALTY_BEGIN, EV_PENALTY_END,
 	EV_MOVE_ENABLE, EV_MAKE_MOVE_DISABLE,
 	EV_UPDATE_DB,
 	EV_RESET_ROOM,
 	EV_WORLD_UPDATE,
-	EV_THUNDERBOLT_SET_NOT_USE,
 	EV_TYPE_COUNT
 };
 

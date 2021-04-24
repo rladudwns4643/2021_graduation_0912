@@ -86,7 +86,6 @@ void Room::Update() {
 	//ProcUnUsedThunderbolt();
 	CopyRecvMsgs();
 	message procMsg;
-	message procMsg;
 	while (!m_copiedRecvMsgs.empty()) {
 		procMsg = m_copiedRecvMsgs.front();
 		m_copiedRecvMsgs.pop();
@@ -94,7 +93,7 @@ void Room::Update() {
 	}
 
 	if (!m_isGameStarted) {
-		int numOfReady;
+		int numOfReady{};
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			if (!m_players[i]->GetSlotStatus()) {
 				if (m_players[i]->GetReady()) ++numOfReady;

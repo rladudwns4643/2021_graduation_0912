@@ -67,6 +67,15 @@
     <Filter Include="Code\Object\Character">
       <UniqueIdentifier>{66c90c78-abf9-4fa4-a916-884bfd6d3c04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Physics">
+      <UniqueIdentifier>{5cad76b1-5598-442d-a204-3507d95e11b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\SpawnPosition">
+      <UniqueIdentifier>{9282ae31-0d61-4dc7-9b5d-11d75cce4387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Map">
+      <UniqueIdentifier>{fd38f94a-04d2-4f4f-a1a8-5d47167fe3a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -99,9 +108,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Code\Player\Interface</Filter>
     </ClCompile>
@@ -113,6 +119,21 @@
     </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Code\Object\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Code\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnPosition.cpp">
+      <Filter>Code\SpawnPosition</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Code\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MyThread.cpp">
+      <Filter>Code\Thread\ThreadInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerThread.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -161,9 +182,6 @@
     <ClInclude Include="TimerThread.h">
       <Filter>Code\Thread\Timer</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Code\Player\Interface</Filter>
     </ClInclude>
@@ -175,6 +193,15 @@
     </ClInclude>
     <ClInclude Include="Character.h">
       <Filter>Code\Object\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Code\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnPosition.h">
+      <Filter>Code\SpawnPosition</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Code\Map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

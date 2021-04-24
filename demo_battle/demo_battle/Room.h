@@ -8,10 +8,10 @@
 #include "extern.h"
 #include "Toy.h"
 #include "Boundary.h"
-#include "Physics.h"
+//#include "Physics.h"
 
+//class Physics;
 class Map;
-class Physics;
 class Room {
 public:
 	explicit Room(int room_no);
@@ -108,7 +108,7 @@ private:
 	std::queue<SEND_INFO> m_sendMsgQueue;
 	std::mutex m_sendMsgQueueLock;
 
-	Physics* m_physics = nullptr;		//面倒 贸府 侩
+	//Physics* m_physics = nullptr;		//面倒 贸府 侩
 	Map* m_map = nullptr;
 
 	std::chrono::system_clock::time_point m_lastUpdate;

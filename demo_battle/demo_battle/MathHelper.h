@@ -152,6 +152,30 @@ public:
 		return(xmf4Result);
 	}
 
+	static XMFLOAT4 QuatFromTwoVectors(XMFLOAT3 u, XMFLOAT3 v)
+	{
+		float cos_theta{ DotProduct(u, v) };
+		std::cout << "cos theta - " << cos_theta << std::endl;
+		float angle{ acos(cos_theta) };
+		std::cout << "angle - " << XMConvertToDegrees(angle) << std::endl;
+
+		XMFLOAT3 w = Normalize(CrossProduct(u, v));
+		XMFLOAT4 quat{};
+
+		if (angle == 0)
+			return quat;
+		else
+			XMStoreFloat4(&quat, XMQuaternionRotationAxis(XMLoadFloat3(&w), angle));
+		return quat;
+	}
+
+	static float DotProduct(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2)
+	{
+		XMFLOAT3 xmf3Result;
+		XMStoreFloat3(&xmf3Result, XMVector3Dot(XMLoadFloat3(&xmf3Vector1), XMLoadFloat3(&xmf3Vector2)));
+		return(xmf3Result.x);
+	}
+
 	static bool IsZero(const float fValue) { return((fabsf(fValue) < EPSILON)); }
 	static bool IsZero(const XMFLOAT3& xmf3Vector) {
 		XMFLOAT3 xmf3Result;

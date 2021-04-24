@@ -150,16 +150,19 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MathHelper.cpp" />
+    <ClCompile Include="MyThread.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="SpawnPosition.cpp" />
     <ClCompile Include="TCPSocket.cpp" />
     <ClCompile Include="ThreadHandler.cpp" />
+    <ClCompile Include="TimerThread.cpp" />
     <ClCompile Include="Toy.cpp" />
     <ClCompile Include="WorkerThread.cpp" />
   </ItemGroup>
@@ -176,6 +179,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="extern.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Singleton.h" />
