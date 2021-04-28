@@ -92,7 +92,7 @@ bool Object::Update(float elapsedTime, bool is_player) {
 	m_xmfVel.y = newVel.y;
 
 	if (is_player) {
-		float velSize = sqrtf(pow(m_xmfVel.x, 2) + pow(m_xmfVel.z, 2));
+		float velSize = sqrtf((float)pow(m_xmfVel.x, 2) + (float)pow(m_xmfVel.z, 2));
 		if (velSize > m_maxVel) {
 			m_xmfVel.x = m_xmfVel.x / velSize * m_maxVel;
 			m_xmfVel.z = m_xmfVel.z / velSize * m_maxVel;
@@ -124,7 +124,7 @@ bool Object::Update(float elapsedTime, bool is_player) {
 bool Object::BulletUpdate(float elapsedTime) {
 	m_xmf3PrePosition = GetPosition();
 
-	float velSize = sqrtf(pow(m_xmfVel.x, 2) + pow(m_xmfVel.y, 2) + pow(m_xmfVel.z, 2));
+	float velSize = sqrtf((float)pow(m_xmfVel.x, 2) + (float)pow(m_xmfVel.y, 2) + (float)pow(m_xmfVel.z, 2));
 	if (velSize > m_maxVel) {
 		m_xmfVel.x = m_xmfVel.x / velSize * m_maxVel;
 		m_xmfVel.y = m_xmfVel.y / velSize * m_maxVel;

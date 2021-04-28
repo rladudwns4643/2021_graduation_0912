@@ -10,7 +10,7 @@ public:
 
 public:
 	void Initialize();
-	void Shoot(const XMFLOAT3& pos, const XMFLOAT3& look, XMFLOAT3& dir, double eTime);
+	void Shoot(const XMFLOAT3& pos, const XMFLOAT3& look, XMFLOAT3& dir, float eTime);
 
 public:
 	unsigned short GetDamage() const;

@@ -1,6 +1,10 @@
 #include "pch.h"
-#include "extern.h"
 #include "Character.h"
+#include "Boundary.h"
+#include "extern.h"
+#include "SpawnPosition.h"
+
+class SpawnPosition;
 
 Character::Character(const int& spawn_pos_idx) {
 	Initialize();

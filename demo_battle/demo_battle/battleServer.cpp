@@ -38,7 +38,7 @@ void BattleServer::Initialize() {
 void BattleServer::ConncetLobbyServer() {
 	TCPSocketPtr LobbySocket;
 	LobbySocket = m_sockUtil.CreateTCPSocket(SocketAddressFamily::INET);
-	DWORD flags;
+	//DWORD flags;
 	SocketAddress s{ inet_addr(LOBBY_SERVER_IP_PUBLIC) , LOBBY_SERVER_PORT};
 	cout << LobbySocket->Connect(s) << endl;
 }

@@ -1,11 +1,8 @@
 #pragma once
 #include "Global.h"
 #include "MathHelper.h"
-#include "pch.h"
 
 constexpr int NONETYPE = -99;
-
-//box, sphere
 
 class Boundary {
 public:

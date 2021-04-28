@@ -9,5 +9,5 @@ public:
 	SpawnPosition() = default;
 
 public:
-	std::array<XMFLOAT4, SPAWN_COUNT> m_spawn_pos;	//rot y = w
+	std::array<XMFLOAT4, SPAWN_COUNT> m_spawn_pos;
 };
