@@ -177,6 +177,16 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 			auto instanceBuffer = m_InstanceBuffers[ri->GetMeshName()]->Resource();
 			Core::g_CommandList->SetGraphicsRootShaderResourceView(0, instanceBuffer->GetGPUVirtualAddress());
 
+			if (ri->m_SkinnedModelInst != nullptr)
+			{
+				D3D12_GPU_VIRTUAL_ADDRESS skinnedCBAddress = m_SkinnedCBs[ri->m_SkinnedCBIndex]->Resource()->GetGPUVirtualAddress();
+				Core::g_CommandList->SetGraphicsRootConstantBufferView(5, skinnedCBAddress);
+			}
+			else
+			{
+				Core::g_CommandList->SetGraphicsRootConstantBufferView(5, 0);
+			}
+
 			// instanceCount = info.size
 			// info = instance world 행렬을 갖고있는 맵
 			Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCount, info.size(), ri->m_StartIndexLocation, ri->m_BaseVertexLocation, 0);
@@ -201,7 +211,15 @@ void GraphicsContext::DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const 
 			auto instanceBuffer = m_InstanceBuffers[ri->GetMeshName()]->Resource();
 			Core::g_CommandList->SetGraphicsRootShaderResourceView(0, instanceBuffer->GetGPUVirtualAddress());
 
-			Core::g_CommandList->SetGraphicsRootConstantBufferView(5, 0);
+			if (ri->m_SkinnedModelInst != nullptr)
+			{
+				D3D12_GPU_VIRTUAL_ADDRESS skinnedCBAddress = m_SkinnedCBs[ri->m_SkinnedCBIndex]->Resource()->GetGPUVirtualAddress();
+				Core::g_CommandList->SetGraphicsRootConstantBufferView(5, skinnedCBAddress);
+			}
+			else
+			{
+				Core::g_CommandList->SetGraphicsRootConstantBufferView(5, 0);
+			}
 
 			Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCount, info.size(), ri->m_StartIndexLocation, ri->m_BaseVertexLocation, 0);
 		}

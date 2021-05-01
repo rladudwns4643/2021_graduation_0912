@@ -81,6 +81,11 @@ cbuffer cbPass : register(b0)
 	// [NUM_DIR_LIGHTS, NUM_DIR_LIGHTS + NUM_POINT_L
 	Light gLights[MaxLights];
 };
+cbuffer cbSkinned : register(b1)
+{
+	// 캐릭터당 최대 96개의 뼈대를 지원한다.
+	float4x4 gBoneTransforms[96];
+};
 
 //---------------------------------------------------------------------------------------
 // Transforms a normal map sample to world space.

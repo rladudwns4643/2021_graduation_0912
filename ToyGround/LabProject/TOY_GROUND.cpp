@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "ApplicationContext.h"
 #include "AssertsReference.h"
+#include "CommandCenter.h"
 
 using namespace Core;
 
@@ -23,6 +24,7 @@ void TOY_GROUND::Startup(void)
 	m_pSceneManager = SceneManager::GetApp();
 	m_pAppContext = ApplicationContext::GetApp();
 	m_pAssetsRef = AssertsReference::GetApp();
+	m_CommandCenter = CommandCenter::GetApp();
 
 	// Build Asserts
 	BuildAsserts();
@@ -76,6 +78,9 @@ void TOY_GROUND::Update(float deltaT)
 {
 	// Cursor
 	InputHandler::ShowMouseCursor();
+
+	/*CommandCenter*/
+	CommandCenter::GetApp()->Order(deltaT);
 
 	// SceneManage
 	if (m_pSceneManager)

@@ -110,13 +110,13 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
 	}
 
-	// Charater
-	for (auto& p : m_Users)
-	{
-		if (!p.second) continue;
-		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
-		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
-	}
+	//// Charater
+	//for (auto& p : m_Users)
+	//{
+	//	if (!p.second) continue;
+	//	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
+	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
+	//}
 
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());

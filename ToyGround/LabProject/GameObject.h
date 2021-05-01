@@ -82,7 +82,7 @@ public:
 	UINT m_OriginMatIndex;
 
 	// 애니메이션 정보
-	SkinnedModelInstance* m_SkinnedModelInst;
+	SkinnedModelInstance* m_SkinnedModelInst = NULL;
 	UINT m_SkinnedCBIndex = -1;
 };
 

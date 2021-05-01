@@ -53,6 +53,7 @@ public:
 
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> m_Shaders;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Instancing_InputLayout;
+	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Skinned_InputLayout;
 
 public:
 	/* GpuResource */

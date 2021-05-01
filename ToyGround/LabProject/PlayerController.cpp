@@ -5,6 +5,9 @@
 #include "Timer.h"
 
 #include "Character.h"
+#include "SkinnedModelInstance.h"
+#include "CommandCenter.h"
+#include "MoveCommand.h"
 
 PlayerController::PlayerController(Character* player) : m_Owner(player)
 {
@@ -126,5 +129,73 @@ void PlayerController::MouseCallback()
 			m_Owner->m_IsThirdCamera = !m_Owner->m_IsThirdCamera;
 			return;
 		}
+	}
+}
+
+void PlayerController::OnKeyPressed()
+{
+	if (!m_Owner) return;
+	if (!m_Owner->m_MyCamera) return;
+
+	if (CommandCenter::GetApp()->m_StartJumpAnim) return;
+
+	switch (m_Owner->m_MyCamera->GetCameraType())
+	{
+	case CameraType::eFirst:
+	case CameraType::eThird:
+		if (InputHandler::IsKeyDown('W'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+		}
+		if (InputHandler::IsKeyDown('S'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
+		}
+		if (InputHandler::IsKeyDown('A'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
+		}
+		if (InputHandler::IsKeyDown('D'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
+		}
+		if (InputHandler::IsKeyDown(VK_SPACE))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
+			CommandCenter::GetApp()->m_StartJumpAnim = true;
+		}
+		break;
+	}
+}
+
+void PlayerController::OnKeyReleased()
+{
+	if (!m_Owner) return;
+	if (!m_Owner->m_MyCamera) return;
+
+	if (CommandCenter::GetApp()->m_StartJumpAnim) return;
+
+	switch (m_Owner->m_MyCamera->GetCameraType())
+	{
+	case CameraType::eFirst:
+	case CameraType::eThird:
+
+		if (InputHandler::IsKeyUp('W'))
+		{
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
+		}
+		if (InputHandler::IsKeyUp('S'))
+		{
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
+		}
+		if (InputHandler::IsKeyUp('A'))
+		{
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+		}
+		if (InputHandler::IsKeyUp('D'))
+		{
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+		}
+		if (InputHandler::IsKeyUp(VK_SPACE)) {}
 	}
 }

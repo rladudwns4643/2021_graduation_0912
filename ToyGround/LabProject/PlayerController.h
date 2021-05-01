@@ -16,6 +16,8 @@ private:
 	virtual void HandleInput(const float deltaT) override;
 	virtual void MouseCallback() override;
 
+	virtual void OnKeyPressed() override;
+	virtual void OnKeyReleased() override;
 private:
 	Character* m_Owner;
 };

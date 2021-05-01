@@ -32,6 +32,7 @@
 // ÅØ½ºÃÄ
 #define TEXTURE_INDEX_SkyBox 0
 #define TEXTURE_INDEX_Cartoon_CubeWorld_Texture 1
+#define TEXTURE_INDEX_Polygon_Fantasy_Characters_Texture_01_A 2
 
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture "Cartoon_CubeWorld_Texture"
 #define TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A "Polygon_Fantasy_Characters_Texture_01_A"

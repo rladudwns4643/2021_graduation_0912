@@ -18,6 +18,7 @@ namespace Core
 class SceneManager;
 class ApplicationContext;
 class AssertsReference;
+class CommandCenter;
 
 class TOY_GROUND : public IGameApp, public TemplateSingleton<TOY_GROUND>
 {
@@ -41,5 +42,6 @@ private:
 	SceneManager					*m_pSceneManager = NULL;
 	ApplicationContext				*m_pAppContext = NULL;
 	AssertsReference				*m_pAssetsRef = NULL;
+	CommandCenter					*m_CommandCenter = NULL;
 };
 

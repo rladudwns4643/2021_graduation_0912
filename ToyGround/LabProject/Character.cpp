@@ -113,7 +113,12 @@ void Character::SetCamera(CameraType cameraType)
 	}
 	case CameraType::eThird:
 		m_MyCamera->SetTimeLag(0.0f);
-		m_MyCamera->SetOffset(XMFLOAT3(0.0f, STD_CUBE_SIZE * 1.5f, -STD_CUBE_SIZE * 4.5f));
+//		m_MyCamera->SetOffset(XMFLOAT3(0.0f, STD_CUBE_SIZE * 1.5f, -STD_CUBE_SIZE * 4.5f));
+		if (m_Bounds.Extents.x > 100.f)
+			m_MyCamera->SetOffset(XMFLOAT3(m_Bounds.Extents.x * 0.35f, m_Bounds.Extents.y * 1.3f, -m_Bounds.Extents.x * 2.3f - m_Bounds.Extents.y * 1.5f));
+		else
+			m_MyCamera->SetOffset({ m_Bounds.Extents.x + m_Bounds.Extents.x * 0.05f, m_Bounds.Extents.y * 2.f, -m_Bounds.Extents.x * 2 * 2.5f - m_Bounds.Extents.y * 2.f });
+
 		m_MyCamera->SetRotation({ 0.f, 0.f, 0.f });
 		break;
 	case CameraType::eFree:
