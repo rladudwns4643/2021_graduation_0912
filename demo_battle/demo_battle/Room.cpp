@@ -259,7 +259,7 @@ bool Room::EnterRoom(int id, bool is_roomMnr) {
 
 //
 void Room::AnnounceRoomEnter(int id) {
-	bool isMnr;
+	//bool isMnr;
 	int enterID = -1;
 	bool is_enterID_mnr = false;
 

@@ -156,7 +156,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		}
 
 		bool isJoin{ false };
-		int slot;
+		//int slot;
 		//cb_packet_join
 		isJoin = SR::g_rooms[roomNo]->EnterRoom(id, inputPacket[6]/*isRoomMnr*/);
 		if (isJoin) {

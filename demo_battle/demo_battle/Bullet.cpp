@@ -33,7 +33,7 @@ void Bullet::Initialize() {
 	m_boundaries->SetObjType(OBJECT_TYPE_BULLET);
 }
 
-void Bullet::Shoot(const XMFLOAT3& pos, const XMFLOAT3& look, XMFLOAT3& dir, double eTime = 10.f) {
+void Bullet::Shoot(const XMFLOAT3& pos, const XMFLOAT3& look, XMFLOAT3& dir, float eTime = 10.f) {
 	//player 총 부분에서 총알이 출발해야 함
 	XMFLOAT3 shoot_pos{ pos };
 	float scala_distance{ 30.f }; // player pivot에서 look 방향으로 떨어진 만큼

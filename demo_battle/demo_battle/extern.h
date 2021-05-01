@@ -1,8 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "Global.h"
-#include "Map.h"
 #include "SpawnPosition.h"
+#include "Map.h"
 
 class Room;
 //SHARED RESOURCE

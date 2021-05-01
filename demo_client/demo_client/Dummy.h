@@ -47,7 +47,7 @@ public:
 
 	void ConnectLobbyServer();
 	void ConnectBattleServer();
-
+	   
 	void DisconnectClient(int id);
 
 	void SendLoginPacket(int id);

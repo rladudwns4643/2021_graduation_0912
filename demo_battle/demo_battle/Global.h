@@ -18,7 +18,7 @@ constexpr size_t MAX_LEFT_TIME = 180 + 1;
 constexpr float GRAVITY = 0.980f;
 
 //animtime
-constexpr int ANIMTIME_JUMP = 500.f; //임시
+constexpr float ANIMTIME_JUMP = 500.f; //임시
 
 enum EVENT_TYPE {
 	EV_TCP_RECV, EV_SEND,
