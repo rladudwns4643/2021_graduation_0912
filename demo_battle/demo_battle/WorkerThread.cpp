@@ -46,31 +46,98 @@ void WorkerThread::ProcThread() {
 		EX_OVER* ex_over = reinterpret_cast<EX_OVER*>(p_over);
 
 		switch (ex_over->ev_type) {
-		case EV_TCP_RECV: {
+		case EV_RECV: {
+			cout << "recv\n";
+			char* buf = SR::g_clients[key]->m_recv_over.net_buf;
+			unsigned int psize = SR::g_clients[key]->curr_packet_size;
+			unsigned int pr_size = SR::g_clients[key]->prev_packet_data;
+			message msg{ -1 };
+			while (num_byte > 0) {
+				if (psize == 0) psize = (BYTE)buf[0];
+				if (num_byte + pr_size >= psize) { //패킷완성
+					unsigned char p[MAX_BUFFER];
+					memcpy(p, SR::g_clients[key]->packet_buf, pr_size);
+					memcpy(p + pr_size, buf, psize - pr_size);
+					msg = ProcPacket(key, p);
+					if (msg.type != NO_MSG) {
+						int room_id = SR::g_clients[key]->room_id;
+						SR::g_rooms[room_id]->PushMsg(msg);
+					}
+
+					num_byte -= psize - pr_size;
+					buf += psize - pr_size;
+					psize = 0;
+					pr_size = 0;
+				}
+				else {
+					ATOMIC::g_clients_lock.lock();
+					memcpy(SR::g_clients[key]->packet_buf + pr_size, buf, num_byte);
+					ATOMIC::g_clients_lock.unlock();
+					pr_size += num_byte;
+					num_byte = 0;
+				}
+			}
+			SR::g_clients[key]->curr_packet_size = psize;
+			SR::g_clients[key]->prev_packet_data = pr_size;
+
+			DWORD flags = 0;
+			ZeroMemory(&ex_over->over, sizeof(WSAOVERLAPPED));
+			ZeroMemory(&msg, sizeof(message));
+			ex_over->ev_type = EV_RECV;
+
+			int ret = WSARecv(clientSocket, ex_over->wsabuf, 1, 0, &flags, &ex_over->over, 0);
+			if (ret == SOCKET_ERROR) {
+				int err_no = WSAGetLastError();
+				if (err_no != ERROR_IO_PENDING) {
+					BattleServer::GetInstance()->error_display("WSARecv Error", err_no);
+					while (true);
+				}
+			}
 			break;
 		}
 		case EV_SEND: {
+			delete ex_over;
 			break;
 		}
 		case EV_UPDATE: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->Update();
+			delete ex_over;
 			break;
 		}
 		case EV_TICK: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->SendLeftTimePacket();
+			SR::g_rooms[room_id]->CheckGameState();
+			delete ex_over;
 			break;
 		}
 		case EV_FLUSH_MSG: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->FlushSendMsg();
 			break;
 		}
 		case EV_MOVE_ENABLE: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->MakeMove(key);
+			delete ex_over;
 			break;
 		}
 		case EV_MAKE_MOVE_DISABLE: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->MakeStop(key);
+			delete ex_over;
 			break;
 		}
 		case EV_UPDATE_DB: {
+			BattleServer::GetInstance()->SendUpdateUserInfoPacket(key, SR::g_clients[key]->mmr);
+			delete ex_over;
 			break;
 		}
 		case EV_RESET_ROOM: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->WorldUpdate();
+			delete ex_over;
 			break;
 		}
 		default: {
@@ -122,8 +189,6 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		ATOMIC::g_dbInfo_lock.lock();
 		memcpy(&SR::g_clients[id]->id_str, &p->name, sizeof(char) * MAX_ID_LEN);
 		SR::g_clients[id]->mmr = p->mmr;
-		SR::g_clients[id]->winningGameCnt = p->winningGameCnt;
-		SR::g_clients[id]->totalGameCnt = p->totalGameCnt;
 		ATOMIC::g_dbInfo_lock.unlock();
 
 		BattleServer::GetInstance()->SendAutoAccessOKPacket(id);

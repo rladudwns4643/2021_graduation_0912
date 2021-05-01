@@ -5,6 +5,7 @@
 #define BATTLE_SERVER_PORT	7238
 
 #define LOBBY_SERVER_IP_PUBLIC "121.170.59.45"
+#define BATTLE_SERVER_IP_PUBLIC "121.170.59.45"
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
@@ -49,13 +50,13 @@
 
 //-------------------------------L->C-------------------------------
 //6
-#define LC_LOGIN_OK					10
-#define LC_LOGIN_FAIL				11
-#define LC_SIGNUP_OK				12
-#define LC_SIGNUP_FAIL				13
-#define LC_USERINFO					14
-#define LC_CANCEL_AUTOMATCH_SUCCESS 15
-#define LC_MATCHSTART				16
+#define LC_LOGIN_OK					30
+#define LC_LOGIN_FAIL				31
+#define LC_SIGNUP_OK				32
+#define LC_SIGNUP_FAIL				33
+#define LC_USERINFO					34
+#define LC_CANCEL_AUTOMATCH_SUCCESS 35
+#define LC_MATCHSTART				36
 
 #pragma pack(push, 1)
 struct lc_packet_login_ok {
@@ -96,6 +97,9 @@ struct lc_packet_cancel_automatch_success {
 struct lc_packet_startMatch {
 	BYTE size;
 	BYTE type;
+
+	short roomNum;
+	char is_host;
 };
 #pragma pack(pop)
 //------------------------------------------------------------------
@@ -231,7 +235,7 @@ struct bc_packet_join_ok {
 	BYTE size;
 	BYTE type;
 
-	bool isRoomMnr;
+	char player_no;
 };
 
 struct bc_packet_join_fail {
@@ -412,8 +416,6 @@ struct cb_packet_login {
 
 	char name[10];
 	int mmr;
-	int totalGameCnt;
-	int winningGameCnt;
 };
 
 struct cb_packet_join {

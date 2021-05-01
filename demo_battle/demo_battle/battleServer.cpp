@@ -22,7 +22,7 @@ void BattleServer::Initialize() {
 	//0: lobby_server, 1: m_userid
 
 	//room clear
-	//for (int i = 0; i < MAX_ROOM; ++i) SHARED_RESOURCE::g_rooms[i] = -1;
+	//for (int i = 0; i < MAX_ROOM; ++i) SR::g_rooms[i] = -1;
 
 	//wsa init
 	if (!m_sockUtil.StaticInit()) while (true); //error, 일어날일 없음
@@ -57,7 +57,7 @@ void BattleServer::AcceptLobbyServer() {
 	LobbyServer->m_recv_over.wsabuf[0].len = MAX_BUFFER;
 	LobbyServer->m_recv_over.wsabuf[0].buf = LobbyServer->m_recv_over.net_buf;
 
-	LobbyServer->m_recv_over.ev_type = EV_TCP_RECV;
+	LobbyServer->m_recv_over.ev_type = EV_RECV;
 	LobbyServer->isConnected = true;
 	LobbyServer->curr_packet_size = 0;
 	LobbyServer->prev_packet_data = 0;
@@ -103,7 +103,7 @@ void BattleServer::Run() {
 		new_client->m_recv_over.wsabuf[0].len = MAX_BUFFER;
 		new_client->m_recv_over.wsabuf[0].buf = new_client->m_recv_over.net_buf;
 
-		new_client->m_recv_over.ev_type = EV_TCP_RECV;
+		new_client->m_recv_over.ev_type = EV_RECV;
 		new_client->isConnected = true;
 
 		new_client->curr_packet_size = 0;
@@ -184,7 +184,6 @@ void BattleServer::SendRoomJoinSuccess(int id, bool isRoomMnr) {
 	bc_packet_join_ok p;
 	p.size = sizeof(p);
 	p.type = BC_JOIN_OK;
-	p.isRoomMnr = isRoomMnr;
 #ifdef LOG_ON
 	std::cout << "send join ok\n";
 #endif

@@ -6,13 +6,16 @@
 #define MAX_PACKET_SIZE	128
 #define MAX_DUMMY	500
 
-enum SERVER_TYPE { ST_LOBBY, ST_BATTLE, ST_COUNT};
+enum SERVER_TYPE { ST_LOBBY = 0, ST_BATTLE = 1, ST_COUNT = 2};
+
+enum EVENT_TYPE { EV_RECV = 0, EV_SEND = 1 };
 
 struct EXOVER {
 	WSAOVERLAPPED over;
 	WSABUF wsabuf;
 	unsigned char io_buf[MAX_BUF];
-	SERVER_TYPE st_type;
+	EVENT_TYPE ev_type;
+	SERVER_TYPE sv_type;
 };
 
 struct ConnectSocket {
@@ -25,11 +28,13 @@ struct ConnectSocket {
 
 struct CLIENT {
 	int id;
+	int battle_id;
 	short room_num;
 	char is_host = 0;
 
 	bool connect;
 	bool loginok;
+	bool battle_connect;
 
 	ConnectSocket connectSocket[ST_COUNT];
 
@@ -46,14 +51,19 @@ public:
 	void ProcessPacket(int id, unsigned char packet[]);
 
 	void ConnectLobbyServer();
-	void ConnectBattleServer();
+	void ConnectBattleServer(int id);
 	   
 	void DisconnectClient(int id);
 
 	void SendLoginPacket(int id);
 	void SendRequestUserInfo(int id);
-	void SendUpdateUserInfo(int id, int mmr, int winrate);
+	void SendUpdateUserInfo(int id, int mmr);
 	void SendAutoMatchPacket(int id);
+
+	void SendBattleLoginPacket(int id);
+	void SendJoinPacket(int id, int room_no);
+	void SendReadyPacket(int id);
+	void SendGameStartPacket(int id);
 
 	void SendPacket(int id, void* packet, SERVER_TYPE st);
 

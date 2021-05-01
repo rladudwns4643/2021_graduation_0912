@@ -212,8 +212,7 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 	}
 }
 
-void LobbyServer::SendLoginOKPacket(int id)
-{
+void LobbyServer::SendLoginOKPacket(int id) {
 	lc_packet_login_ok p;
 	p.size = sizeof(p);
 	p.type = LC_LOGIN_OK;
@@ -280,6 +279,8 @@ void LobbyServer::SendPacket(int id, void* buf)
 	memcpy(sendover->io_buf, p, p[0]);
 	sendover->wsabuf[0].buf = sendover->io_buf;
 	sendover->wsabuf[0].len = p[0];
+
+	cout << "Send Packet: " << (int)p[1] << endl;
 
 	DWORD flags = 0;
 	int retval = WSASend(userList[id]->m_s, sendover->wsabuf, 1, NULL, flags, &sendover->over, NULL);
