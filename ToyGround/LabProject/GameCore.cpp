@@ -64,7 +64,6 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 	}
 
 	TerminateApplication(app);
-	//subRenderThread.join();
 }
 
 void Core::TerminateApplication(IGameApp& game)

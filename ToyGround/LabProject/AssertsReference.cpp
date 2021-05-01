@@ -304,8 +304,8 @@ void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsComma
 	GeometryGenerator::MeshData box = geoGen.CreateBox(1.0f, 1.0f, 1.0f, 2);
 	GeometryGenerator::MeshData grid = geoGen.CreateGrid(0.1f, 0.1f, 2, 2);
 	GeometryGenerator::MeshData sphere = geoGen.CreateSphere(0.5f, 20, 2);
-	GeometryGenerator::MeshData cylinder = geoGen.CreateCylinder(PLAYER_SIZE_X / 2, PLAYER_SIZE_X / 2, PLAYER_SIZE_Y, 20, 2);
-
+	GeometryGenerator::MeshData cylinder = geoGen.CreateCylinder(0.5f, 0.3f, 3.0f, 20, 2);
+	
 	UINT boxVertexOffset = 0;
 	UINT gridVertexOffset = (UINT)box.Vertices.size();
 	UINT sphereVertexOffset = gridVertexOffset + (UINT)grid.Vertices.size();

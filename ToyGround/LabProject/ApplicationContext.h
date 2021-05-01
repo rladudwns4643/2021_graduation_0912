@@ -65,6 +65,7 @@ public:
 	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
 
 	void DisplayCharacter(std::string mapName, Character* user, int spawnLocation, bool isVisible = true);
+	void DisplayCharacter(std::string mapName, std::string userName, int spawnLocation, bool isVisible = true);
 
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;

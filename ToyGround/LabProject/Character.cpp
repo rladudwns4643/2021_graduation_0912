@@ -35,6 +35,8 @@ void Character::Update(const float deltaT)
 	if (m_PlayerController)
 		m_PlayerController->Update(deltaT);
 
+	m_AnimationController->Update(deltaT);
+
 	// 카메라 변환
 	if (m_MyCamera != NULL)
 	{
@@ -118,7 +120,7 @@ void Character::SetCamera(CameraType cameraType)
 			m_MyCamera->SetOffset(XMFLOAT3(m_Bounds.Extents.x * 0.35f, m_Bounds.Extents.y * 1.3f, -m_Bounds.Extents.x * 2.3f - m_Bounds.Extents.y * 1.5f));
 		else
 			m_MyCamera->SetOffset({ m_Bounds.Extents.x + m_Bounds.Extents.x * 0.05f, m_Bounds.Extents.y * 2.f, -m_Bounds.Extents.x * 2 * 2.5f - m_Bounds.Extents.y * 2.f });
-
+		
 		m_MyCamera->SetRotation({ 0.f, 0.f, 0.f });
 		break;
 	case CameraType::eFree:
@@ -130,7 +132,7 @@ void Character::SetCamera(CameraType cameraType)
 
 void Character::SetController()
 {
-	// 커서지우고 에임그려주기
+	// 커서지우고
 	m_PlayerController = make_unique<PlayerController>(this);
 }
 

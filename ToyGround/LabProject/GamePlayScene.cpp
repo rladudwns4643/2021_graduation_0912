@@ -104,19 +104,19 @@ void GameplayScene::Render()
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 
-	// Props
-	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
-	{
-		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
-	}
-
-	//// Charater
-	//for (auto& p : m_Users)
+	//// Props
+	//for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
 	//{
-	//	if (!p.second) continue;
-	//	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
-	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
+	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
 	//}
+
+	// Charater
+	for (auto& p : m_Users)
+	{
+		if (!p.second) continue;
+		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
+	}
 
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());

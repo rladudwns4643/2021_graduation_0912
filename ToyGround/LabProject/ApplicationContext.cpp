@@ -105,9 +105,36 @@ void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, 
 		if (spawnLocation == p.spawnPos)
 		{
 			user->InitializeTransform();
+			user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
+			user->SetAnimationPlayerState(AnimationController::PlayerState::STATE_IDLE);
+
 			user->m_HP = 1.f;
 			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
 			user->SetPosition(p.position);
+		}
+	}
+}
+
+void ApplicationContext::DisplayCharacter(std::string mapName, std::string userName, int spawnLocation, bool isVisible)
+{
+	if (!m_Maps.count(mapName)) return;
+	Character* user = FindObject<Character>(userName, userName);
+	if (!user) return;
+
+	std::vector<MapTool::PlayerInfo> playerInfoVec = m_Maps[mapName]->playerInfoVector;
+
+	for (auto& p : playerInfoVec)
+	{
+		if (spawnLocation == p.spawnPos)
+		{
+			user->InitializeTransform();
+			user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
+			user->SetAnimationPlayerState(AnimationController::PlayerState::STATE_IDLE);
+
+			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
+			user->SetPosition(p.position);
+
+			return;
 		}
 	}
 }
