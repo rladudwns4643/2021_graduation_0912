@@ -1,5 +1,7 @@
 #include "Dummy.h"
 
+#define LOG_ON
+
 Dummy::Dummy()
 {
 	for (int i = 0; i < MAX_DUMMY; ++i) {
@@ -122,6 +124,7 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		bc_packet_accept_ok* p = reinterpret_cast<bc_packet_accept_ok*>(packet);
 		dummy[id].battle_id = p->id;
 		dummy[id].battle_connect = true;
+		dummy[id].room_num = 1;
 
 		SendJoinPacket(id, dummy[id].room_num);
 		break;
@@ -211,10 +214,10 @@ void Dummy::ConnectLobbyServer() {
 	}
 	dummy[num_connections].connect = true;
 	SendLoginPacket(num_connections);
-	std::cout << "num connection: " << num_connections << std::endl;
-	num_connections++;
-	while (!dummy[num_connections - 1].loginok) {};
-	SendAutoMatchPacket(num_connections - 1);
+	//std::cout << "num connection: " << num_connections << std::endl;
+	//num_connections++;
+	//while (!dummy[num_connections - 1].loginok) {};
+	//SendAutoMatchPacket(num_connections - 1);
 }
 
 void Dummy::ConnectBattleServer(int id) {
@@ -269,6 +272,7 @@ void Dummy::SendLoginPacket(int id)
 }
 
 void Dummy::SendBattleLoginPacket(int id) {
+	cout << "Send BattleLogin\n";
 	cb_packet_login p;
 	p.size = sizeof(p);
 	p.type = CB_LOGIN;
@@ -280,16 +284,16 @@ void Dummy::SendBattleLoginPacket(int id) {
 	SendPacket(id, &p, ST_BATTLE);
 }
 
-void Dummy::SendRequestUserInfo(int id)
-{
+void Dummy::SendRequestUserInfo(int id) {
+	cout << "Send RequestUser\n";
 	cl_packet_request_userinfo p;
 	p.size = sizeof(p);
 	p.type = CL_REQUEST_USER_INFO;
 	SendPacket(id, &p, ST_LOBBY);
 }
 
-void Dummy::SendUpdateUserInfo(int id, int mmr)
-{
+void Dummy::SendUpdateUserInfo(int id, int mmr) {
+	cout << "Send Update\n";
 	cl_packet_update_user_info p;
 	p.size = sizeof(p);
 	p.type = CL_UPDATE_USER_INFO;
@@ -298,6 +302,7 @@ void Dummy::SendUpdateUserInfo(int id, int mmr)
 }
 
 void Dummy::SendAutoMatchPacket(int id) {
+	cout << "Send AutoMath\n";
 	cl_packet_automatch p;
 	p.size = sizeof(p);
 	p.type = CL_AUTOMATCH;
@@ -306,6 +311,7 @@ void Dummy::SendAutoMatchPacket(int id) {
 }
 
 void Dummy::SendGameStartPacket(int id) {
+	cout << "Send GameStart\n";
 	cb_packet_start p;
 	p.size = sizeof(p);
 	p.type = CB_START;
@@ -313,13 +319,17 @@ void Dummy::SendGameStartPacket(int id) {
 }
 
 void Dummy::SendReadyPacket(int id) {
+	cout << "Send Ready\n";
 	cb_packet_ready p;
 	p.size = sizeof(p);
 	p.type = CB_READY;
 	SendPacket(id, &p, ST_BATTLE);
+
+	//gameScene change
 }
 
 void Dummy::SendJoinPacket(int id, int room_no) {
+	cout << "Send Join\n";
 	cb_packet_join p;
 	p.size = sizeof(p);
 	p.type = CB_JOIN;

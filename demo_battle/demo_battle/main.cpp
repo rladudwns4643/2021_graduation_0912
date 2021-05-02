@@ -60,6 +60,7 @@ int main() {
 	BattleServer* battleserver = BattleServer::GetInstance();
 
 	battleserver->ConncetLobbyServer();
+	//battleserver->AcceptLobbyServer();
 	battleserver->Run();
 }
 

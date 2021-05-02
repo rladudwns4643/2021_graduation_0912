@@ -485,35 +485,45 @@ struct ml_packet_match {
 	short room_no;
 	char is_host;
 };
-
-struct ml_packet_room_ready {
-	BYTE size;
-	BYTE type;
-
-	short id;
-	short room_no;
-};
 //------------------------------------------------------------------
 
 //-------------------------------L->B------------------------------- 
-#define LB_REQUEST_ROOM 0
+//1
 
-struct lb_packet_request_room {
+#define LB_REQUEST_ROOM			31
+#define LB_CHECK				32
+#pragma pack (push, 1)
+struct lb_packet_check_connect {
 	BYTE size;
 	BYTE type;
 };
+struct lb_packet_request_room {
+	BYTE size;
+	BYTE type;
+
+	short id; //의미가 있을까
+};
+#pragma pack (pop)
 //------------------------------------------------------------------
 
 //-------------------------------B->L-------------------------------
 //1
 
-#define BL_ROOMREADY			1
+#define BL_ROOMREADY			41
+#define BL_CHECK				42
 #pragma pack (push, 1)
-struct bl_pakcet_room_ready {
+struct bl_packet_room_ready {
 	BYTE size;
 	BYTE type;
 
-	int room_no;
+	short id;
+	short room_no;
+	bool is_host;
+};
+
+struct bl_pakcet_check_connect {
+	BYTE size;
+	BYTE type;
 };
 //------------------------------------------------------------------
 #pragma pack (pop)

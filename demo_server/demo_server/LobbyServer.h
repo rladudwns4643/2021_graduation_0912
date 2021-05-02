@@ -39,17 +39,13 @@ public:
 	// L->C
 	void SendLoginOKPacket(int id);
 	void SendLoginFailPacket(int id);
-	void SendSignUpOKPacket(int id, int mmr);
-	void SendSignUpFailPacket(int id);
-	void SendMatchPacket(int id, short roomNo, char is_host);
 	void SendUserInfoPacket(int id);
 	void SendCancelAutoMatchSuccess(int id);
-	void SendAutoMatchPacket(int id, int mmr);
-	void SendMatchStartPacket(int id);
-
-	void AutoMatch(int id, int mmr);
-	void CancelAutoMatch(int id);
-	void ClientDisconnect(int id);
+	void SendMatchStartPacket(int id, short room_no);
+	
+	void SendRequestRoomPacket(int id);
+	
+	void SendLBCheckPacket();
 
 	void SendPacket(int id, void* buf);
 	void error_display(const char* msg, int err_no);

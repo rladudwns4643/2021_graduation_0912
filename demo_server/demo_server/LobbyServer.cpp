@@ -80,6 +80,8 @@ void LobbyServer::BattleServerAccept() {
 		if (err != WSA_IO_PENDING) error_display("WSARecv Error: ", err);
 	};
 
+	//SendLBCheckPacket();
+
 #ifdef LOG_ON
 	std::cout << "BattleServer Connect\n";
 #endif
@@ -185,7 +187,6 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 #ifdef LOG_ON
 		cout << "GET CL_REQUEST_USER_INFO" << endl;
 #endif
-
 		//do check db info
 		SendUserInfoPacket(id);
 		break;
@@ -197,16 +198,24 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		break;
 	}
 	case CL_AUTOMATCH: {
+		cout << "GET CL_AUTOMATCH" << endl;
 		cl_packet_automatch p;
 		memcpy(&p, packet, sizeof(p));
 		if (id != 0) {
 			userList[id]->user_info->SetPlayerMatch(true);
 			if (id == 2) {
-				SendMatchStartPacket(id);
-				SendMatchStartPacket(1/*id*/);
+				SendRequestRoomPacket(1);
 			}
 		}
 		//SendAutoMatchPacket(id, userList[id]->user_info->GetPlayerMMR());
+		break;
+	}
+	case BL_ROOMREADY: {
+		cout << "GET BL_ROOMREADY" << endl;
+		bl_packet_room_ready p;
+		memcpy(&p, packet, sizeof(p));
+		SendMatchStartPacket(1, p.room_no);
+		SendMatchStartPacket(2, p.room_no);
 		break;
 	}
 	}
@@ -230,18 +239,6 @@ void LobbyServer::SendLoginFailPacket(int id)
 	SendPacket(id, &p);
 }
 
-void LobbyServer::SendSignUpOKPacket(int id, int mmr)
-{
-}
-
-void LobbyServer::SendSignUpFailPacket(int id)
-{
-}
-
-void LobbyServer::SendMatchPacket(int id, short roomNo, char is_host)
-{
-}
-
 void LobbyServer::SendUserInfoPacket(int id) {
 	lc_packet_userinfo p;
 	p.size = sizeof(p);
@@ -253,14 +250,12 @@ void LobbyServer::SendUserInfoPacket(int id) {
 	SendPacket(id, &p);
 }
 
-void LobbyServer::SendAutoMatchPacket(int id, int mmr) {
-	//
-}
-
-void LobbyServer::SendMatchStartPacket(int id) {
+void LobbyServer::SendMatchStartPacket(int id, short room_no) {
 	lc_packet_startMatch p;
 	p.size = sizeof(p);
 	p.type = LC_MATCHSTART;
+	p.roomNum = room_no;
+	p.is_host = false;
 	
 	SendPacket(id, &p);
 }
@@ -269,8 +264,26 @@ void LobbyServer::SendCancelAutoMatchSuccess(int id)
 {
 }
 
-void LobbyServer::SendPacket(int id, void* buf)
-{
+
+
+void LobbyServer::SendRequestRoomPacket(int id) {
+	lb_packet_request_room p;
+	p.size = sizeof(p);
+	p.type = LB_REQUEST_ROOM;
+	p.id = id;
+	
+	SendPacket(0, &p); //battle server·Î
+}
+
+void LobbyServer::SendLBCheckPacket() {
+	lb_packet_check_connect p;
+	p.size = sizeof(p);
+	p.type = LB_CHECK;
+
+	SendPacket(0, &p);
+}
+
+void LobbyServer::SendPacket(int id, void* buf) {
 	char* p = reinterpret_cast<char*>(buf);
 
 	EXOVER* sendover = new EXOVER;

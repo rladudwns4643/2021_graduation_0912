@@ -24,6 +24,7 @@ public:
 
 public:
 	void SendPacket(int id, void* buff);
+	void SendCheckConnect();
 	void SendAutoAccessOKPacket(int id);
 	void SendAutoAccessFailPacket(int id);
 	void SendAutoRoomReadyPacket(int id, int room_no);

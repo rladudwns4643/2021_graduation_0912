@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "WorkerThread.h"
-
+#define LOG_ON
 void WorkerThread::InitThread() {
 	m_ServerAddr = BattleServer::GetInstance()->GetServerAdder();
 	m_AddrLen = sizeof(m_ServerAddr);
@@ -25,12 +25,12 @@ void WorkerThread::ProcThread() {
 		if (evkey == EVENT_KEY);
 		else if (evkey == LOBBY_SERVER_KEY) {
 #ifdef LOG_ON
-			std::cout << "MatchMakingServerKey Return\n";
+			std::cout << "LobbyserverKey Return\n";
 #endif
 			clientSocket = SR::g_clients[key]->m_s->GetSocket();
 		}
 		else {
-			if (SR::g_clients[key]->m_s = nullptr) {
+			if (SR::g_clients[key]->m_s == nullptr) {
 #ifdef LOG_ON
 				std::cout << key << "- socket was nullptr\n";
 #endif
@@ -47,7 +47,7 @@ void WorkerThread::ProcThread() {
 
 		switch (ex_over->ev_type) {
 		case EV_RECV: {
-			cout << "recv\n";
+			//cout << "recv\n";
 			char* buf = SR::g_clients[key]->m_recv_over.net_buf;
 			unsigned int psize = SR::g_clients[key]->curr_packet_size;
 			unsigned int pr_size = SR::g_clients[key]->prev_packet_data;
@@ -158,13 +158,14 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 	msg.id = id;
 	msg.type = NO_MSG;
 
+	cout << "!!\n";
 	switch (inputPacket[1]) {
 	case LB_REQUEST_ROOM: {
 #ifdef LOG_ON
 		std::cout << "recv lb_packet_request_room from Lobby\n";
 #endif
 		int roomNo;
-		for (int i = 0; i < MAX_ROOM; ++i) { //선형 순회로 빈 방 찾기
+		for (int i = 0; i < MAX_ROOM; ++i) { //선형 순회로 빈 방 찾기, 이거 최악의 경우에 안들어갈 수 있음 탐색 개편 필요
 			ATOMIC::g_room_no_lock.lock();
 			if (SR::g_room_no[i] == -1) {
 				SR::g_room_no[i] = i + 1;
@@ -196,7 +197,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 	}
 	case CB_JOIN: {
 #ifdef LOG_ON
-		std::cout << "recv cb_packet_join from ID: "id << std::endl;
+		std::cout << "recv cb_packet_join from ID: "<<id << std::endl;
 #endif
 
 		int roomNo;
@@ -320,7 +321,7 @@ void WorkerThread::DisconnectClient(int disconnectClientID, SOCKET clientSocket)
 	SR::g_clients[disconnectClientID]->m_s = nullptr;
 	ATOMIC::g_clients_lock.unlock();
 #ifdef LOG_ON
-	std::cout << "Disconnect - Client ID: " << disconnectClientID << "room NO: "roomID << std::endl;
+	std::cout << "Disconnect - Client ID: " << disconnectClientID << "room NO: "<<roomID << std::endl;
 #endif 
 }
 

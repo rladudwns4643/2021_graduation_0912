@@ -4,7 +4,7 @@
 
 #define MAX_BUF	128
 #define MAX_PACKET_SIZE	128
-#define MAX_DUMMY	500
+#define MAX_DUMMY	1
 
 enum SERVER_TYPE { ST_LOBBY = 0, ST_BATTLE = 1, ST_COUNT = 2};
 

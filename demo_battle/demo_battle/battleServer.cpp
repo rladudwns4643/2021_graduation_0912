@@ -22,7 +22,7 @@ void BattleServer::Initialize() {
 	//0: lobby_server, 1: m_userid
 
 	//room clear
-	//for (int i = 0; i < MAX_ROOM; ++i) SR::g_rooms[i] = -1;
+	for (int i = 0; i < MAX_ROOM; ++i) SR::g_room_no[i] = -1;
 
 	//wsa init
 	if (!m_sockUtil.StaticInit()) while (true); //error, 일어날일 없음
@@ -38,15 +38,37 @@ void BattleServer::Initialize() {
 void BattleServer::ConncetLobbyServer() {
 	TCPSocketPtr LobbySocket;
 	LobbySocket = m_sockUtil.CreateTCPSocket(SocketAddressFamily::INET);
-	//DWORD flags;
+	DWORD flags = 0;
 	SocketAddress s{ inet_addr(LOBBY_SERVER_IP_PUBLIC) , LOBBY_SERVER_PORT};
-	cout << LobbySocket->Connect(s) << endl;
+	int ret = LobbySocket->Connect(s);
+	if (ret == 0) {
+		CLIENT* LobbyServer = new CLIENT;
+		LobbyServer->user_id = LOBBY_SERVER_KEY; //0: lobby_server
+		LobbyServer->m_s = LobbySocket;
+
+		LobbyServer->m_recv_over.wsabuf[0].len = MAX_BUFFER;
+		LobbyServer->m_recv_over.wsabuf[0].buf = LobbyServer->m_recv_over.net_buf;
+
+		LobbyServer->curr_packet_size = 0;
+		LobbyServer->m_recv_over.ev_type = EV_RECV;
+		LobbyServer->isConnected = true;
+		LobbyServer->prev_packet_data = 0;
+		SR::g_clients[LOBBY_SERVER_KEY] = LobbyServer;
+		CreateIoCompletionPort(reinterpret_cast<HANDLE>(LobbySocket->GetSocket()), SR::g_iocp, LOBBY_SERVER_KEY, 0);
+		memset(&SR::g_clients[LOBBY_SERVER_KEY]->m_recv_over, 0, sizeof(WSAOVERLAPPED));
+		LobbySocket->WSAReceive(SR::g_clients[LOBBY_SERVER_KEY]->m_recv_over.wsabuf, 1, NULL, &flags, &SR::g_clients[LOBBY_SERVER_KEY]->m_recv_over.over);
+		//SendCheckConnect();
+	}
+#ifdef LOG_ON
+	if (ret == 0) std::cout << "Connnect\n";
+#endif
 }
 
+//unused
 void BattleServer::AcceptLobbyServer() {
 	SocketAddress LobbyServerAddr;
 	TCPSocketPtr clientSocket;
-	DWORD flags;
+	DWORD flags = 0;
 
 	clientSocket = m_listen->Accept(LobbyServerAddr);
 
@@ -81,7 +103,7 @@ void BattleServer::Run() {
 
 	SocketAddress clientAddress;
 	TCPSocketPtr clientSocket;
-	DWORD flags;
+	DWORD flags = 0;
 
 	while (true) {
 		clientSocket = m_listen->Accept(clientAddress);
@@ -148,13 +170,21 @@ void BattleServer::SendPacket(int id, void* buff) {
 	char* p = reinterpret_cast<char*>(buff);
 	BYTE packet_size = (BYTE)p[0];
 	EX_OVER* send_over = new EX_OVER;
-	ZeroMemory(&send_over, sizeof(EX_OVER));
+	//memset(send_over, 0, sizeof(EX_OVER));
+	ZeroMemory(send_over, sizeof(EX_OVER));
 	send_over->ev_type = EV_SEND;
 	memcpy(send_over->net_buf, p, packet_size);
 	send_over->wsabuf[0].len = packet_size;
 	send_over->wsabuf[0].buf = send_over->net_buf;
 
 	SR::g_clients[id]->m_s->WSASend(send_over->wsabuf, 1, 0, 0, &send_over->over);
+}
+
+void BattleServer::SendCheckConnect() {
+	bl_pakcet_check_connect p;
+	p.size = sizeof(p);
+	p.type = BL_CHECK;
+	SendPacket(LOBBY_SERVER_KEY, &p);
 }
 
 void BattleServer::SendAutoAccessOKPacket(int id) {
@@ -173,9 +203,10 @@ void BattleServer::SendAutoAccessFailPacket(int id) {
 }
 
 void BattleServer::SendAutoRoomReadyPacket(int id, int room_no) {
-	bl_pakcet_room_ready p;
+	bl_packet_room_ready p;
 	p.size = sizeof(p);
 	p.type = BL_ROOMREADY;
+	p.id = id;
 	p.room_no = room_no;
 	SendPacket(id, &p);
 }
