@@ -19,6 +19,9 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
+	if (GetAsyncKeyState('T') & 0x8000) {
+		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+	}
 }
 
 void LobbyController::MouseCallback()
@@ -41,7 +44,7 @@ void GameplayController::HandleInput(const float deltaT)
 	Camera* camera = TOY_GROUND::GetApp()->m_Camera;
 
 
-	if (GetAsyncKeyState('T') & 0x8000) {
+	if (GetAsyncKeyState(VK_F3) & 0x8000) {
 		m_MyScene->ChangeFreeCamera();
 	}
 
@@ -112,7 +115,7 @@ void GameplayController::MouseCallback()
 			if (InputHandler::g_MouseChangebleY != 0.0f) {
 				camera->Rotate(InputHandler::g_MouseChangebleY, 0, 0);
 			}
-
+		
 			if (InputHandler::g_MouseChangebleX != 0.0f)
 			{
 				// m_Owner->Rotate(0, InputHandler::g_MouseChangebleX, 0);
