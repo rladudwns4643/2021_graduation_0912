@@ -14,6 +14,11 @@ constexpr int MAX_ID_STR = 10;
 constexpr int MAX_CLIENT = 5100;
 
 constexpr size_t MAX_LEFT_TIME = 180 + 1;
+constexpr size_t COUNTDOWN_TIME = 5;
+constexpr size_t WIN_COIN_CNT = 10;
+
+constexpr int WINNER_PLUS_MMR = 50;
+constexpr int LOOSER_MIN_MMR = -40;
 
 constexpr float GRAVITY = 0.980f;
 
@@ -72,5 +77,5 @@ struct EVENT {
 struct message {
 	int id;
 	char type;
-	PTC_VECTOR vec;
+	XMFLOAT3 vec;
 };

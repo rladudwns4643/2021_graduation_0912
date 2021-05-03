@@ -257,6 +257,7 @@ void BattleServer::SendGameStartPacket(int id, PTC_START_INFO* player_info) {
 	bc_packet_game_start p;
 	p.size = sizeof(p);
 	p.type = BC_GAME_START;
+	memcpy(&p.start_info, player_info, sizeof(PTC_START_INFO));
 	SendPacket(id, &p);
 }
 
@@ -285,7 +286,7 @@ void BattleServer::SendLeftTimePacket(int id, char left_time) {
 }
 
 void BattleServer::SendShootPacket(int id, int bullet_id, PTC_VECTOR look) {
-	bc_pakcet_shoot_bullet p;
+	bc_packet_shoot_bullet p;
 	p.size = sizeof(p);
 	p.type = BC_SHOOT_BULLET;
 	p.bullet_id = bullet_id;

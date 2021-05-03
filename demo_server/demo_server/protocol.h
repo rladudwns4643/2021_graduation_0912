@@ -193,11 +193,12 @@ struct cl_packet_cancel_automatch {
 #define BC_DIE					21
 
 #define BC_UPDATED_USER_INFO	22
+#define BC_ANIM					23
 
 #pragma pack(push, 1)
 struct PTC_START_INFO {
 	int id;
-	char rule;
+	XMFLOAT4 spawn_pos;
 };
 
 struct PTC_VECTOR {
@@ -272,7 +273,7 @@ struct bc_packet_new_room_host {
 	int id;
 };
 
-struct bc_pakcet_ready {
+struct bc_packet_ready {
 	BYTE size;
 	BYTE type;
 
@@ -283,6 +284,8 @@ struct bc_pakcet_ready {
 struct bc_packet_game_start {
 	BYTE size;
 	BYTE type;
+
+	PTC_START_INFO start_info;
 };
 
 struct bc_packet_gamestart_available {
@@ -311,7 +314,7 @@ struct bc_packet_round_start {		//game start
 	BYTE type;
 };
 
-struct bc_pakcet_player_pos {
+struct bc_packet_player_pos {
 	BYTE size;
 	BYTE type;
 
@@ -344,7 +347,7 @@ struct bc_packet_object_rot {
 	float rot_y;
 };
 
-struct bc_pakcet_shoot_bullet {
+struct bc_packet_shoot_bullet {
 	BYTE size;
 	BYTE type;
 
@@ -361,7 +364,7 @@ struct bc_packet_remove_bullet {
 	PTC_VECTOR pos; //사라지는 위치 이팩트 발생 위치
 };
 
-struct bc_pakcet_hit {
+struct bc_packet_hit {
 	BYTE size;
 	BYTE type;
 
@@ -369,11 +372,19 @@ struct bc_pakcet_hit {
 	float hp;
 };
 
-struct bc_pakcet_die {
+struct bc_packet_die {
 	BYTE size;
 	BYTE type;
 
 	int id;
+};
+
+struct bc_packet_anim_type {
+	BYTE size;
+	BYTE type;
+
+	int id;
+	char anim_type;
 };
 
 struct bc_packet_updated_user_info {

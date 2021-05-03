@@ -21,9 +21,11 @@ public:
 	unsigned short GetMaxHP() const;
 
 public:
+	void SetIsShoot(bool shoot);
 	int GetAnimType() override;
 
 private:
 	unsigned short m_HP;
 	unsigned short m_MaxHP;
+	bool m_isShoot{ false };
 };

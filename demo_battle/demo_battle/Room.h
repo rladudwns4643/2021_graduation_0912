@@ -60,11 +60,12 @@ public:		//send msg
 	void PushPlayerDirectionMsg(int to, int from, PTC_VECTOR look);
 	void PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* position_info);
 	void PushTransformMsg(int transformer, short obj_type);
-	void PushShootBulletMsg(int to, PTC_VECTOR look);
+	void PushShootBulletMsg(int to, int bullet_id, PTC_VECTOR look);
+	void PushRemoveBulletMsg(int bullet_id);
 	void PushHitMsg(int hit_id, int dmg);
 	void PushDieMsg(int die_id);
 
-	void PushReadyMsg(int id);
+	void PushReadyMsg(int id, bool ready);
 	void PushUnReadyMsg(int id);
 	void PushGameStartAvailableMsg(int id, bool available);
 

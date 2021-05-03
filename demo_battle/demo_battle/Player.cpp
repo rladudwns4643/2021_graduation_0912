@@ -42,6 +42,7 @@ void Player::Initialize() {
 	m_isEmpty = true;
 	m_isReady = false;
 	m_isDead = false;
+	m_coin_cnt = 0;
 	ZeroMemory(&m_idStr, sizeof(char) * 10);
 	m_mmr = 0;
 	m_prevAnimType = ANIM_IDLE;
@@ -58,6 +59,7 @@ void Player::Reset() {
 	m_isReady = false;
 	m_isDead = false;
 	m_isMoveable = false;
+	m_coin_cnt = 0;
 	m_keyW = false;
 	m_keyA = false;
 	m_keyS = false;
@@ -131,6 +133,14 @@ void Player::SetDead(const bool& dead) {
 
 bool Player::IsDead() {
 	return m_isDead;
+}
+
+void Player::SetCoin(size_t coin) {
+	m_coin_cnt = coin;
+}
+
+size_t Player::GetCoin() {
+	return m_coin_cnt;
 }
 
 int Player::GetPrevAnimType() {

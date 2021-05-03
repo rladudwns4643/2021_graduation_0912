@@ -98,6 +98,10 @@ unsigned short Toy::GetMaxHP() const {
 	return m_MaxHP;
 }
 
+void Toy::SetIsShoot(bool shoot) {
+	m_isShoot = shoot;
+}
+
 int Toy::GetAnimType() {
 	if(m_animJump){ 
 		return ANIM_JUMP;

@@ -209,7 +209,8 @@ void Room::Update() {
 	EVENT ev_update{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(nextUpdate), EV_UPDATE };
 	BattleServer::GetInstance()->AddTimer(ev_update);
 
-	//
+	EVENT ev_flush{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(1), EV_FLUSH_MSG };
+	BattleServer::GetInstance()->AddTimer(ev_flush);
 }
 
 void Room::PushMsg(message& msg) {
@@ -225,7 +226,22 @@ void Room::Collision() {
 }
 
 void Room::WorldUpdate() {
-	//
+	//유동 object update
+	for (auto it = m_map->m_obj_list[Map::NOTFIXED].begin();
+		it != m_map->m_obj_list[Map::NOTFIXED].end();
+		++it) {
+		(*it)->Update(m_elapsedSec.count() * 1000.f, false);
+	}
+
+	for (int i = 0; i < m_bullets.size(); ++i) {
+		if (m_bullets[i].isShoot()) {
+			m_bullets[i].BulletUpdate(m_elapsedSec.count() * 1000.f);
+			if (!m_bullets[i].isBulletActive()) {
+				m_bullets[i].SetShoot(false);
+				
+			}
+		}
+	}
 }
 
 bool Room::IsEmpty() {
@@ -325,12 +341,6 @@ void Room::LeaveRoom(int id) {
 	}
 }
 
-//
-void Room::LoadMap() {
-	//m_map = new Map();
-	//m_map->Initialize();
-}
-
 std::wstring Room::GetRoomName() {
 	return m_roomName;
 }
@@ -363,97 +373,460 @@ void Room::SendLeftTimePacket() {
 }
 
 void Room::CheckGameState() {
+	if (this == nullptr) return;
+	--m_leftTime;
+	if (m_leftTime <= MAX_LEFT_TIME - COUNTDOWN_TIME) {
+		if (!m_isRoundStarted) {
+			m_isRoundStarted = true;
+			cout << "---RoundStart---\n";
+			RoundStart();
+		}
+	}
 
+	if (m_isGameStarted) {
+		if (m_leftTime <= 0) {
+			GameOver(0);
+		}
+		for (int i = 0; i < MAX_PLAYER; ++i) {
+			if (m_players[i]->GetCoin() > WIN_COIN_CNT) {
+				GameOver(m_players[i]->GetID());
+			}
+		}
+	}
 }
 
-void Room::GameStart()
-{
+void Room::GameStart(){
+	for (int i = 0; i < MAX_PLAYER; ++i) {
+		m_players[i]->SetCurObject(i);
+		m_curPlayerNum++;
+	}
+	for (int i = 0; i < MAX_PLAYER; ++i) {
+		PTC_START_INFO info;
+		info.id = m_players[i]->GetID();
+		info.spawn_pos = SR::g_spawn_pos.GetSpawnPosition(SpawnPosition::ePositionType(i));
+		BattleServer::GetInstance()->SendGameStartPacket(info.id, &info);
+	}
+
+	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(2), EV_WORLD_UPDATE };
+	BattleServer::GetInstance()->AddTimer(ev);
+
+	m_isGameStarted = true;
+	m_isEnterable = false;
 }
 
-void Room::RoundStart()
-{
+void Room::RoundStart() {
+	for (int i = 0; i < MAX_PLAYER; ++i) {
+		const int& id = m_players[i]->GetID();
+		if (id != -1) {
+			BattleServer::GetInstance()->SendRoundStartPacket(id);
+		}
+	}
 }
 
-void Room::GameOver(int winner_role)
-{
+void Room::GameOver(int winner) {
+	cout << winner << " winner!\n";
+	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EV_RESET_ROOM };
+	BattleServer::GetInstance()->AddTimer(ev);
 }
 
-void Room::UpdateUserInfo_DB(int winner_role)
-{
+void Room::UpdateUserInfo_DB(int winner) {
+	for (auto& p : m_players) {
+		const int& id = p->GetID();
+		if (id != -1) {
+			if (id == winner) {
+				p->SetMMR(p->GetMMR() + WINNER_PLUS_MMR);
+			}
+			else {
+				p->SetMMR(p->GetMMR() + LOOSER_MIN_MMR);
+			}
+		}
+		ATOMIC::g_dbInfo_lock.lock();
+		SR::g_clients[id]->mmr = p->GetMMR();
+		ATOMIC::g_dbInfo_lock.unlock();
+
+		EVENT ev{ id, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(1), EV_UPDATE_DB };
+		BattleServer::GetInstance()->AddTimer(ev);
+		BattleServer::GetInstance()->SendGameOverPacket(id, winner);
+	}
 }
 
-void Room::PushSendMsg(int id, void* buff)
-{
+void Room::PushSendMsg(int id, void* buff) {
+	char* p = reinterpret_cast<char*>(buff);
+	SEND_INFO sinfo{};
+	sinfo.to = id;
+	memcpy(&sinfo.buff, buff, (BYTE)p[0]);
+
+	m_sendMsgQueueLock.lock();
+	m_sendMsgQueue.push(sinfo);
+	m_sendMsgQueueLock.unlock();
 }
 
-void Room::FlushSendMsg()
-{
+void Room::FlushSendMsg() {
+	if (this == nullptr) return;
+
+	m_sendMsgQueueLock.lock();
+	std::queue<SEND_INFO> q{ m_sendMsgQueue };
+	while (!m_sendMsgQueue.empty()) m_sendMsgQueue.pop(); //여기서 문제가 생길 수 있음, 분리할 필요 있을수도?
+	m_sendMsgQueueLock.unlock();
+
+	while (!q.empty()) {
+		SEND_INFO sinfo = q.front();
+		q.pop();
+
+		BattleServer::GetInstance()->SendPacket(sinfo.to, &sinfo.buff);
+	}
 }
 
-void Room::PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info)
-{
+void Room::PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info) {
+	bc_packet_player_pos p;
+	p.size = sizeof(p);
+	p.type = BC_PLAYER_POS;
+	p.id = from;
+	p.pos.x = position_info->x;
+	p.pos.y = position_info->y;
+	p.pos.z = position_info->z;
+	PushSendMsg(to, &p);
 }
 
-void Room::PushPlayerDirectionMsg(int to, int from, PTC_VECTOR look)
-{
+void Room::PushPlayerDirectionMsg(int to, int from, PTC_VECTOR look){
+	bc_packet_player_rot p;
+	p.size = sizeof(p);
+	p.type = BC_PLAYER_ROT;
+	p.id = from;
+	p.look = look;
+	PushSendMsg(to, &p);
 }
 
-void Room::PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* position_info)
-{
+void Room::PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* position_info) {
+	bc_packet_object_pos p;
+	p.size = sizeof(p);
+	p.type = BC_OBJECT_POS;
+	p.type_id = type_id;
+	p.obj_id = obj_id;
+	p.pos.x = position_info->x;
+	p.pos.y = position_info->y;
+	p.pos.z = position_info->z;
+	PushSendMsg(id, &p);
 }
 
-void Room::PushTransformMsg(int transformer, short obj_type)
-{
+void Room::PushShootBulletMsg(int to, int bullet_id, PTC_VECTOR look) {
+	bc_packet_shoot_bullet p;
+	p.size = sizeof(p);
+	p.type = BC_SHOOT_BULLET;
+	p.bullet_id = bullet_id;
+	p.pos = look;
+	PushSendMsg(to, &p);
 }
 
-void Room::PushShootBulletMsg(int to, PTC_VECTOR look)
-{
+void Room::PushRemoveBulletMsg(int bullet_id) {
+	bc_packet_remove_bullet p;
+	p.type = BC_REMOVE_BULLET;
+	p.size = sizeof(p);
+	p.bullet_id = bullet_id;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) PushSendMsg(id, &p);
+	}
 }
 
-void Room::PushHitMsg(int hit_id, int dmg)
-{
+void Room::PushHitMsg(int hit_id, int dmg) {
+	bc_packet_hit p;
+	p.type = BC_HIT;
+	p.hp = dmg;
+	p.id = hit_id;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) PushSendMsg(id, &p);
+	}
 }
 
-void Room::PushDieMsg(int die_id)
-{
+void Room::PushDieMsg(int die_id) {
+	bc_packet_die p;
+	p.type = BC_DIE;
+	p.size = sizeof(p);
+	p.id = die_id;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) {
+			PushSendMsg(id, &p);
+		}
+	}
 }
 
-void Room::PushReadyMsg(int id)
-{
+void Room::PushReadyMsg(int id, bool ready) {
+	bc_packet_ready p;
+	p.size = sizeof(p);
+	p.type = BC_READY;
+	p.id = id;
+	p.ready = ready;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) PushSendMsg(id, &p);
+	}
 }
 
-void Room::PushUnReadyMsg(int id)
-{
+void Room::PushUnReadyMsg(int id) {
+	bc_packet_ready p;
+	p.size = sizeof(p);
+	p.type = BC_READY;
+	p.id = id;
+	p.ready = false;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) PushSendMsg(id, &p);
+	}
 }
 
-void Room::PushGameStartAvailableMsg(int id, bool available)
-{
+void Room::PushGameStartAvailableMsg(int id, bool available) {
+	bc_packet_gamestart_available p;
+	p.size = sizeof(p);
+	p.type = BC_GAME_START_AVAILABLE;
+	p.available = available;
+	PushSendMsg(id, &p);
 }
 
-void Room::PushNewRoomMnrMsg(int id)
-{
+void Room::PushNewRoomMnrMsg(int id) {
+	bc_packet_new_room_host p;
+	p.size = sizeof(p);
+	p.type = BC_NEW_ROOM_HOST;
+	p.id = id;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) PushSendMsg(id, &p);
+	}
 }
 
-void Room::PushAnimMsg(int id, int animType)
-{
+void Room::PushAnimMsg(int id, int animType) {
+	bc_packet_anim_type p;
+	p.size = sizeof(p);
+	p.type = BC_ANIM;
+	p.id = id;
+	p.anim_type = animType;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) PushSendMsg(id, &p);
+	}
 }
 
-void Room::MakeMove(int id)
-{
+void Room::MakeMove(int id) {
+	if (this == nullptr) return;
+	if (!m_isGameStarted) return;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) {
+			pl->SetIsMoveable(true);
+		}
+	}
 }
 
-void Room::MakeStop(int id)
-{
+void Room::MakeStop(int id) {
+	if (this == nullptr) return;
+	if (!m_isGameStarted) return;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) {
+			pl->SetIsMoveable(false);
+		}
+	}
 }
 
-void Room::CopyRecvMsgs()
-{
+void Room::CopyRecvMsgs() {
+	m_recvMsgQueueLock.lock();
+	m_copiedRecvMsgs = m_recvMsgQueue;
+	m_recvMsgQueueLock.unlock();
+
+	m_recvMsgQueueLock.lock();
+	while (!m_recvMsgQueue.empty()) m_recvMsgQueue.pop();
+	m_recvMsgQueueLock.unlock();
 }
 
-void Room::ClearCopyMsg()
-{
+void Room::ClearCopyMsg() {
+	while (!m_copiedRecvMsgs.empty()) m_copiedRecvMsgs.pop();
 }
 
-void Room::ProcMsg(message msg)
-{
+void Room::ProcMsg(message msg) {
+	switch (msg.type) {
+	case CB_READY: {
+		for (auto& pl : m_players) {
+			if (pl->GetID() == msg.id) {
+				pl->SetReady(!pl->GetReady());
+				char ready = pl->GetReady();
+				PushReadyMsg(msg.id, ready);
+			}
+		}
+		break;
+	}
+	case CB_START: {
+		ClearCopyMsg();
+		if (!m_isGameStarted) {
+			GameStart();
+			SendLeftTimePacket();
+		}
+		break;
+	}
+	case CB_KEY_W_DOWN: {
+		for (auto& pl : m_players) {
+			if (msg.id == pl->GetID()) {
+				pl->SetKeyW(true);
+				break;
+			}
+		}
+		break;
+	}
+	case CB_KEY_W_UP: {
+		for (auto& pl : m_players) {
+			if (msg.id == pl->GetID()) {
+				pl->SetKeyW(false);
+				break;
+			}
+		}
+		break;
+	}
+	case CB_KEY_A_DOWN: {
+		for (auto& pl : m_players) {
+			if (msg.id == pl->GetID()) {
+				pl->SetKeyA(true);
+				break;
+			}
+		}
+		break;
+	}
+	case CB_KEY_A_UP: {
+		for (auto& pl : m_players) {
+			if (msg.id == pl->GetID()) {
+				pl->SetKeyA(false);
+				break;
+			}
+		}
+		break;
+	}
+	case CB_KEY_S_DOWN: {
+		for (auto& pl : m_players) {
+			if (msg.id == pl->GetID()) {
+				pl->SetKeyS(true);
+				break;
+			}
+		}
+		break;
+	}
+	case CB_KEY_S_UP: {
+		for (auto& pl : m_players) {
+			if (msg.id == pl->GetID()) {
+				pl->SetKeyS(false);
+				break;
+			}
+		}
+		break;
+	}
+	case CB_KEY_D_DOWN: {
+		for (auto& pl : m_players) {
+			if (msg.id == pl->GetID()) {
+				pl->SetKeyD(true);
+				break;
+			}
+		}
+		break;
+	}
+	case CB_KEY_D_UP: {
+		for (auto& pl : m_players) {
+			if (msg.id == pl->GetID()) {
+				pl->SetKeyD(false);
+				break;
+			}
+		}
+		break;
+	}
+	case CB_KEY_JUMP: {
+		for (auto& pl : m_players) {
+			if (msg.id == pl->GetID()) {
+				pl->SetKeyJump(true);
+				break;
+			}
+		}
+		break;
+	}
+	case CB_BULLET: {
+		if (!m_isRoundStarted) break;
+		int bullet_id{};
+		for (auto& pl : m_players) {
+			for (int i = 0; i < MAX_BULLET_COUNT; ++i) {
+				if (!m_bullets[i].isBulletActive()) {
+					bullet_id = i;
+					XMFLOAT3 look{ pl->GetCurObject()->GetLook() };
+					m_bullets[i].Shoot(pl->GetCurObject()->GetPosition(), look, msg.vec, 1.f);
+
+					static_cast<Toy*>(pl)->SetIsShoot(true);
+					break;
+				}
+				else if (i + 1 == MAX_BULLET_COUNT) {
+					cout << "bullet max\n";
+				}
+			}
+		}
+
+		XMFLOAT3 bullet_pos{ m_bullets[bullet_id].GetPosition() };
+		PTC_VECTOR ptc_bullet_pos{};
+		ptc_bullet_pos.x = bullet_pos.x;
+		ptc_bullet_pos.y = bullet_pos.y;
+		ptc_bullet_pos.z = bullet_pos.z;
+		
+		int id{};
+		for (const auto& pl : m_players) {
+			id = pl->GetID();
+			if (id != -1) {
+				PushShootBulletMsg(id, bullet_id, ptc_bullet_pos);
+			}
+		}
+		break;
+	}
+	case CB_LOOK_VECTOR: {
+		int id{};
+		for (auto& pl : m_players) {
+			id = pl->GetID();
+			if (id != -1 && id == msg.id) {
+				if (pl->GetCurObject() == nullptr) return;
+				XMFLOAT3 pre_look{ pl->GetCurObject()->GetLook() };
+				pl->GetCurObject()->SetPreLook(pre_look);
+
+				pl->GetCurObject()->SetMatrixByLook(msg.vec.x, msg.vec.y, msg.vec.z);
+				//bb rotation
+				pl->GetCurObject()->m_boundaries->SetBBLook(pl->GetCurObject()->GetLook(), 0);
+				pl->GetCurObject()->m_boundaries->SetBBRight(pl->GetCurObject()->GetRight(), 0);
+			}
+			else {
+				PTC_VECTOR recv_look{ msg.vec.x, msg.vec.y, msg.vec.z };
+				BattleServer::GetInstance()->SendPlayerRotation(id, msg.id, recv_look);
+			}
+		}
+		break;
+	}
+	case CB_TEST_TIME_MINUS: {
+		break;
+	}
+	case CB_TEST_TIME_PLUS: {
+		break;
+	}
+	default: {
+		//unknown MSG
+		while (true);
+	}
+	}
 }

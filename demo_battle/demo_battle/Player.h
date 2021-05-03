@@ -44,6 +44,9 @@ public:
 	void SetDead(const bool& dead);
 	bool IsDead();
 
+	void SetCoin(size_t coin);
+	size_t GetCoin();
+
 public:
 	virtual int GetAnimType() = 0;
 	int GetPrevAnimType();
@@ -70,6 +73,7 @@ protected:
 	bool m_isReady;
 	bool m_isMoveable;
 	bool m_isDead;
+	size_t m_coin_cnt;
 
 	char m_idStr[MAX_STR_LEN];
 	int m_mmr;
