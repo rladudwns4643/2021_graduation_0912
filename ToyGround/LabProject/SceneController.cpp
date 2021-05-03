@@ -19,6 +19,9 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
+	if (GetAsyncKeyState('T') & 0x8000) {
+		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+	}
 }
 
 void LobbyController::MouseCallback()

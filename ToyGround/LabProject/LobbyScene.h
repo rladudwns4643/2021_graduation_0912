@@ -2,9 +2,14 @@
 #include "Scene.h"
 
 
+namespace Graphics
+{
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
+}
+
 class LobbyScene : public Scene
 {
-	friend GameplayController;
+	friend LobbyController;
 
 public:
 	virtual void Initialize() override;

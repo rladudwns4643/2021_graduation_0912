@@ -63,7 +63,7 @@ HRESULT FbxLoader::LoadFBX(
 	if (pFbxRootNode)
 	{
 		// Skeleton Bone Hierarchy Index
-		std::cout << "루트 자식수: " << pFbxRootNode->GetChildCount() << std::endl;
+		//std::cout << "루트 자식수: " << pFbxRootNode->GetChildCount() << std::endl;
 		for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
 		{
 			FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
