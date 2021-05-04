@@ -28,7 +28,8 @@ void PlayerController::HandleInput(const float deltaT)
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
 
-	float speed = 16.f * deltaT;
+	//float speed = 16.f * deltaT;
+	float speed = 200.f * deltaT;
 	XMVECTOR direction = {};
 
 	DWORD dir = 0;
