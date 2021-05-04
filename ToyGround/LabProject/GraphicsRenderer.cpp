@@ -62,7 +62,8 @@ void GraphicsRenderer::LoadTextures()
 	{
 		"SkyBox",
 		"Cartoon_CubeWorld_Texture",
-		"Polygon_Fantasy_Characters_Texture_01_A"
+		"Polygon_Fantasy_Characters_Texture_01_A",
+		//"PolygonMinis_Texture_01_A"
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -70,6 +71,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/SkyBox.dds",
 		L"./Textures/Cartoon_CubeWorld_Texture.dds",
 		L"./Textures/Polygon_Fantasy_Characters_Texture_01_A.dds",
+		//L"./Textures/PolygonMinis_Texture_01_A.dds"
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -107,6 +109,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	{
 		m_Textures[TEXTURE_STR_Cartoon_CubeWorld_Texture]->Resource,
 		m_Textures[TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A]->Resource,
+		//m_Textures[TEXTURE_STR_PolygonMinis_Texture_01_A]->Resource
 	};
 
 	auto SkyBox = m_Textures["SkyBox"]->Resource;

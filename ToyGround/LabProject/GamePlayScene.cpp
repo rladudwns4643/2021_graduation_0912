@@ -48,6 +48,7 @@ bool GameplayScene::Enter()
 	m_MapName = MAP_STR_GAME_MAP;
 	AppContext->DisplayProps(m_MapName);
 
+	//m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
 
 	///---
@@ -91,6 +92,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_BAIRD], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Baird, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_BAIRD].get());
+	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_COWBOY], AppContext->m_RItemsVec);
+	//GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Cowboy, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_COWBOY].get());
 	
 	/*Materials*/
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);

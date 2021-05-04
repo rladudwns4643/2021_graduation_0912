@@ -32,14 +32,15 @@
 // 텍스쳐
 #define TEXTURE_INDEX_SkyBox 0
 #define TEXTURE_INDEX_Cartoon_CubeWorld_Texture 1
+//#define TEXTURE_INDEX_PolygonMinis_Texture_01_A 2
 #define TEXTURE_INDEX_Polygon_Fantasy_Characters_Texture_01_A 2
 
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture "Cartoon_CubeWorld_Texture"
+//#define TEXTURE_STR_PolygonMinis_Texture_01_A "PolygonMinis_Texture_01_A"
 #define TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A "Polygon_Fantasy_Characters_Texture_01_A"
 
-
 // 캐릭터
-#define CHARACTER_TEST "TEST_CHARCTER"
+//enum BoneIndex { Cowboy = 0, Count };
 enum BoneIndex { Baird = 0, Count };
 
 // 오브젝트 메쉬
@@ -112,6 +113,8 @@ enum class CameraType { eFirst = 0, eThird = 1, eFree = 2 };
 
 // 캐릭터 - 테스트
 #define CHARACTER_BAIRD "BA"
+// 캐릭터
+//#define CHARACTER_COWBOY "Cowboy"
 
 // Animation KeyState
 #define KEY_IDLE "Idle"
