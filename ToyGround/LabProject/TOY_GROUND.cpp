@@ -133,6 +133,12 @@ void TOY_GROUND::BuildAsserts()
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_BAIRD, "Jump");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_BAIRD, "Win");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_BAIRD, "Lose");
+	AssertsReference::GetApp()->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), CHARACTER_DRUID);
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_DRUID, "Idle");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_DRUID, "Running");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_DRUID, "Jump");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_DRUID, "Win");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_DRUID, "Lose");
 	//AssertsReference::GetApp()->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), CHARACTER_COWBOY);
 	//AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Idle");
 	//AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Running");
@@ -145,5 +151,6 @@ void TOY_GROUND::BuildAsserts()
 void TOY_GROUND::BuildCharacters()
 {
 	AppContext->CreateCharacter(CHARACTER_BAIRD, CHARACTER_BAIRD, TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A, BoneIndex::Baird);
+	AppContext->CreateCharacter(CHARACTER_DRUID, CHARACTER_DRUID, TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A, BoneIndex::Druid);
 	//AppContext->CreateCharacter(CHARACTER_COWBOY, CHARACTER_COWBOY, TEXTURE_STR_PolygonMinis_Texture_01_A, BoneIndex::Cowboy);
 }

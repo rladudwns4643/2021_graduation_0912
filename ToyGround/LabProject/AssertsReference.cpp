@@ -17,6 +17,14 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	prePlayerInfo.spawnPos = 1;
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
+	prePlayerInfo.playerName = "SecondPlayer";
+	prePlayerInfo.position.x = 0.f;
+	prePlayerInfo.position.y = STD_CUBE_SIZE * 2;
+	prePlayerInfo.position.z = 500.f;
+	prePlayerInfo.rotY = 180.f;
+	prePlayerInfo.spawnPos = 2;
+	map->playerInfoVector.emplace_back(prePlayerInfo);
+
 	//-------------------------
 	string path = "Maps\\" + mapName + ".txt";
 	cout << path << endl;

@@ -76,7 +76,8 @@ void Character::SetCamera(CameraType cameraType)
 	case CameraType::eFirst:
 	{
 		m_MyCamera->SetTimeLag(0.f);
-		m_MyCamera->SetOffset(XMFLOAT3(0.0f, STD_CUBE_SIZE * 0.7, 0.0f));
+		//m_MyCamera->SetOffset(XMFLOAT3(0.0f, STD_CUBE_SIZE * 0.7, 0.0f));
+		m_MyCamera->SetOffset(XMFLOAT3(0.0f, 160.f, 20.0f));
 
 		XMVECTOR direction = {};
 		XMFLOAT3 dir;

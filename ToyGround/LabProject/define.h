@@ -41,7 +41,7 @@
 
 // 캐릭터
 //enum BoneIndex { Cowboy = 0, Count };
-enum BoneIndex { Baird = 0, Count };
+enum BoneIndex { Baird = 0, Druid, Count };
 
 // 오브젝트 메쉬
 #define OBJECT_MESH_STR_TEST_PLAYER		"Test_Player"
@@ -113,6 +113,7 @@ enum class CameraType { eFirst = 0, eThird = 1, eFree = 2 };
 
 // 캐릭터 - 테스트
 #define CHARACTER_BAIRD "BA"
+#define CHARACTER_DRUID "DR"
 // 캐릭터
 //#define CHARACTER_COWBOY "Cowboy"
 

@@ -50,12 +50,14 @@ bool GameplayScene::Enter()
 
 	//m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
+	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_DRUID, CHARACTER_DRUID);
 
 	///---
 	// Player type, id 등등 세팅
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
 	AppContext->DisplayCharacter(m_MapName, m_Users[m_PlayerID], 1);
+	AppContext->DisplayCharacter(m_MapName, m_Users[1], 2);
 
 	// 카메라 세팅
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
@@ -92,6 +94,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	/*Characters*/
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_BAIRD], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Baird, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_BAIRD].get());
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_DRUID], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Druid, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_DRUID].get());
 	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_COWBOY], AppContext->m_RItemsVec);
 	//GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Cowboy, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_COWBOY].get());
 	
