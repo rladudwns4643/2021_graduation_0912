@@ -65,6 +65,9 @@ public:
 	void SendReadyPacket(int id);
 	void SendGameStartPacket(int id);
 
+	void SendKeyDownW(int id);
+
+
 	void SendPacket(int id, void* packet, SERVER_TYPE st);
 
 	void error_display(const char* msg, int err_no);

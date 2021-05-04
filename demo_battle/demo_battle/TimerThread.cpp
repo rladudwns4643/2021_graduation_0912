@@ -28,29 +28,44 @@ void TimerThread::ProcThread() {
 
 		EX_OVER* ex_over = new EX_OVER;
 		if (SR::g_rooms[proc_ev.target] != NULL) {
-			ex_over->ev_type = proc_ev.et;
-			*(int*)ex_over->net_buf = proc_ev.target;
-
 			switch (proc_ev.et) {
 			case EV_UPDATE: {
+				ex_over->ev_type = EV_UPDATE;
+				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
 			case EV_TICK: {
+				ex_over->ev_type = EV_TICK;
+				*(int*)ex_over->net_buf = proc_ev.target;
+				break;
+			}
+			case EV_FLUSH_MSG: {
+				ex_over->ev_type = EV_FLUSH_MSG;
+				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
 			case EV_MOVE_ENABLE: {
+				ex_over->ev_type = EV_MOVE_ENABLE;
+				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
 			case EV_MAKE_MOVE_DISABLE: {
+				ex_over->ev_type = EV_MAKE_MOVE_DISABLE;
+				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
-			case EV_UPDATE_DB: {
+			case EV_UPDATE_DB: { //아직없음
+				//ex_over->ev_type = EV_UPDATE_DB;
 				break;
 			}
 			case EV_RESET_ROOM: {
+				ex_over->ev_type = EV_RESET_ROOM;
+				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
 			case EV_WORLD_UPDATE: {
+				ex_over->ev_type = EV_WORLD_UPDATE;
+				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
 			default: {

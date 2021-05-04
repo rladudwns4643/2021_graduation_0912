@@ -62,7 +62,7 @@ bool Object::Update(float elapsedTime, bool is_player) {
 	float frictionZ = -normalrized.z * friction;
 
 	//friction acc
-	XMFLOAT3 fricAcc;
+	XMFLOAT3 fricAcc{};
 	if (m_isApplyGravity) {
 		fricAcc = {
 			frictionX / m_mass,
@@ -111,7 +111,7 @@ bool Object::Update(float elapsedTime, bool is_player) {
 
 	XMFLOAT3 newPos = MathHelper::Subtract(GetPosition(), m_xmf3PrePosition);
 	XMStoreFloat3(&newPos, XMVector3Length(XMLoadFloat3(&newPos)));
-	if (MathHelper::IsZero(newPos.x)) {
+	if (MathHelper::IsZero(newPos)) {
 		return false;
 	}
 	else {
@@ -141,7 +141,7 @@ void Object::AddForce(XMFLOAT3 force, float elapsedTime, bool isBullet) {
 	XMStoreFloat3(&acc, XMLoadFloat3(&force) / m_mass);
 
 	m_xmfVel.x += acc.x * elapsedTime;
-	m_xmfVel.y += acc.y * elapsedTime;
+	m_xmfVel.z += acc.z * elapsedTime;
 	if (isBullet) m_xmfVel.y += acc.y * elapsedTime;
 	else m_xmfVel.y += acc.y * 16.f;
 }
@@ -173,7 +173,7 @@ void Object::SetPrePosition(XMFLOAT3 xmfPosition) {
 }
 
 XMFLOAT3 Object::GetLook() const {
-	return MathHelper::Normalize(XMFLOAT3(m_xmf4x4World._21, m_xmf4x4World._22, m_xmf4x4World._23));
+	return MathHelper::Normalize(XMFLOAT3(m_xmf4x4World._31, m_xmf4x4World._32, m_xmf4x4World._33));
 }
 
 void Object::SetLook(const float& x, const float& y, const float& z) {

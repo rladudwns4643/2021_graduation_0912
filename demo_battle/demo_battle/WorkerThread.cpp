@@ -24,9 +24,6 @@ void WorkerThread::ProcThread() {
 		int evkey = static_cast<int>(key);
 		if (evkey == EVENT_KEY);
 		else if (evkey == LOBBY_SERVER_KEY) {
-#ifdef LOG_ON
-			std::cout << "LobbyserverKey Return\n";
-#endif
 			clientSocket = SR::g_clients[key]->m_s->GetSocket();
 		}
 		else {
@@ -47,7 +44,6 @@ void WorkerThread::ProcThread() {
 
 		switch (ex_over->ev_type) {
 		case EV_RECV: {
-			//cout << "recv\n";
 			char* buf = SR::g_clients[key]->m_recv_over.net_buf;
 			unsigned int psize = SR::g_clients[key]->curr_packet_size;
 			unsigned int pr_size = SR::g_clients[key]->prev_packet_data;
@@ -61,6 +57,7 @@ void WorkerThread::ProcThread() {
 					msg = ProcPacket(key, p);
 					if (msg.type != NO_MSG) {
 						int room_id = SR::g_clients[key]->room_id;
+						//cout << "Push MSG [room:" << room_id << " msg:" << (int)msg.type << " id: " << msg.id << "]\n";
 						SR::g_rooms[room_id]->PushMsg(msg);
 					}
 
@@ -140,8 +137,13 @@ void WorkerThread::ProcThread() {
 			delete ex_over;
 			break;
 		}
+		case EV_WORLD_UPDATE: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->WorldUpdate();
+			break;
+		}
 		default: {
-			std::cout << "worker > unknown event type" << ex_over->ev_type << std::endl;
+			std::cout << "[worker] unknown event type" << ex_over->ev_type << std::endl;
 		}
 		}
 	}
@@ -158,12 +160,11 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 	msg.id = id;
 	msg.type = NO_MSG;
 
-	cout << "!!\n";
+#ifdef LOG_ON
+	std::cout << "[WORKER] ProcPacket Type: " << (int)inputPacket[1] << " ID: " << id << endl;
+#endif //LOG_ON
 	switch (inputPacket[1]) {
 	case LB_REQUEST_ROOM: {
-#ifdef LOG_ON
-		std::cout << "recv lb_packet_request_room from Lobby\n";
-#endif
 		int roomNo;
 		for (int i = 0; i < MAX_ROOM; ++i) { //선형 순회로 빈 방 찾기, 이거 최악의 경우에 안들어갈 수 있음 탐색 개편 필요
 			ATOMIC::g_room_no_lock.lock();
@@ -184,9 +185,6 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 	}
 	case CB_LOGIN: {
 		cb_packet_login* p = reinterpret_cast<cb_packet_login*>(inputPacket);
-#ifdef LOG_ON
-		std::cout << "recv cb_packet_login from ID:" << id << std::endl;
-#endif
 		ATOMIC::g_dbInfo_lock.lock();
 		memcpy(&SR::g_clients[id]->id_str, &p->name, sizeof(char) * MAX_ID_LEN);
 		SR::g_clients[id]->mmr = p->mmr;
@@ -196,27 +194,17 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		break;
 	}
 	case CB_JOIN: {
-#ifdef LOG_ON
-		std::cout << "recv cb_packet_join from ID: "<<id << std::endl;
-#endif
-
 		int roomNo;
 		memcpy(&roomNo, &inputPacket[2]/*inputPacket + 2*/, sizeof(int));
 
 		//if (!SR::g_rooms[roomNo]) break;
 
 		if (SR::g_rooms.find(roomNo) == SR::g_rooms.end()) {
-#ifdef LOG_ON
-			std::cout << "room not found" << std::endl;
-#endif
 			BattleServer::GetInstance()->SendRoomJoinFail(id, ROOM_FAIL_CODE_ROOM_NOT_FOUND);
 			break;
 		}
 
 		if (SR::g_rooms[roomNo]->IsRoomStarted()) {
-#ifdef LOG_ON
-			std::cout << "room already started" << std::endl;
-#endif
 			BattleServer::GetInstance()->SendRoomJoinFail(id, ROOM_FAIL_CODE_ROOM_STARTED);
 			break;
 		}
@@ -235,9 +223,6 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		break;
 	}
 	case CB_ROOM_LEAVE: {
-#ifdef LOG_ON
-		std::cout << "recv cb_packet_room_leave from ID: " << id << std::endl;
-#endif
 		int roomNo = SR::g_clients[id]->room_id;
 		SR::g_rooms[roomNo]->LeaveRoom(id);
 
@@ -276,16 +261,10 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		break;
 	}
 	case CB_START: {
-#ifdef LOG_ON
-		std::cout << id << "start_packet received\n";
-#endif
 		msg.type = CB_START;
 		break;
 	}
 	case CB_READY: {
-#ifdef LOG_ON
-		std::cout << id << "start_packet received\n";
-#endif
 		msg.type = CB_READY;
 		break;
 	}

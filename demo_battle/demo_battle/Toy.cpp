@@ -48,24 +48,30 @@ bool Toy::Update(float elapsedTime) {
 		}
 	}
 
-	XMFLOAT3 force;
-	int vertical{ 0 }; //ws
-	int horizontal{ 0 }; //ad
+	if (m_isShoot) {
+		m_fAttackTime += elapsedTime;
+		if (m_fAttackTime >= ATTACK_DELAY) {
+			m_isShoot = false;
+			m_fAttackTime;
+		}
+	}
+
+	XMFLOAT3 force{};
 
 	XMFLOAT3 look = m_cur->GetLook();
 	XMFLOAT3 up = m_cur->GetUp();
+	XMFLOAT3 right = m_cur->GetRight();
 
-	if (m_keyW) { vertical++; }
-	if (m_keyS) { vertical--; }
-	if (m_keyA) { horizontal++; }
-	if (m_keyD) { horizontal--; }
+	if (m_keyW) { 
+		force = MathHelper::Add(force, look, 1.f);
+	}
+	if (m_keyS) { force = MathHelper::Add(force, look, -1.f); }
+	if (m_keyA) { force = MathHelper::Add(force, right, -1.f); }
+	if (m_keyD) { force = MathHelper::Add(force, right, 1.f); }
 	if (m_keyJump) {
 		force = MathHelper::Add(force, up, 1.f);
 		m_animJump = true;
 		m_keyJump = false; //anim 끝나고 false 처리?
-	}
-	if (vertical != 0 || horizontal != 0) {
-		force = MathHelper::Add(force, look, 1.f);
 	}
 
 	MathHelper::Normalize(force);

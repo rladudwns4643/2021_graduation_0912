@@ -37,5 +37,4 @@ void ThreadHandler::CreateThreads() {
 
 void ThreadHandler::JoinThreads() {
 	for (auto& t : threads) t->JoinThread();
-
 }
