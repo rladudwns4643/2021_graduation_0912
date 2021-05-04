@@ -17,6 +17,14 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	prePlayerInfo.spawnPos = 1;
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
+	prePlayerInfo.playerName = "SecondPlayer";
+	prePlayerInfo.position.x = 0.f;
+	prePlayerInfo.position.y = STD_CUBE_SIZE * 2;
+	prePlayerInfo.position.z = 500.f;
+	prePlayerInfo.rotY = 180.f;
+	prePlayerInfo.spawnPos = 2;
+	map->playerInfoVector.emplace_back(prePlayerInfo);
+
 	//-------------------------
 	string path = "Maps\\" + mapName + ".txt";
 	cout << path << endl;
@@ -293,9 +301,17 @@ void AssertsReference::BuildMaterials()
 	Polygon_Fantasy_Characters_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	Polygon_Fantasy_Characters_Texture_01_A->Roughness = 0.717734;
 
+	//auto PolygonMinis_Texture_01_A = std::make_unique<Material>();
+	//PolygonMinis_Texture_01_A->MatCBIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
+	//PolygonMinis_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
+	//PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	//PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	//PolygonMinis_Texture_01_A->Roughness = 0.717734;
+
 	m_Materials["SkyBox"] = std::move(sky);
 	m_Materials[TEXTURE_STR_Cartoon_CubeWorld_Texture] = std::move(Cartoon_CubeWorld_Texture);
 	m_Materials[TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A] = std::move(Polygon_Fantasy_Characters_Texture_01_A);
+	//m_Materials[TEXTURE_STR_PolygonMinis_Texture_01_A] = std::move(PolygonMinis_Texture_01_A);
 }
 
 void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
