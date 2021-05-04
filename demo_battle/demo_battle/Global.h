@@ -25,6 +25,8 @@ constexpr float GRAVITY = 0.980f;
 //animtime
 constexpr float ANIMTIME_JUMP = 500.f; //юс╫ц
 
+constexpr float ATTACK_DELAY = 500.f;
+
 enum EVENT_TYPE {
 	EV_RECV, EV_SEND,
 	EV_UPDATE, EV_TICK, EV_FLUSH_MSG,

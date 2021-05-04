@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Room.h"
+//#define LOG_ON
 
 Room::Room(int room_no) {
 	Initialize(room_no);
@@ -15,10 +16,10 @@ Room::~Room() {
 	//	delete m_physics;
 	//	m_physics = nullptr;
 	//}
-	if (m_map != nullptr) {
-		delete m_map;
-		m_map = nullptr;
-	}
+	//if (m_map != nullptr) {
+	//	delete m_map;
+	//	m_map = nullptr;
+	//}
 
 	for (auto& p : m_players) {
 		if (p != nullptr) {
@@ -36,7 +37,7 @@ void Room::Initialize(int room_no) {
 	m_isRoundStarted = false;
 	m_leftTime = MAX_LEFT_TIME;
 	//m_physics = new Physics();
-	m_map = new Map();
+	//m_map = new Map();
 	m_lastUpdate = std::chrono::system_clock::now();
 
 	for (auto& p : m_players) p = new Toy();
@@ -57,12 +58,8 @@ void Room::Reset() {
 	m_leftTime = MAX_LEFT_TIME;
 	m_lastUpdate = std::chrono::system_clock::now();
 
-	delete m_map;
-	m_map = new Map();
-
-	for (int i = 0; i < MAX_BULLET_COUNT; ++i) {
-		//
-	}
+	//delete m_map;
+	//m_map = new Map();
 
 	for (auto& p : m_players) {
 		Toy* tmp = new Toy(*p);
@@ -83,7 +80,6 @@ void Room::Update() {
 
 	float elapsedMilliSec{ (m_elapsedSec.count() * 1000.f) };
 
-	//ProcUnUsedThunderbolt();
 	CopyRecvMsgs();
 	message procMsg;
 	while (!m_copiedRecvMsgs.empty()) {
@@ -121,8 +117,8 @@ void Room::Update() {
 				//anim
 			}
 		}
-		WorldUpdate();
-		Collision();
+		//WorldUpdate();
+		//Collision();
 
 		XMFLOAT3 subDistance;
 		for (int i = 0; i < MAX_PLAYER; ++i) {
@@ -149,53 +145,55 @@ void Room::Update() {
 						iter->SetPrePosition(curpos);
 
 						for (int j = 0; j < MAX_PLAYER; ++j) {
-							if (m_players[j]->GetID() != -1) PushPlayerPositionMsg(m_players[j]->GetID(), m_players[i]->GetID(), &ptc_pos);
+							if (m_players[j]->GetID() != -1) {
+								PushPlayerPositionMsg(m_players[j]->GetID(), m_players[i]->GetID(), &ptc_pos);
+							}
 						}
 					}
 				}
 			}
 		}
 
-		for (auto iter = m_map->m_obj_list[Map::NOTFIXED].begin(); iter != m_map->m_obj_list[Map::NOTFIXED].end(); ++iter) {
-			XMFLOAT3 curpos = (*iter)->GetPosition();
-			XMFLOAT3 prepos = (*iter)->GetPrePosition();
+		//for (auto iter = m_map->m_obj_list[Map::NOTFIXED].begin(); iter != m_map->m_obj_list[Map::NOTFIXED].end(); ++iter) {
+		//	XMFLOAT3 curpos = (*iter)->GetPosition();
+		//	XMFLOAT3 prepos = (*iter)->GetPrePosition();
+		//
+		//	subDistance = MathHelper::Subtract(curpos, prepos);
+		//
+		//	if (fabs(subDistance.x) >= 0.1f
+		//		|| fabs(subDistance.y) >= 1.f
+		//		|| fabs(subDistance.z) >= 0.1f) { //움직였다면
+		//		short type_id = (*iter)->m_boundaries->GetObjType();
+		//		int obj_id = (*iter)->GetUniqueID();
+		//		PTC_VECTOR ptc_pos;
+		//
+		//		ptc_pos.x = curpos.x;
+		//		ptc_pos.y = curpos.y;
+		//		ptc_pos.z = curpos.z;
+		//
+		//		for (int i = 0; i < MAX_PLAYER; ++i) {
+		//			if (m_players[i]->GetID() != -1) { //not unset
+		//				PushObjectPositionMsg(m_players[i]->GetID(), type_id, obj_id, &ptc_pos); //클라 obj 움직임이 끝난다면
+		//			}
+		//		}
+		//	}
+		//}
 
-			subDistance = MathHelper::Subtract(curpos, prepos);
-
-			if (fabs(subDistance.x) >= 0.1f
-				|| fabs(subDistance.y) >= 1.f
-				|| fabs(subDistance.z) >= 0.1f) { //움직였다면
-				short type_id = (*iter)->m_boundaries->GetObjType();
-				int obj_id = (*iter)->GetUniqueID();
-				PTC_VECTOR ptc_pos;
-
-				ptc_pos.x = curpos.x;
-				ptc_pos.y = curpos.y;
-				ptc_pos.z = curpos.z;
-
-				for (int i = 0; i < MAX_PLAYER; ++i) {
-					if (m_players[i]->GetID() != -1) { //not unset
-						PushObjectPositionMsg(m_players[i]->GetID(), type_id, obj_id, &ptc_pos); //클라 obj 움직임이 끝난다면
-					}
-				}
-			}
-		}
-
-		for (int i = 0; i < m_bullets.size(); ++i) {
-			if (m_bullets[i].isShoot()) {
-				XMFLOAT3 pos = m_bullets[i].GetPosition();
-				PTC_VECTOR ptc_pos;
-				ptc_pos.x = pos.x;
-				ptc_pos.y = pos.y;
-				ptc_pos.z = pos.z;
-
-				for (int j = 0; i < MAX_PLAYER; ++j) {
-					if (m_players[j]->GetID() != -1) {
-						PushObjectPositionMsg(m_players[j]->GetID(), m_bullets[i].m_boundaries->GetObjType(), m_bullets[i].GetUniqueID(), &ptc_pos);
-					}
-				}
-			}
-		}
+		//for (int i = 0; i < m_bullets.size(); ++i) {
+		//	if (m_bullets[i].isShoot()) {
+		//		XMFLOAT3 pos = m_bullets[i].GetPosition();
+		//		PTC_VECTOR ptc_pos;
+		//		ptc_pos.x = pos.x;
+		//		ptc_pos.y = pos.y;
+		//		ptc_pos.z = pos.z;
+		//
+		//		for (int j = 0; i < MAX_PLAYER; ++j) {
+		//			if (m_players[j]->GetID() != -1) {
+		//				PushObjectPositionMsg(m_players[j]->GetID(), m_bullets[i].m_boundaries->GetObjType(), m_bullets[i].GetUniqueID(), &ptc_pos);
+		//			}
+		//		}
+		//	}
+		//}
 		++m_countFrame;
 	}
 
@@ -214,7 +212,7 @@ void Room::Update() {
 }
 
 void Room::PushMsg(message& msg) {
-	if (msg.id <= 1) return; //
+	if (msg.id <= 0) return; // 0은 lobby
 
 	ATOMIC::g_msg_lock.lock();
 	m_recvMsgQueue.push(msg);
@@ -227,21 +225,21 @@ void Room::Collision() {
 
 void Room::WorldUpdate() {
 	//유동 object update
-	for (auto it = m_map->m_obj_list[Map::NOTFIXED].begin();
-		it != m_map->m_obj_list[Map::NOTFIXED].end();
-		++it) {
-		(*it)->Update(m_elapsedSec.count() * 1000.f, false);
-	}
-
-	for (int i = 0; i < m_bullets.size(); ++i) {
-		if (m_bullets[i].isShoot()) {
-			m_bullets[i].BulletUpdate(m_elapsedSec.count() * 1000.f);
-			if (!m_bullets[i].isBulletActive()) {
-				m_bullets[i].SetShoot(false);
-				
-			}
-		}
-	}
+	//for (auto it = m_map->m_obj_list[Map::NOTFIXED].begin();
+	//	it != m_map->m_obj_list[Map::NOTFIXED].end();
+	//	++it) {
+	//	(*it)->Update(m_elapsedSec.count() * 1000.f, false);
+	//}
+	//
+	//for (int i = 0; i < m_bullets.size(); ++i) {
+	//	if (m_bullets[i].isShoot()) {
+	//		m_bullets[i].BulletUpdate(m_elapsedSec.count() * 1000.f);
+	//		if (!m_bullets[i].isBulletActive()) {
+	//			m_bullets[i].SetShoot(false);
+	//			
+	//		}
+	//	}
+	//}
 }
 
 bool Room::IsEmpty() {
@@ -295,7 +293,6 @@ void Room::AnnounceRoomEnter(int id) {
 		}
 	}
 }
-
 
 void Room::LeaveRoom(int id) {
 	ATOMIC::g_clients_lock.lock();
@@ -456,6 +453,9 @@ void Room::PushSendMsg(int id, void* buff) {
 	sinfo.to = id;
 	memcpy(&sinfo.buff, buff, (BYTE)p[0]);
 
+#ifdef LOG_ON
+	cout << "[ROOM] SEND: [msg: " << (int)p[1] << " id: " << id << "]\n";
+#endif
 	m_sendMsgQueueLock.lock();
 	m_sendMsgQueue.push(sinfo);
 	m_sendMsgQueueLock.unlock();
@@ -466,7 +466,9 @@ void Room::FlushSendMsg() {
 
 	m_sendMsgQueueLock.lock();
 	std::queue<SEND_INFO> q{ m_sendMsgQueue };
-	while (!m_sendMsgQueue.empty()) m_sendMsgQueue.pop(); //여기서 문제가 생길 수 있음, 분리할 필요 있을수도?
+	while (!m_sendMsgQueue.empty()) {
+		m_sendMsgQueue.pop(); //여기서 문제가 생길 수 있음, 분리할 필요 있을수도?
+	}
 	m_sendMsgQueueLock.unlock();
 
 	while (!q.empty()) {
@@ -566,10 +568,10 @@ void Room::PushReadyMsg(int id, bool ready) {
 	p.id = id;
 	p.ready = ready;
 
-	int id{};
+	int tid{};
 	for (const auto& pl : m_players) {
-		id = pl->GetID();
-		if (id != -1) PushSendMsg(id, &p);
+		tid = pl->GetID();
+		if (tid != -1) PushSendMsg(tid, &p);
 	}
 }
 
@@ -580,10 +582,10 @@ void Room::PushUnReadyMsg(int id) {
 	p.id = id;
 	p.ready = false;
 
-	int id{};
+	int tid{};
 	for (const auto& pl : m_players) {
-		id = pl->GetID();
-		if (id != -1) PushSendMsg(id, &p);
+		tid = pl->GetID();
+		if (tid != -1) PushSendMsg(tid, &p);
 	}
 }
 
@@ -601,10 +603,10 @@ void Room::PushNewRoomMnrMsg(int id) {
 	p.type = BC_NEW_ROOM_HOST;
 	p.id = id;
 
-	int id{};
+	int tid{};
 	for (const auto& pl : m_players) {
-		id = pl->GetID();
-		if (id != -1) PushSendMsg(id, &p);
+		tid = pl->GetID();
+		if (tid != -1) PushSendMsg(tid, &p);
 	}
 }
 
@@ -615,10 +617,10 @@ void Room::PushAnimMsg(int id, int animType) {
 	p.id = id;
 	p.anim_type = animType;
 
-	int id{};
+	int tid{};
 	for (const auto& pl : m_players) {
-		id = pl->GetID();
-		if (id != -1) PushSendMsg(id, &p);
+		tid = pl->GetID();
+		if (tid != -1) PushSendMsg(tid, &p);
 	}
 }
 
@@ -626,12 +628,10 @@ void Room::MakeMove(int id) {
 	if (this == nullptr) return;
 	if (!m_isGameStarted) return;
 
-	int id{};
+	int tid{};
 	for (const auto& pl : m_players) {
-		id = pl->GetID();
-		if (id != -1) {
-			pl->SetIsMoveable(true);
-		}
+		tid = pl->GetID();
+		if (tid != -1) pl->SetIsMoveable(true);
 	}
 }
 
@@ -639,22 +639,23 @@ void Room::MakeStop(int id) {
 	if (this == nullptr) return;
 	if (!m_isGameStarted) return;
 
-	int id{};
+	int tid{};
 	for (const auto& pl : m_players) {
-		id = pl->GetID();
-		if (id != -1) {
-			pl->SetIsMoveable(false);
-		}
+		tid = pl->GetID();
+		if (tid != -1) pl->SetIsMoveable(false);
 	}
 }
 
 void Room::CopyRecvMsgs() {
+	//cout << "Copy\n";
 	m_recvMsgQueueLock.lock();
 	m_copiedRecvMsgs = m_recvMsgQueue;
 	m_recvMsgQueueLock.unlock();
 
 	m_recvMsgQueueLock.lock();
-	while (!m_recvMsgQueue.empty()) m_recvMsgQueue.pop();
+	while (!m_recvMsgQueue.empty()) {
+		m_recvMsgQueue.pop();
+	}
 	m_recvMsgQueueLock.unlock();
 }
 
@@ -663,6 +664,9 @@ void Room::ClearCopyMsg() {
 }
 
 void Room::ProcMsg(message msg) {
+#ifdef LOG_ON
+	cout << "[ROOM] Proc: [msg: " << (int)msg.type << " id: " << msg.id << "]\n";
+#endif //LOG_ON
 	switch (msg.type) {
 	case CB_READY: {
 		for (auto& pl : m_players) {

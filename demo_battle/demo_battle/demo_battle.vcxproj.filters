@@ -133,7 +133,7 @@
       <Filter>Code\Thread\ThreadInterface</Filter>
     </ClCompile>
     <ClCompile Include="TimerThread.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Code\Thread\Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

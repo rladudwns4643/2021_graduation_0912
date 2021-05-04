@@ -22,8 +22,7 @@ Dummy::~Dummy()
 {
 }
 
-void Dummy::DoWorker()
-{
+void Dummy::DoWorker() {
 	while (true) {
 		DWORD io_size;
 		unsigned long long ci;
@@ -141,7 +140,11 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		break;
 	}
 	case BC_PLAYER_ROT: break;
-	case BC_PLAYER_POS: break;
+	case BC_PLAYER_POS: {
+		bc_packet_player_pos* p = reinterpret_cast<bc_packet_player_pos*>(packet);
+		cout << p->pos.x << " " << p->pos.y << " " << p->pos.z << endl;
+		break;
+	}
 	case BC_JOIN_OK: {
 		bc_packet_join_ok* p = reinterpret_cast<bc_packet_join_ok*>(packet);
 		SendReadyPacket(id);
@@ -151,11 +154,18 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 	case BC_AUTO_ACCEPT_FAIL: cout << "auto accept fail\n"; break;
 	case BC_ROOM_ENTERED: cout << "room entered\n"; break;
 	case BC_NEW_ROOM_HOST: cout << "new room host\n"; break;
-	case BC_LEFT_TIME: cout << "left time\n"; break;
-	case BC_READY: cout << "ready\n"; break;
+	case BC_LEFT_TIME: {
+		cout << "left time\n"; 
+		SendKeyDownW(id);
+		break;
+	}
+	case BC_READY: {
+		SendGameStartPacket(id);
+		break;
+	}
 	case BC_GAME_START: cout << "start\n"; break;
 	case BC_GAME_START_AVAILABLE: {
-		SendGameStartPacket(id);
+		//SendGameStartPacket(id);
 		break;
 	}
 	case BC_UPDATED_USER_INFO: {
@@ -337,6 +347,16 @@ void Dummy::SendJoinPacket(int id, int room_no) {
 	p.is_roomMnr = dummy[id].is_host;
 	SendPacket(id, &p, ST_BATTLE);
 }
+
+
+void Dummy::SendKeyDownW(int id) {
+	cb_packet_move_key_status p;
+	p.size = sizeof(p);
+	p.type = CB_KEY_W_DOWN;
+
+	SendPacket(id, &p, ST_BATTLE);
+}
+
 
 void Dummy::SendPacket(int id, void* packet, SERVER_TYPE st)
 {

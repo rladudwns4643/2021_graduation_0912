@@ -57,6 +57,10 @@ int main() {
 	std::wcout.imbue(std::locale("korean"));
 
 	CreatePlayerSlot(MAX_CLIENT);
+
+	Boundary* t_b = new Boundary;
+
+	SR::g_boundaries[OBJECT_TYPE_TOY] = t_b;
 	BattleServer* battleserver = BattleServer::GetInstance();
 
 	battleserver->ConncetLobbyServer();

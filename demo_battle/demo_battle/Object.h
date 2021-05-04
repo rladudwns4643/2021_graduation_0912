@@ -82,18 +82,18 @@ public:
 protected:
 	int m_uniqueID;
 
-	XMFLOAT4X4 m_xmf4x4World;
+	XMFLOAT4X4 m_xmf4x4World{};
 	XMFLOAT3 m_PreLook{ 0.f, 0.f, 1.f };
-	XMFLOAT3 m_xmfVel;
-	XMFLOAT3 m_xmfAcc;
+	XMFLOAT3 m_xmfVel{};
+	XMFLOAT3 m_xmfAcc{};
 
-	XMFLOAT3 m_xmf3PrePosition;
+	XMFLOAT3 m_xmf3PrePosition{};
 
-	float m_forceAmountXZ;
-	float m_forceAmountY;
-	float m_mass;
-	float m_fricCoef;
-	float m_maxVel;
+	float m_forceAmountXZ{};
+	float m_forceAmountY{};
+	float m_mass{};
+	float m_fricCoef{};
+	float m_maxVel{};
 
 	bool m_isApplyGravity = true;
 
