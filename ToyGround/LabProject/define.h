@@ -5,7 +5,8 @@
 #define FRAME_BUFFER_HEIGHT 720
 
 // 기준이되는 큐브 크기
-#define STD_CUBE_SIZE 5.0f
+//#define STD_CUBE_SIZE 5.0f
+#define STD_CUBE_SIZE 100.0f
 #define PLAYER_SIZE_X 4.5f
 #define PLAYER_SIZE_Y 9.0f
 #define PLAYER_SIZE_Z 4.5f
