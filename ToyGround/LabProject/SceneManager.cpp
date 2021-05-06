@@ -5,6 +5,12 @@
 #include "LobbyScene.h"
 #include "GameplayScene.h"
 
+void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
+	if (argsCount == 0) {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent);
+	}
+}
+
 SceneManager::SceneManager() : m_CurScene(0)
 {
 }
