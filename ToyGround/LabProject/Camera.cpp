@@ -85,7 +85,7 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 
 
 		XMFLOAT4X4 LookAtMat;
-		XMStoreFloat4x4(&LookAtMat, DirectX::XMMatrixLookToLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&GetLook3f()), XMLoadFloat3(&GetUp3f())));
+		XMStoreFloat4x4(&LookAtMat, DirectX::XMMatrixLookToLH(DirectX::XMLoadFloat3(&mPosition), DirectX::XMLoadFloat3(&GetLook3f()), DirectX::XMLoadFloat3(&GetUp3f())));
 
 		mRight = XMFLOAT3(LookAtMat._11, LookAtMat._21, LookAtMat._31);
 		mUp = XMFLOAT3(LookAtMat._12, LookAtMat._22, LookAtMat._32);
