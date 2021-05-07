@@ -294,24 +294,24 @@ void AssertsReference::BuildMaterials()
 	Cartoon_CubeWorld_Texture->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	Cartoon_CubeWorld_Texture->Roughness = 0.967734f;
 
-	auto Polygon_Fantasy_Characters_Texture_01_A = std::make_unique<Material>();
-	Polygon_Fantasy_Characters_Texture_01_A->MatCBIndex = TEXTURE_INDEX_Polygon_Fantasy_Characters_Texture_01_A;
-	Polygon_Fantasy_Characters_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_Polygon_Fantasy_Characters_Texture_01_A;
-	Polygon_Fantasy_Characters_Texture_01_A->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	Polygon_Fantasy_Characters_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	Polygon_Fantasy_Characters_Texture_01_A->Roughness = 0.717734;
+	//auto Polygon_Fantasy_Characters_Texture_01_A = std::make_unique<Material>();
+	//Polygon_Fantasy_Characters_Texture_01_A->MatCBIndex = TEXTURE_INDEX_Polygon_Fantasy_Characters_Texture_01_A;
+	//Polygon_Fantasy_Characters_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_Polygon_Fantasy_Characters_Texture_01_A;
+	//Polygon_Fantasy_Characters_Texture_01_A->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	//Polygon_Fantasy_Characters_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	//Polygon_Fantasy_Characters_Texture_01_A->Roughness = 0.717734;
 
-	//auto PolygonMinis_Texture_01_A = std::make_unique<Material>();
-	//PolygonMinis_Texture_01_A->MatCBIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
-	//PolygonMinis_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
-	//PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	//PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	//PolygonMinis_Texture_01_A->Roughness = 0.717734;
+	auto PolygonMinis_Texture_01_A = std::make_unique<Material>();
+	PolygonMinis_Texture_01_A->MatCBIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
+	PolygonMinis_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
+	PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	PolygonMinis_Texture_01_A->Roughness = 0.717734;
 
 	m_Materials["SkyBox"] = std::move(sky);
 	m_Materials[TEXTURE_STR_Cartoon_CubeWorld_Texture] = std::move(Cartoon_CubeWorld_Texture);
-	m_Materials[TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A] = std::move(Polygon_Fantasy_Characters_Texture_01_A);
-	//m_Materials[TEXTURE_STR_PolygonMinis_Texture_01_A] = std::move(PolygonMinis_Texture_01_A);
+	//m_Materials[TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A] = std::move(Polygon_Fantasy_Characters_Texture_01_A);
+	m_Materials[TEXTURE_STR_PolygonMinis_Texture_01_A] = std::move(PolygonMinis_Texture_01_A);
 }
 
 void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
