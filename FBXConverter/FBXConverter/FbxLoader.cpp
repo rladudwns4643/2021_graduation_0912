@@ -78,7 +78,7 @@ HRESULT FbxLoader::LoadFBX(
 					GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
 			}
 		}
-
+		
 		mBoneName = outSkinnedData.GetBoneName();
 		// Bone offset, Control point, Vertex, Index Data
 		// And Animation Data
@@ -92,30 +92,83 @@ HRESULT FbxLoader::LoadFBX(
 				if (nAttributeType == FbxNodeAttribute::eMesh)
 				{
 					FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
-
+		
 					GetControlPoints(pFbxChildNode);
-
+		
 					// To access the bone index directly
 					mBoneOffsets.resize(mBoneHierarchy.size());
-
+		
 					// Get Animation Clip
 					GetAnimation(pFbxScene, pFbxChildNode, outSkinnedData, clipName, false);
 					/*std::string outAnimationName;
 					GetAnimation(pFbxScene, pFbxChildNode, outAnimationName, clipName);
 					outSkinnedData.SetAnimationName(clipName);*/
 					//outSkinnedData.SetAnimationName(outAnimationName);
-
+		
 					// Get Vertices and indices info
 					GetVerticesAndIndice(pMesh, outVertexVector, outIndexVector, &outSkinnedData);
-
+		
 					GetMaterials(pFbxChildNode, outMaterial);
-
+		
 					break;
 				}
 			}
 		}
-
+		
 		outSkinnedData.Set(mBoneHierarchy, mBoneOffsets, &mAnimations);
+
+		// 다른에셋 편집
+		//// Skeleton Bone Hierarchy Index 
+		//std::cout << "루트 자식수: " << pFbxRootNode->GetChildCount() << std::endl;
+		//for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
+		//{
+		//	FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
+		//	FbxNodeAttribute* pfbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
+		//	if (pfbxNodeAttribute)
+		//	{
+		//		FbxNodeAttribute::EType nAttributeType = pfbxNodeAttribute->GetAttributeType();
+		//		if (nAttributeType == FbxNodeAttribute::eSkeleton)
+		//			GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
+		//	}
+		//}
+		//
+		//mBoneName = outSkinnedData.GetBoneName();
+		//// Bone offset, Control point, Vertex, Index Data
+		//// And Animation Data
+		//for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
+		//{
+		//	FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
+		//	FbxNodeAttribute* pfbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
+		//	if (pfbxNodeAttribute)
+		//	{
+		//		FbxNodeAttribute::EType nAttributeType = pfbxNodeAttribute->GetAttributeType();
+		//		if (nAttributeType == FbxNodeAttribute::eMesh)
+		//		{
+		//			FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
+		//
+		//			GetControlPoints(pFbxChildNode);
+		//
+		//			// To access the bone index directly
+		//			mBoneOffsets.resize(mBoneHierarchy.size());
+		//
+		//			// Get Animation Clip
+		//			GetAnimation(pFbxScene, pFbxChildNode, outSkinnedData, clipName, false);
+		//			/*std::string outAnimationName;
+		//			GetAnimation(pFbxScene, pFbxChildNode, outAnimationName, clipName);
+		//			outSkinnedData.SetAnimationName(clipName);*/
+		//			//outSkinnedData.SetAnimationName(outAnimationName);
+		//
+		//			// Get Vertices and indices info
+		//			GetVerticesAndIndice(pMesh, outVertexVector, outIndexVector, &outSkinnedData);
+		//
+		//			GetMaterials(pFbxChildNode, outMaterial);
+		//
+		//			break;
+		//		}
+		//	}
+		//}
+		//
+		//outSkinnedData.Set(mBoneHierarchy, mBoneOffsets, &mAnimations);
 	}
 
 	// Export cmesh / skeleton / anim
