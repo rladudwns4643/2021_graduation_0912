@@ -108,11 +108,11 @@ void GameplayScene::Render()
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 
-	//// Props
-	//for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
-	//{
-	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
-	//}
+	// Props
+	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
+	{
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+	}
 
 	// Charater
 	for (auto& p : m_Users)
