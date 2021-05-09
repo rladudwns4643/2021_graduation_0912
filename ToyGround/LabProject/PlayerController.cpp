@@ -3,7 +3,6 @@
 #include "InputHandler.h"
 #include "Camera.h"
 #include "Timer.h"
-#include "Network.h"
 
 #include "Character.h"
 #include "SkinnedModelInstance.h"
@@ -148,22 +147,18 @@ void PlayerController::OnKeyPressed()
 	case CameraType::eThird:
 		if (InputHandler::IsKeyDown('W'))
 		{
-			Network::GetApp()->SendKeyDownW(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 		}
 		if (InputHandler::IsKeyDown('S'))
 		{
-			Network::GetApp()->SendKeyDownS(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
 		}
 		if (InputHandler::IsKeyDown('A'))
 		{
-			Network::GetApp()->SendKeyDownA(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
 		}
 		if (InputHandler::IsKeyDown('D'))
 		{
-			Network::GetApp()->SendKeyDownD(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
 		}
 		if (InputHandler::IsKeyDown(VK_SPACE))
@@ -189,22 +184,18 @@ void PlayerController::OnKeyReleased()
 
 		if (InputHandler::IsKeyUp('W'))
 		{
-			Network::GetApp()->SendKeyUpW(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
 		}
 		if (InputHandler::IsKeyUp('S'))
 		{
-			Network::GetApp()->SendKeyUpS(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
 		}
 		if (InputHandler::IsKeyUp('A'))
 		{
-			Network::GetApp()->SendKeyUpA(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
 		}
 		if (InputHandler::IsKeyUp('D'))
 		{
-			Network::GetApp()->SendKeyUpD(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
 		}
 		if (InputHandler::IsKeyUp(VK_SPACE)) {}

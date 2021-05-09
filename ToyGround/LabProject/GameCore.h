@@ -1,6 +1,5 @@
 #pragma once
 #include "Singleton.h"
-#include "Network.h"
 
 class IGameApp;
 class GraphicsRenderer;
