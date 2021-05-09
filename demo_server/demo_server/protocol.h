@@ -1,11 +1,13 @@
 #pragma once
-#include "../../demo_battle/demo_battle/MathHelper.h"
+//#include "../../demo_battle/demo_battle/MathHelper.h"
 //------------------------------------------------------------------
 #define LOBBY_SERVER_PORT	7237
 #define BATTLE_SERVER_PORT	7238
 
-//#define LOBBY_SERVER_IP_PUBLIC "192.168.0.1"
-//#define BATTLE_SERVER_IP_PUBLIC "192.168.0.1"
+//동석
+//#define LOBBY_SERVER_IP_PUBLIC "182.229.10.168"
+//#define BATTLE_SERVER_IP_PUBLIC "182.229.10.168"
+//영준
 #define LOBBY_SERVER_IP_PUBLIC "121.170.59.45"
 #define BATTLE_SERVER_IP_PUBLIC "121.170.59.45"
 //------------------------------------------------------------------
