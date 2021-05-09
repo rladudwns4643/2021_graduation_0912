@@ -19,15 +19,12 @@
     <Filter Include="network">
       <UniqueIdentifier>{ade07e57-30f1-40f1-8556-d77efd82d39d}</UniqueIdentifier>
     </Filter>
-<<<<<<< HEAD
     <Filter Include="network\netCore">
       <UniqueIdentifier>{b0c2564e-dd7a-45e0-b255-b7cdbd5000a3}</UniqueIdentifier>
     </Filter>
     <Filter Include="network\battleClient">
       <UniqueIdentifier>{c9fbe54b-5110-4ec8-b24b-c38ca7a058aa}</UniqueIdentifier>
     </Filter>
-=======
->>>>>>> parent of 10430d4... Revert "Connect Client - Sever"
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -162,15 +159,12 @@
     <ClInclude Include="Network.h">
       <Filter>network</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="netCore.h">
       <Filter>network\netCore</Filter>
     </ClInclude>
     <ClInclude Include="BattleClient.h">
       <Filter>network\battleClient</Filter>
     </ClInclude>
-=======
->>>>>>> parent of 10430d4... Revert "Connect Client - Sever"
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -294,15 +288,12 @@
     <ClCompile Include="Network.cpp">
       <Filter>network</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="netCore.cpp">
       <Filter>network\netCore</Filter>
     </ClCompile>
     <ClCompile Include="BattleClient.cpp">
       <Filter>network\battleClient</Filter>
     </ClCompile>
-=======
->>>>>>> parent of 10430d4... Revert "Connect Client - Sever"
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Common.hlsl" />

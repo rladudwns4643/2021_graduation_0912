@@ -4,7 +4,6 @@
 #include "ApplicationContext.h"
 #include "AssertsReference.h"
 #include "CommandContext.h"
-#include "Network.h"
 
 Character::Character(std::string type, std::string id) :
 	GameObject(type, id),
@@ -146,8 +145,6 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 	XMVECTOR direction = {};
 	DWORD MoveBit = 3;
 	DWORD strafeBit = 12;
-
-	
 
 	if (dwDirection)
 	{
@@ -300,8 +297,7 @@ void Character::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 {
 	XMFLOAT3 pos = MathHelper::Add(GetPosition(), xmf3Shift);
-
-	SetPosition(Network::GetApp()->GetPos());
+	SetPosition(pos.x, pos.y, pos.z);
 	if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
 }
 

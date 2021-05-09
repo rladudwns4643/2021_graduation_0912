@@ -98,10 +98,7 @@ void Network::ProcessPacket(int id, unsigned char packet[]) {
 	case LC_LOGIN_OK: {
 		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet);
 		m_client.id = p->id;
-<<<<<<< HEAD
 		cout << "!!!" << m_client.id << endl;
-=======
->>>>>>> parent of 10430d4... Revert "Connect Client - Sever"
 		m_client.loginok = true;
 		SendRequestUserInfo(m_client.id);
 		break;

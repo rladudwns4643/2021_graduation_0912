@@ -6,7 +6,6 @@
 #include "CommandContext.h"
 #include "TOY_GROUND.h"
 #include "InputHandler.h"
-#include "Network.h"
 
 using namespace Core;
 
@@ -14,8 +13,6 @@ namespace Core
 {
 	GameCore* g_Core = nullptr;
 	GameTimer* g_GameTimer = nullptr;
-	Network* g_network = nullptr;
-
 
 	HINSTANCE			g_hAppInst = nullptr; // application instance handle
 	HWND				g_hMainWnd = nullptr; // main window handle
@@ -46,10 +43,6 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 
 	g_Core = GameCore::GetApp();
 	g_GameTimer = GameTimer::GetApp();
-	g_network = Network::GetApp();
-
-	std::thread connect_thread(&Network::ConnectLobbyServer, g_network);
-	std::thread worker_thread(&Network::DoWorker, g_network);
 
 	MSG msg = {};
 
@@ -70,8 +63,6 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 		}
 	}
 
-	connect_thread.join();
-	worker_thread.join();
 	TerminateApplication(app);
 }
 
@@ -83,7 +74,6 @@ void Core::TerminateApplication(IGameApp& game)
 	// Context Release
 	GameCore::DestroyApp();
 	GameTimer::DestroyApp();
-	delete g_network;
 }
 
 void Core::CalculateFrameStats()
