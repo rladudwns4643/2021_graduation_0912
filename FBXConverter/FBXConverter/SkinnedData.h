@@ -44,7 +44,7 @@ struct BoneAnimation
 	float GetStartTime()const;
 	float GetEndTime()const;
 
-	void Interpolate(float t, DirectX::XMFLOAT4X4 & M) const;
+	void Interpolate(float t, DirectX::XMFLOAT4X4& M) const;
 
 	std::vector<Keyframe> Keyframes;
 };

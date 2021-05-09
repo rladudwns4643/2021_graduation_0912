@@ -4,6 +4,8 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일
+#include <winsock.h> // 필요 없을듯
+#include <WinSock2.h>
 #include <WindowsX.h>
 #include <Windows.h>
 #include <shellapi.h>
@@ -56,8 +58,8 @@
 #include <dxgi1_4.h>
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>
-#include <DirectXPackedVector.h>
-#include <DirectXColors.h>
+#include <DirectXPackedVector.h>
+#include <DirectXColors.h>
 #include <DirectXCollision.h>
 
 #pragma comment(lib, "d3dcompiler.lib")
@@ -73,9 +75,12 @@
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "d3d11.lib")
 
+//network
+#pragma comment (lib, "ws2_32.lib")
+
 
 using namespace std;
-using namespace DirectX;
+//using namespace DirectX;
 using Microsoft::WRL::ComPtr;
 using namespace DirectX::PackedVector;
 

@@ -5,6 +5,8 @@ class Scene;
 class SceneManager : public TemplateSingleton<SceneManager>
 {
 private:
+	friend class Service;
+
 	template<class NewScene>
 	void CreateScene(SceneType sceneType, std::string sceneName)
 	{
@@ -13,6 +15,9 @@ private:
 		scene->Initialize();
 		m_Scenes[static_cast<int>(sceneType)] = scene;
 	}
+
+	void SendEventArgs(SceneType st, int sEvent, int argsCount, ...);
+	XMFLOAT3 arg_look_callback = { 0.f, 1.f, 0.f };
 
 public:
 	explicit SceneManager();

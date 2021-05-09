@@ -190,7 +190,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		SR::g_clients[id]->mmr = p->mmr;
 		ATOMIC::g_dbInfo_lock.unlock();
 
-		BattleServer::GetInstance()->SendAutoAccessOKPacket(id);
+		BattleServer::GetInstance()->SendAccessOKPacket(id);
 		break;
 	}
 	case CB_JOIN: {
