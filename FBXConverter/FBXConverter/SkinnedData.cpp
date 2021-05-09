@@ -160,14 +160,12 @@ void SkinnedData::SetAnimation(AnimationClip inAnimation, std::string ClipName)
 {
 	mAnimations[ClipName] = inAnimation;
 }
-void SkinnedData::SetAnimationName(const std::string& clipName)
+void SkinnedData::SetAnimationName(const std::string & clipName)
 {
 	mAnimationName.push_back(clipName);
 }
 void SkinnedData::SetBoneName(std::string boneName)
-{
-	mBoneName.push_back(boneName);
-}
+{ mBoneName.push_back(boneName); }
 void SkinnedData::SetSubmeshOffset(int num)
 {
 	mSubmeshOffset.push_back(num);

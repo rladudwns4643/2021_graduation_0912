@@ -1,17 +1,20 @@
 #pragma once
-#include "../../demo_battle/demo_battle/MathHelper.h"
+//#include "../../demo_battle/demo_battle/MathHelper.h"
 //------------------------------------------------------------------
 #define LOBBY_SERVER_PORT	7237
 #define BATTLE_SERVER_PORT	7238
 
-//#define LOBBY_SERVER_IP_PUBLIC "192.168.0.1"
-//#define BATTLE_SERVER_IP_PUBLIC "192.168.0.1"
+//동석
+//#define LOBBY_SERVER_IP_PUBLIC "182.229.10.168"
+//#define BATTLE_SERVER_IP_PUBLIC "182.229.10.168"
+//영준
 #define LOBBY_SERVER_IP_PUBLIC "121.170.59.45"
 #define BATTLE_SERVER_IP_PUBLIC "121.170.59.45"
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
-#define MAX_ID_LEN		10
+#define MAX_ID_LEN		50
+#define MAX_STR_LEN		50
 //------------------------------------------------------------------
 
 
@@ -50,8 +53,9 @@
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
-#define MAX_ROOM_COUNT 1
+#define MAX_ROOM_COUNT 5
 //------------------------------------------------------------------
+
 
 //-------------------------------L->C-------------------------------
 //6
@@ -60,7 +64,7 @@
 #define LC_SIGNUP_OK				32
 #define LC_SIGNUP_FAIL				33
 #define LC_USERINFO					34
-#define LC_CANCEL_MATCH_OK			35
+#define LC_CANCEL_AUTOMATCH_SUCCESS 35
 #define LC_MATCHSTART				36
 
 #pragma pack(push, 1)
@@ -94,7 +98,7 @@ struct lc_pakcet_signup_fail {
 	BYTE type;
 };
 
-struct lc_packet_cancel_match_ok {
+struct lc_packet_cancel_automatch_success {
 	BYTE size;
 	BYTE type;
 };
@@ -121,12 +125,11 @@ struct lc_packet_startMatch {
 #define CL_CANCEL_AUTOMATCH			25
 
 #pragma pack(push, 1)
-struct cl_packet_login {
+struct cl_pakcet_login {
 	BYTE size;
 	BYTE type;
 
 	char id[MAX_ID_LEN];
-	char pw[MAX_ID_LEN];
 };
 
 struct cl_pakcet_signup {
@@ -170,8 +173,8 @@ struct cl_packet_cancel_automatch {
 
 //-------------------------------B->C-------------------------------
 //22 + (bb, START_INFO, VECTOR, ROOM)
-#define BC_ACCEPT_OK			1
-#define BC_ACCEPT_FAIL			2
+#define BC_AUTO_ACCEPT_OK		1
+#define BC_AUTO_ACCEPT_FAIL		2
 #define BC_JOIN_OK				3
 #define BC_JOIN_FAIL			4
 
@@ -291,8 +294,7 @@ struct bc_packet_game_start {
 	BYTE size;
 	BYTE type;
 
-	PTC_START_INFO start_info[2];
-	char map_type;	//unuse 210506(map 추가시 추가)
+	PTC_START_INFO start_info;
 };
 
 struct bc_packet_gamestart_available {

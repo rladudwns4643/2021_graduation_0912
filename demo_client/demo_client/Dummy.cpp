@@ -119,7 +119,7 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		SendAutoMatchPacket(id);
 		break;
 	}
-	case BC_ACCEPT_OK: {
+	case BC_AUTO_ACCEPT_OK: {
 		bc_packet_accept_ok* p = reinterpret_cast<bc_packet_accept_ok*>(packet);
 		dummy[id].battle_id = p->id;
 		dummy[id].battle_connect = true;
@@ -151,7 +151,7 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		break;
 	}
 	case BC_JOIN_FAIL: cout << "join fail\n"; break;
-	case BC_ACCEPT_FAIL: cout << "auto accept fail\n"; break;
+	case BC_AUTO_ACCEPT_FAIL: cout << "auto accept fail\n"; break;
 	case BC_ROOM_ENTERED: cout << "room entered\n"; break;
 	case BC_NEW_ROOM_HOST: cout << "new room host\n"; break;
 	case BC_LEFT_TIME: {

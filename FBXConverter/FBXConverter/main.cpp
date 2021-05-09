@@ -171,6 +171,6 @@ void MergeAnimationsFbx(std::string findPath, std::string dir)
 			ostreambuf_iterator<char>(fileA));
 	}
 
-
+	
 
 }

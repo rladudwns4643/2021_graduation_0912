@@ -6,7 +6,6 @@
 #include "CommandContext.h"
 #include "ApplicationContext.h"
 #include "InputHandler.h"
-#include "Network.h"
 
 #include "GameObject.h"
 #include "Character.h"
@@ -47,7 +46,7 @@ bool GameplayScene::Enter()
 	// Props Setting
 	m_PlayerID = 0;
 	m_MapName = MAP_STR_GAME_MAP;
-	AppContext->DisplayProps(m_MapName, true, 20);
+	AppContext->DisplayProps(m_MapName);
 
 	//m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_BAIRD, CHARACTER_BAIRD);
@@ -55,16 +54,8 @@ bool GameplayScene::Enter()
 
 	///---
 	// Player type, id 등등 세팅
-	//if (Network::GetApp()->m_client.battle_id == 1)
-	//{
-		m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
-		m_Users[m_PlayerID]->SetController();
-	//}
-	//else
-	//{
-	//	m_Users[1]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
-		//m_Users[1]->SetController();
-	//}
+	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
+	m_Users[m_PlayerID]->SetController();
 	AppContext->DisplayCharacter(m_MapName, m_Users[m_PlayerID], 1);
 	AppContext->DisplayCharacter(m_MapName, m_Users[1], 2);
 
@@ -117,11 +108,11 @@ void GameplayScene::Render()
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 
-	// Props
-	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
-	{
-		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
-	}
+	//// Props
+	//for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
+	//{
+	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+	//}
 
 	// Charater
 	for (auto& p : m_Users)

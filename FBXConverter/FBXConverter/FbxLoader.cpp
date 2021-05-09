@@ -2,9 +2,9 @@
 #include <vector>
 #include <winerror.h>
 #include <assert.h>
-// #include "FrameResource.h"
 #include "vertexHash.h"
 #include "FbxLoader.h"
+#include "Common.h"
 
 using namespace fbxsdk;
 using namespace DirectX;
@@ -15,10 +15,8 @@ FbxLoader::FbxLoader()
 
 FbxLoader::~FbxLoader()
 {
-
+	
 }
-
-FbxManager* gFbxManager = nullptr;
 
 HRESULT FbxLoader::LoadFBX(
 	std::vector<CharacterVertex>& outVertexVector,
@@ -34,147 +32,109 @@ HRESULT FbxLoader::LoadFBX(
 		LoadSkeleton(outSkinnedData, clipName, fileName))
 		return S_OK;
 
-	if (gFbxManager == nullptr)
-	{
-		gFbxManager = FbxManager::Create();
+	FbxManager* gFbxManager = nullptr;
 
-		FbxIOSettings* pIOsettings = FbxIOSettings::Create(gFbxManager, IOSROOT);
-		gFbxManager->SetIOSettings(pIOsettings);
-	}
+	InitializeSdkObjects(gFbxManager);
 
-	FbxImporter* pImporter = FbxImporter::Create(gFbxManager, "");
 	std::string fbxFileName = fileName + clipName + ".fbx";
-	bool bSuccess = pImporter->Initialize(fbxFileName.c_str(), -1, gFbxManager->GetIOSettings());
-	if (!bSuccess) return E_FAIL;
 
-	FbxScene* pFbxScene = FbxScene::Create(gFbxManager, "");
-	bSuccess = pImporter->Import(pFbxScene);
-	if (!bSuccess) return E_FAIL;
+	FbxScene* pFbxScene = FbxScene::Create(gFbxManager, fbxFileName.c_str());
+	bool bResult = LoadScene(gFbxManager, pFbxScene, fbxFileName.c_str());
 
-	pImporter->Destroy();
+	// ÁÂÇ¥°è ¹Ù²ãÁÜ(Direct3D ÁÂÇ¥°è·Î)
+	//fbxsdk::FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
+	//FbxAxisSystem fbxDirectXAxisSystem(FbxAxisSystem::eDirectX);
+	//if (sceneAxisSystem != fbxDirectXAxisSystem) fbxDirectXAxisSystem.ConvertScene(pFbxScene);
+	
+	//fbxsdk::FbxAxisSystem::MayaYUp.ConvertScene(pFbxScene);
 
-	fbxsdk::FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
-	fbxsdk::FbxAxisSystem::MayaYUp.ConvertScene(pFbxScene);
+	//FbxSystemUnit fbxSceneSystemUnit = pfbxModelScene->GetGlobalSettings().GetSystemUnit();
+	//if (fbxSceneSystemUnit.GetScaleFactor() != 1.0) FbxSystemUnit::cm.ConvertScene(pfbxModelScene);
 
 	// Convert quad to triangle
 	FbxGeometryConverter geometryConverter(gFbxManager);
 	geometryConverter.Triangulate(pFbxScene, true);
 
+	FbxSystemUnit fbxSceneSystemUnit = pFbxScene->GetGlobalSettings().GetSystemUnit();
+	if (fbxSceneSystemUnit.GetScaleFactor() != 1.0) FbxSystemUnit::cm.ConvertScene(pFbxScene);
+
 	// Start to RootNode
 	FbxNode* pFbxRootNode = pFbxScene->GetRootNode();
 	if (pFbxRootNode)
 	{
-		// Skeleton Bone Hierarchy Index 
-		std::cout << "·çÆ® ÀÚ½Ä¼ö: " << pFbxRootNode->GetChildCount() << std::endl;
-		FbxNode* pFbxRRootNode = pFbxRootNode->GetChild(0);
-		for (int i = 0; i < pFbxRRootNode->GetChildCount(); i++)
+		// Skeleton Bone Hierarchy Index
+		//std::cout << "·çÆ® ÀÚ½Ä¼ö: " << pFbxRootNode->GetChildCount() << std::endl;
+		for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
 		{
-			FbxNode* pFbxChildNode = pFbxRRootNode->GetChild(i);
-			FbxNodeAttribute* pfbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
-			if (pfbxNodeAttribute)
+			FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
+		
+			FbxNodeAttribute* pFbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
+			if (pFbxNodeAttribute)
 			{
-				FbxNodeAttribute::EType nAttributeType = pfbxNodeAttribute->GetAttributeType();
-				if (nAttributeType == FbxNodeAttribute::eSkeleton)
-					GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
+				FbxNodeAttribute::EType AttributeType = pFbxNodeAttribute->GetAttributeType();
+		
+				if (AttributeType == FbxNodeAttribute::eSkeleton) GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
 			}
 		}
-		
-		mBoneName = outSkinnedData.GetBoneName();
+
+		//for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
+		//{
+		//	FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
+		//
+		//	FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
+		//	FbxNodeAttribute::EType AttributeType = pMesh->GetAttributeType();
+		//	if (!pMesh || !AttributeType) { continue; }
+		//
+		//	switch (AttributeType)
+		//	{
+		//	case FbxNodeAttribute::eSkeleton:
+		//		GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
+		//		break;
+		//	}
+		//}
+
 		// Bone offset, Control point, Vertex, Index Data
 		// And Animation Data
-		for (int i = 0; i < pFbxRRootNode->GetChildCount(); i++)
+		for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
 		{
-			FbxNode* pFbxChildNode = pFbxRRootNode->GetChild(i);
-			FbxNodeAttribute* pfbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
-			if (pfbxNodeAttribute)
+			FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
+			FbxNodeAttribute* pFbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
+			if (pFbxNodeAttribute)
 			{
-				FbxNodeAttribute::EType nAttributeType = pfbxNodeAttribute->GetAttributeType();
-				if (nAttributeType == FbxNodeAttribute::eMesh)
+				FbxNodeAttribute::EType AttributeType = pFbxNodeAttribute->GetAttributeType();
+				if (AttributeType == FbxNodeAttribute::eMesh)
 				{
-					FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
-		
 					GetControlPoints(pFbxChildNode);
-		
+
 					// To access the bone index directly
 					mBoneOffsets.resize(mBoneHierarchy.size());
-		
+
 					// Get Animation Clip
 					GetAnimation(pFbxScene, pFbxChildNode, outSkinnedData, clipName, false);
 					/*std::string outAnimationName;
 					GetAnimation(pFbxScene, pFbxChildNode, outAnimationName, clipName);
 					outSkinnedData.SetAnimationName(clipName);*/
 					//outSkinnedData.SetAnimationName(outAnimationName);
-		
+
 					// Get Vertices and indices info
-					GetVerticesAndIndice(pMesh, outVertexVector, outIndexVector, &outSkinnedData);
-		
+					GetVerticesAndIndice(pFbxChildNode->GetMesh(), outVertexVector, outIndexVector, &outSkinnedData);
+
 					GetMaterials(pFbxChildNode, outMaterial);
-		
+
 					break;
 				}
 			}
 		}
 		
 		outSkinnedData.Set(mBoneHierarchy, mBoneOffsets, &mAnimations);
-
-		// ´Ù¸¥¿¡¼Â ÆíÁý
-		//// Skeleton Bone Hierarchy Index 
-		//std::cout << "·çÆ® ÀÚ½Ä¼ö: " << pFbxRootNode->GetChildCount() << std::endl;
-		//for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
-		//{
-		//	FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
-		//	FbxNodeAttribute* pfbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
-		//	if (pfbxNodeAttribute)
-		//	{
-		//		FbxNodeAttribute::EType nAttributeType = pfbxNodeAttribute->GetAttributeType();
-		//		if (nAttributeType == FbxNodeAttribute::eSkeleton)
-		//			GetSkeletonHierarchy(pFbxChildNode, outSkinnedData, 0, -1);
-		//	}
-		//}
-		//
-		//mBoneName = outSkinnedData.GetBoneName();
-		//// Bone offset, Control point, Vertex, Index Data
-		//// And Animation Data
-		//for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
-		//{
-		//	FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
-		//	FbxNodeAttribute* pfbxNodeAttribute = pFbxChildNode->GetNodeAttribute();
-		//	if (pfbxNodeAttribute)
-		//	{
-		//		FbxNodeAttribute::EType nAttributeType = pfbxNodeAttribute->GetAttributeType();
-		//		if (nAttributeType == FbxNodeAttribute::eMesh)
-		//		{
-		//			FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
-		//
-		//			GetControlPoints(pFbxChildNode);
-		//
-		//			// To access the bone index directly
-		//			mBoneOffsets.resize(mBoneHierarchy.size());
-		//
-		//			// Get Animation Clip
-		//			GetAnimation(pFbxScene, pFbxChildNode, outSkinnedData, clipName, false);
-		//			/*std::string outAnimationName;
-		//			GetAnimation(pFbxScene, pFbxChildNode, outAnimationName, clipName);
-		//			outSkinnedData.SetAnimationName(clipName);*/
-		//			//outSkinnedData.SetAnimationName(outAnimationName);
-		//
-		//			// Get Vertices and indices info
-		//			GetVerticesAndIndice(pMesh, outVertexVector, outIndexVector, &outSkinnedData);
-		//
-		//			GetMaterials(pFbxChildNode, outMaterial);
-		//
-		//			break;
-		//		}
-		//	}
-		//}
-		//
-		//outSkinnedData.Set(mBoneHierarchy, mBoneOffsets, &mAnimations);
 	}
 
 	// Export cmesh / skeleton / anim
 	ExportMesh(outVertexVector, outIndexVector, outMaterial, fileName + clipName);
 	ExportSkeleton(outSkinnedData, clipName, fileName);
 	ExportAnimation(mAnimations[clipName], fileName, clipName);
+
+	DestroySdkObjects(gFbxManager, bResult);
 
 	return S_OK;
 }
@@ -189,29 +149,22 @@ HRESULT FbxLoader::LoadFBX(
 	if (LoadMesh(fileName, outVertexVector, outIndexVector, &outMaterial)) return S_OK;
 	if (LoadMesh(fileName, outVertexVector, outIndexVector)) return S_OK;
 
-	if (gFbxManager == nullptr)
-	{
-		gFbxManager = FbxManager::Create();
-
-		FbxIOSettings* pIOsettings = FbxIOSettings::Create(gFbxManager, IOSROOT);
-		gFbxManager->SetIOSettings(pIOsettings);
-	}
-
-	FbxImporter* pImporter = FbxImporter::Create(gFbxManager, "");
 	std::string fbxFileName = fileName + ".fbx";
-	bool bSuccess = pImporter->Initialize(fbxFileName.c_str(), -1, gFbxManager->GetIOSettings());
-	if (!bSuccess) return E_FAIL;
 
-	FbxScene* pFbxScene = FbxScene::Create(gFbxManager, "");
-	bSuccess = pImporter->Import(pFbxScene);
-	if (!bSuccess) return E_FAIL;
+	FbxManager* gFbxManager = nullptr;
 
-	pImporter->Destroy();
+	InitializeSdkObjects(gFbxManager);
 
+	FbxScene* pFbxScene = FbxScene::Create(gFbxManager, fbxFileName.c_str());
+	bool bResult = LoadScene(gFbxManager, pFbxScene, fbxFileName.c_str());
+
+	// ÁÂÇ¥°è ¹Ù²ãÁÜ(Direct3D ÁÂÇ¥°è·Î)
 	fbxsdk::FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
-	fbxsdk::FbxAxisSystem::MayaYUp.ConvertScene(pFbxScene); // Delete?
+	FbxAxisSystem fbxDirectXAxisSystem(FbxAxisSystem::eDirectX);
+	if (sceneAxisSystem != fbxDirectXAxisSystem) fbxDirectXAxisSystem.ConvertScene(pFbxScene);
+	//fbxsdk::FbxAxisSystem::MayaYUp.ConvertScene(pFbxScene);
 
-													// Convert quad to triangle
+	// Convert quad to triangle
 	FbxGeometryConverter geometryConverter(gFbxManager);
 	geometryConverter.Triangulate(pFbxScene, true);
 
@@ -220,7 +173,6 @@ HRESULT FbxLoader::LoadFBX(
 	if (pFbxRootNode)
 	{
 		// Bone offset, Control point, Vertex, Index Data
-		int ii = pFbxRootNode->GetChildCount();
 		for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
 		{
 			FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
@@ -245,6 +197,8 @@ HRESULT FbxLoader::LoadFBX(
 
 	ExportMesh(outVertexVector, outIndexVector, outMaterial, fileName);
 
+	DestroySdkObjects(gFbxManager, bResult);
+
 	return S_OK;
 }
 
@@ -258,29 +212,20 @@ HRESULT FbxLoader::LoadFBX(
 
 	mBoneName = outSkinnedData.GetBoneName();
 
-	if (gFbxManager == nullptr)
-	{
-		gFbxManager = FbxManager::Create();
-
-		FbxIOSettings* pIOsettings = FbxIOSettings::Create(gFbxManager, IOSROOT);
-		gFbxManager->SetIOSettings(pIOsettings);
-	}
-
-	FbxImporter* pImporter = FbxImporter::Create(gFbxManager, "");
 	std::string fbxFileName = fileName + clipName + ".fbx";
 
-	bool bSuccess = pImporter->Initialize(fbxFileName.c_str(), -1, gFbxManager->GetIOSettings());
-	if (!bSuccess) return E_FAIL;
+	FbxManager* gFbxManager = nullptr;
 
-	FbxScene* pFbxScene = FbxScene::Create(gFbxManager, "");
-	bSuccess = pImporter->Import(pFbxScene);
-	if (!bSuccess) return E_FAIL;
+	InitializeSdkObjects(gFbxManager);
 
-	pImporter->Destroy();
+	FbxScene* pFbxScene = FbxScene::Create(gFbxManager, fbxFileName.c_str());
+	bool bResult = LoadScene(gFbxManager, pFbxScene, fbxFileName.c_str());
 
+	// ÁÂÇ¥°è ¹Ù²ãÁÜ(Direct3D ÁÂÇ¥°è·Î)
 	fbxsdk::FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
-	fbxsdk::FbxAxisSystem::DirectX.ConvertScene(pFbxScene); // Delete?
-
+	FbxAxisSystem fbxDirectXAxisSystem(FbxAxisSystem::eDirectX);
+	if (sceneAxisSystem != fbxDirectXAxisSystem) fbxDirectXAxisSystem.ConvertScene(pFbxScene);
+	//fbxsdk::FbxAxisSystem::MayaYUp.ConvertScene(pFbxScene);
 
 	// Convert quad to triangle
 	FbxGeometryConverter geometryConverter(gFbxManager);
@@ -308,12 +253,15 @@ HRESULT FbxLoader::LoadFBX(
 	}
 
 	ExportAnimation(outSkinnedData.GetAnimation(clipName), fileName, clipName);
+
+	DestroySdkObjects(gFbxManager, bResult);
+
 	return S_OK;
 }
 
 bool FbxLoader::LoadSkeleton(
-	SkinnedData& outSkinnedData,
-	const std::string& clipName,
+	SkinnedData& outSkinnedData, 
+	const std::string& clipName, 
 	std::string fileName)
 {
 	fileName = fileName + clipName + ".skeleton";
@@ -339,7 +287,7 @@ bool FbxLoader::LoadSkeleton(
 			fileIn >> tempBoneHierarchy;
 			boneHierarchy.push_back(tempBoneHierarchy);
 		}
-
+		
 		fileIn >> ignore;
 		for (uint32_t i = 0; i < boneSize; ++i)
 		{
@@ -391,6 +339,8 @@ bool FbxLoader::LoadMesh(
 	fileName = fileName + ".mesh";
 	std::ifstream fileIn(fileName);
 
+	//std::cout << "ÆÄÀÏÀÌ¸§" << fileName << std::endl;
+
 	uint32_t vertexSize, indexSize;
 	uint32_t materialSize;
 
@@ -401,7 +351,7 @@ bool FbxLoader::LoadMesh(
 		fileIn >> ignore >> indexSize;
 		fileIn >> ignore >> materialSize;
 
-		if (vertexSize == 0 || indexSize == 0)
+		if (vertexSize == 0 || indexSize == 0	)
 			return false;
 
 		// Material Data
@@ -450,7 +400,7 @@ bool FbxLoader::LoadMesh(
 			fileIn >> index;
 			outIndexVector.push_back(index);
 		}
-
+		
 		return true;
 	}
 
@@ -505,7 +455,7 @@ bool FbxLoader::LoadMesh(
 				(*outMaterial).push_back(tempMaterial);
 			}
 		}
-
+		
 		// Vertex Data
 		for (uint32_t i = 0; i < vertexSize; ++i)
 		{
@@ -544,7 +494,7 @@ bool FbxLoader::LoadMesh(
 
 bool FbxLoader::LoadAnimation(
 	SkinnedData& outSkinnedData,
-	const std::string& clipName,
+	const std::string& clipName, 
 	std::string fileName)
 {
 	fileName = fileName + clipName + ".anim";
@@ -583,8 +533,8 @@ bool FbxLoader::LoadAnimation(
 
 
 void FbxLoader::GetSkeletonHierarchy(
-	FbxNode* pNode,
-	SkinnedData& outSkinnedData,
+	FbxNode * pNode,
+	SkinnedData& outSkinnedData, 
 	int curIndex, int parentIndex)
 {
 	mBoneHierarchy.push_back(parentIndex);
@@ -596,9 +546,9 @@ void FbxLoader::GetSkeletonHierarchy(
 	}
 }
 
-void FbxLoader::GetControlPoints(FbxNode* pFbxRootNode)
+void FbxLoader::GetControlPoints(FbxNode * pFbxRootNode)
 {
-	FbxMesh* pCurrMesh = (FbxMesh*)pFbxRootNode->GetNodeAttribute();
+	FbxMesh * pCurrMesh = (FbxMesh*)pFbxRootNode->GetNodeAttribute();
 
 	unsigned int ctrlPointCount = pCurrMesh->GetControlPointsCount();
 	for (unsigned int i = 0; i < ctrlPointCount; ++i)
@@ -618,7 +568,7 @@ void FbxLoader::GetControlPoints(FbxNode* pFbxRootNode)
 
 void FbxLoader::GetAnimation(
 	FbxScene* pFbxScene,
-	FbxNode* pFbxChildNode,
+	FbxNode * pFbxChildNode,
 	SkinnedData& outSkinnedData,
 	const std::string& ClipName,
 	bool isGetOnlyAnim)
@@ -779,7 +729,7 @@ void FbxLoader::GetAnimation(
 
 		mAnimations[ClipName] = animation;
 	}
-
+	
 	outSkinnedData.SetAnimation(animation, ClipName);
 }
 
@@ -826,9 +776,9 @@ void FbxLoader::CalculateTangentBinormalVector(std::vector<Vertex>& vertexVector
 }
 
 void FbxLoader::GetVerticesAndIndice(
-	FbxMesh* pMesh,
-	std::vector<CharacterVertex>& outVertexVector,
-	std::vector<uint32_t>& outIndexVector,
+	FbxMesh * pMesh, 
+	std::vector<CharacterVertex> & outVertexVector, 
+	std::vector<uint32_t> & outIndexVector,
 	SkinnedData* outSkinnedData)
 {
 	// Vertex and Index
@@ -856,10 +806,10 @@ void FbxLoader::GetVerticesAndIndice(
 			pMesh->GetPolygonVertexNormal(i, j, pNormal);
 
 			// UV
-			float* lUVs = NULL;
+			float * lUVs = NULL;
 			FbxStringList lUVNames;
 			pMesh->GetUVSetNames(lUVNames);
-			const char* lUVName = NULL;
+			const char * lUVName = NULL;
 			if (lUVNames.GetCount())
 			{
 				lUVName = lUVNames[0];
@@ -980,9 +930,9 @@ void FbxLoader::GetVerticesAndIndice(
 }
 
 void FbxLoader::GetVerticesAndIndice(
-	FbxMesh* pMesh,
-	std::vector<Vertex>& outVertexVector,
-	std::vector<uint32_t>& outIndexVector)
+	FbxMesh * pMesh,
+	std::vector<Vertex> & outVertexVector,
+	std::vector<uint32_t> & outIndexVector)
 {
 	// Vertex and Index
 	std::unordered_map<Vertex, uint32_t> IndexMapping;
@@ -1004,10 +954,10 @@ void FbxLoader::GetVerticesAndIndice(
 			pMesh->GetPolygonVertexNormal(i, j, pNormal);
 
 			// UV
-			float* lUVs = NULL;
+			float * lUVs = NULL;
 			FbxStringList lUVNames;
 			pMesh->GetUVSetNames(lUVNames);
-			const char* lUVName = NULL;
+			const char * lUVName = NULL;
 			if (lUVNames.GetCount())
 			{
 				lUVName = lUVNames[0];
@@ -1070,7 +1020,7 @@ void FbxLoader::GetVerticesAndIndice(
 		}
 	}
 
-
+	
 	for (uint32_t i = 0; i < outVertexVector.size(); ++i)
 	{
 		XMVECTOR N = XMLoadFloat3(&outVertexVector[i].Normal);
@@ -1111,35 +1061,35 @@ void FbxLoader::GetMaterialAttribute(FbxSurfaceMaterial* pMaterial, Material& ou
 	if (pMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))
 	{
 		// Amibent Color
-		double3 = reinterpret_cast<FbxSurfacePhong*>(pMaterial)->Ambient;
+		double3 = reinterpret_cast<FbxSurfacePhong *>(pMaterial)->Ambient;
 		outMaterial.Ambient.x = static_cast<float>(double3.mData[0]);
 		outMaterial.Ambient.y = static_cast<float>(double3.mData[1]);
 		outMaterial.Ambient.z = static_cast<float>(double3.mData[2]);
 
 		// Diffuse Color
-		double3 = reinterpret_cast<FbxSurfacePhong*>(pMaterial)->Diffuse;
+		double3 = reinterpret_cast<FbxSurfacePhong *>(pMaterial)->Diffuse;
 		outMaterial.DiffuseAlbedo.x = static_cast<float>(double3.mData[0]);
 		outMaterial.DiffuseAlbedo.y = static_cast<float>(double3.mData[1]);
 		outMaterial.DiffuseAlbedo.z = static_cast<float>(double3.mData[2]);
 
 		// Roughness 
-		double1 = reinterpret_cast<FbxSurfacePhong*>(pMaterial)->Shininess;
+		double1 = reinterpret_cast<FbxSurfacePhong *>(pMaterial)->Shininess;
 		outMaterial.Roughness = 1 - double1;
 
 		// Reflection
-		double3 = reinterpret_cast<FbxSurfacePhong*>(pMaterial)->Reflection;
+		double3 = reinterpret_cast<FbxSurfacePhong *>(pMaterial)->Reflection;
 		outMaterial.FresnelR0.x = static_cast<float>(double3.mData[0]);
 		outMaterial.FresnelR0.y = static_cast<float>(double3.mData[1]);
 		outMaterial.FresnelR0.z = static_cast<float>(double3.mData[2]);
 
 		// Specular Color
-		double3 = reinterpret_cast<FbxSurfacePhong*>(pMaterial)->Specular;
+		double3 = reinterpret_cast<FbxSurfacePhong *>(pMaterial)->Specular;
 		outMaterial.Specular.x = static_cast<float>(double3.mData[0]);
 		outMaterial.Specular.y = static_cast<float>(double3.mData[1]);
 		outMaterial.Specular.z = static_cast<float>(double3.mData[2]);
 
 		// Emissive Color
-		double3 = reinterpret_cast<FbxSurfacePhong*>(pMaterial)->Emissive;
+		double3 = reinterpret_cast<FbxSurfacePhong *>(pMaterial)->Emissive;
 		outMaterial.Emissive.x = static_cast<float>(double3.mData[0]);
 		outMaterial.Emissive.y = static_cast<float>(double3.mData[1]);
 		outMaterial.Emissive.z = static_cast<float>(double3.mData[2]);
@@ -1161,26 +1111,26 @@ void FbxLoader::GetMaterialAttribute(FbxSurfaceMaterial* pMaterial, Material& ou
 	else if (pMaterial->GetClassId().Is(FbxSurfaceLambert::ClassId))
 	{
 		// Amibent Color
-		double3 = reinterpret_cast<FbxSurfaceLambert*>(pMaterial)->Ambient;
+		double3 = reinterpret_cast<FbxSurfaceLambert *>(pMaterial)->Ambient;
 		outMaterial.Ambient.x = static_cast<float>(double3.mData[0]);
 		outMaterial.Ambient.y = static_cast<float>(double3.mData[1]);
 		outMaterial.Ambient.z = static_cast<float>(double3.mData[2]);
 
 		// Diffuse Color
-		double3 = reinterpret_cast<FbxSurfaceLambert*>(pMaterial)->Diffuse;
+		double3 = reinterpret_cast<FbxSurfaceLambert *>(pMaterial)->Diffuse;
 		outMaterial.DiffuseAlbedo.x = static_cast<float>(double3.mData[0]);
 		outMaterial.DiffuseAlbedo.y = static_cast<float>(double3.mData[1]);
 		outMaterial.DiffuseAlbedo.z = static_cast<float>(double3.mData[2]);
 
 		// Emissive Color
-		double3 = reinterpret_cast<FbxSurfaceLambert*>(pMaterial)->Emissive;
+		double3 = reinterpret_cast<FbxSurfaceLambert *>(pMaterial)->Emissive;
 		outMaterial.Emissive.x = static_cast<float>(double3.mData[0]);
 		outMaterial.Emissive.y = static_cast<float>(double3.mData[1]);
 		outMaterial.Emissive.z = static_cast<float>(double3.mData[2]);
 	}
 }
 
-void FbxLoader::GetMaterialTexture(fbxsdk::FbxSurfaceMaterial* pMaterial, Material& Mat)
+void FbxLoader::GetMaterialTexture(fbxsdk::FbxSurfaceMaterial * pMaterial, Material & Mat)
 {
 	unsigned int textureIndex = 0;
 	FbxProperty property;
@@ -1244,8 +1194,8 @@ FbxAMatrix FbxLoader::GetGeometryTransformation(FbxNode* pNode)
 
 
 void FbxLoader::ExportAnimation(
-	const AnimationClip& animation,
-	std::string fileName,
+	const AnimationClip& animation, 
+	std::string fileName, 
 	const std::string& clipName)
 {
 	fileName = fileName + clipName + ".anim";
@@ -1275,8 +1225,8 @@ void FbxLoader::ExportAnimation(
 }
 
 void FbxLoader::ExportSkeleton(
-	SkinnedData& outSkinnedData,
-	const std::string& clipName,
+	SkinnedData& outSkinnedData, 
+	const std::string& clipName, 
 	std::string fileName)
 {
 	std::ofstream skeletonFileOut(fileName + clipName + ".skeleton");
@@ -1319,8 +1269,8 @@ void FbxLoader::ExportSkeleton(
 		}
 
 		skeletonFileOut << "SubmeshOffset " << "\n";
-		auto& e = outSkinnedData.GetSubmeshOffset();
-		for (uint32_t i = 0; i < boneSize; ++i)
+		auto & e = outSkinnedData.GetSubmeshOffset();
+		for(uint32_t i = 0; i < boneSize; ++i)
 		{
 			skeletonFileOut << e[i] << " ";
 		}
@@ -1350,7 +1300,7 @@ void FbxLoader::ExportMesh(
 		fileOut << "MaterialSize " << materialSize << "\n";
 
 		fileOut << "Material " << "\n";
-		for (auto& e : outMaterial)
+		for (auto & e : outMaterial)
 		{
 			fileOut << "Name " << e.Name << "\n";
 			fileOut << "Ambient " << e.Ambient.x << " " << e.Ambient.y << " " << e.Ambient.z << "\n";
@@ -1410,7 +1360,7 @@ void FbxLoader::ExportMesh(
 		fileOut << "MaterialSize " << materialSize << "\n";
 
 		fileOut << "Material " << "\n";
-		for (auto& e : outMaterial)
+		for (auto & e : outMaterial)
 		{
 			fileOut << "Name " << e.Name << "\n";
 			fileOut << "Ambient " << e.Ambient.x << " " << e.Ambient.y << " " << e.Ambient.z << "\n";
@@ -1430,7 +1380,7 @@ void FbxLoader::ExportMesh(
 			fileOut << "\n";
 		}
 
-
+		
 		for (auto& e : outVertexVector)
 		{
 			fileOut << "Pos " << e.Pos.x << " " << e.Pos.y << " " << e.Pos.z << "\n";

@@ -11,7 +11,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	MapTool::PlayerInfo prePlayerInfo;
 	prePlayerInfo.playerName = "FirstPlayer";
 	prePlayerInfo.position.x = 0.f;
-	prePlayerInfo.position.y = 0;
+	prePlayerInfo.position.y = STD_CUBE_SIZE * 2;
 	prePlayerInfo.position.z = 0.f;
 	prePlayerInfo.rotY = 0.f;
 	prePlayerInfo.spawnPos = 1;
@@ -19,9 +19,9 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 
 	prePlayerInfo.playerName = "SecondPlayer";
 	prePlayerInfo.position.x = 0.f;
-	prePlayerInfo.position.y = 0;
+	prePlayerInfo.position.y = STD_CUBE_SIZE * 2;
 	prePlayerInfo.position.z = 500.f;
-	prePlayerInfo.rotY = 0.f;
+	prePlayerInfo.rotY = 180.f;
 	prePlayerInfo.spawnPos = 2;
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
@@ -60,7 +60,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 					ri = MAP_DEPTH_BLOCK_NUM - i - 1;
 					rj = MAP_WIDTH_BLOCK_NUM - j - 1;
 					shiftX = 0.f;
-					shiftY = -STD_CUBE_SIZE;
+					shiftY = 0.f;
 					shiftZ = 0.f;
 
 					// 오브젝트 생성
@@ -128,7 +128,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.rotation.y = 90.f;
 						preInfo.meshName = OBJECT_MESH_STR_CUBE_BRIDGE;
 						propTypeSet.insert(OBJECT_MESH_STR_CUBE_BRIDGE);
-						shiftY = -80.f -STD_CUBE_SIZE;
+						shiftY = -4.f;
 						break;
 					}
 					case 3:

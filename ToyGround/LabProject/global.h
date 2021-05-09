@@ -1,5 +1,4 @@
 #pragma once
-using namespace DirectX;
 
 struct Vertex
 {
