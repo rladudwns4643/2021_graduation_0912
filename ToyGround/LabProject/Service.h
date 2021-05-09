@@ -1,0 +1,58 @@
+#pragma once
+#include "Singleton.h"
+#include "netCore.h"
+#include <functional>
+
+#define EVENT_LOBBY_LOGIN_OK						0xA0
+#define EVENT_LOBBY_LOGIN_FAIL						0xA1
+#define EVENT_LOBBY_LOGIN_OK						0xA2
+#define EVENT_LOBBY_LOGIN_FAIL						0xA3
+#define EVENT_LOBBY_SIGNUP_OK						0xA4
+#define EVENT_LOBBY_SIGNUP_FAIL						0xA5
+#define EVENT_LOBBY_UPDATE_CLIENT_USERINFO			0xA6
+#define EVENT_LOBBY_MATCH_OK						0xA7
+#define EVENT_LOBBY_MATCH_CANCEL					0xA8
+
+#define EVENT_BATTLE_ACCEPT_OK						0xB0
+#define EVENT_BATTLE_ROOM_JOIN_OK					0xB1
+#define EVENT_BATTLE_ROOM_JOIN_FAIL					0xB2
+
+#define EVENT_ROOM_READY							0xC0
+#define EVENT_ROOM_START_AVAILABLE					0xC1
+#define EVENT_ROOM_START							0xC2
+
+#define EVENT_GAME_TIMER							0xD0
+#define EVENT_GAME_GAMEOVER							0xD1
+
+#define EVENT_LOBBY_UPDATE_SERVER_USERINFO			0xE0
+
+class Service : public TemplateSingleton<Service> {
+private:
+	bool active = true;
+	bool lobby_active = false;
+	bool battle_active = false;
+
+private:
+	XMFLOAT3 arg_look = { 0.f, 1.f, 0.f };
+	XMFLOAT3 arg_look_callback = { 0.f, 1.f, 0.f };
+
+public:
+	void Clear();
+	void ActiveService();
+
+	void Notify(int sEvent, int argsCount = 0, ...);
+	void setConnectLobby(bool connect) { lobby_active = connect; }
+	bool isConnectLobby() const { return lobby_active; }
+	bool isConnectBattle() const { return battle_active; }
+
+public:
+	int GetMyBattleID() const;
+	BattleClient* GetBattleClient(int id) const;
+	int GetBattleClientsCount() const;
+	int GetWinner() const;
+	int GetMapInfo() const;
+
+
+private:
+	std::mutex m_mutex_event;
+};
