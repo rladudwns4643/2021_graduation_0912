@@ -14,14 +14,10 @@
 #include "global.h"
 #include "d3dUtil.h"
 
-// 서버와 클라 작업나눔
-#define DEBUG_CLIENT 0x00FF1
-//#define DEBUG_SERVER 0x00FF2
-
-#define FRUSTUM_CULLMODE 0x00FF3
 // 풀스크린 모드
-//#define FULLSCREEN_MODE 0x00FF4
-//#define ON_PAUSE 0x00FF5
+//#define FULLSCREEN_MODE 0x00FF1
+//#define ON_PAUSE 0x00FF2
+#define FRUSTUM_CULLMODE 0x00FF3
 
 // 콘솔창 띄우기
 #ifdef UNICODE
