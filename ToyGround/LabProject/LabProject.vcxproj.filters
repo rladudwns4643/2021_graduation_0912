@@ -126,9 +126,6 @@
     <ClInclude Include="PlayerController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GeometryGenerator.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="SkinnedData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -152,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="Network.h">
       <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -300,7 +300,11 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 {
 	XMFLOAT3 pos = MathHelper::Add(GetPosition(), xmf3Shift);
 
+#ifdef DEBUG_CLIENT
+	SetPosition(pos.x, pos.y, pos.z);
+#elif DEBUG_SERVER
 	SetPosition(Network::GetApp()->GetPos());
+#endif
 	if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
 }
 

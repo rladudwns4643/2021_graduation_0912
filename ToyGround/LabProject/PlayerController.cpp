@@ -29,8 +29,7 @@ void PlayerController::HandleInput(const float deltaT)
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
 
-	//float speed = 16.f * deltaT;
-	float speed = 200.f * deltaT;
+	float speed = 16.f * ScaleConverter * deltaT;
 	XMVECTOR direction = {};
 
 	DWORD dir = 0;
@@ -146,6 +145,29 @@ void PlayerController::OnKeyPressed()
 	{
 	case CameraType::eFirst:
 	case CameraType::eThird:
+#ifdef DEBUG_CLIENT
+		if (InputHandler::IsKeyDown('W'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+		}
+		if (InputHandler::IsKeyDown('S'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
+		}
+		if (InputHandler::IsKeyDown('A'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
+		}
+		if (InputHandler::IsKeyDown('D'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
+		}
+		if (InputHandler::IsKeyDown(VK_SPACE))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
+			CommandCenter::GetApp()->m_StartJumpAnim = true;
+		}
+#elif DEBUG_SERVER
 		if (InputHandler::IsKeyDown('W'))
 		{
 			Network::GetApp()->SendKeyDownW(Network::GetApp()->m_client.id);
@@ -171,6 +193,7 @@ void PlayerController::OnKeyPressed()
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
 		}
+#endif
 		break;
 	}
 }
@@ -187,6 +210,25 @@ void PlayerController::OnKeyReleased()
 	case CameraType::eFirst:
 	case CameraType::eThird:
 
+#ifdef DEBUG_CLIENT
+		if (InputHandler::IsKeyUp('W'))
+		{
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
+		}
+		if (InputHandler::IsKeyUp('S'))
+		{
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
+		}
+		if (InputHandler::IsKeyUp('A'))
+		{
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+		}
+		if (InputHandler::IsKeyUp('D'))
+		{
+			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+		}
+		if (InputHandler::IsKeyUp(VK_SPACE)) {}
+#elif DEBUG_SERVER
 		if (InputHandler::IsKeyUp('W'))
 		{
 			Network::GetApp()->SendKeyUpW(Network::GetApp()->m_client.id);
@@ -208,5 +250,7 @@ void PlayerController::OnKeyReleased()
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
 		}
 		if (InputHandler::IsKeyUp(VK_SPACE)) {}
+#endif
+		break;
 	}
 }

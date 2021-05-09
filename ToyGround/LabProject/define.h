@@ -4,11 +4,14 @@
 #define FRAME_BUFFER_WIDTH 1280
 #define FRAME_BUFFER_HEIGHT 720
 
+// 크기변환
+#define ScaleConverter 20.f
+
 // 기준이되는 큐브 크기
-#define STD_CUBE_SIZE 5.0f
-#define PLAYER_SIZE_X 4.5f
-#define PLAYER_SIZE_Y 9.0f
-#define PLAYER_SIZE_Z 4.5f
+#define STD_CUBE_SIZE (5.0f * ScaleConverter)
+#define PLAYER_SIZE_X (4.5f * ScaleConverter)
+#define PLAYER_SIZE_Y (9.0f * ScaleConverter)
+#define PLAYER_SIZE_Z (4.5f * ScaleConverter)
 
 // 맵 큐브 개수
 #define MAP_WIDTH_BLOCK_NUM 21
@@ -32,16 +35,13 @@
 // 텍스쳐
 #define TEXTURE_INDEX_SkyBox 0
 #define TEXTURE_INDEX_Cartoon_CubeWorld_Texture 1
-//#define TEXTURE_INDEX_PolygonMinis_Texture_01_A 2
-#define TEXTURE_INDEX_Polygon_Fantasy_Characters_Texture_01_A 2
+#define TEXTURE_INDEX_PolygonMinis_Texture_01_A 2
 
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture "Cartoon_CubeWorld_Texture"
-//#define TEXTURE_STR_PolygonMinis_Texture_01_A "PolygonMinis_Texture_01_A"
-#define TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A "Polygon_Fantasy_Characters_Texture_01_A"
+#define TEXTURE_STR_PolygonMinis_Texture_01_A "PolygonMinis_Texture_01_A"
 
 // 캐릭터
-//enum BoneIndex { Cowboy = 0, Count };
-enum BoneIndex { Baird = 0, Druid, Count };
+enum BoneIndex { Cowboy = 0, Count };
 
 // 오브젝트 메쉬
 #define OBJECT_MESH_STR_TEST_PLAYER		"Test_Player"
@@ -56,11 +56,13 @@ enum BoneIndex { Baird = 0, Druid, Count };
 #define OBJECT_MESH_STR_TREE_01			"Tree_01"
 #define OBJECT_MESH_STR_TREE_02			"Tree_02"
 #define OBJECT_MESH_STR_BARREL			"Barrel"
-#define OBJECT_MESH_STR_CHEST			"Chest"
+#define OBJECT_MESH_STR_CHEST_DOWN		"Chest_Down"
+#define OBJECT_MESH_STR_CHEST_UP		"Chest_Up"
 #define OBJECT_MESH_STR_FENCE_01		"Fence_01"
 #define OBJECT_MESH_STR_FENCE_02		"Fence_02"
 #define OBJECT_MESH_STR_GRAVESTONE		"Gravestone"
 #define OBJECT_MESH_STR_LOGS			"Logs"
+#define OBJECT_MESH_STR_REVOLVER		"Revolver"
 //
 #define MESH_GEOID			"geo"
 #define MESH_GEOID_RECT		"rect"
@@ -111,11 +113,8 @@ enum class CameraType { eFirst = 0, eThird = 1, eFree = 2 };
 #define SPAWN_BLUE_TEAM 1
 #define SPAWN_CENTER 2
 
-// 캐릭터 - 테스트
-#define CHARACTER_BAIRD "BA"
-#define CHARACTER_DRUID "DR"
 // 캐릭터
-//#define CHARACTER_COWBOY "Cowboy"
+#define CHARACTER_COWBOY "Cowboy"
 
 // Animation KeyState
 #define KEY_IDLE "Idle"

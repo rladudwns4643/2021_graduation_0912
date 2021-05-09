@@ -11,7 +11,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	MapTool::PlayerInfo prePlayerInfo;
 	prePlayerInfo.playerName = "FirstPlayer";
 	prePlayerInfo.position.x = 0.f;
-	prePlayerInfo.position.y = STD_CUBE_SIZE * 2;
+	prePlayerInfo.position.y = 0.f;
 	prePlayerInfo.position.z = 0.f;
 	prePlayerInfo.rotY = 0.f;
 	prePlayerInfo.spawnPos = 1;
@@ -19,7 +19,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 
 	prePlayerInfo.playerName = "SecondPlayer";
 	prePlayerInfo.position.x = 0.f;
-	prePlayerInfo.position.y = STD_CUBE_SIZE * 2;
+	prePlayerInfo.position.y = 0.f;
 	prePlayerInfo.position.z = 500.f;
 	prePlayerInfo.rotY = 180.f;
 	prePlayerInfo.spawnPos = 2;
@@ -37,7 +37,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		int typeIDCount = 0;
 
 		float startX = -STD_CUBE_SIZE * (MAP_WIDTH_BLOCK_NUM / 2);
-		float startY = 0.f;
+		float startY = -STD_CUBE_SIZE;
 		float startZ = -STD_CUBE_SIZE * (MAP_DEPTH_BLOCK_NUM / 2);
 		float shiftX, shiftY, shiftZ;
 
@@ -113,9 +113,16 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							propTypeSet.insert(OBJECT_MESH_STR_BARREL);
 							break;
 						case 11:
-							preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
-							propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
-							preInfo.rotation.y = 0.f;
+							preInfo.meshName = OBJECT_MESH_STR_CHEST_DOWN;
+							propTypeSet.insert(OBJECT_MESH_STR_CHEST_DOWN);
+							preInfo.rotation.y = 90.f;
+							break;
+						case 12:
+							preInfo.meshName = OBJECT_MESH_STR_CHEST_UP;
+							propTypeSet.insert(OBJECT_MESH_STR_CHEST_UP);
+							shiftY = -STD_CUBE_SIZE / 2;
+							shiftX = -STD_CUBE_SIZE * 0.25;
+							preInfo.rotation.y = 90.f;
 							break;
 						}
 						break;
@@ -128,7 +135,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.rotation.y = 90.f;
 						preInfo.meshName = OBJECT_MESH_STR_CUBE_BRIDGE;
 						propTypeSet.insert(OBJECT_MESH_STR_CUBE_BRIDGE);
-						shiftY = -4.f;
+						shiftY = -STD_CUBE_SIZE * 0.85;
 						break;
 					}
 					case 3:
@@ -157,19 +164,19 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						{
 						case 50:
 							preInfo.rotation.y = 0.f;
-							shiftZ = -2.5f;
+							shiftZ = -STD_CUBE_SIZE / 2;
 							break;
 						case 51:
 							preInfo.rotation.y = 90.f;
-							shiftX = 2.5f;
+							shiftX = STD_CUBE_SIZE / 2;
 							break;
 						case 52:
 							preInfo.rotation.y = 0.f;
-							shiftZ = 2.5f;
+							shiftZ = STD_CUBE_SIZE / 2;
 							break;
 						case 53:
 							preInfo.rotation.y = 90.f;
-							shiftX = -2.5f;
+							shiftX = -STD_CUBE_SIZE / 2;
 							break;
 						}
 						preInfo.meshName = OBJECT_MESH_STR_FENCE_01;
@@ -182,19 +189,19 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						{
 						case 60:
 							preInfo.rotation.y = 0.f;
-							shiftZ = -2.5f;
+							shiftZ = -STD_CUBE_SIZE / 2;
 							break;
 						case 61:
 							preInfo.rotation.y = 90.f;
-							shiftX = 2.5f;
+							shiftX = STD_CUBE_SIZE / 2;
 							break;
 						case 62:
 							preInfo.rotation.y = 0.f;
-							shiftZ = 2.5f;
+							shiftZ = STD_CUBE_SIZE / 2;
 							break;
 						case 63:
 							preInfo.rotation.y = 90.f;
-							shiftX = -2.5f;
+							shiftX = -STD_CUBE_SIZE / 2;
 							break;
 						}
 						preInfo.meshName = OBJECT_MESH_STR_FENCE_02;
@@ -254,11 +261,13 @@ void AssertsReference::CreateBB()
 	m_PropBoundingBox[OBJECT_MESH_STR_TREE_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TREE_02]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_BARREL]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-	m_PropBoundingBox[OBJECT_MESH_STR_CHEST]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CHEST_DOWN]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CHEST_UP]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_FENCE_01]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_FENCE_02]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_GRAVESTONE]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_LOGS]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_REVOLVER]->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
 
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_CUBE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
@@ -271,11 +280,13 @@ void AssertsReference::CreateBB()
 	m_PropBoundingBox[OBJECT_MESH_STR_TREE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_TREE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_BARREL]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-	m_PropBoundingBox[OBJECT_MESH_STR_CHEST]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CHEST_DOWN]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_CHEST_UP]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_FENCE_01]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_FENCE_02]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_GRAVESTONE]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 	m_PropBoundingBox[OBJECT_MESH_STR_LOGS]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+	m_PropBoundingBox[OBJECT_MESH_STR_REVOLVER]->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
 }
 
 void AssertsReference::BuildMaterials()
@@ -294,24 +305,16 @@ void AssertsReference::BuildMaterials()
 	Cartoon_CubeWorld_Texture->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
 	Cartoon_CubeWorld_Texture->Roughness = 0.967734f;
 
-	auto Polygon_Fantasy_Characters_Texture_01_A = std::make_unique<Material>();
-	Polygon_Fantasy_Characters_Texture_01_A->MatCBIndex = TEXTURE_INDEX_Polygon_Fantasy_Characters_Texture_01_A;
-	Polygon_Fantasy_Characters_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_Polygon_Fantasy_Characters_Texture_01_A;
-	Polygon_Fantasy_Characters_Texture_01_A->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	Polygon_Fantasy_Characters_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	Polygon_Fantasy_Characters_Texture_01_A->Roughness = 0.717734;
-
-	//auto PolygonMinis_Texture_01_A = std::make_unique<Material>();
-	//PolygonMinis_Texture_01_A->MatCBIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
-	//PolygonMinis_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
-	//PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	//PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	//PolygonMinis_Texture_01_A->Roughness = 0.717734;
+	auto PolygonMinis_Texture_01_A = std::make_unique<Material>();
+	PolygonMinis_Texture_01_A->MatCBIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
+	PolygonMinis_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
+	PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	PolygonMinis_Texture_01_A->Roughness = 0.717734;
 
 	m_Materials["SkyBox"] = std::move(sky);
 	m_Materials[TEXTURE_STR_Cartoon_CubeWorld_Texture] = std::move(Cartoon_CubeWorld_Texture);
-	m_Materials[TEXTURE_STR_Polygon_Fantasy_Characters_Texture_01_A] = std::move(Polygon_Fantasy_Characters_Texture_01_A);
-	//m_Materials[TEXTURE_STR_PolygonMinis_Texture_01_A] = std::move(PolygonMinis_Texture_01_A);
+	m_Materials[TEXTURE_STR_PolygonMinis_Texture_01_A] = std::move(PolygonMinis_Texture_01_A);
 }
 
 void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
