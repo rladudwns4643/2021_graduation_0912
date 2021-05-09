@@ -3,7 +3,6 @@
 #include "InputHandler.h"
 #include "Camera.h"
 #include "Timer.h"
-#include "Network.h"
 
 #include "Character.h"
 #include "SkinnedModelInstance.h"
@@ -146,6 +145,29 @@ void PlayerController::OnKeyPressed()
 	{
 	case CameraType::eFirst:
 	case CameraType::eThird:
+#ifdef DEBUG_CLIENT
+		if (InputHandler::IsKeyDown('W'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+		}
+		if (InputHandler::IsKeyDown('S'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
+		}
+		if (InputHandler::IsKeyDown('A'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
+		}
+		if (InputHandler::IsKeyDown('D'))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
+		}
+		if (InputHandler::IsKeyDown(VK_SPACE))
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
+			CommandCenter::GetApp()->m_StartJumpAnim = true;
+		}
+#elif DEBUG_SERVER
 		if (InputHandler::IsKeyDown('W'))
 		{
 			Network::GetApp()->SendKeyDownW(Network::GetApp()->m_client.id);
@@ -171,6 +193,7 @@ void PlayerController::OnKeyPressed()
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
 		}
+#endif
 		break;
 	}
 }
@@ -189,22 +212,18 @@ void PlayerController::OnKeyReleased()
 
 		if (InputHandler::IsKeyUp('W'))
 		{
-			Network::GetApp()->SendKeyUpW(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
 		}
 		if (InputHandler::IsKeyUp('S'))
 		{
-			Network::GetApp()->SendKeyUpS(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
 		}
 		if (InputHandler::IsKeyUp('A'))
 		{
-			Network::GetApp()->SendKeyUpA(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
 		}
 		if (InputHandler::IsKeyUp('D'))
 		{
-			Network::GetApp()->SendKeyUpD(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
 		}
 		if (InputHandler::IsKeyUp(VK_SPACE)) {}

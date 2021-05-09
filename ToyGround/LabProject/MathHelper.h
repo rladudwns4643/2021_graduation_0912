@@ -12,6 +12,7 @@
 #define XM_1DIV2PI 0.159154943f
 #define XM_PIDIV2 1.570796327f
 #define XM_PIDIV4 0.785398163f
+using namespace DirectX;
 
 class MathHelper
 {

@@ -98,6 +98,7 @@ void Network::ProcessPacket(int id, unsigned char packet[]) {
 	case LC_LOGIN_OK: {
 		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet);
 		m_client.id = p->id;
+		cout << "!!!" << m_client.id << endl;
 		m_client.loginok = true;
 		SendRequestUserInfo(m_client.id);
 		break;

@@ -4,7 +4,6 @@
 #include "ApplicationContext.h"
 #include "AssertsReference.h"
 #include "CommandContext.h"
-#include "Network.h"
 
 Character::Character(std::string type, std::string id) :
 	GameObject(type, id),
@@ -147,70 +146,69 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 	DWORD MoveBit = 3;
 	DWORD strafeBit = 12;
 
-	
-
 	if (dwDirection)
 	{
-		if (dwDirection == 15) // 모든 키가 눌렸을 경우
-			return false;
-		if ((dwDirection ^ MoveBit) == 0 || (dwDirection ^ MoveBit) == 15)	// ws가 동시에 눌렸을 경우
-			return false;
-		if ((dwDirection ^ strafeBit) == 0 || (dwDirection ^ strafeBit) == 15)	// ad가 동시에 눌렸을 경우
-			return false;
-
-
-		if (dwDirection & DIR_FORWARD)			direction = direction + look;
-		if (dwDirection & DIR_BACKWARD)			direction = direction - look;
-
-		if (dwDirection & DIR_RIGHT)			direction = direction + right;
-		if (dwDirection & DIR_LEFT)				direction = direction - right;
-
-		XMFLOAT3 dir;
-		DirectX::XMStoreFloat3(&dir, direction);
-		dir.y = 0.f;
-		direction = DirectX::XMVector3Normalize(XMLoadFloat3(&dir));
-		
-		XMFLOAT3 cLook = m_Look;
-		cLook.y = 0.f;
-		cLook = MathHelper::Normalize(cLook);
-		
-		float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(direction, XMLoadFloat3(&cLook)));
-		
-		XMFLOAT3 cUp = m_Up;
-		//cUp.y = 0.f;
-		cUp = MathHelper::Normalize(cUp);
-		
-		float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&cUp), DirectX::XMVector3Cross(direction, XMLoadFloat3(&cLook))));
-		
-		float acosValue = 0.f;
-		
-		acosValue = acos(cosValue);
-		
-		float degree = XMConvertToDegrees(acosValue);
-		
-		if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
-			degree = -degree;
-		degree *= 0.9f;
-		
-		bool isChange = false;
-		
-		if (m_MyCamera->GetCameraType() == CameraType::eThird)
-		{
-			if (fabs(degree) > 1.f)
-			{
-				Rotate(0.f, XMConvertToRadians(degree), 0.f);
-				isChange = true;
-			}
-			else
-				Move(DIR_FORWARD, fDistance, true);
-			degree = 0.f;
-		}
-		else
-		{
-			Move(dwDirection, fDistance, true);
-		}
-
-		return isChange;
+		//if (dwDirection == 15) // 모든 키가 눌렸을 경우
+		//	return false;
+		//if ((dwDirection ^ MoveBit) == 0 || (dwDirection ^ MoveBit) == 15)	// ws가 동시에 눌렸을 경우
+		//	return false;
+		//if ((dwDirection ^ strafeBit) == 0 || (dwDirection ^ strafeBit) == 15)	// ad가 동시에 눌렸을 경우
+		//	return false;
+		//
+		//
+		//if (dwDirection & DIR_FORWARD)			direction = direction + look;
+		//if (dwDirection & DIR_BACKWARD)			direction = direction - look;
+		//
+		//if (dwDirection & DIR_RIGHT)			direction = direction + right;
+		//if (dwDirection & DIR_LEFT)				direction = direction - right;
+		//
+		//XMFLOAT3 dir;
+		//DirectX::XMStoreFloat3(&dir, direction);
+		//dir.y = 0.f;
+		//direction = DirectX::XMVector3Normalize(XMLoadFloat3(&dir));
+		//
+		//XMFLOAT3 cLook = m_Look;
+		//cLook.y = 0.f;
+		//cLook = MathHelper::Normalize(cLook);
+		//
+		//float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(direction, XMLoadFloat3(&cLook)));
+		//
+		//XMFLOAT3 cUp = m_Up;
+		////cUp.y = 0.f;
+		//cUp = MathHelper::Normalize(cUp);
+		//
+		//float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&cUp), DirectX::XMVector3Cross(direction, XMLoadFloat3(&cLook))));
+		//
+		//float acosValue = 0.f;
+		//
+		//acosValue = acos(cosValue);
+		//
+		//float degree = XMConvertToDegrees(acosValue);
+		//
+		//if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
+		//	degree = -degree;
+		//degree *= 0.9f;
+		//
+		//bool isChange = false;
+		//
+		//if (m_MyCamera->GetCameraType() == CameraType::eThird)
+		//{
+		//	if (fabs(degree) > 1.f)
+		//	{
+		//		Rotate(0.f, XMConvertToRadians(degree), 0.f);
+		//		isChange = true;
+		//	}
+		//	else
+		//		Move(DIR_FORWARD, fDistance, true);
+		//	degree = 0.f;
+		//}
+		//else
+		//{
+		//	Move(dwDirection, fDistance, true);
+		//}
+		Move(dwDirection, fDistance, true);
+		return true;
+		//return isChange;
 	}
 	return false;
 }
@@ -299,8 +297,7 @@ void Character::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 {
 	XMFLOAT3 pos = MathHelper::Add(GetPosition(), xmf3Shift);
-
-	SetPosition(Network::GetApp()->GetPos());
+	SetPosition(pos.x, pos.y, pos.z);
 	if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
 }
 

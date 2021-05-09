@@ -187,18 +187,18 @@ void BattleServer::SendCheckConnect() {
 	SendPacket(LOBBY_SERVER_KEY, &p);
 }
 
-void BattleServer::SendAutoAccessOKPacket(int id) {
+void BattleServer::SendAccessOKPacket(int id) {
 	bc_packet_accept_ok p;
 	p.size = sizeof(p);
-	p.type = BC_AUTO_ACCEPT_OK;
+	p.type = BC_ACCEPT_OK;
 	p.id = id;
 	SendPacket(id, &p);
 }
 
-void BattleServer::SendAutoAccessFailPacket(int id) {
+void BattleServer::SendAccessFailPacket(int id) {
 	bc_packet_accept_fail p;
 	p.size = sizeof(p);
-	p.type = BC_AUTO_ACCEPT_FAIL;
+	p.type = BC_ACCEPT_FAIL;
 	SendPacket(id, &p);
 }
 
