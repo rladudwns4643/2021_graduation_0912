@@ -30,7 +30,7 @@ public:
 	CameraType GetCameraType();
 
 	virtual void Initialize();
-	virtual void Update(const DirectX::XMFLOAT3& lookAt, float deltaT);
+	virtual void Update(const XMFLOAT3& lookAt, float deltaT);
 
 public:
 	explicit Camera(CameraType cameraType = CameraType::eThird);
@@ -40,21 +40,21 @@ public:
 	void CameraInitialize(SceneType sceneType);
 
 	// Get/Set world camera position.
-	DirectX::XMVECTOR GetPosition()const;
-	DirectX::XMFLOAT3 GetPosition3f()const;
+	XMVECTOR GetPosition()const;
+	XMFLOAT3 GetPosition3f()const;
 	void SetPosition(float x, float y, float z);
-	void SetPosition(const DirectX::XMFLOAT3& v);
+	void SetPosition(const XMFLOAT3& v);
 
 	// Get camera basis vectors.
-	DirectX::XMVECTOR GetRight()const;
-	DirectX::XMFLOAT3 GetRight3f()const;
-	DirectX::XMVECTOR GetUp()const;
-	DirectX::XMFLOAT3 GetUp3f()const;
-	DirectX::XMVECTOR GetLook()const;
-	DirectX::XMFLOAT3 GetLook3f()const;
+	XMVECTOR GetRight()const;
+	XMFLOAT3 GetRight3f()const;
+	XMVECTOR GetUp()const;
+	XMFLOAT3 GetUp3f()const;
+	XMVECTOR GetLook()const;
+	XMFLOAT3 GetLook3f()const;
 
-	void SetOffset(DirectX::XMFLOAT3 offset);
-	DirectX::XMFLOAT3& GetOffset();
+	void SetOffset(XMFLOAT3 offset);
+	XMFLOAT3& GetOffset();
 
 	XMFLOAT3 GetRotation();
 	void SetRotation(XMFLOAT3 rotation);
@@ -79,20 +79,20 @@ public:
 	void SetLens(float fovY, float aspect, float zn, float zf);
 
 	// Set Target
-	void SetTarget(const DirectX::XMFLOAT3& lookAt);
+	void SetTarget(const XMFLOAT3& lookAt);
 
 	// Define camera space via LookAt parameters.
-	void LookAt(DirectX::FXMVECTOR pos, DirectX::FXMVECTOR target, DirectX::FXMVECTOR worldUp);
-	void LookAt(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& up);
+	void LookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp);
+	void LookAt(const XMFLOAT3& pos, const XMFLOAT3& target, const XMFLOAT3& up);
 
 	// Get View/Proj matrices.
-	DirectX::XMMATRIX GetView()const;
-	DirectX::XMMATRIX GetProj()const;
-	DirectX::XMMATRIX GetOrtho()const;
+	XMMATRIX GetView()const;
+	XMMATRIX GetProj()const;
+	XMMATRIX GetOrtho()const;
 
-	DirectX::XMFLOAT4X4 GetView4x4f()const;
-	DirectX::XMFLOAT4X4 GetProj4x4f()const;
-	DirectX::XMFLOAT4X4 GetOrtho4x4f()const;
+	XMFLOAT4X4 GetView4x4f()const;
+	XMFLOAT4X4 GetProj4x4f()const;
+	XMFLOAT4X4 GetOrtho4x4f()const;
 
 	// Strafe/Walk the camera a distance d.
 	void Strafe(float d);
@@ -114,17 +114,17 @@ public:
 
 
 private:
-	DirectX::BoundingFrustum m_Frustum;
+	BoundingFrustum m_Frustum;
 	Character* m_Owner = nullptr;
 
-	DirectX::XMFLOAT3	mPosition = { 0.0f, 0.0f, 0.0f };
-	DirectX::XMFLOAT3	mRight = { 1.0f, 0.0f, 0.0f };
-	DirectX::XMFLOAT3	mUp = { 0.0f, 1.0f, 0.0f };
-	DirectX::XMFLOAT3	mLook = { 0.0f, 0.0f, 1.0f };
+	XMFLOAT3	mPosition = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3	mRight = { 1.0f, 0.0f, 0.0f };
+	XMFLOAT3	mUp = { 0.0f, 1.0f, 0.0f };
+	XMFLOAT3	mLook = { 0.0f, 0.0f, 1.0f };
 
-	DirectX::XMFLOAT3	mTarget = { 0.f,0.f,0.f };
-	DirectX::XMFLOAT3	mOffset = { 0.f,0.f,0.f };
-	DirectX::XMFLOAT3	mRotation = { 0.f,0.f,0.f };
+	XMFLOAT3	mTarget = { 0.f,0.f,0.f };
+	XMFLOAT3	mOffset = { 0.f,0.f,0.f };
+	XMFLOAT3	mRotation = { 0.f,0.f,0.f };
 	float				mTimeLag = 0.f;
 
 	// frustum properties.
@@ -138,9 +138,9 @@ private:
 	bool mViewDirty = true;
 
 	// View/Proj matrices.
-	DirectX::XMFLOAT4X4 mView = MathHelper::Identity4x4();
-	DirectX::XMFLOAT4X4 mProj = MathHelper::Identity4x4();
-	DirectX::XMFLOAT4X4 mOrtho = MathHelper::Identity4x4();
+	XMFLOAT4X4 mView = MathHelper::Identity4x4();
+	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
+	XMFLOAT4X4 mOrtho = MathHelper::Identity4x4();
 };
 
 #endif // CAMERA_H

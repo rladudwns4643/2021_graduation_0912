@@ -63,19 +63,19 @@ bool Toy::Update(float elapsedTime) {
 	XMFLOAT3 right = m_cur->GetRight();
 
 	if (m_keyW) { 
-		force = MathHelper::Add(force, look, 1.f);
+		force = SMathHelper::Add(force, look, 1.f);
 	}
-	if (m_keyS) { force = MathHelper::Add(force, look, -1.f); }
-	if (m_keyA) { force = MathHelper::Add(force, right, -1.f); }
-	if (m_keyD) { force = MathHelper::Add(force, right, 1.f); }
+	if (m_keyS) { force = SMathHelper::Add(force, look, -1.f); }
+	if (m_keyA) { force = SMathHelper::Add(force, right, -1.f); }
+	if (m_keyD) { force = SMathHelper::Add(force, right, 1.f); }
 	if (m_keyJump) {
-		force = MathHelper::Add(force, up, 1.f);
+		force = SMathHelper::Add(force, up, 1.f);
 		m_animJump = true;
 		m_keyJump = false; //anim 끝나고 false 처리?
 	}
 
-	MathHelper::Normalize(force);
-	if (!MathHelper::IsZero(force)) {
+	SMathHelper::Normalize(force);
+	if (!SMathHelper::IsZero(force)) {
 		float curForceAmountXZ{ m_cur->GetForceAmountXZ() };
 		float curForceAmountY{ m_cur->GetForceAmountY() };
 		force.x *= curForceAmountXZ;

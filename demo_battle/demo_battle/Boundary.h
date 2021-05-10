@@ -1,6 +1,6 @@
 #pragma once
 #include "Global.h"
-#include "MathHelper.h"
+#include "SMathHelper.h"
 
 constexpr int NONETYPE = -99;
 

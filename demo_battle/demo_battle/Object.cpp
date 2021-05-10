@@ -3,7 +3,7 @@
 
 Object::Object() {
 	m_uniqueID = -1;
-	m_xmf4x4World = MathHelper::Identity4x4();
+	m_xmf4x4World = SMathHelper::Identity4x4();
 	m_xmfVel = { 0.f, 0.f, 0.f };
 	m_xmfAcc = { 0.f, 0.f, 0.f };
 	m_xmf3PrePosition = { 0.f, 0.f, 0.f };
@@ -55,7 +55,7 @@ bool Object::Update(float elapsedTime, bool is_player) {
 	float friction = force * m_fricCoef;	//¸¶Âû
 
 	//direction
-	XMFLOAT3 normalrized = MathHelper::Normalize(m_xmfVel);
+	XMFLOAT3 normalrized = SMathHelper::Normalize(m_xmfVel);
 
 	//friction force
 	float frictionX = -normalrized.x * friction;
@@ -109,9 +109,9 @@ bool Object::Update(float elapsedTime, bool is_player) {
 		m_xmfVel.y = 0.f;
 	}
 
-	XMFLOAT3 newPos = MathHelper::Subtract(GetPosition(), m_xmf3PrePosition);
+	XMFLOAT3 newPos = SMathHelper::Subtract(GetPosition(), m_xmf3PrePosition);
 	XMStoreFloat3(&newPos, XMVector3Length(XMLoadFloat3(&newPos)));
-	if (MathHelper::IsZero(newPos)) {
+	if (SMathHelper::IsZero(newPos)) {
 		return false;
 	}
 	else {
@@ -173,7 +173,7 @@ void Object::SetPrePosition(XMFLOAT3 xmfPosition) {
 }
 
 XMFLOAT3 Object::GetLook() const {
-	return MathHelper::Normalize(XMFLOAT3(m_xmf4x4World._31, m_xmf4x4World._32, m_xmf4x4World._33));
+	return SMathHelper::Normalize(XMFLOAT3(m_xmf4x4World._31, m_xmf4x4World._32, m_xmf4x4World._33));
 }
 
 void Object::SetLook(const float& x, const float& y, const float& z) {
@@ -191,7 +191,7 @@ void Object::SetPreLook(XMFLOAT3 look) {
 }
 
 XMFLOAT3 Object::GetUp() const {
-	return MathHelper::Normalize(XMFLOAT3(m_xmf4x4World._21, m_xmf4x4World._22, m_xmf4x4World._23));
+	return SMathHelper::Normalize(XMFLOAT3(m_xmf4x4World._21, m_xmf4x4World._22, m_xmf4x4World._23));
 }
 
 void Object::SetUp(const float& x, const float& y, const float& z) {
@@ -201,7 +201,7 @@ void Object::SetUp(const float& x, const float& y, const float& z) {
 }
 
 XMFLOAT3 Object::GetRight() const {
-	return MathHelper::Normalize(XMFLOAT3(m_xmf4x4World._11, m_xmf4x4World._12, m_xmf4x4World._13));
+	return SMathHelper::Normalize(XMFLOAT3(m_xmf4x4World._11, m_xmf4x4World._12, m_xmf4x4World._13));
 }
 
 void Object::SetRight(const float& x, const float& y, const float& z) {
@@ -219,7 +219,7 @@ XMFLOAT3 Object::GetRotation() const {
 }
 
 XMFLOAT4 Object::GetRotationQuaternion() const {
-	return MathHelper::QuatFromTwoVectors(m_PreLook, GetLook());
+	return SMathHelper::QuatFromTwoVectors(m_PreLook, GetLook());
 }
 
 XMFLOAT3 Object::GetVelocity() const {
@@ -231,11 +231,11 @@ void Object::SetVelocity(XMFLOAT3 xmfVel) {
 }
 
 void Object::AddVelocity(XMFLOAT3 xmfVel) {
-	m_xmfVel = MathHelper::Add(m_xmfVel, xmfVel);
+	m_xmfVel = SMathHelper::Add(m_xmfVel, xmfVel);
 }
 
 void Object::SubVelocity(XMFLOAT3 xmfVel) {
-	m_xmfVel = MathHelper::Subtract(m_xmfVel, xmfVel);
+	m_xmfVel = SMathHelper::Subtract(m_xmfVel, xmfVel);
 }
 
 void Object::InitYVelocity() {
@@ -283,7 +283,7 @@ float Object::GetForceAmountY() const {
 }
 
 void Object::MoveObject(XMFLOAT3 distance) {
-	SetPosition(MathHelper::Add(GetPosition(), distance));
+	SetPosition(SMathHelper::Add(GetPosition(), distance));
 }
 
 void Object::MoveObject(float x, float y, float z) {
@@ -295,7 +295,7 @@ void Object::MoveStrafe(float distance) {
 	XMFLOAT3 xmf3Position = GetPosition();
 	XMFLOAT3 xmf3Right = GetRight();
 
-	xmf3Position = MathHelper::Add(xmf3Position, xmf3Right, distance);
+	xmf3Position = SMathHelper::Add(xmf3Position, xmf3Right, distance);
 	SetPosition(xmf3Position);
 }
 
@@ -303,14 +303,14 @@ void Object::MoveUp(float distance) {
 	XMFLOAT3 xmf3Position = GetPosition();
 	XMFLOAT3 xmf3Up = GetUp();
 
-	xmf3Position = MathHelper::Add(xmf3Position, xmf3Up, distance);
+	xmf3Position = SMathHelper::Add(xmf3Position, xmf3Up, distance);
 	SetPosition(xmf3Position);
 }
 
 void Object::MoveForward(float distance) {
 	XMFLOAT3 xmf3Position = GetPosition();
 	XMFLOAT3 xmf3Look = GetLook();
-	xmf3Position = MathHelper::Add(xmf3Position, xmf3Look, distance);
+	xmf3Position = SMathHelper::Add(xmf3Position, xmf3Look, distance);
 	SetPosition(xmf3Position);
 }
 
@@ -319,14 +319,14 @@ void Object::Rotate(float pitch, float yaw, float roll) {
 	XMStoreFloat4(&quat, XMQuaternionRotationRollPitchYaw(XMConvertToRadians(pitch), XMConvertToRadians(yaw), XMConvertToRadians(roll)));
 	XMFLOAT4X4 rot;
 
-	MathHelper::QuatToMatrix(&quat, &rot);
+	SMathHelper::QuatToMatrix(&quat, &rot);
 	XMStoreFloat4x4(&m_xmf4x4World, XMLoadFloat4x4(&rot) * XMLoadFloat4x4(&m_xmf4x4World));
 }
 
 void Object::SetMatrixByLook(float x, float y, float z) {
 	XMFLOAT3 look{ x,y,z };
 	XMFLOAT3 up = GetUp();
-	XMFLOAT3 right = MathHelper::CrossProduct(up, look);
+	XMFLOAT3 right = SMathHelper::CrossProduct(up, look);
 
 	m_xmf4x4World._11 = right.x;
 	m_xmf4x4World._12 = right.y;

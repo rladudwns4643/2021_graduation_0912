@@ -149,7 +149,7 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MathHelper.cpp" />
+    <ClCompile Include="SMathHelper.cpp" />
     <ClCompile Include="MyThread.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="pch.cpp">
@@ -174,7 +174,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="SMathHelper.h" />
     <ClInclude Include="MyThread.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="pch.h" />

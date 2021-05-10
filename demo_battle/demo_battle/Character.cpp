@@ -20,7 +20,7 @@ Character::Character(const int& spawn_pos_idx) {
 Character::Character(Object& cur, const Boundary* new_bb) {
 	Initialize();
 
-	m_xmf4x4World = MathHelper::Identity4x4();
+	m_xmf4x4World = SMathHelper::Identity4x4();
 
 	m_xmfAcc = cur.GetAccerleration();
 	m_xmfVel = cur.GetVelocity();
@@ -32,7 +32,7 @@ Character::Character(Object& cur, const Boundary* new_bb) {
 	m_boundaries->SetObjType(-1);
 
 	//obj¿« rot_quaternion
-	FXMVECTOR obj_rot_quat{ MathHelper::QuatFromMatrix(GetMatrix()) };
+	FXMVECTOR obj_rot_quat{ SMathHelper::QuatFromMatrix(GetMatrix()) };
 	XMVECTOR result_quat;
 	for (int i = 0; i < numofBB; ++i) {
 		m_boundaries->SetBBPos(new_bb->GetBBPos(i), i); //setPos bb
@@ -50,8 +50,8 @@ Character::Character(Object& cur, const Boundary* new_bb) {
 		//make 
 		XMFLOAT4X4 result_quat_to_mat;
 		result_quat = XMQuaternionMultiply(bb_rot_quat, obj_rot_quat);
-		XMFLOAT4 tmp = MathHelper::XMVector4ToFloat4(result_quat);
-		MathHelper::QuatToMatrix(&tmp, &result_quat_to_mat);
+		XMFLOAT4 tmp = SMathHelper::XMVector4ToFloat4(result_quat);
+		SMathHelper::QuatToMatrix(&tmp, &result_quat_to_mat);
 
 		XMFLOAT3 bb_pos{ m_boundaries->GetBBPos(i) };
 		result_quat_to_mat._41 += bb_pos.x;
@@ -60,7 +60,7 @@ Character::Character(Object& cur, const Boundary* new_bb) {
 
 		m_boundaries->SetBBSize(new_bb->GetBBSize(i), i);
 		m_boundaries->SetWorldMatrix(result_quat_to_mat, i);
-		m_boundaries->SetBBPos(MathHelper::Add(m_boundaries->GetBBPos(i), GetPosition()), i);
+		m_boundaries->SetBBPos(SMathHelper::Add(m_boundaries->GetBBPos(i), GetPosition()), i);
 	}
 }
 
@@ -70,7 +70,7 @@ Character::~Character() {
 }
 
 void Character::Initialize() {
-	m_xmf4x4World = MathHelper::Identity4x4();
+	m_xmf4x4World = SMathHelper::Identity4x4();
 	m_xmfAcc = {};
 	m_xmfVel = {};
 	m_boundaries->SetObjType(OBJECT_TYPE_TOY);

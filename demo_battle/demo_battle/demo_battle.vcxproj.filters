@@ -96,7 +96,7 @@
     <ClCompile Include="Room.cpp">
       <Filter>Code\Room</Filter>
     </ClCompile>
-    <ClCompile Include="MathHelper.cpp">
+    <ClCompile Include="SMathHelper.cpp">
       <Filter>Code\DX</Filter>
     </ClCompile>
     <ClCompile Include="Boundary.cpp">
@@ -170,7 +170,7 @@
     <ClInclude Include="..\..\demo_server\demo_server\protocol.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="MathHelper.h">
+    <ClInclude Include="SMathHelper.h">
       <Filter>Code\DX</Filter>
     </ClInclude>
     <ClInclude Include="Boundary.h">

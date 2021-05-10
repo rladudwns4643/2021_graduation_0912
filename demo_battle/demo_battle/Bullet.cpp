@@ -16,7 +16,7 @@ void Bullet::Initialize() {
 	m_fricCoef = 1.f;
 	m_maxVel = 3.f;
 	m_isApplyGravity = false;
-	m_xmf4x4World = MathHelper::Identity4x4();
+	m_xmf4x4World = SMathHelper::Identity4x4();
 	SetVelocity(XMFLOAT3{ 0.f, 0.f, 0.f });
 	SetAcceleration(XMFLOAT3{ 0.f,0.f, 0.f });
 
@@ -41,13 +41,13 @@ void Bullet::Shoot(const XMFLOAT3& pos, const XMFLOAT3& look, XMFLOAT3& dir, flo
 	shoot_pos.z += look.z * scala_distance;
 	shoot_pos.y += 120.f; // player pivot에서 얼마나 위에서 쏘는가
 
-	m_xmf4x4World = MathHelper::Identity4x4();
+	m_xmf4x4World = SMathHelper::Identity4x4();
 	SetPosition(shoot_pos); //실제 위치 변경
 	SetLook(dir.x, dir.y, dir.z); //look 방향으로 쏘면 안될까
 	SetShoot(true);
 	SetCollider(true);
 
-	XMFLOAT3 force = MathHelper::Normalize(dir);
+	XMFLOAT3 force = SMathHelper::Normalize(dir);
 
 	XMStoreFloat3(&force, XMLoadFloat3(&force) * m_forceAmountXZ);
 	AddForce(force, eTime, true); // 

@@ -131,7 +131,7 @@ void Room::Update() {
 
 					//
 
-					subDistance = MathHelper::Subtract(curpos, prepos);
+					subDistance = SMathHelper::Subtract(curpos, prepos);
 
 					if (fabs(subDistance.x) >= 0.1f
 						|| fabs(subDistance.y) >= 3.f
@@ -158,7 +158,7 @@ void Room::Update() {
 		//	XMFLOAT3 curpos = (*iter)->GetPosition();
 		//	XMFLOAT3 prepos = (*iter)->GetPrePosition();
 		//
-		//	subDistance = MathHelper::Subtract(curpos, prepos);
+		//	subDistance = SMathHelper::Subtract(curpos, prepos);
 		//
 		//	if (fabs(subDistance.x) >= 0.1f
 		//		|| fabs(subDistance.y) >= 1.f

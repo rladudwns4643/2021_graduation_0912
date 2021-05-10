@@ -1,13 +1,14 @@
 //***************************************************************************************
-// MathHelper.cpp by Frank Luna (C) 2011 All Rights Reserved.
+// SMathHelper.cpp by Frank Luna (C) 2011 All Rights Reserved.
 //***************************************************************************************
+
 #include "pch.h"
-#include "MathHelper.h"
+#include "SMathHelper.h"
 
-const float MathHelper::Infinity = FLT_MAX;
-const float MathHelper::Pi = 3.1415926535f;
+const float SMathHelper::Infinity = FLT_MAX;
+const float SMathHelper::Pi = 3.1415926535f;
 
-float MathHelper::AngleFromXY(float x, float y)
+float SMathHelper::AngleFromXY(float x, float y)
 {
 	float theta = 0.0f;
 
@@ -29,7 +30,7 @@ float MathHelper::AngleFromXY(float x, float y)
 	return theta;
 }
 
-XMVECTOR MathHelper::RandUnitVec3()
+XMVECTOR SMathHelper::RandUnitVec3()
 {
 	XMVECTOR One = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	XMVECTOR Zero = XMVectorZero();
@@ -38,7 +39,7 @@ XMVECTOR MathHelper::RandUnitVec3()
 	while (true)
 	{
 		// Generate random point in the cube [-1,1]^3.
-		XMVECTOR v = XMVectorSet(MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), 0.0f);
+		XMVECTOR v = XMVectorSet(SMathHelper::RandF(-1.0f, 1.0f), SMathHelper::RandF(-1.0f, 1.0f), SMathHelper::RandF(-1.0f, 1.0f), 0.0f);
 
 		// Ignore points outside the unit sphere in order to get an even distribution 
 		// over the unit sphere.  Otherwise points will clump more on the sphere near 
@@ -51,7 +52,7 @@ XMVECTOR MathHelper::RandUnitVec3()
 	}
 }
 
-XMVECTOR MathHelper::RandHemisphereUnitVec3(XMVECTOR n)
+XMVECTOR SMathHelper::RandHemisphereUnitVec3(XMVECTOR n)
 {
 	XMVECTOR One = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	XMVECTOR Zero = XMVectorZero();
@@ -60,7 +61,7 @@ XMVECTOR MathHelper::RandHemisphereUnitVec3(XMVECTOR n)
 	while (true)
 	{
 		// Generate random point in the cube [-1,1]^3.
-		XMVECTOR v = XMVectorSet(MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), MathHelper::RandF(-1.0f, 1.0f), 0.0f);
+		XMVECTOR v = XMVectorSet(SMathHelper::RandF(-1.0f, 1.0f), SMathHelper::RandF(-1.0f, 1.0f), SMathHelper::RandF(-1.0f, 1.0f), 0.0f);
 
 		// Ignore points outside the unit sphere in order to get an even distribution 
 		// over the unit sphere.  Otherwise points will clump more on the sphere near 
@@ -77,35 +78,35 @@ XMVECTOR MathHelper::RandHemisphereUnitVec3(XMVECTOR n)
 	}
 }
 
-XMFLOAT3 MathHelper::Normalize(const XMFLOAT3& xmfVector)
+XMFLOAT3 SMathHelper::Normalize(const XMFLOAT3& xmfVector)
 {
 	XMFLOAT3 m_xmf3Normal;
 	XMStoreFloat3(&m_xmf3Normal, XMVector3Normalize(XMLoadFloat3(&xmfVector)));
 	return(m_xmf3Normal);
 }
 
-XMFLOAT3 MathHelper::Add(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2)
+XMFLOAT3 SMathHelper::Add(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) + XMLoadFloat3(&xmf3Vector2));
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::Add(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2, const float fScalar)
+XMFLOAT3 SMathHelper::Add(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2, const float fScalar)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) + (XMLoadFloat3(&xmf3Vector2) * fScalar));
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::Subtract(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2)
+XMFLOAT3 SMathHelper::Subtract(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMLoadFloat3(&xmf3Vector1) - XMLoadFloat3(&xmf3Vector2));
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::TransformNormal(const XMFLOAT3& xmf3Vector, const XMMATRIX& xmmtxTransform)
+XMFLOAT3 SMathHelper::TransformNormal(const XMFLOAT3& xmf3Vector, const XMMATRIX& xmmtxTransform)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMVector3TransformNormal(XMLoadFloat3(&xmf3Vector), xmmtxTransform));
@@ -113,20 +114,20 @@ XMFLOAT3 MathHelper::TransformNormal(const XMFLOAT3& xmf3Vector, const XMMATRIX&
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::TransformCoord(const XMFLOAT3& xmf3Vector, const XMMATRIX& xmmtxTransform)
+XMFLOAT3 SMathHelper::TransformCoord(const XMFLOAT3& xmf3Vector, const XMMATRIX& xmmtxTransform)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMVector3TransformCoord(XMLoadFloat3(&xmf3Vector), xmmtxTransform));
 	return(xmf3Result);
 }
 
-XMFLOAT3 MathHelper::TransformCoord(const XMFLOAT3& xmf3Vector, const XMFLOAT4X4& xmmtx4x4Matrix)
+XMFLOAT3 SMathHelper::TransformCoord(const XMFLOAT3& xmf3Vector, const XMFLOAT4X4& xmmtx4x4Matrix)
 {
 	XMMATRIX xmfMatrix = XMLoadFloat4x4(&xmmtx4x4Matrix);
-	return MathHelper::TransformCoord(xmf3Vector, xmfMatrix);
+	return SMathHelper::TransformCoord(xmf3Vector, xmfMatrix);
 }
 
-XMFLOAT3 MathHelper::CrossProduct(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2, const bool bNormalize)
+XMFLOAT3 SMathHelper::CrossProduct(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& xmf3Vector2, const bool bNormalize)
 {
 	XMFLOAT3 xmf3Result;
 	if (bNormalize)
@@ -136,14 +137,14 @@ XMFLOAT3 MathHelper::CrossProduct(const XMFLOAT3& xmf3Vector1, const XMFLOAT3& x
 	return(xmf3Result);
 }
 
-float MathHelper::Length(const XMFLOAT3& xmf3Vector)
+float SMathHelper::Length(const XMFLOAT3& xmf3Vector)
 {
 	XMFLOAT3 xmf3Result;
 	XMStoreFloat3(&xmf3Result, XMVector3Length(XMLoadFloat3(&xmf3Vector)));
 	return(xmf3Result.x);
 }
 
-XMFLOAT4X4 MathHelper::LookAtLH(const XMFLOAT3& xmf3EyePosition, const XMFLOAT3& xmf3LookAtPosition, const XMFLOAT3& xmf3UpDirection)
+XMFLOAT4X4 SMathHelper::LookAtLH(const XMFLOAT3& xmf3EyePosition, const XMFLOAT3& xmf3LookAtPosition, const XMFLOAT3& xmf3UpDirection)
 {
 	XMFLOAT4X4 xmmtx4x4Result;
 	XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixLookAtLH(XMLoadFloat3(&xmf3EyePosition), XMLoadFloat3(&xmf3LookAtPosition), XMLoadFloat3(&xmf3UpDirection)));

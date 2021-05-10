@@ -2,7 +2,6 @@
 // MathHelper.cpp by Frank Luna (C) 2011 All Rights Reserved.
 //***************************************************************************************
 #include "pch.h"
-#include "MathHelper.h"
 
 const float MathHelper::Infinity = FLT_MAX;
 const float MathHelper::Pi = 3.1415926535f;

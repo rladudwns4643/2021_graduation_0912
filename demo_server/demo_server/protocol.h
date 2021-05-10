@@ -1,5 +1,5 @@
 #pragma once
-//#include "../../demo_battle/demo_battle/MathHelper.h"
+#include "../../demo_battle/demo_battle/SMathHelper.h"
 //------------------------------------------------------------------
 #define LOBBY_SERVER_PORT	7237
 #define BATTLE_SERVER_PORT	7238
