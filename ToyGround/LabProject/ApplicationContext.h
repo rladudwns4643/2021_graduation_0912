@@ -61,6 +61,7 @@ public:
 	void CreateSkycube(std::string skycubeName, std::string instID, std::string matName);
 	void CreateProps(std::string mapName);
 	void CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex);
+	void CreateWeapon(std::string weaponName, std::string subWeaponName, std::string partName);
 
 	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
 

@@ -34,11 +34,13 @@ AnimationController::~AnimationController()
 void AnimationController::Update(const float deltaT)
 {
 	SetState(deltaT);
-	float speed = 60.f / (1.f / deltaT);
+	float speed = deltaT;
+	if (m_PlayerState == PlayerState::STATE_ATTACK)
+		speed *= 2;
 
 	for (auto& p : m_MapAnimData)
 	{
-		p.second->m_Time = p.second->m_Time + deltaT;
+		p.second->m_Time = p.second->m_Time + speed;
 	}
 	UpdateBoneTransforms();
 

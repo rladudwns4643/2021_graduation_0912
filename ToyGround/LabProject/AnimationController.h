@@ -15,6 +15,7 @@ public:
 
 private:
 	Character* m_Owner;
+public:
 	SkinnedModelInstance* m_CopySkinnedModelInst;
 
 public:

@@ -41,7 +41,7 @@
 #define TEXTURE_STR_PolygonMinis_Texture_01_A "PolygonMinis_Texture_01_A"
 
 // 캐릭터
-enum BoneIndex { Cowboy = 0, Count };
+enum BoneIndex { Cowboy = 0, GunMan, Count };
 
 // 오브젝트 메쉬
 #define OBJECT_MESH_STR_TEST_PLAYER		"Test_Player"
@@ -115,6 +115,7 @@ enum class CameraType { eFirst = 0, eThird = 1, eFree = 2 };
 
 // 캐릭터
 #define CHARACTER_COWBOY "Cowboy"
+#define CHARACTER_GUNMAN "GunMan"
 
 // Animation KeyState
 #define KEY_IDLE "Idle"

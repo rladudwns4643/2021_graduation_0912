@@ -161,7 +161,7 @@ namespace MapTool
 {
 	struct MapInfo
 	{
-		string meshName; // 클라 메시타입 아이디
+		string meshName;
 		XMFLOAT3 position;
 		XMFLOAT3 rotation;
 		int typeID; // 고유ID

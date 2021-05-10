@@ -131,6 +131,12 @@ void TOY_GROUND::BuildAsserts()
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Idle");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Running");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Jump");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Attack");
+	AssertsReference::GetApp()->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), CHARACTER_GUNMAN);
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Idle");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Running");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Jump");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Attack");
 
 	// Build Materials
 	AssertsReference::GetApp()->BuildMaterials();
@@ -139,4 +145,5 @@ void TOY_GROUND::BuildAsserts()
 void TOY_GROUND::BuildCharacters()
 {
 	AppContext->CreateCharacter(CHARACTER_COWBOY, CHARACTER_COWBOY, TEXTURE_STR_PolygonMinis_Texture_01_A, BoneIndex::Cowboy);
+	AppContext->CreateCharacter(CHARACTER_GUNMAN, CHARACTER_GUNMAN, TEXTURE_STR_PolygonMinis_Texture_01_A, BoneIndex::GunMan);
 }

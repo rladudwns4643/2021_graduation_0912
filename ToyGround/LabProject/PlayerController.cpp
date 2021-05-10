@@ -132,6 +132,14 @@ void PlayerController::MouseCallback()
 			return;
 		}
 	}
+	if (InputHandler::g_LeftMouseCallback)
+	{
+		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
+		CommandCenter::GetApp()->m_StartAttackAnim = true;
+	}
+	else
+	{
+	}
 }
 
 void PlayerController::OnKeyPressed()

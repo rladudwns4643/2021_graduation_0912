@@ -14,7 +14,7 @@ namespace Core
 {
 	GameCore* g_Core = nullptr;
 	GameTimer* g_GameTimer = nullptr;
-	Network* g_network = nullptr;
+	//Network* g_network = nullptr;
 
 
 	HINSTANCE			g_hAppInst = nullptr; // application instance handle
@@ -46,10 +46,10 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 
 	g_Core = GameCore::GetApp();
 	g_GameTimer = GameTimer::GetApp();
-	g_network = Network::GetApp();
+//	g_network = Network::GetApp();
 
-	std::thread connect_thread(&Network::ConnectLobbyServer, g_network);
-	std::thread worker_thread(&Network::DoWorker, g_network);
+	//std::thread connect_thread(&Network::ConnectLobbyServer, g_network);
+	//std::thread worker_thread(&Network::DoWorker, g_network);
 
 	MSG msg = {};
 
@@ -70,8 +70,8 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 		}
 	}
 
-	connect_thread.join();
-	worker_thread.join();
+	//connect_thread.join();
+	//worker_thread.join();
 	TerminateApplication(app);
 }
 
@@ -83,7 +83,7 @@ void Core::TerminateApplication(IGameApp& game)
 	// Context Release
 	GameCore::DestroyApp();
 	GameTimer::DestroyApp();
-	delete g_network;
+	//delete g_network;
 }
 
 void Core::CalculateFrameStats()

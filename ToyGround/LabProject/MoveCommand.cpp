@@ -33,8 +33,7 @@ void MoveCommand::RightStrafe()
 
 void MoveCommand::Attack()
 {
-	// Animation
-	//m_Owner->SetAnimationKeyState(AnimationController::PlayerState::STATE_ATTACK);
+	m_Owner->SetAnimationKeyState(AnimationController::PlayerState::STATE_ATTACK);
 }
 
 void MoveCommand::Jump()

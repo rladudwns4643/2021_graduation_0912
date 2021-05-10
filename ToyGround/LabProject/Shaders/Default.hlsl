@@ -60,9 +60,6 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 
     for (int i = 0; i < 4; ++i)
     {
-        // 변환들에 비균등 비례가 전혀 없다고 가정한다(따라서
-        // 법선 변환 시 역전치 행렬을 사용할 필요가 없다.)
-
         posL += weights[i] * mul(float4(vin.PosL, 1.0f), gBoneTransforms[vin.BoneIndices[i]]).xyz;
         normalL += weights[i] * mul(vin.NormalL, (float3x3) gBoneTransforms[vin.BoneIndices[i]]);
         tangentL += weights[i] * mul(vin.TangentL.xyz, (float3x3) gBoneTransforms[vin.BoneIndices[i]]);

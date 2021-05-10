@@ -105,8 +105,7 @@ void AnimationClip::Interpolate(float t, std::vector<XMFLOAT4X4>& boneTransforms
 {
 	for (UINT i = 0; i < BoneAnimations.size(); ++i)
 	{
-		// 딱 그 시간에 맞는 프레임을 알기가 어렵다
-		// 보간으로 인하여 그래서 어쩔수 없이 반복문을 돌아야함
+		// 보간을 통해서 애니메이션을 자유롭게함
 		BoneAnimations[i].Interpolate(t, boneTransforms[i]);
 	}
 }

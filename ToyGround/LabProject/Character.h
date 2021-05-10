@@ -13,6 +13,7 @@ class Character : public GameObject
 public:
 	int m_SpawnLoaction;				// 스폰위치
 	std::string m_UserPlayerMeshName;	// 플레이어 메쉬이름
+	std::string m_MapName;				// 캐릭터가 속해있는 맵이름
 
 public:
 	// 캐릭터 상태
@@ -26,13 +27,16 @@ public:
 
 	// 업데이트 + 컴포넌트 업데이트
 	void Update(const float deltaT);
+	void WeaponUpdate();
 
 public:
 
 public:
+	void SetMapName(std::string mapName);
 	void SetCamera(Camera* myCamera, CameraType cameraType);
 	void SetCamera(CameraType cameraType);
 	void SetController();
+	void SetParts(CharacterParts* parts);
 
 	virtual bool	SetMesh(std::string meshName, std::string submeshName) override;
 	void			SetMaterial(int materialIndex);
@@ -62,6 +66,8 @@ public:
 	std::unique_ptr<PlayerController>		m_PlayerController;
 	std::unique_ptr<AnimationController>	m_AnimationController;
 	std::map<std::string, CharacterParts*>	m_Parts;
+
+	int m_PlayerID = 0;
 
 public:
 	bool			m_IsThirdCamera = true;

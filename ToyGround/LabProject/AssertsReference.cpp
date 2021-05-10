@@ -9,7 +9,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	set<string> propTypeSet;
 
 	MapTool::PlayerInfo prePlayerInfo;
-	prePlayerInfo.playerName = "FirstPlayer";
+	prePlayerInfo.playerName = "Cowboy";
 	prePlayerInfo.position.x = 0.f;
 	prePlayerInfo.position.y = 0.f;
 	prePlayerInfo.position.z = 0.f;
@@ -17,7 +17,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	prePlayerInfo.spawnPos = 1;
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
-	prePlayerInfo.playerName = "SecondPlayer";
+	prePlayerInfo.playerName = "GunMan";
 	prePlayerInfo.position.x = 0.f;
 	prePlayerInfo.position.y = 0.f;
 	prePlayerInfo.position.z = 500.f;
@@ -40,6 +40,22 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		float startY = -STD_CUBE_SIZE;
 		float startZ = -STD_CUBE_SIZE * (MAP_DEPTH_BLOCK_NUM / 2);
 		float shiftX, shiftY, shiftZ;
+
+		// Create Weapon
+		propTypeSet.insert(OBJECT_MESH_STR_REVOLVER);
+		for (int i = 0; i < 4; ++i)
+		{
+			preInfo.meshName = OBJECT_MESH_STR_REVOLVER;
+			preInfo.rotation.x = 0.0f;
+			preInfo.rotation.y = 0.0f;
+			preInfo.rotation.z = 0.0f;
+			preInfo.position.x = STD_CUBE_SIZE * i;
+			preInfo.position.y = STD_CUBE_SIZE * 2;
+			preInfo.position.z = 0.0f;
+			preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+			preInfo.typeID = ++typeIDCount;
+			map->mapInfoVector.emplace_back(preInfo);
+		}
 
 		for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k)
 		{

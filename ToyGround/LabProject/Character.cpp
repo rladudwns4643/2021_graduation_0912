@@ -37,6 +37,7 @@ void Character::Update(const float deltaT)
 		m_PlayerController->Update(deltaT);
 
 	m_AnimationController->Update(deltaT);
+	//WeaponUpdate();
 
 	// 카메라 변환
 	if (m_MyCamera != NULL)
@@ -58,6 +59,40 @@ void Character::Update(const float deltaT)
 			//CameraUpdate(deltaT);
 		}
 	}
+}
+
+void Character::WeaponUpdate()
+{
+	Map* originMap = AppContext->m_Maps[m_MapName];
+
+	//if (m_PlayerID == 0)
+	//{
+	//	GameObject* leftWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(1));
+	//	leftWeapon->SetPosition(m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._41,
+	//							m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._42,
+	//							m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._43);
+	//	leftWeapon->
+	//	GameObject* RightWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(2));
+	//	RightWeapon->SetPosition(m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._41,
+	//							m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._42,
+	//							m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._43);
+	//}
+	//else
+	//{
+	//	GameObject* leftWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(3));
+	//	leftWeapon->SetPosition(m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._41,
+	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._42,
+	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._43);
+	//	GameObject* RightWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(4));
+	//	RightWeapon->SetPosition(m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._41,
+	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._42,
+	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._43);
+	//}
+}
+
+void Character::SetMapName(std::string mapName)
+{
+	m_MapName = mapName;
 }
 
 void Character::SetCamera(Camera* myCamera, CameraType cameraType)
@@ -136,6 +171,11 @@ void Character::SetController()
 {
 	// 커서지우고
 	m_PlayerController = make_unique<PlayerController>(this);
+}
+
+void Character::SetParts(CharacterParts* parts)
+{
+	//m_Parts[parts->m_PartsName] = parts;
 }
 
 bool Character::Move(DWORD dwDirection, float fDistance)

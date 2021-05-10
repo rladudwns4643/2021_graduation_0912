@@ -4,6 +4,7 @@
 #include "CommandContext.h"
 #include "Map.h"
 #include "Character.h"
+#include "CharacterParts.h"
 
 #define WIDTH_NORMALIZE_LT(x) (x + (1980.f / 2.f))
 #define HEIGHT_NORMALIZE_LT(y) (-y + (1080.f / 2.f))
@@ -73,6 +74,16 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->SetAnimationController(AssertsReference::GetApp()->m_SkinnedModelInsts[meshName].get());
 	chr->m_SkinnedCBIndex = skinnedCBIndex;
 	chr->m_SpawnLoaction = skinnedCBIndex;
+}
+
+void ApplicationContext::CreateWeapon(std::string weaponName, std::string subWeaponName, std::string partName)
+{
+	CharacterParts* weapon = CreateObject<CharacterParts>(weaponName, subWeaponName);
+	weapon->SetMesh(weaponName, subWeaponName);
+	weapon->m_MaterialIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
+	weapon->m_PartsName = partName;
+	weapon->Rotate(0, 0, 0);
+	weapon->SetPosition(0, 0, 0);
 }
 
 void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float scaleValue)
