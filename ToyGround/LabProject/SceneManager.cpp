@@ -1,9 +1,66 @@
 #include "pch.h"
 #include "SceneManager.h"
 #include "Scene.h"
+#include "Service.h"
 
 #include "LobbyScene.h"
 #include "GameplayScene.h"
+
+void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
+	if (argsCount == 0) {
+		cout << "[SceneMnr] event: " << (int)sEvent << endl;
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent);
+		return;
+	}
+	switch (sEvent) { //break 바로 들어가는건 argsCount가 0이라 위에서 처리함
+		//lobby
+	case EVENT_LOBBY_LOGIN_OK: break;
+	case EVENT_LOBBY_LOGIN_FAIL: break;
+	case EVENT_LOBBY_SIGNUP_OK: break;
+	case EVENT_LOBBY_SIGNUP_FAIL: break;
+	case EVENT_LOBBY_UPDATE_CLIENT_USERINFO: {
+		va_list ap;
+		int mmr;
+		va_start(ap, argsCount);
+		mmr = va_arg(ap, int);
+		va_end(ap);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, mmr);
+		break;
+	}
+	case EVENT_LOBBY_MATCH_START: break;
+	case EVENT_LOBBY_MATCH_CANCEL: break; //미구현
+		//battle
+	case EVENT_BATTLE_ROOM_JOIN_OK: break;
+	case EVENT_ROOM_READY: {
+		va_list ap;
+		int id;
+		bool ready;
+		va_start(ap, argsCount);
+		id = va_arg(ap, int);
+		ready = va_arg(ap, bool);
+		va_end(ap);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, id, ready);
+		break;
+	}
+	case EVENT_ROOM_START_AVAILABLE: { //일단 바로 시작하는걸로
+		break;
+	}
+	case EVENT_ROOM_START: {
+		//씬전환 eLobby -> eGamePlay
+		break;
+	}
+	//ingame
+	case EVENT_GAME_TIMER: {
+		va_list ap;
+		int t;
+		va_start(ap, argsCount);
+		t = va_arg(ap, int);
+		va_end(ap);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, t);
+		break;
+	}
+	}
+}
 
 SceneManager::SceneManager() : m_CurScene(0)
 {
@@ -11,8 +68,7 @@ SceneManager::SceneManager() : m_CurScene(0)
 
 SceneManager::~SceneManager()
 {
-	for (auto& s : m_Scenes)
-	{
+	for (auto& s : m_Scenes) {
 		SAFE_DELETE_PTR(s->m_SceneController);
 	}
 

@@ -253,14 +253,14 @@ void LobbyServer::SendUserInfoPacket(int id) {
 void LobbyServer::SendMatchStartPacket(int id, short room_no) {
 	lc_packet_startMatch p;
 	p.size = sizeof(p);
-	p.type = LC_MATCHSTART;
+	p.type = LC_MATCH_START;
 	p.roomNum = room_no;
 	p.is_host = false;
 	
 	SendPacket(id, &p);
 }
 
-void LobbyServer::SendCancelAutoMatchSuccess(int id)
+void LobbyServer::SendMatchCancelPacket(int id)
 {
 }
 

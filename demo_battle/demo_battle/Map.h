@@ -1,16 +1,18 @@
 #pragma once
 #include "Object.h"
 
-class Map {
-public:
-	enum e_obj_list_type { FIXED, NOTFIXED, ABOVE, ID_COUNT };
+// ¸Ê Å¥ºê °³¼ö
+#define MAP_WIDTH_BLOCK_NUM 21
+#define MAP_DEPTH_BLOCK_NUM 33
+#define MAP_HEIGHT_BLOCK_NUM 5
 
+class Map {
 public:
 	Map();
 	~Map();
 
-	void LoadMap(int map_no);
+	void LoadMapInfo(string mapName);
 
 public:
-	std::vector<Object*> m_obj_list[ID_COUNT];
+	int data[MAP_HEIGHT_BLOCK_NUM][MAP_DEPTH_BLOCK_NUM][MAP_WIDTH_BLOCK_NUM];
 };

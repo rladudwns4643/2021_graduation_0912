@@ -64,8 +64,8 @@
 #define LC_SIGNUP_OK				32
 #define LC_SIGNUP_FAIL				33
 #define LC_USERINFO					34
-#define LC_CANCEL_AUTOMATCH_SUCCESS 35
-#define LC_MATCHSTART				36
+#define LC_MATCH_START				35
+#define LC_MATCH_CANCEL				36
 
 #pragma pack(push, 1)
 struct lc_packet_login_ok {
@@ -98,7 +98,7 @@ struct lc_pakcet_signup_fail {
 	BYTE type;
 };
 
-struct lc_packet_cancel_automatch_success {
+struct lc_packet_match_cancel {
 	BYTE size;
 	BYTE type;
 };
@@ -465,7 +465,7 @@ struct cb_packet_move_key_status {
 	BYTE size;
 	BYTE type;
 
-	BYTE key;	//CB_KEY_@_DOWN, UP
+	//BYTE key;	//CB_KEY_@_DOWN, UP
 };
 
 struct cb_packet_bullet {

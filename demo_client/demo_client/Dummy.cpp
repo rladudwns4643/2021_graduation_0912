@@ -128,7 +128,7 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		SendJoinPacket(id, dummy[id].room_num);
 		break;
 	}
-	case LC_MATCHSTART: {
+	case LC_MATCH_START: {
 		//scene change
 #ifdef LOG_ON
 		cout << "MATCHSTART" << endl;

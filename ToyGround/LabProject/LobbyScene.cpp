@@ -4,6 +4,34 @@
 #include "CommandContext.h"
 #include "Timer.h"
 #include "InputHandler.h"
+#include "Service.h"
+
+void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
+	va_list arg;
+	switch (sEvent) {
+	case EVENT_LOBBY_LOGIN_OK: {
+		break;
+	}
+	case EVENT_LOBBY_LOGIN_FAIL: {
+		break;
+	}
+	case EVENT_LOBBY_SIGNUP_OK: {
+		break;
+	}
+	case EVENT_LOBBY_SIGNUP_FAIL: {
+		break;
+	}
+	case EVENT_LOBBY_UPDATE_CLIENT_USERINFO: {
+		break;
+	}
+	case EVENT_LOBBY_MATCH_START: {
+		break;
+	}
+	case EVENT_LOBBY_MATCH_CANCEL: {
+		break;
+	}
+	}
+}
 
 void LobbyScene::Initialize()
 {

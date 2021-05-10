@@ -23,6 +23,7 @@ class Scene abstract
 {
 protected:
 	friend class SceneManager;
+	virtual void ProcessEvent(int sEvent, int argsCount = 0, ...) {};
 
 public:
 	Scene();

@@ -3,26 +3,55 @@
 #include "Map.h"
 
 Map::Map() {
-
-}
-
-Map::~Map() {
-	for (int i = 0; i < ID_COUNT; ++i) {
-		size_t list_size = m_obj_list[i].size();
-
-		for (int j = 0; j < list_size; ++j) {
-			if (m_obj_list) delete m_obj_list[i][j];
+	for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k) {
+		for (int i = 0; i < MAP_DEPTH_BLOCK_NUM; ++i) {
+			for (int j = 0; j < MAP_WIDTH_BLOCK_NUM; ++j) {
+				data[k][i][j] = 0;
+			}
 		}
 	}
 }
 
-void Map::LoadMap(int map_no) {
-	for (int i = 0; i < ID_COUNT; ++i) {
-		size_t list_size = SR::g_map.m_obj_list[i].size(); //SR::g_map[map_no].m_obj_list[i].size();
-		m_obj_list[i].resize(list_size);
+Map::~Map() {
+	//for (int i = 0; i < ID_COUNT; ++i) {
+	//	size_t list_size = m_obj_list[i].size();
+	//
+	//	for (int j = 0; j < list_size; ++j) {
+	//		if (m_obj_list) delete m_obj_list[i][j];
+	//	}
+	//}
+}
 
-		for (int j = 0; j < list_size; ++j) {
-			m_obj_list[i][j] = new Object(*SR::g_map.m_obj_list[i][j]);
+void Map::LoadMapInfo(string mapName) {
+	string path = "Maps\\" + mapName + ".txt";
+	cout << path << endl;
+	std::ifstream fileIn(path);
+
+	if (fileIn) {
+		int ri, rj;
+		for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k) {
+			int floor;
+			fileIn >> floor;
+			for (int i = 0; i < MAP_DEPTH_BLOCK_NUM / 2 + 1; ++i) {
+				for (int j = 0; j < MAP_WIDTH_BLOCK_NUM; ++j) {
+					// 배열에 맵 저장
+					int input;
+					fileIn >> input;
+					ri = MAP_DEPTH_BLOCK_NUM - i - 1;
+					rj = MAP_WIDTH_BLOCK_NUM - j - 1;
+					data[k][i][j] = input;
+					data[k][ri][rj] = input;
+				}
+			}
 		}
+	}
+	for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k) {
+		for (int i = 0; i < MAP_DEPTH_BLOCK_NUM; ++i) {
+			for (int j = 0; j < MAP_WIDTH_BLOCK_NUM; ++j) {
+				cout << data[k][i][j];
+			}
+			cout << endl;
+		}
+		cout << endl;
 	}
 }

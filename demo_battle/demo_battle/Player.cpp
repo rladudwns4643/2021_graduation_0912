@@ -104,7 +104,7 @@ bool Player::GetReady() {
 }
 
 void Player::SetID_STR(char* name) {
-	memcpy(&m_idStr, name, sizeof(char) * MAX_STR_LEN);
+	memcpy(&m_idStr, name, sizeof(char) * MAX_ID_LEN);
 }
 
 char* Player::GetID_STR() {

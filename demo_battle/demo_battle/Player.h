@@ -75,7 +75,7 @@ protected:
 	bool m_isDead;
 	size_t m_coin_cnt;
 
-	char m_idStr[MAX_STR_LEN];
+	char m_idStr[MAX_ID_LEN];
 	int m_mmr;
 
 	bool m_keyW{ false };

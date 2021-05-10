@@ -19,6 +19,15 @@
     <Filter Include="network">
       <UniqueIdentifier>{ade07e57-30f1-40f1-8556-d77efd82d39d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="network\netCore">
+      <UniqueIdentifier>{b0c2564e-dd7a-45e0-b255-b7cdbd5000a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network\battleClient">
+      <UniqueIdentifier>{c9fbe54b-5110-4ec8-b24b-c38ca7a058aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network\Service">
+      <UniqueIdentifier>{3f9440bd-80bb-4bce-ad11-6932af57a626}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -153,6 +162,12 @@
     <ClInclude Include="GeometryGenerator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Service.h">
+      <Filter>network\Service</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -275,6 +290,15 @@
     </ClCompile>
     <ClCompile Include="Network.cpp">
       <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="netCore.cpp">
+      <Filter>network\netCore</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleClient.cpp">
+      <Filter>network\battleClient</Filter>
+    </ClCompile>
+    <ClCompile Include="Service.cpp">
+      <Filter>network\Service</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

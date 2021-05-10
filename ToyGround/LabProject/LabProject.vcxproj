@@ -181,6 +181,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneController.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Service.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SkinnedData.h" />
     <ClInclude Include="SkinnedModelInstance.h" />
@@ -231,6 +232,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneController.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Service.cpp" />
     <ClCompile Include="SkinnedData.cpp" />
     <ClCompile Include="SkinnedModelInstance.cpp" />
     <ClCompile Include="Timer.cpp" />

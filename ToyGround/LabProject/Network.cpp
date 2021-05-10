@@ -113,7 +113,7 @@ void Network::ProcessPacket(int id, unsigned char packet[]) {
 		SendAutoMatchPacket(m_client.id);
 		break;
 	}
-	case BC_AUTO_ACCEPT_OK: {
+	case BC_ACCEPT_OK: {
 		bc_packet_accept_ok* p = reinterpret_cast<bc_packet_accept_ok*>(packet);
 		m_client.battle_id = p->id;
 		m_client.battle_connect = true;
@@ -122,7 +122,7 @@ void Network::ProcessPacket(int id, unsigned char packet[]) {
 		SendJoinPacket(m_client.id, m_client.room_num);
 		break;
 	}
-	case LC_MATCHSTART: {
+	case LC_MATCH_START: {
 		//scene change
 #ifdef LOG_ON
 		cout << "MATCHSTART" << endl;
@@ -147,7 +147,7 @@ void Network::ProcessPacket(int id, unsigned char packet[]) {
 		break;
 	}
 	case BC_JOIN_FAIL: cout << "join fail\n"; break;
-	case BC_AUTO_ACCEPT_FAIL: cout << "auto accept fail\n"; break;
+	case BC_ACCEPT_FAIL: cout << "auto accept fail\n"; break;
 	case BC_ROOM_ENTERED: cout << "room entered\n"; break;
 	case BC_NEW_ROOM_HOST: cout << "new room host\n"; break;
 	case BC_LEFT_TIME: cout << "left time\n"; break;
