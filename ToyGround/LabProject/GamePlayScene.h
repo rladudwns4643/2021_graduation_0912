@@ -18,7 +18,6 @@ class Character;
 class GameplayScene : public Scene
 {
 	friend GameplayController;
-
 private:
 	virtual void ProcessEvent(int sEvent, int argsCount = 0, ...) override;
 public:

@@ -24,10 +24,19 @@ void Service::ActiveService() {
 void Service::Notify(int sEvent, int argsCount, ...) {
 	switch (sEvent) {
 	//lobby
+	case EVENT_LOBBY_CONNECT_OK: {
+		lobby_active = true;
+		Notify(EVENT_LOBBY_LOGIN_REQUEST);
+		break;
+	}
+	case EVENT_LOBBY_CONNECT_FAIL: {
+		lobby_active = false;
+		NetCore::GetApp()->DisconnectServer(eSERVER::SV_LOBBY);
+		break;
+	}
 	case EVENT_LOBBY_LOGIN_REQUEST: {
-		string id{ "test" };
-		string pw{ "1234" };
-
+		std::string id{};
+		std::string pw{};
 		NetCore::GetApp()->SendLobbyLoginPacket(id, pw);
 		break;
 	}

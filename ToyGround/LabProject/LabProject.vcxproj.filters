@@ -19,14 +19,32 @@
     <Filter Include="network">
       <UniqueIdentifier>{ade07e57-30f1-40f1-8556-d77efd82d39d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="network\netCore">
-      <UniqueIdentifier>{b0c2564e-dd7a-45e0-b255-b7cdbd5000a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="network\battleClient">
-      <UniqueIdentifier>{c9fbe54b-5110-4ec8-b24b-c38ca7a058aa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="network\Service">
       <UniqueIdentifier>{3f9440bd-80bb-4bce-ad11-6932af57a626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{44744847-ef9c-463f-b73a-d44ec615a049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Lobby">
+      <UniqueIdentifier>{522a3029-169d-420d-b249-33634ecc3228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Battle">
+      <UniqueIdentifier>{786a3a63-717e-4a0b-8f27-d2de0c1c5265}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Controller">
+      <UniqueIdentifier>{5edeaf4f-9469-4acb-9fb5-7d9d5ea5c0c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Manager">
+      <UniqueIdentifier>{1e6af721-7d84-4637-b347-cd9f88e9a6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Interface">
+      <UniqueIdentifier>{86ea8961-cf7b-4958-87be-71ef4c97887b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network\BattleClient">
+      <UniqueIdentifier>{c9fbe54b-5110-4ec8-b24b-c38ca7a058aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network\NetCore">
+      <UniqueIdentifier>{b0c2564e-dd7a-45e0-b255-b7cdbd5000a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,9 +58,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
@@ -91,18 +106,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TOY_GROUND.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="LobbyScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="GamePlayScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Controller.h">
@@ -169,10 +172,25 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="netCore.h">
-      <Filter>network\netCore</Filter>
+      <Filter>network\NetCore</Filter>
     </ClInclude>
     <ClInclude Include="BattleClient.h">
-      <Filter>network\battleClient</Filter>
+      <Filter>network\BattleClient</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyScene.h">
+      <Filter>Scene\Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayScene.h">
+      <Filter>Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneController.h">
+      <Filter>Scene\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Scene\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -225,18 +243,6 @@
     <ClCompile Include="TOY_GROUND.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="LobbyScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GamePlayScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneController.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Controller.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -270,9 +276,6 @@
     <ClCompile Include="PlayerController.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="SkinnedData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -301,10 +304,25 @@
       <Filter>network\Service</Filter>
     </ClCompile>
     <ClCompile Include="netCore.cpp">
-      <Filter>network\netCore</Filter>
+      <Filter>network\NetCore</Filter>
     </ClCompile>
     <ClCompile Include="BattleClient.cpp">
-      <Filter>network\battleClient</Filter>
+      <Filter>network\BattleClient</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyScene.cpp">
+      <Filter>Scene\Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayScene.cpp">
+      <Filter>Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneController.cpp">
+      <Filter>Scene\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Scene\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

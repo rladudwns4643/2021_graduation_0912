@@ -404,12 +404,18 @@ void NetCore::errorDisplay(const char* msg)
 void NetCore::SendLobbyLoginPacket(const std::string& id, const std::string& pw) {
 	m_client.lobby_id = id;
 
-	cl_packet_login p;
-	p.size = sizeof(p);
-	p.type = CL_DUMMY_LOGIN;
+	//todo: 나중에 login으로 바꿔야함
+
+	//cl_packet_login p;
+	//p.size = sizeof(p);
+	//p.type = CL_LOGIN;
 	//memcpy(p.id, id.c_str(), sizeof(char) * MAX_ID_LEN);
 	//memcpy(p.pw, pw.c_str(), sizeof(char) * MAX_ID_LEN);
+	//SendPacket(&p, SV_LOBBY);
 
+	cl_packet_dummy_login p;
+	p.size = sizeof(p);
+	p.type = CL_DUMMY_LOGIN;
 	SendPacket(&p, SV_LOBBY);
 }
 
