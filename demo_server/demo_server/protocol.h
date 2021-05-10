@@ -102,6 +102,7 @@ struct lc_packet_find_room {
 	BYTE type;
 
 	short roomNum;
+	bool isHost;
 };
 #pragma pack(pop)
 //------------------------------------------------------------------
@@ -171,8 +172,8 @@ struct cl_packet_cancel_automatch {
 #define BC_NEW_ROOM_HOST		7
 
 #define BC_READY				8
-#define BC_GAME_START			9
-#define BC_GAME_START_AVAILABLE	10
+#define BC_ROOM_START			9
+#define BC_ROOM_START_AVAILABLE	10
 #define BC_GAME_OVER			11
 
 #define BC_LEFT_TIME			12
@@ -266,13 +267,13 @@ struct bc_packet_ready {
 	int id;
 	bool ready;
 };
-struct bc_packet_game_start {
+struct bc_packet_room_start {
 	BYTE size;
 	BYTE type;
 
 	PTC_START_INFO start_info[2];
 };
-struct bc_packet_gamestart_available {
+struct bc_packet_room_start_available {
 	BYTE size;
 	BYTE type;
 

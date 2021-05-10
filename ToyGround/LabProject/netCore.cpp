@@ -233,6 +233,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	case LC_FIND_ROOM: {
 		lc_packet_find_room* p = reinterpret_cast<lc_packet_find_room*>(packet_buf);
 		m_battle_clients[m_client.battle_id]->m_room_num = p->roomNum;
+		m_battle_clients[m_client.battle_id]->m_host = p->isHost;
 
 		cout << "FINDROOM: " << m_room_no << endl;
 		Service::GetApp()->Notify(EVENT_ROOM_FIND_ROOM);
@@ -311,22 +312,18 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->Notify(EVENT_ROOM_READY, 2, p->id, p->ready);
 		break;
 	}
-	case BC_GAME_START_AVAILABLE: {
-		bc_packet_gamestart_available* p = reinterpret_cast<bc_packet_gamestart_available*>(packet_buf);
+	case BC_ROOM_START_AVAILABLE: {
+		bc_packet_room_start_available* p = reinterpret_cast<bc_packet_room_start_available*>(packet_buf);
 		Service::GetApp()->Notify(EVENT_ROOM_START_AVAILABLE, 1, p->available);
 		break;
 	}
-	case BC_GAME_START: {
-		bc_packet_game_start* p = reinterpret_cast<bc_packet_game_start*>(packet_buf);
+	case BC_ROOM_START: {
+		bc_packet_room_start* p = reinterpret_cast<bc_packet_room_start*>(packet_buf);
 		for (auto& st : p->start_info) {
 			if (m_battle_clients.count(st.id)) {
 				m_battle_clients[st.id]->m_spawn_position = st.spawn_pos;
 			}
 		}
-		cout << m_battle_clients[m_client.battle_id]->m_spawn_position.x;
-		cout << m_battle_clients[m_client.battle_id]->m_spawn_position.y;
-		cout << m_battle_clients[m_client.battle_id]->m_spawn_position.z;
-		cout << endl;
 		//¸ÊÁ¤º¸ Àü´Þ
 		//m_map_info = static_cast<int>(p->map_type);
 

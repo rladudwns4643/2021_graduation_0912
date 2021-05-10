@@ -594,10 +594,10 @@ void Room::PushUnReadyMsg(int id) {
 	}
 }
 
-void Room::PushGameStartAvailableMsg(int id, bool available) {
-	bc_packet_gamestart_available p;
+void Room::PushRoomStartAvailableMsg(int id, bool available) {
+	bc_packet_room_start_available p;
 	p.size = sizeof(p);
-	p.type = BC_GAME_START_AVAILABLE;
+	p.type = BC_ROOM_START_AVAILABLE;
 	p.available = available;
 	PushSendMsg(id, &p);
 }

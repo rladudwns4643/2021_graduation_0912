@@ -67,7 +67,7 @@ public:		//send msg
 
 	void PushReadyMsg(int id, bool ready);
 	void PushUnReadyMsg(int id);
-	void PushGameStartAvailableMsg(int id, bool available);
+	void PushRoomStartAvailableMsg(int id, bool available);
 
 	void PushNewRoomMnrMsg(int id);
 

@@ -173,6 +173,6 @@ namespace MapTool
 		string playerName;
 		XMFLOAT3 position;
 		float rotY;
-		UINT spawnPos;
+		XMFLOAT3 spawnPos;
 	};
 }

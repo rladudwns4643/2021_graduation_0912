@@ -255,6 +255,8 @@ void LobbyServer::SendFindRoomPacket(int id, short room_no) {
 	p.size = sizeof(p);
 	p.type = LC_FIND_ROOM;
 	p.roomNum = room_no;
+	if (id == 1) p.isHost = true;
+	else p.isHost = false;
 	
 	SendPacket(id, &p);
 }

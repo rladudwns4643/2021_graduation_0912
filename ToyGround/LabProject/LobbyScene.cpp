@@ -41,15 +41,17 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	}
 	case EVENT_ROOM_ENTER: {
 		//누군가 룸에 들어옴(나 포함)
-		cout << "ENTER ROOM" << endl;
 		int arg_id;
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
 		va_end(ap);
+		cout << "ENTER ROOM id: "<< arg_id << endl;
 		//들어온 id
 		//Ready key 눌러서
-		NetCore::GetApp()->SendReadyPacket();
+		if (arg_id == Service::GetApp()->GetMyBattleID()) {
+			NetCore::GetApp()->SendReadyPacket();
+		}
 		break;
 	}
 	case EVENT_ROOM_LEAVE: {

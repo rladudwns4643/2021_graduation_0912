@@ -282,9 +282,9 @@ void BattleServer::SendGameStartPacket(int id, PTC_START_INFO* player_info) {
 #ifdef LOG_ON
 	cout << "SendGameStartPacket: " << id << endl;
 #endif
-	bc_packet_game_start p;
+	bc_packet_room_start p;
 	p.size = sizeof(p);
-	p.type = BC_GAME_START;
+	p.type = BC_ROOM_START;
 	memcpy(&p.start_info, player_info, sizeof(PTC_START_INFO));
 	SendPacket(id, &p);
 }

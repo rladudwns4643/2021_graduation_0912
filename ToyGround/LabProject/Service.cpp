@@ -136,9 +136,13 @@ void Service::Notify(int sEvent, int argsCount, ...) {
 	}
 	//ingame
 	case EVENT_ROOM_START: {
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_ROOM_START);
+		break;
+	}
+	case EVENT_GAME_START: {
 		std::lock_guard<std::mutex> lock(m_mutex_event);
 		for (auto& bc : NetCore::GetApp()->m_battle_clients) {
-			SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_ROOM_START, 2, bc.second->m_battleID, bc.second->m_spawn_position);
+			SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_START, 2, bc.second->m_battleID, bc.second->m_spawn_position);
 		}
 		break;
 	}

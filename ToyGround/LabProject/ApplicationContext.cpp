@@ -27,13 +27,13 @@ std::string ApplicationContext::FindMapName(int mapCode) const
 	return mapName;
 }
 
-XMFLOAT3 ApplicationContext::FindSpawnLocation(std::string mapName, int spawnLocation)
+XMFLOAT3 ApplicationContext::FindSpawnLocation(std::string mapName, XMFLOAT4 spawnpos)
 {
 	std::vector<MapTool::PlayerInfo> playerInfoVec = m_Maps[mapName]->playerInfoVector;
 
-	for (auto& p : playerInfoVec)
-	{
-		if (spawnLocation == p.spawnPos)
+	for (auto& p : playerInfoVec) {
+		XMFLOAT3 t{ spawnpos.x, spawnpos.y, spawnpos.z };
+		if (XMVector3Equal(XMLoadFloat3(&t), XMLoadFloat3(&p.spawnPos)))
 		{
 			return p.position;
 		}
@@ -104,16 +104,16 @@ void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float s
 	}
 }
 
-void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, int spawnLocation, bool isVisible)
+void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, XMFLOAT4 spawnpos, bool isVisible)
 {
 	if (!m_Maps.count(mapName)) return;
 	if (!user) return;
 
 	std::vector<MapTool::PlayerInfo> playerInfoVec = m_Maps[mapName]->playerInfoVector;
 
-	for (auto& p : playerInfoVec)
-	{
-		if (spawnLocation == p.spawnPos)
+	for (auto& p : playerInfoVec) {
+		XMFLOAT3 t{ spawnpos.x, spawnpos.y, spawnpos.z };
+		if (XMVector3Equal(XMLoadFloat3(&t), XMLoadFloat3(&p.spawnPos)))
 		{
 			user->InitializeTransform();
 			user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
@@ -126,7 +126,7 @@ void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, 
 	}
 }
 
-void ApplicationContext::DisplayCharacter(std::string mapName, std::string userName, int spawnLocation, bool isVisible)
+void ApplicationContext::DisplayCharacter(std::string mapName, std::string userName, XMFLOAT4 spawnpos, bool isVisible)
 {
 	if (!m_Maps.count(mapName)) return;
 	Character* user = FindObject<Character>(userName, userName);
@@ -134,9 +134,9 @@ void ApplicationContext::DisplayCharacter(std::string mapName, std::string userN
 
 	std::vector<MapTool::PlayerInfo> playerInfoVec = m_Maps[mapName]->playerInfoVector;
 
-	for (auto& p : playerInfoVec)
-	{
-		if (spawnLocation == p.spawnPos)
+	for (auto& p : playerInfoVec){
+		XMFLOAT3 t{ spawnpos.x, spawnpos.y, spawnpos.z };
+		if (XMVector3Equal(XMLoadFloat3(&t), XMLoadFloat3(&p.spawnPos)))
 		{
 			user->InitializeTransform();
 			user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);

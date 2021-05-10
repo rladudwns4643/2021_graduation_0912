@@ -14,7 +14,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	prePlayerInfo.position.y = 0.f;
 	prePlayerInfo.position.z = 0.f;
 	prePlayerInfo.rotY = 0.f;
-	prePlayerInfo.spawnPos = 1;
+	prePlayerInfo.spawnPos = XMFLOAT3(0,0,0);
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
 	prePlayerInfo.playerName = "GunMan";
@@ -22,7 +22,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	prePlayerInfo.position.y = 0.f;
 	prePlayerInfo.position.z = 500.f;
 	prePlayerInfo.rotY = 180.f;
-	prePlayerInfo.spawnPos = 2;
+	prePlayerInfo.spawnPos = XMFLOAT3(0, 0, 0);
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
 	//-------------------------

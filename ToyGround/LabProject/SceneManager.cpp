@@ -72,7 +72,7 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, isAvailable);
 		break;
 	}
-	case EVENT_ROOM_START: {
+	case EVENT_GAME_START: {
 		//¾ÀÀüÈ¯ eLobby -> eGamePlay
 		int arg_bt_id;
 		XMFLOAT4 arg_sl;
@@ -158,7 +158,7 @@ void SceneManager::ChangeScene(SceneType sceneType)
 {
 	if (m_CurScene == -1)
 		cout << "NullScene" << endl;
-
+	if (m_CurScene == (int)sceneType) return;
 	m_MutexChangeScene.lock();
 	m_Scenes[m_CurScene]->Exit();
 
