@@ -13,6 +13,9 @@
 #define PLAYER_SIZE_Y (9.0f * ScaleConverter)
 #define PLAYER_SIZE_Z (4.5f * ScaleConverter)
 
+// 플레이어 스피드
+#define PLAYER_SPEED (16.f * ScaleConverter)
+
 // 맵 큐브 개수
 #define MAP_WIDTH_BLOCK_NUM 21
 #define MAP_DEPTH_BLOCK_NUM 33

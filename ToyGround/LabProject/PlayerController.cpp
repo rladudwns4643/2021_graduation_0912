@@ -29,7 +29,7 @@ void PlayerController::HandleInput(const float deltaT)
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
 
-	float speed = 16.f * ScaleConverter * deltaT;
+	float speed = PLAYER_SPEED * deltaT;
 	XMVECTOR direction = {};
 
 	DWORD dir = 0;
@@ -95,7 +95,7 @@ void PlayerController::MouseCallback()
 			}
 		}
 		// 3인칭 회전(공전)
-		else if (m_Owner->m_MyCamera->GetCameraType() == CameraType::eThird)
+		else if (m_Owner->m_MyCamera->GetCameraType() == CameraType::eThird && CommandCenter::GetApp()->m_StartAttackAnim == false)
 		{
 			if (InputHandler::g_MouseChangebleY != 0.0f) {
 				m_Owner->m_MyCamera->Rotate(InputHandler::g_MouseChangebleY, 0, 0);
@@ -134,6 +134,7 @@ void PlayerController::MouseCallback()
 	}
 	if (InputHandler::g_LeftMouseCallback)
 	{
+		m_Owner->SetLookToCameraLook();
 		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
 		CommandCenter::GetApp()->m_StartAttackAnim = true;
 	}
@@ -154,26 +155,29 @@ void PlayerController::OnKeyPressed()
 	case CameraType::eFirst:
 	case CameraType::eThird:
 #ifdef DEBUG_CLIENT
-		if (InputHandler::IsKeyDown('W'))
+		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
 		{
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
-		}
-		if (InputHandler::IsKeyDown('S'))
-		{
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
-		}
-		if (InputHandler::IsKeyDown('A'))
-		{
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
-		}
-		if (InputHandler::IsKeyDown('D'))
-		{
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
-		}
-		if (InputHandler::IsKeyDown(VK_SPACE))
-		{
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
-			CommandCenter::GetApp()->m_StartJumpAnim = true;
+			if (InputHandler::IsKeyDown('W'))
+			{
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			}
+			if (InputHandler::IsKeyDown('S'))
+			{
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
+			}
+			if (InputHandler::IsKeyDown('A'))
+			{
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
+			}
+			if (InputHandler::IsKeyDown('D'))
+			{
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
+			}
+			if (InputHandler::IsKeyDown(VK_SPACE))
+			{
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
+				CommandCenter::GetApp()->m_StartJumpAnim = true;
+			}
 		}
 #elif DEBUG_SERVER
 		if (InputHandler::IsKeyDown('W'))
@@ -219,23 +223,26 @@ void PlayerController::OnKeyReleased()
 	case CameraType::eThird:
 
 #ifdef DEBUG_CLIENT
-		if (InputHandler::IsKeyUp('W'))
+		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
 		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
+			if (InputHandler::IsKeyUp('W'))
+			{
+				CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
+			}
+			if (InputHandler::IsKeyUp('S'))
+			{
+				CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
+			}
+			if (InputHandler::IsKeyUp('A'))
+			{
+				CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+			}
+			if (InputHandler::IsKeyUp('D'))
+			{
+				CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+			}
+			if (InputHandler::IsKeyUp(VK_SPACE)) {}
 		}
-		if (InputHandler::IsKeyUp('S'))
-		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
-		}
-		if (InputHandler::IsKeyUp('A'))
-		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
-		}
-		if (InputHandler::IsKeyUp('D'))
-		{
-			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
-		}
-		if (InputHandler::IsKeyUp(VK_SPACE)) {}
 #elif DEBUG_SERVER
 		if (InputHandler::IsKeyUp('W'))
 		{

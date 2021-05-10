@@ -365,9 +365,6 @@ void Camera::SetTarget(const DirectX::XMFLOAT3& lookAt)
 	}
 	case CameraType::eFree:
 	{
-		// mRotation 나중에 수정해야함 
-		// mRotation은 각 축에 대해서 얼만큼씩 회전했는지를 가지고 있음 (누적)
-		// degree -> radian으로 바꿈
 		XMVECTOR Up = { 0.f,1.f,0.f };
 		Up = XMVector3Transform(Up, DirectX::XMMatrixRotationQuaternion(XMLoadFloat3(&mRotation)));	// 이거 바꿔야할 수도 있음
 
@@ -563,7 +560,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 			float degree = XMConvertToDegrees(acosValue);
 
 			float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&mRight), DirectX::XMVector3Cross(XMLoadFloat3(&calLook), (projVec))));
-			if (ccw > 0)	// ccw가 양수이면 방시계로 돌아야함
+			if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
 				degree = -degree;
 			degree += 90.f;
 

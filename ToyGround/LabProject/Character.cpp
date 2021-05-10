@@ -4,6 +4,7 @@
 #include "ApplicationContext.h"
 #include "AssertsReference.h"
 #include "CommandContext.h"
+#include "CommandCenter.h"
 #include "Network.h"
 
 Character::Character(std::string type, std::string id) :
@@ -112,7 +113,6 @@ void Character::SetCamera(CameraType cameraType)
 	case CameraType::eFirst:
 	{
 		m_MyCamera->SetTimeLag(0.f);
-		//m_MyCamera->SetOffset(XMFLOAT3(0.0f, STD_CUBE_SIZE * 0.7, 0.0f));
 		m_MyCamera->SetOffset(XMFLOAT3(0.0f, 160.f, 20.0f));
 
 		XMVECTOR direction = {};
@@ -152,9 +152,8 @@ void Character::SetCamera(CameraType cameraType)
 	}
 	case CameraType::eThird:
 		m_MyCamera->SetTimeLag(0.0f);
-//		m_MyCamera->SetOffset(XMFLOAT3(0.0f, STD_CUBE_SIZE * 1.5f, -STD_CUBE_SIZE * 4.5f));
 		if (m_Bounds.Extents.x > 100.f)
-			m_MyCamera->SetOffset(XMFLOAT3(m_Bounds.Extents.x * 0.35f, m_Bounds.Extents.y * 1.3f, -m_Bounds.Extents.x * 2.3f - m_Bounds.Extents.y * 1.5f));
+			m_MyCamera->SetOffset(XMFLOAT3(m_Bounds.Extents.x * 0.35f, m_Bounds.Extents.y * 1.3f + STD_CUBE_SIZE, -m_Bounds.Extents.x * 2.3f - m_Bounds.Extents.y * 1.5f));
 		else
 			m_MyCamera->SetOffset({ m_Bounds.Extents.x + m_Bounds.Extents.x * 0.05f, m_Bounds.Extents.y * 2.f, -m_Bounds.Extents.x * 2 * 2.5f - m_Bounds.Extents.y * 2.f });
 		
@@ -234,7 +233,7 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 		
 		bool isChange = false;
 		
-		if (m_MyCamera->GetCameraType() == CameraType::eThird)
+		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
 		{
 			if (fabs(degree) > 1.f)
 			{
@@ -288,7 +287,7 @@ void Character::SetPosition(float posX, float posY, float posZ)
 	m_World._42 = posY;
 	m_World._43 = posZ;
 
-	XMFLOAT3 shift = { posX - prePos.x, posY - prePos.y , posZ - prePos.z };
+	XMFLOAT3 shift = { posX - prePos.x, posY - prePos.y, posZ - prePos.z };
 
 	// FreeType일때
 	if (m_MyCamera) m_MyCamera->Move(shift);
@@ -317,20 +316,66 @@ void Character::SetAnimationKeyState(AnimationController::PlayerState keyState)
 	m_AnimationController->m_KeyState = keyState;
 }
 
+void Character::SetLookToCameraLook()
+{
+	XMVECTOR direction = m_MyCamera->GetLook();
+
+	XMFLOAT3 dir;
+	DirectX::XMStoreFloat3(&dir, direction);
+	dir.y = 0.f;
+	direction = DirectX::XMVector3Normalize(XMLoadFloat3(&dir));
+
+	XMFLOAT3 cLook = m_Look;
+	cLook.y = 0.f;
+	cLook = MathHelper::Normalize(cLook);
+
+	float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(direction, XMLoadFloat3(&cLook)));
+
+	XMFLOAT3 cUp = m_Up;
+	cUp = MathHelper::Normalize(cUp);
+
+	float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&cUp), DirectX::XMVector3Cross(direction, XMLoadFloat3(&cLook))));
+
+	float acosValue = 0.f;
+
+	acosValue = acos(cosValue);
+
+	float degree = XMConvertToDegrees(acosValue);
+
+	if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
+		degree = -degree;
+	degree *= 0.9f;
+
+	if (fabs(degree) > 1.f)
+		Rotate(0.f, XMConvertToRadians(degree), 0.f);
+	degree = 0.f;
+}
+
 void Character::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 {
 	XMFLOAT3 look = GetLook();
 	XMFLOAT3 right = GetRight();
 	XMFLOAT3 up = GetUp();
+	
+	// 대각선 체크
+	float tfDistance = fDistance;
+	int checkFB = 0, checkRL = 0;
+	if (dwDirection & DIR_FORWARD) checkFB++;
+	if (dwDirection & DIR_BACKWARD) checkFB--;
+	if (dwDirection & DIR_RIGHT) checkRL++;
+	if (dwDirection & DIR_LEFT) checkRL--;
+	if (checkFB != 0 && checkRL != 0)
+		tfDistance = tfDistance / sqrt(2);
+
 	if (dwDirection)
 	{
 		XMFLOAT3 xmf3Shift = XMFLOAT3(0, 0, 0);
-		if (dwDirection & DIR_FORWARD) xmf3Shift = MathHelper::Add(xmf3Shift, look, fDistance);
-		if (dwDirection & DIR_BACKWARD) xmf3Shift = MathHelper::Add(xmf3Shift, look, -fDistance);
-		if (dwDirection & DIR_RIGHT) xmf3Shift = MathHelper::Add(xmf3Shift, right, fDistance);
-		if (dwDirection & DIR_LEFT) xmf3Shift = MathHelper::Add(xmf3Shift, right, -fDistance);
-		if (dwDirection & DIR_UP) xmf3Shift = MathHelper::Add(xmf3Shift, up, fDistance);
-		if (dwDirection & DIR_DOWN) xmf3Shift = MathHelper::Add(xmf3Shift, up, -fDistance);
+		if (dwDirection & DIR_FORWARD) xmf3Shift = MathHelper::Add(xmf3Shift, look, tfDistance);
+		if (dwDirection & DIR_BACKWARD) xmf3Shift = MathHelper::Add(xmf3Shift, look, -tfDistance);
+		if (dwDirection & DIR_RIGHT) xmf3Shift = MathHelper::Add(xmf3Shift, right, tfDistance);
+		if (dwDirection & DIR_LEFT) xmf3Shift = MathHelper::Add(xmf3Shift, right, -tfDistance);
+		if (dwDirection & DIR_UP) xmf3Shift = MathHelper::Add(xmf3Shift, up, tfDistance);
+		if (dwDirection & DIR_DOWN) xmf3Shift = MathHelper::Add(xmf3Shift, up, -tfDistance);
 
 		Move(xmf3Shift, bUpdateVelocity);
 	}

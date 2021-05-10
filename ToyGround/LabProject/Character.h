@@ -48,6 +48,8 @@ public:
 	void SetAnimationPlayerState(AnimationController::PlayerState playerState);
 	void SetAnimationKeyState(AnimationController::PlayerState keyState);
 
+	void SetLookToCameraLook();
+
 public:
 	// 이동 & 회전
 	bool			Move(DWORD dwDirection, float fDistance);
