@@ -4,6 +4,7 @@
 class Scene;
 class SceneManager : public TemplateSingleton<SceneManager>
 {
+	friend class Service;
 private:
 	template<class NewScene>
 	void CreateScene(SceneType sceneType, std::string sceneName)
@@ -13,6 +14,8 @@ private:
 		scene->Initialize();
 		m_Scenes[static_cast<int>(sceneType)] = scene;
 	}
+
+	void SendEventArgs(SceneType st, int sEvent, int argsCount, ...);
 
 public:
 	explicit SceneManager();

@@ -125,19 +125,20 @@ struct lc_packet_startMatch {
 #define CL_CANCEL_AUTOMATCH			25
 
 #pragma pack(push, 1)
-struct cl_pakcet_login {
+struct cl_packet_login {
 	BYTE size;
 	BYTE type;
 
 	char id[MAX_ID_LEN];
+	char pw[MAX_ID_LEN];
 };
 
 struct cl_pakcet_signup {
 	BYTE size;
 	BYTE type;
 
-	char id[10];
-	char password[10];
+	char id[MAX_ID_LEN];
+	char pw[MAX_ID_LEN];
 };
 
 struct cl_packet_dummy_login {
@@ -173,8 +174,8 @@ struct cl_packet_cancel_automatch {
 
 //-------------------------------B->C-------------------------------
 //22 + (bb, START_INFO, VECTOR, ROOM)
-#define BC_AUTO_ACCEPT_OK		1
-#define BC_AUTO_ACCEPT_FAIL		2
+#define BC_ACCEPT_OK			1
+#define BC_ACCEPT_FAIL			2
 #define BC_JOIN_OK				3
 #define BC_JOIN_FAIL			4
 
@@ -294,7 +295,7 @@ struct bc_packet_game_start {
 	BYTE size;
 	BYTE type;
 
-	PTC_START_INFO start_info;
+	PTC_START_INFO start_info[2];
 };
 
 struct bc_packet_gamestart_available {

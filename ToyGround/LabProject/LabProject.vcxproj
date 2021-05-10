@@ -23,7 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{f2cb92c1-9296-4ff6-a069-3d0f2bc69085}</ProjectGuid>
     <RootNamespace>LabProject</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -147,6 +147,7 @@
     <ClInclude Include="AnimationController.h" />
     <ClInclude Include="ApplicationContext.h" />
     <ClInclude Include="AssertsReference.h" />
+    <ClInclude Include="BattleClient.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterParts.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MoveCommand.h" />
+    <ClInclude Include="netCore.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Objectinfo.h" />
     <ClInclude Include="pch.h" />
@@ -201,6 +203,7 @@
     <ClCompile Include="AnimationController.cpp" />
     <ClCompile Include="ApplicationContext.cpp" />
     <ClCompile Include="AssertsReference.cpp" />
+    <ClCompile Include="BattleClient.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CharacterParts.cpp" />
@@ -223,6 +226,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="MoveCommand.cpp" />
+    <ClCompile Include="netCore.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Objectinfo.cpp" />
     <ClCompile Include="pch.cpp">
@@ -241,15 +245,19 @@
   <ItemGroup>
     <FxCompile Include="Shaders\Common.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\Default.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\LightingUtil.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shaders\Sky.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

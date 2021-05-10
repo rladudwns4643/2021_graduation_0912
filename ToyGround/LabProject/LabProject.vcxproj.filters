@@ -168,6 +168,12 @@
     <ClInclude Include="GeometryGenerator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="netCore.h">
+      <Filter>network\netCore</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleClient.h">
+      <Filter>network\battleClient</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -291,14 +297,14 @@
     <ClCompile Include="Network.cpp">
       <Filter>network</Filter>
     </ClCompile>
+    <ClCompile Include="Service.cpp">
+      <Filter>network\Service</Filter>
+    </ClCompile>
     <ClCompile Include="netCore.cpp">
       <Filter>network\netCore</Filter>
     </ClCompile>
     <ClCompile Include="BattleClient.cpp">
       <Filter>network\battleClient</Filter>
-    </ClCompile>
-    <ClCompile Include="Service.cpp">
-      <Filter>network\Service</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

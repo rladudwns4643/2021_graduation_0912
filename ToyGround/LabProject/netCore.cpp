@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Service.h"
+#include "netCore.h"
 
 NetCore::NetCore() {
 	Initialize();
