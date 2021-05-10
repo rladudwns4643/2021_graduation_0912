@@ -26,6 +26,13 @@ void Map::LoadMapInfo(string mapName) {
 	string path = "Maps\\" + mapName + ".txt";
 	cout << path << endl;
 	std::ifstream fileIn(path);
+	
+	//todo: 맵 파일에서 불러와서 해야함 당장 임시
+	XMFLOAT4 t1{ 0.f, 0.f, -1500.f, 0.f };
+	XMFLOAT4 t2{ 0.f, 0.f, 1500.f, 0.f };
+	SR::g_spawn_pos.SetSpawnPosition(SpawnPosition::ePositionType::SPAWN_1P, t1);
+	SR::g_spawn_pos.SetSpawnPosition(SpawnPosition::ePositionType::SPAWN_2P, t2);
+
 
 	if (fileIn) {
 		int ri, rj;

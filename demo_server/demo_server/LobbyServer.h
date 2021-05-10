@@ -40,8 +40,8 @@ public:
 	void SendLoginOKPacket(int id);
 	void SendLoginFailPacket(int id);
 	void SendUserInfoPacket(int id);
-	void SendMatchCancelPacket(int id);
-	void SendMatchStartPacket(int id, short room_no);
+	void SendCancelFindRoomPacket(int id);
+	void SendFindRoomPacket(int id, short room_no);
 	
 	void SendRequestRoomPacket(int id);
 	

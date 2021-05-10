@@ -83,7 +83,7 @@ void Player::Leave(){
 	m_isEmpty = true;
 }
 
-bool Player::GetSlotStatus() {
+bool Player::GetEmpty() {
 	return m_isEmpty;
 }
 

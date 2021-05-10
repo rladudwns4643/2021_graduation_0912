@@ -197,9 +197,9 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 #endif
 		break;
 	}
-	case CL_AUTOMATCH: {
+	case CL_FIND_ROOM: { //22
 		cout << "GET CL_AUTOMATCH" << endl;
-		cl_packet_automatch p;
+		cl_packet_find_room p;
 		memcpy(&p, packet, sizeof(p));
 		if (id != 0) {
 			userList[id]->user_info->SetPlayerMatch(true);
@@ -207,15 +207,15 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 				SendRequestRoomPacket(1);
 			}
 		}
-		//SendAutoMatchPacket(id, userList[id]->user_info->GetPlayerMMR());
 		break;
 	}
 	case BL_ROOMREADY: {
 		cout << "GET BL_ROOMREADY" << endl;
 		bl_packet_room_ready p;
 		memcpy(&p, packet, sizeof(p));
-		SendMatchStartPacket(1, p.room_no);
-		SendMatchStartPacket(2, p.room_no);
+		cout << "SEND READY ROOM: " << p.room_no << endl;
+		SendFindRoomPacket(1, p.room_no);
+		SendFindRoomPacket(2, p.room_no);
 		break;
 	}
 	}
@@ -250,21 +250,18 @@ void LobbyServer::SendUserInfoPacket(int id) {
 	SendPacket(id, &p);
 }
 
-void LobbyServer::SendMatchStartPacket(int id, short room_no) {
-	lc_packet_startMatch p;
+void LobbyServer::SendFindRoomPacket(int id, short room_no) {
+	lc_packet_find_room p;
 	p.size = sizeof(p);
-	p.type = LC_MATCH_START;
+	p.type = LC_FIND_ROOM;
 	p.roomNum = room_no;
-	p.is_host = false;
 	
 	SendPacket(id, &p);
 }
 
-void LobbyServer::SendMatchCancelPacket(int id)
+void LobbyServer::SendCancelFindRoomPacket(int id)
 {
 }
-
-
 
 void LobbyServer::SendRequestRoomPacket(int id) {
 	lb_packet_request_room p;
@@ -275,6 +272,7 @@ void LobbyServer::SendRequestRoomPacket(int id) {
 	SendPacket(0, &p); //battle server·Î
 }
 
+//unuse
 void LobbyServer::SendLBCheckPacket() {
 	lb_packet_check_connect p;
 	p.size = sizeof(p);
@@ -293,7 +291,7 @@ void LobbyServer::SendPacket(int id, void* buf) {
 	sendover->wsabuf[0].buf = sendover->io_buf;
 	sendover->wsabuf[0].len = p[0];
 
-	cout << "Send Packet: " << (int)p[1] << endl;
+	cout << "Send ID:" << id << "  Packet: " << (int)p[1] << endl;
 
 	DWORD flags = 0;
 	int retval = WSASend(userList[id]->m_s, sendover->wsabuf, 1, NULL, flags, &sendover->over, NULL);

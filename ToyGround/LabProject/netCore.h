@@ -18,7 +18,7 @@ struct SocketInfo {
 };
 
 struct CLIENT {
-	std::string lobby_id{ -1 };
+	string lobby_id{ -1 };
 	int battle_id{ -1 };
 	bool is_battle_login{ false };
 	//lobby, battle
@@ -53,12 +53,12 @@ public:
 	bool SendPacket(void* buf, eSERVER sv);
 	void SendLobbyLoginPacket(const std::string& id, const std::string& pw);
 	void SendLobbySignUpPacket(const std::string& id, const std::string& pw);
-	void SendAutoMatchPacket();
-	void SendAutoMatchCancelPacket();
+	void SendFindRoomPacket();
+	void SendMatchCancelPacket();
 	void SendRequestUserInfoPacket();
 
 	bool SendBattleLoginPacket();
-	void SendBattleRoomJoinPacket(int room_no);
+	void SendBattleRoomJoinPacket();
 	void SendBattleRoomLeavePacket();
 	void SendReadyPacket();
 	void SendGameStartPacket();

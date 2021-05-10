@@ -7,6 +7,10 @@
 #include "LobbyScene.h"
 #include "GameplayScene.h"
 
+//임시
+#include "Service.h"
+
+static bool p{ false };
 LobbyController::LobbyController(LobbyScene* myScene) : m_MyScene(myScene)
 {
 }
@@ -19,6 +23,12 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
+	//임시로 로그인 없이 바로 dummy login packet 전송
+	if (GetAsyncKeyState('Y') & 0x8000 && p == false) {
+		p = true;
+		Service::GetApp()->Notify(EVENT_LOBBY_LOGIN_REQUEST);
+	}
+
 	if (GetAsyncKeyState('T') & 0x8000) {
 		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 	}

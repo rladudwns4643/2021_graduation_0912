@@ -11,7 +11,7 @@ class Character : public GameObject
 	friend class CharacterParts;
 
 public:
-	int m_SpawnLoaction;				// 스폰위치
+	XMFLOAT4 m_SpawnLoaction;				// 스폰위치
 	std::string m_UserPlayerMeshName;	// 플레이어 메쉬이름
 	std::string m_MapName;				// 캐릭터가 속해있는 맵이름
 

@@ -73,7 +73,7 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->SetMaterial(AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex);
 	chr->SetAnimationController(AssertsReference::GetApp()->m_SkinnedModelInsts[meshName].get());
 	chr->m_SkinnedCBIndex = skinnedCBIndex;
-	chr->m_SpawnLoaction = skinnedCBIndex;
+	chr->m_PlayerID = skinnedCBIndex;
 }
 
 void ApplicationContext::CreateWeapon(std::string weaponName, std::string subWeaponName, std::string partName)

@@ -64,8 +64,8 @@
 #define LC_SIGNUP_OK				32
 #define LC_SIGNUP_FAIL				33
 #define LC_USERINFO					34
-#define LC_MATCH_START				35
-#define LC_MATCH_CANCEL				36
+#define LC_FIND_ROOM				35
+#define LC_CANCLE_FIND_ROOM			36
 
 #pragma pack(push, 1)
 struct lc_packet_login_ok {
@@ -74,12 +74,10 @@ struct lc_packet_login_ok {
 
 	int id;
 };
-
 struct lc_packet_login_fail {
 	BYTE size;
 	BYTE type;
 };
-
 struct lc_packet_userinfo {
 	BYTE size;
 	BYTE type;
@@ -87,28 +85,23 @@ struct lc_packet_userinfo {
 	char id_str[MAX_ID_LEN];
 	int mmr;
 };
-
 struct lc_packet_signup_ok {
 	BYTE size;
 	BYTE type;
 };
-
 struct lc_pakcet_signup_fail {
 	BYTE size;
 	BYTE type;
 };
-
-struct lc_packet_match_cancel {
+struct lc_packet_cancel_find_room {
 	BYTE size;
 	BYTE type;
 };
-
-struct lc_packet_startMatch {
+struct lc_packet_find_room {
 	BYTE size;
 	BYTE type;
 
 	short roomNum;
-	char is_host;
 };
 #pragma pack(pop)
 //------------------------------------------------------------------
@@ -119,7 +112,7 @@ struct lc_packet_startMatch {
 #define CL_LOGIN					20
 #define CL_SIGNUP					21
 #define CL_DUMMY_LOGIN				99
-#define CL_AUTOMATCH				22
+#define CL_FIND_ROOM				22
 #define CL_UPDATE_USER_INFO			23
 #define CL_REQUEST_USER_INFO		24
 #define CL_CANCEL_AUTOMATCH			25
@@ -132,7 +125,6 @@ struct cl_packet_login {
 	char id[MAX_ID_LEN];
 	char pw[MAX_ID_LEN];
 };
-
 struct cl_pakcet_signup {
 	BYTE size;
 	BYTE type;
@@ -140,31 +132,26 @@ struct cl_pakcet_signup {
 	char id[MAX_ID_LEN];
 	char pw[MAX_ID_LEN];
 };
-
 struct cl_packet_dummy_login {
 	BYTE size;
 	BYTE type;
 
 	char id[MAX_ID_LEN];
 };
-
-struct cl_packet_automatch {
+struct cl_packet_find_room {
 	BYTE size;
 	BYTE type;
 };
-
 struct cl_packet_update_user_info {
 	BYTE size;
 	BYTE type;
 
 	int mmr;
 };
-
 struct cl_packet_request_userinfo {
 	BYTE size;
 	BYTE type;
 };
-
 struct cl_packet_cancel_automatch {
 	BYTE size;
 	BYTE type;
@@ -174,8 +161,8 @@ struct cl_packet_cancel_automatch {
 
 //-------------------------------B->C-------------------------------
 //22 + (bb, START_INFO, VECTOR, ROOM)
-#define BC_ACCEPT_OK			1
-#define BC_ACCEPT_FAIL			2
+#define BC_BATTLE_LOGIN_OK		1
+#define BC_BATTLE_LOGIN_FAIL	2
 #define BC_JOIN_OK				3
 #define BC_JOIN_FAIL			4
 
@@ -210,18 +197,15 @@ struct PTC_START_INFO {
 	int id;
 	XMFLOAT4 spawn_pos;
 };
-
 struct PTC_VECTOR {
 	float x;
 	float y;
 	float z;
 };
-
 struct PTC_ROOM {
 	short id;
 	char joinable;
 };
-
 struct bc_packet_bb {
 	BYTE size;
 	BYTE type;
@@ -229,33 +213,28 @@ struct bc_packet_bb {
 	XMFLOAT4X4 mats;
 	XMFLOAT3 sizes;
 };
-
-struct bc_packet_accept_ok {
+struct bc_packet_battle_login_ok {
 	BYTE size;
 	BYTE type;
 
 	int id;
 };
-
-struct bc_packet_accept_fail {
+struct bc_packet_battle_login_fail {
 	BYTE size;
 	BYTE type;
 };
-
 struct bc_packet_join_ok {
 	BYTE size;
 	BYTE type;
 
 	char player_no;
 };
-
 struct bc_packet_join_fail {
 	BYTE size;
 	BYTE type;
 
 	char code; //fail code
 };
-
 struct bc_packet_room_entered {
 	BYTE size;
 	BYTE type;
@@ -268,21 +247,18 @@ struct bc_packet_room_entered {
 	int mmr;
 	char isManager;
 };
-
 struct bc_packet_room_leaved {
 	BYTE size;
 	BYTE type;
 
 	int id;
 };
-
 struct bc_packet_new_room_host {
 	BYTE size;
 	BYTE type;
 
 	int id;
 };
-
 struct bc_packet_ready {
 	BYTE size;
 	BYTE type;
@@ -290,40 +266,34 @@ struct bc_packet_ready {
 	int id;
 	bool ready;
 };
-
 struct bc_packet_game_start {
 	BYTE size;
 	BYTE type;
 
 	PTC_START_INFO start_info[2];
 };
-
 struct bc_packet_gamestart_available {
 	BYTE size;
 	BYTE type;
 
 	bool available;
 };
-
 struct bc_packet_game_over {
 	BYTE size;
 	BYTE type;
 
 	char win_team;
 };
-
 struct bc_packet_left_time {
 	BYTE size;
 	BYTE type;
 
 	unsigned char left_time;
 };
-
 struct bc_packet_round_start {		//game start
 	BYTE size;
 	BYTE type;
 };
-
 struct bc_packet_player_pos {
 	BYTE size;
 	BYTE type;
@@ -331,7 +301,6 @@ struct bc_packet_player_pos {
 	int id;
 	PTC_VECTOR pos;
 };
-
 struct bc_packet_player_rot {
 	BYTE size;
 	BYTE type;
@@ -339,7 +308,6 @@ struct bc_packet_player_rot {
 	int id;
 	PTC_VECTOR look;
 };
-
 struct bc_packet_object_pos {
 	BYTE size;
 	BYTE type;
@@ -348,7 +316,6 @@ struct bc_packet_object_pos {
 	int obj_id;
 	PTC_VECTOR pos;
 };
-
 struct bc_packet_object_rot {
 	BYTE size;
 	BYTE type;
@@ -356,7 +323,6 @@ struct bc_packet_object_rot {
 	short type_id;
 	float rot_y;
 };
-
 struct bc_packet_shoot_bullet {
 	BYTE size;
 	BYTE type;
@@ -365,7 +331,6 @@ struct bc_packet_shoot_bullet {
 	PTC_VECTOR pos;
 	PTC_VECTOR look;
 };
-
 struct bc_packet_remove_bullet {
 	BYTE size;
 	BYTE type;
@@ -373,7 +338,6 @@ struct bc_packet_remove_bullet {
 	char bullet_id;
 	PTC_VECTOR pos; //사라지는 위치 이팩트 발생 위치
 };
-
 struct bc_packet_hit {
 	BYTE size;
 	BYTE type;
@@ -381,14 +345,12 @@ struct bc_packet_hit {
 	int id;
 	float hp;
 };
-
 struct bc_packet_die {
 	BYTE size;
 	BYTE type;
 
 	int id;
 };
-
 struct bc_packet_anim_type {
 	BYTE size;
 	BYTE type;
@@ -396,7 +358,6 @@ struct bc_packet_anim_type {
 	int id;
 	char anim_type;
 };
-
 struct bc_packet_updated_user_info {
 	BYTE size;
 	BYTE type;
@@ -438,7 +399,6 @@ struct cb_packet_login {
 	char name[10];
 	int mmr;
 };
-
 struct cb_packet_join {
 	BYTE size;
 	BYTE type;
@@ -446,17 +406,14 @@ struct cb_packet_join {
 	int room_no;
 	char is_roomMnr;
 };
-
 struct cb_packet_room_leave {
 	BYTE size;
 	BYTE type;
 };
-
 struct cb_packet_ready {
 	BYTE size;
 	BYTE type;
 };
-
 struct cb_packet_start {
 	BYTE size;
 	BYTE type;
@@ -468,14 +425,12 @@ struct cb_packet_move_key_status {
 
 	//BYTE key;	//CB_KEY_@_DOWN, UP
 };
-
 struct cb_packet_bullet {
 	BYTE size;
 	BYTE type;
 
 	PTC_VECTOR dir; //look angle
 };
-
 struct cb_packet_look_vector {
 	BYTE size;
 	BYTE type;
@@ -483,12 +438,10 @@ struct cb_packet_look_vector {
 	int id;
 	PTC_VECTOR look;
 };
-
 struct cb_test_packet_time_plus {
 	BYTE size;
 	BYTE type;
 };
-
 struct cb_test_packet_time_mimus {
 	BYTE size;
 	BYTE type;

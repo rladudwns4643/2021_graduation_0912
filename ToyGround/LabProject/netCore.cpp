@@ -83,6 +83,7 @@ bool NetCore::SendPacket(void* buf, eSERVER sv) {
 	char* p = reinterpret_cast<char*>(buf);
 	int psize = (BYTE)p[0];
 	int retval = send(m_client.socket[sv].socket, p, psize, 0);
+	cout << "[NETCORE] SEND: " << (int)p[1] << " for " << (int)sv << endl;
 	if (retval == SOCKET_ERROR) {
 		int error_no = WSAGetLastError();
 		if (error_no != WSA_IO_PENDING) {
@@ -138,9 +139,7 @@ void NetCore::ConnectServer(eSERVER sv) {
 			}
 			else {
 				cout << "[NETCORE]: SV_LOBBY CONNECT\n";
-				Service::GetApp()->setConnectLobby(true);
-				//임시로 로그인 없이 바로 dummy login packet 전송
-				Service::GetApp()->Notify(EVENT_LOBBY_LOGIN_REQUEST);
+				Service::GetApp()->Notify(EVENT_LOBBY_CONNECT_OK);
 			}
 		}
 		break;
@@ -205,9 +204,11 @@ void NetCore::ProcessData(char* buf, size_t io_byte) {
 }
 
 void NetCore::ProcessPacket(char* packet_buf) {
-	cout << "[NETCORE] procpacket: " << (BYTE)packet_buf[1] << " LobbyID: " << m_client.lobby_id << " BattleID: " << m_client.battle_id << endl;
+	cout << "[NETCORE] procpacket: " << (int)packet_buf[1] << " LobbyID: " << m_client.lobby_id << " BattleID: " << m_client.battle_id << endl;
 	switch ((BYTE)packet_buf[1]) { //type
 	case LC_LOGIN_OK: {
+		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet_buf);
+		m_client.lobby_id = p->id;
 		Service::GetApp()->Notify(EVENT_LOBBY_LOGIN_OK);
 		break;
 	}
@@ -229,21 +230,20 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->Notify(EVENT_LOBBY_UPDATE_CLIENT_USERINFO, 1, m_client.mmr);
 		break;
 	}
-	case LC_MATCH_START: {
-		lc_packet_startMatch* p = reinterpret_cast<lc_packet_startMatch*>(packet_buf);
-		ConnectServer(SV_BATTLE);
-		m_room_no = p->roomNum;
-		m_ishost = p->is_host;
+	case LC_FIND_ROOM: {
+		lc_packet_find_room* p = reinterpret_cast<lc_packet_find_room*>(packet_buf);
+		m_battle_clients[m_client.battle_id]->m_room_num = p->roomNum;
 
-		Service::GetApp()->Notify(EVENT_LOBBY_MATCH_START);
+		cout << "FINDROOM: " << m_room_no << endl;
+		Service::GetApp()->Notify(EVENT_ROOM_FIND_ROOM);
 		break;
 	}
-	case LC_MATCH_CANCEL: {
-		Service::GetApp()->Notify(EVENT_LOBBY_MATCH_CANCEL);
+	case LC_CANCLE_FIND_ROOM: {
+		Service::GetApp()->Notify(EVENT_LOBBY_CANCLE_FIND_ROOM);
 		break;
 	}
-	case BC_ACCEPT_OK: { //객체 생성, 나의 정보를 받아옴
-		bc_packet_accept_ok* p = reinterpret_cast<bc_packet_accept_ok*>(packet_buf);
+	case BC_BATTLE_LOGIN_OK: { //객체 생성, 나의 정보를 받아옴
+		bc_packet_battle_login_ok* p = reinterpret_cast<bc_packet_battle_login_ok*>(packet_buf);
 		m_client.battle_id = p->id;
 		if (m_client.battle_id == 0) {
 			cout << "error, BUFFER ZERO / battle ID == 0\n";
@@ -256,27 +256,52 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		battle_client->mmr = m_client.mmr;
 		m_battle_clients[m_client.battle_id] = std::move(battle_client);
 		m_battle_clients[m_client.battle_id]->m_host = m_ishost;
+		m_battle_clients[m_client.battle_id]->m_room_num = m_room_no;
+		cout << "MAKE client: " << m_client.battle_id <<
+			" isHOST: " << m_battle_clients[m_client.battle_id]->m_host <<
+			" roomNo: " << m_battle_clients[m_client.battle_id]->m_room_num << endl;
 
-		SendBattleRoomJoinPacket(m_room_no);
+
+		Service::GetApp()->Notify(EVENT_BATTLE_LOGIN_OK);
 		break;
 	}
-	case BC_ACCEPT_FAIL: {
+	case BC_BATTLE_LOGIN_FAIL: {
 		cout << "ACCEPT FAIL\n";
 		break;
 	}
-	case BC_JOIN_OK: { //나의 정보를 받아옴(accept_ok랑 통합해도 될듯?)
+	case BC_ROOM_ENTERED: {
+		bc_packet_room_entered* p = reinterpret_cast<bc_packet_room_entered*>(packet_buf);
+
+		std::unique_ptr<BattleClient> battleClient = std::make_unique<BattleClient>(p->id);
+		memcpy(battleClient->name, p->name, sizeof(char) * MAX_ID_LEN);
+		battleClient->mmr = p->mmr;
+		battleClient->m_host = p->isManager;
+		battleClient->m_player_num = p->player_no;
+		battleClient->m_ready = p->ready;
+		m_battle_clients[p->id] = std::move(battleClient);
+		Service::GetApp()->Notify(EVENT_ROOM_ENTER, 1, p->id);
+		break;
+	}
+	case BC_ROOM_LEAVED: {
+		bc_packet_room_leaved* p = reinterpret_cast<bc_packet_room_leaved*>(packet_buf);
+		if (m_client.battle_id != p->id) {
+			m_battle_clients[p->id].release();
+			m_battle_clients.erase(p->id);
+		}
+		Service::GetApp()->Notify(EVENT_ROOM_LEAVE, 1, p->id);
+	}
+	case BC_JOIN_OK: {
 		bc_packet_join_ok* p = reinterpret_cast<bc_packet_join_ok*>(packet_buf);
 		int& id = m_client.battle_id;
 		m_battle_clients[id]->m_player_num = p->player_no;
 
-		cout << "player_no(spawn_pos): " << m_battle_clients[id]->m_player_num << endl;
-		Service::GetApp()->Notify(EVENT_BATTLE_ROOM_JOIN_OK);
+		Service::GetApp()->Notify(EVENT_ROOM_JOIN_OK);
 		break;
 	}
 	case BC_JOIN_FAIL: {
-		bc_packet_accept_fail* p = reinterpret_cast<bc_packet_accept_fail*>(packet_buf);
+		bc_packet_join_fail* p = reinterpret_cast<bc_packet_join_fail*>(packet_buf);
 		m_battle_clients[m_client.battle_id]->Initialize();
-		Service::GetApp()->Notify(EVENT_BATTLE_ROOM_JOIN_FAIL);
+		Service::GetApp()->Notify(EVENT_ROOM_JOIN_FAIL);
 		break;
 	}
 	case BC_READY: {
@@ -293,12 +318,16 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	}
 	case BC_GAME_START: {
 		bc_packet_game_start* p = reinterpret_cast<bc_packet_game_start*>(packet_buf);
-
 		for (auto& st : p->start_info) {
 			if (m_battle_clients.count(st.id)) {
 				m_battle_clients[st.id]->m_spawn_position = st.spawn_pos;
 			}
 		}
+		cout << m_battle_clients[m_client.battle_id]->m_spawn_position.x;
+		cout << m_battle_clients[m_client.battle_id]->m_spawn_position.y;
+		cout << m_battle_clients[m_client.battle_id]->m_spawn_position.z;
+		cout << endl;
+		//맵정보 전달
 		//m_map_info = static_cast<int>(p->map_type);
 
 		Service::GetApp()->Notify(EVENT_ROOM_START);
@@ -405,7 +434,6 @@ void NetCore::SendLobbyLoginPacket(const std::string& id, const std::string& pw)
 	m_client.lobby_id = id;
 
 	//todo: 나중에 login으로 바꿔야함
-
 	//cl_packet_login p;
 	//p.size = sizeof(p);
 	//p.type = CL_LOGIN;
@@ -423,14 +451,14 @@ void NetCore::SendLobbySignUpPacket(const std::string& id, const std::string& pw
 	//DB 업뎃 이후 
 }
 
-void NetCore::SendAutoMatchPacket() {
-	cl_packet_automatch p;
+void NetCore::SendFindRoomPacket() {
+	cl_packet_find_room p;
 	p.size = sizeof(p);
-	p.type = CL_AUTOMATCH;
+	p.type = CL_FIND_ROOM;
 	SendPacket(&p, SV_LOBBY);
 }
 
-void NetCore::SendAutoMatchCancelPacket() {
+void NetCore::SendMatchCancelPacket() {
 	cl_packet_cancel_automatch p;
 	p.size = sizeof(p);
 	p.type = CL_CANCEL_AUTOMATCH;
@@ -454,10 +482,8 @@ bool NetCore::SendBattleLoginPacket() {
 	return true;
 }
 
-void NetCore::SendBattleRoomJoinPacket(int room_no) {
-	if (m_battle_clients.count(m_client.battle_id)) {
-		m_battle_clients[m_client.battle_id]->m_room_num = room_no;
-	}
+void NetCore::SendBattleRoomJoinPacket() {
+	//m_battle_clients[m_client.battle_id]->m_room_num = m_room_no;
 	cb_packet_join p;
 	p.size = sizeof(p);
 	p.type = CB_JOIN;

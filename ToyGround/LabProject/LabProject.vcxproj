@@ -176,7 +176,6 @@
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MoveCommand.h" />
     <ClInclude Include="netCore.h" />
-    <ClInclude Include="Network.h" />
     <ClInclude Include="Objectinfo.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayerController.h" />
@@ -228,7 +227,6 @@
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="MoveCommand.cpp" />
     <ClCompile Include="netCore.cpp" />
-    <ClCompile Include="Network.cpp" />
     <ClCompile Include="Objectinfo.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

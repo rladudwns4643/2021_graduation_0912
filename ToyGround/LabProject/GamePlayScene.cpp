@@ -14,8 +14,46 @@
 
 void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	switch (sEvent) {
-	case EVENT_GAME_CALLBACK_MOVE: {
+	case EVENT_ROOM_START: {
+		cout << "GAME START" << endl;
+		va_list ap;
+		int arg_bt_id;
+		XMFLOAT4 arg_sl;
+		va_start(ap, argsCount);
+		arg_bt_id = va_arg(ap, int);
+		arg_sl = va_arg(ap, XMFLOAT4);
+		va_end(ap);
+
+		//m_users »ý¼º
+
+		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
+		m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
 		break;
+	}
+	case EVENT_GAME_TIMER: {
+		va_list ap;
+		int t;
+		va_start(ap, argsCount);
+		t = va_arg(ap, int);
+		va_end(ap);
+		cout << "left Time: " << t << endl;
+		break;
+	}
+	case EVENT_GAME_CALLBACK_MOVE: {
+		int arg_id;
+		XMFLOAT3 arg_pos;
+
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_pos = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+
+		if (m_Users[arg_id] != nullptr) {
+			m_Users[arg_id]->SetPosition(arg_pos.x, arg_pos.y, arg_pos.z);
+		}
+		break;
+	}
 	}
 }
 

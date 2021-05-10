@@ -88,10 +88,10 @@ void Room::Update() {
 		ProcMsg(procMsg);
 	}
 
-	if (!m_isGameStarted) {
+/*	if (!m_isGameStarted) {
 		int numOfReady{};
 		for (int i = 0; i < MAX_PLAYER; ++i) {
-			if (!m_players[i]->GetSlotStatus()) {
+			if (!m_players[i]->GetEmpty()) {
 				if (m_players[i]->GetReady()) ++numOfReady;
 			}
 		}
@@ -109,7 +109,7 @@ void Room::Update() {
 			}
 		}
 	}
-	else if (m_isGameStarted) {
+	else */if (m_isGameStarted) {
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			int id{ m_players[i]->GetID() };
 			if (id != -1) {//not unset
@@ -252,7 +252,7 @@ bool Room::EnterRoom(int id, bool is_roomMnr) {
 	if (m_curPlayerNum >= MAX_PLAYER) return false;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
-		if (m_players[i]->GetSlotStatus()) {
+		if (m_players[i]->GetEmpty()) {
 			m_curPlayerNum++;
 			m_players[i]->Enter();
 			m_players[i]->SetID(id);
@@ -283,7 +283,7 @@ void Room::AnnounceRoomEnter(int id) {
 	if (m_RoomMnr == m_players[enterID]->GetID())  is_enterID_mnr = true;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
-		if (!m_players[i]->GetSlotStatus()) {
+		if (!m_players[i]->GetEmpty()) {
 			if (m_players[i]->GetID() == m_RoomMnr) {
 				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), true);
 			}
@@ -360,8 +360,10 @@ bool Room::IsRoomStarted() {
 
 void Room::SendLeftTimePacket() {
 	if (this == nullptr) return;
-	if (m_leftTime > 1
-		&& m_isGameStarted) {
+	if (m_leftTime > 1 && m_isGameStarted) {
+		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(1), EV_TICK };
+		BattleServer::GetInstance()->AddTimer(ev);
+		m_countFrame = 0;
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			int id = m_players[i]->GetID();
 			if (id != -1) BattleServer::GetInstance()->SendLeftTimePacket(id, m_leftTime);
@@ -424,6 +426,9 @@ void Room::GameOver(int winner) {
 	cout << winner << " winner!\n";
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EV_RESET_ROOM };
 	BattleServer::GetInstance()->AddTimer(ev);
+	for (const auto& pl : m_players) {
+		BattleServer::GetInstance()->SendGameOverPacket(pl->GetID(), winner);
+	}
 }
 
 void Room::UpdateUserInfo_DB(int winner) {
@@ -671,9 +676,19 @@ void Room::ProcMsg(message msg) {
 	case CB_READY: {
 		for (auto& pl : m_players) {
 			if (pl->GetID() == msg.id) {
-				pl->SetReady(!pl->GetReady());
+				if (pl->GetReady() == true) {
+					break;
+				}
+				pl->SetReady(true);
 				char ready = pl->GetReady();
 				PushReadyMsg(msg.id, ready);
+			}
+		}
+		if (m_players[0]->GetReady() && m_players[1]->GetReady()) {
+			ClearCopyMsg();
+			if (!m_isGameStarted) {
+				GameStart();
+				SendLeftTimePacket();
 			}
 		}
 		break;
