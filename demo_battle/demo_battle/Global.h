@@ -1,5 +1,5 @@
 #pragma once
-#include "MathHelper.h"
+#include "SMathHelper.h"
 
 constexpr int NO_MSG = -1;
 

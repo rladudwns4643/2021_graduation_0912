@@ -1,6 +1,6 @@
 #pragma once
 #include "Global.h"
-#include "MathHelper.h"
+#include "SMathHelper.h"
 #include "Boundary.h"
 #include "pch.h"
 

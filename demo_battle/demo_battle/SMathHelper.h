@@ -1,12 +1,11 @@
 //***************************************************************************************
-// MathHelper.h by Frank Luna (C) 2011 All Rights Reserved.
+// SMathHelper.h by Frank Luna (C) 2011 All Rights Reserved.
 //
 // Helper math class.
 //***************************************************************************************
 
 #pragma once
 #include <DirectXMath.h>
-#include "pch.h"
 
 using namespace DirectX;
 
@@ -20,7 +19,7 @@ using namespace DirectX;
 constexpr float EPSILON = 1.0e-10f;
 constexpr float PI = 3.1415f;
 
-class MathHelper
+class SMathHelper
 {
 public:
 	// Returns random float in [0, 1).
@@ -180,7 +179,7 @@ public:
 	static bool IsZero(const XMFLOAT3& xmf3Vector) {
 		XMFLOAT3 xmf3Result;
 		XMStoreFloat3(&xmf3Result, XMVector3Length(XMLoadFloat3(&xmf3Vector)));
-		return(MathHelper::IsZero(xmf3Result.x));
+		return(SMathHelper::IsZero(xmf3Result.x));
 	}
 
 	static DirectX::XMVECTOR RandUnitVec3();

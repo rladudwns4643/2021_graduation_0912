@@ -65,7 +65,7 @@ void Camera::Initialize()
 	mViewDirty = true;
 }
 
-void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
+void Camera::Update(const XMFLOAT3& lookAt, float deltaT)
 {
 	switch (m_CameraType)
 	{
@@ -85,7 +85,7 @@ void Camera::Update(const DirectX::XMFLOAT3& lookAt, float deltaT)
 
 
 		XMFLOAT4X4 LookAtMat;
-		XMStoreFloat4x4(&LookAtMat, DirectX::XMMatrixLookToLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&GetLook3f()), XMLoadFloat3(&GetUp3f())));
+		XMStoreFloat4x4(&LookAtMat, XMMatrixLookToLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&GetLook3f()), XMLoadFloat3(&GetUp3f())));
 
 		mRight = XMFLOAT3(LookAtMat._11, LookAtMat._21, LookAtMat._31);
 		mUp = XMFLOAT3(LookAtMat._12, LookAtMat._22, LookAtMat._32);
@@ -246,7 +246,7 @@ XMFLOAT3 Camera::GetLook3f()const
 }
 
 
-void Camera::SetOffset(DirectX::XMFLOAT3 offset)
+void Camera::SetOffset(XMFLOAT3 offset)
 {
 	if (!m_Owner) return;
 
@@ -258,7 +258,7 @@ void Camera::SetOffset(DirectX::XMFLOAT3 offset)
 	mViewDirty = true;
 }
 
-DirectX::XMFLOAT3& Camera::GetOffset()
+XMFLOAT3& Camera::GetOffset()
 {
 	return mOffset;
 }
@@ -337,26 +337,26 @@ void Camera::SetLens(float fovY, float aspect, float zn, float zf)
 	mFarWindowHeight = 2.0f * mFarZ * tanf(0.5f * mFovY);
 
 	// Proj
-	XMMATRIX P = DirectX::XMMatrixPerspectiveFovLH(mFovY, mAspect, mNearZ, mFarZ);
+	XMMATRIX P = XMMatrixPerspectiveFovLH(mFovY, mAspect, mNearZ, mFarZ);
 	XMStoreFloat4x4(&mProj, P);
 
 	// Ortho
 	// far = 1.f
 	// near = 0.f
-	XMMATRIX O = DirectX::XMMatrixOrthographicLH(Core::g_DisplayWidth, Core::g_DisplayHeight, 0.f, 1.f);
+	XMMATRIX O = XMMatrixOrthographicLH(Core::g_DisplayWidth, Core::g_DisplayHeight, 0.f, 1.f);
 	XMStoreFloat4x4(&mOrtho, O);
 
 	mViewDirty = true;
 }
 
-void Camera::SetTarget(const DirectX::XMFLOAT3& lookAt)
+void Camera::SetTarget(const XMFLOAT3& lookAt)
 {
 	switch (m_CameraType)
 	{
 	case CameraType::eThird:
 	{
 		XMFLOAT4X4 LookAtMat;
-		XMStoreFloat4x4(&LookAtMat, DirectX::XMMatrixLookAtLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&lookAt), XMLoadFloat3(&m_Owner->GetUp())));
+		XMStoreFloat4x4(&LookAtMat, XMMatrixLookAtLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&lookAt), XMLoadFloat3(&m_Owner->GetUp())));
 
 		mRight = XMFLOAT3(LookAtMat._11, LookAtMat._21, LookAtMat._31);
 		mUp = XMFLOAT3(LookAtMat._12, LookAtMat._22, LookAtMat._32);
@@ -366,10 +366,10 @@ void Camera::SetTarget(const DirectX::XMFLOAT3& lookAt)
 	case CameraType::eFree:
 	{
 		XMVECTOR Up = { 0.f,1.f,0.f };
-		Up = XMVector3Transform(Up, DirectX::XMMatrixRotationQuaternion(XMLoadFloat3(&mRotation)));	// 이거 바꿔야할 수도 있음
+		Up = XMVector3Transform(Up, XMMatrixRotationQuaternion(XMLoadFloat3(&mRotation)));	// 이거 바꿔야할 수도 있음
 
 		XMFLOAT4X4 LookAtMat;
-		XMStoreFloat4x4(&LookAtMat, DirectX::XMMatrixLookAtLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&lookAt), Up));
+		XMStoreFloat4x4(&LookAtMat, XMMatrixLookAtLH(XMLoadFloat3(&mPosition), XMLoadFloat3(&lookAt), Up));
 
 		mRight = XMFLOAT3(LookAtMat._11, LookAtMat._21, LookAtMat._31);
 		mUp = XMFLOAT3(LookAtMat._12, LookAtMat._22, LookAtMat._32);
@@ -387,10 +387,10 @@ void Camera::LookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp)
 	XMVECTOR R = XMVector3Normalize(XMVector3Cross(worldUp, L));
 	XMVECTOR U = XMVector3Cross(L, R);
 
-	DirectX::XMStoreFloat3(&mPosition, pos);
-	DirectX::XMStoreFloat3(&mLook, L);
-	DirectX::XMStoreFloat3(&mRight, R);
-	DirectX::XMStoreFloat3(&mUp, U);
+	XMStoreFloat3(&mPosition, pos);
+	XMStoreFloat3(&mLook, L);
+	XMStoreFloat3(&mRight, R);
+	XMStoreFloat3(&mUp, U);
 
 	mViewDirty = true;
 }
@@ -417,7 +417,7 @@ XMMATRIX Camera::GetProj()const
 	return XMLoadFloat4x4(&mProj);
 }
 
-DirectX::XMMATRIX Camera::GetOrtho() const
+XMMATRIX Camera::GetOrtho() const
 {
 	return XMLoadFloat4x4(&mOrtho);
 }
@@ -434,7 +434,7 @@ XMFLOAT4X4 Camera::GetProj4x4f()const
 	return mProj;
 }
 
-DirectX::XMFLOAT4X4 Camera::GetOrtho4x4f() const
+XMFLOAT4X4 Camera::GetOrtho4x4f() const
 {
 	return mOrtho;
 }
@@ -445,7 +445,7 @@ void Camera::Strafe(float d)
 	XMVECTOR s = XMVectorReplicate(d);
 	XMVECTOR r = XMLoadFloat3(&mRight);
 	XMVECTOR p = XMLoadFloat3(&mPosition);
-	DirectX::XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, r, p));
+	XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, r, p));
 
 	mViewDirty = true;
 }
@@ -457,7 +457,7 @@ void Camera::Walk(float d)
 	XMVECTOR s = XMVectorReplicate(d);
 	XMVECTOR l = XMLoadFloat3(&mLook);
 	XMVECTOR p = XMLoadFloat3(&mPosition);
-	DirectX::XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
+	XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
 
 	mViewDirty = true;
 }
@@ -468,7 +468,7 @@ void Camera::Up(float d)
 	XMVECTOR s = XMVectorReplicate(d);
 	XMVECTOR l = XMLoadFloat3(&mUp);
 	XMVECTOR p = XMLoadFloat3(&mPosition);
-	DirectX::XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
+	XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
 
 	mViewDirty = true;
 }
@@ -497,7 +497,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 		{
 			// - 고개 관련
 			XMFLOAT3 xmf3Right = mRight;
-			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
+			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
 			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
 			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
 			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
@@ -510,7 +510,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 			mPosition = m_Owner->GetPosition();
 		
 			XMFLOAT3 xmf3Up = m_Owner->GetUp();
-			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
+			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
 			
 			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
 			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
@@ -522,7 +522,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 		if (m_Owner && fRoll)
 		{
 			XMFLOAT3 xmf3Look = m_Owner->GetLook();
-			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
+			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
 			XMFLOAT3 xmPos = m_Owner->GetPosition();
 		
 			mPosition = MathHelper::Subtract(mPosition, xmPos);
@@ -541,7 +541,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 		if (m_Owner && fPitch)
 		{
 			XMFLOAT3 xmf3Right = mRight;
-			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
+			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
 
 			XMFLOAT3 calLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
 			XMFLOAT3 upVec = { 0.f, 1.f, 0.f };
@@ -549,7 +549,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 			XMVECTOR projVec = XMVectorMultiply(XMVector3Dot(XMLoadFloat3(&calLook), XMLoadFloat3(&upVec)), XMLoadFloat3(&upVec));
 
 
-			float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&calLook), projVec));
+			float cosValue = XMVectorGetX(XMVector3Dot(XMLoadFloat3(&calLook), projVec));
 			float acosValue = 0.f;
 			if (cosValue <= -1.f)
 				acosValue = 3.141592;
@@ -559,7 +559,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 				acosValue = acos(cosValue);
 			float degree = XMConvertToDegrees(acosValue);
 
-			float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&mRight), DirectX::XMVector3Cross(XMLoadFloat3(&calLook), (projVec))));
+			float ccw = XMVectorGetX(XMVector3Dot(XMLoadFloat3(&mRight), XMVector3Cross(XMLoadFloat3(&calLook), (projVec))));
 			if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
 				degree = -degree;
 			degree += 90.f;
@@ -584,7 +584,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 		if (m_Owner && fYaw)
 		{
 			XMFLOAT3 xmf3Up = m_Owner->GetUp();
-			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
+			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
 			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
 			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
 			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
@@ -592,7 +592,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 		if (m_Owner && fRoll)
 		{
 			XMFLOAT3 xmf3Look = m_Owner->GetLook();
-			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
+			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
 			XMFLOAT3 xmPos = m_Owner->GetPosition();
 
 			mPosition = MathHelper::Subtract(mPosition, xmPos);
@@ -614,7 +614,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 		if (m_Owner && fPitch)
 		{
 			XMFLOAT3 xmf3Right = mRight;
-			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
+			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
 			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
 			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
 			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
@@ -622,7 +622,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 		if (m_Owner && fYaw)
 		{
 			XMFLOAT3 xmf3Up = m_Owner->GetUp();
-			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
+			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
 			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
 			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
 			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
@@ -637,7 +637,7 @@ void Camera::Pitch(float angle)
 {
 	// Rotate up and look vector about the right vector.
 
-	XMMATRIX R = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&mRight), angle);
+	XMMATRIX R = XMMatrixRotationAxis(XMLoadFloat3(&mRight), angle);
 
 	XMStoreFloat3(&mUp, XMVector3TransformNormal(XMLoadFloat3(&mUp), R));
 	XMStoreFloat3(&mLook, XMVector3TransformNormal(XMLoadFloat3(&mLook), R));
@@ -649,7 +649,7 @@ void Camera::RotateY(float angle)
 {
 	// Rotate the basis vectors about the world y-axis.
 
-	XMMATRIX R = DirectX::XMMatrixRotationY(angle);
+	XMMATRIX R = XMMatrixRotationY(angle);
 
 	XMStoreFloat3(&mRight, XMVector3TransformNormal(XMLoadFloat3(&mRight), R));
 	XMStoreFloat3(&mUp, XMVector3TransformNormal(XMLoadFloat3(&mUp), R));
@@ -729,5 +729,5 @@ bool Camera::IsInFrustum(const XMMATRIX& invWorld, const BoundingBox& otherBound
 	m_Frustum.Transform(localSpaceFrustum, viewToLocal);
 
 	// Perform the box/frustum intersection test in local space.
-	return (localSpaceFrustum.Contains(otherBounds) != DirectX::DISJOINT);
+	return (localSpaceFrustum.Contains(otherBounds) != DISJOINT);
 }

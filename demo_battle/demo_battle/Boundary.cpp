@@ -16,7 +16,7 @@ Boundary::Boundary(int numBB) noexcept {
 
 	m_xmf4x4_BB_world = new XMFLOAT4X4[m_numOfBB];
 	for (int i = 0; i < m_numOfBB; ++i) {
-		m_xmf4x4_BB_world[i] = MathHelper::Identity4x4();
+		m_xmf4x4_BB_world[i] = SMathHelper::Identity4x4();
 	}
 	m_xmf3_BB_size = new XMFLOAT3[m_numOfBB];
 	m_xmf3_BB_rot = new XMFLOAT3[m_numOfBB];
@@ -66,7 +66,7 @@ void Boundary::SetBB(int numBB) {
 	m_numOfBB = numBB;
 	m_xmf4x4_BB_world = new XMFLOAT4X4[numBB];
 	for (int i = 0; i < numBB; ++i){
-		m_xmf4x4_BB_world[i] = MathHelper::Identity4x4();
+		m_xmf4x4_BB_world[i] = SMathHelper::Identity4x4();
 	}
 	m_xmf3_BB_size = new XMFLOAT3[numBB];
 	m_xmf3_BB_rot = new XMFLOAT3[numBB];
@@ -134,7 +134,7 @@ void Boundary::SetBBPos(XMFLOAT3 xmfPos, int idx) {
 }
 
 XMFLOAT3 Boundary::GetBBLook(int idx) const {
-	return MathHelper::Normalize(XMFLOAT3(m_xmf4x4_BB_world[idx]._31, m_xmf4x4_BB_world[idx]._32, m_xmf4x4_BB_world[idx]._33));
+	return SMathHelper::Normalize(XMFLOAT3(m_xmf4x4_BB_world[idx]._31, m_xmf4x4_BB_world[idx]._32, m_xmf4x4_BB_world[idx]._33));
 }
 
 void Boundary::SetBBLook(float x, float y, float z, int idx) {
@@ -148,7 +148,7 @@ void Boundary::SetBBLook(XMFLOAT3 xmfLook, int idx) {
 }
 
 XMFLOAT3 Boundary::GetBBUp(int idx) const {
-	return MathHelper::Normalize(XMFLOAT3(m_xmf4x4_BB_world[idx]._21, m_xmf4x4_BB_world[idx]._22, m_xmf4x4_BB_world[idx]._23));
+	return SMathHelper::Normalize(XMFLOAT3(m_xmf4x4_BB_world[idx]._21, m_xmf4x4_BB_world[idx]._22, m_xmf4x4_BB_world[idx]._23));
 }
 
 void Boundary::SetBBUp(float x, float y, float z, int idx) {
@@ -162,7 +162,7 @@ void Boundary::SetBBUp(XMFLOAT3 xmfUp, int idx) {
 }
 
 XMFLOAT3 Boundary::GetBBRight(int idx) const {
-	return MathHelper::Normalize(XMFLOAT3(m_xmf4x4_BB_world[idx]._11, m_xmf4x4_BB_world[idx]._12, m_xmf4x4_BB_world[idx]._13));
+	return SMathHelper::Normalize(XMFLOAT3(m_xmf4x4_BB_world[idx]._11, m_xmf4x4_BB_world[idx]._12, m_xmf4x4_BB_world[idx]._13));
 }
 
 void Boundary::SetBBRight(float x, float y, float z, int idx) {
@@ -191,7 +191,7 @@ void Boundary::BoundaryMove(float x, float y, float z){
 void Boundary::BoundaryMove(XMFLOAT3 distance){
 	for (int i = 0; i < m_numOfBB; ++i) {
 		XMFLOAT3 bbPos = GetBBPos(i);
-		bbPos = MathHelper::Add(bbPos, distance);
+		bbPos = SMathHelper::Add(bbPos, distance);
 		SetBBPos(bbPos, i);
 	}
 }
