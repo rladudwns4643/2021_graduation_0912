@@ -6,15 +6,18 @@
 #include "CommandContext.h"
 #include "TOY_GROUND.h"
 #include "InputHandler.h"
-#include "Network.h"
+#include "netCore.h"
+#include "Service.h"
 
 using namespace Core;
 
 namespace Core
 {
+	NetCore* g_netcore;
+	Service* g_service;
+
 	GameCore* g_Core = nullptr;
 	GameTimer* g_GameTimer = nullptr;
-	//Network* g_network = nullptr;
 
 
 	HINSTANCE			g_hAppInst = nullptr; // application instance handle
@@ -46,10 +49,11 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 
 	g_Core = GameCore::GetApp();
 	g_GameTimer = GameTimer::GetApp();
-//	g_network = Network::GetApp();
 
-	//std::thread connect_thread(&Network::ConnectLobbyServer, g_network);
-	//std::thread worker_thread(&Network::DoWorker, g_network);
+	g_netcore = NetCore::GetApp();
+	g_service = Service::GetApp();
+
+	std::thread io_thread(&Service::ActiveService, g_service);
 
 	MSG msg = {};
 
@@ -70,20 +74,23 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 		}
 	}
 
-	//connect_thread.join();
-	//worker_thread.join();
 	TerminateApplication(app);
+	io_thread.join();
+	//worker_thread.join();
 }
 
 void Core::TerminateApplication(IGameApp& game)
 {
+	g_service->Clear();
+	g_netcore->Destory();
 	game.Cleanup();
 	g_Core->ShutdownCore();
 
 	// Context Release
 	GameCore::DestroyApp();
 	GameTimer::DestroyApp();
-	//delete g_network;
+	NetCore::DestroyApp();
+	Service::DestroyApp();
 }
 
 void Core::CalculateFrameStats()

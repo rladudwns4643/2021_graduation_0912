@@ -15,7 +15,7 @@ private:
 		m_Scenes[static_cast<int>(sceneType)] = scene;
 	}
 
-	void SendEventArgs(SceneType st, int sEvent, int argsCount, ...);
+	void SendEventArgs(SceneType st, int sEvent, int argsCount = 0, ...);
 
 public:
 	explicit SceneManager();
@@ -41,4 +41,3 @@ private:
 	UINT m_CurScene;
 	std::mutex m_MutexChangeScene;
 };
-

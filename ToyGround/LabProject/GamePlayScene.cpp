@@ -6,10 +6,38 @@
 #include "CommandContext.h"
 #include "ApplicationContext.h"
 #include "InputHandler.h"
+#include "Service.h"
 
 #include "GameObject.h"
 #include "Character.h"
 #include "Map.h"
+
+void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
+	switch (sEvent) {
+	case EVENT_LOBBY_LOGIN_REQUEST: {
+		//login을 위한 id /pw 입력하는 곳, 지금은 dummylogin으로 넘어감
+		break;
+	}
+	case EVENT_LOBBY_LOGIN_FAIL: {
+		break;
+	}
+	case EVENT_LOBBY_SIGNUP_OK: {
+		break;
+	}
+	case EVENT_LOBBY_SIGNUP_FAIL: {
+		break;
+	}
+	case EVENT_LOBBY_UPDATE_CLIENT_USERINFO: {
+		break;
+	}
+	case EVENT_LOBBY_MATCH_START: {
+		break;
+	}
+	case EVENT_LOBBY_MATCH_CANCEL: {
+		break;
+	}
+	}
+}
 
 void GameplayScene::Initialize()
 {

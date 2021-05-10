@@ -24,20 +24,27 @@ void Service::ActiveService() {
 void Service::Notify(int sEvent, int argsCount, ...) {
 	switch (sEvent) {
 	//lobby
+	case EVENT_LOBBY_LOGIN_REQUEST: {
+		string id{ "test" };
+		string pw{ "1234" };
+
+		NetCore::GetApp()->SendLobbyLoginPacket(id, pw);
+		break;
+	}
 	case EVENT_LOBBY_LOGIN_OK: { //LC_LOGIN_OK
-		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_LOGIN_OK, 0);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_LOGIN_OK);
 		break;
 	}
 	case EVENT_LOBBY_LOGIN_FAIL: { //LC_LOGIN_FAIL
-		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_LOGIN_FAIL, 0);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_LOGIN_FAIL);
 		break;
 	}
 	case EVENT_LOBBY_SIGNUP_OK: { //LC_SIGNUP_OK
-		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_SIGNUP_OK, 0);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_SIGNUP_OK);
 		break;
 	}
 	case EVENT_LOBBY_SIGNUP_FAIL: { //LC_SIGNUP_FAIL
-		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_SIGNUP_FAIL, 0);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_SIGNUP_FAIL);
 		break;
 	}
 	case EVENT_LOBBY_UPDATE_CLIENT_USERINFO: { //LC_USERINFO
@@ -64,7 +71,7 @@ void Service::Notify(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_BATTLE_ROOM_JOIN_OK: { //BC_JOIN_OK
-		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_BATTLE_ROOM_JOIN_OK, 0);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_BATTLE_ROOM_JOIN_OK);
 		break;
 	}
 	case EVENT_BATTLE_ROOM_JOIN_FAIL: { //BC_JOIN_FAIL, ¹Ì±¸Çö
@@ -93,7 +100,7 @@ void Service::Notify(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_ROOM_START: { //BC_GAME_START
-		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_ROOM_START, 0);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_ROOM_START);
 		break;
 	}
 	//ingame
@@ -209,7 +216,7 @@ void Service::Notify(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_GAMEOVER: { //BC_GAME_OVER
-		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_GAMEOVER, 0);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_GAMEOVER);
 		break;
 	}
 	case EVENT_GAME_UPDATE_SERVER_USERINFO: { //BC_UPDATE_USER_INFO

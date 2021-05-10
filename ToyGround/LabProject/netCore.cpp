@@ -137,7 +137,10 @@ void NetCore::ConnectServer(eSERVER sv) {
 				}
 			}
 			else {
+				cout << "[NETCORE]: SV_LOBBY CONNECT\n";
 				Service::GetApp()->setConnectLobby(true);
+				//임시로 로그인 없이 바로 dummy login packet 전송
+				Service::GetApp()->Notify(EVENT_LOBBY_LOGIN_REQUEST);
 			}
 		}
 		break;
@@ -149,6 +152,9 @@ void NetCore::ConnectServer(eSERVER sv) {
 				if (WSAGetLastError() != WSAEWOULDBLOCK) {
 					errorDisplay("BATTLE SERVER CONNECT ERROR!");
 				}
+			}
+			else {
+				cout << "[NETCORE]: SV_BATTLE CONNECT\n";
 			}
 		}
 		break;
@@ -199,6 +205,7 @@ void NetCore::ProcessData(char* buf, size_t io_byte) {
 }
 
 void NetCore::ProcessPacket(char* packet_buf) {
+	cout << "[NETCORE] procpacket: " << (BYTE)packet_buf[1] << " LobbyID: " << m_client.lobby_id << " BattleID: " << m_client.battle_id << endl;
 	switch ((BYTE)packet_buf[1]) { //type
 	case LC_LOGIN_OK: {
 		Service::GetApp()->Notify(EVENT_LOBBY_LOGIN_OK);
@@ -394,18 +401,19 @@ void NetCore::errorDisplay(const char* msg)
 
 //sendPacket
 
-void NetCore::SendLobbyLoginPacket(std::string id, std::string pw) {
+void NetCore::SendLobbyLoginPacket(const std::string& id, const std::string& pw) {
 	m_client.lobby_id = id;
 
 	cl_packet_login p;
 	p.size = sizeof(p);
-	p.type = CL_LOGIN;
-	memcpy(p.id, id.c_str(), sizeof(char) * MAX_ID_LEN);
-	memcpy(p.pw, pw.c_str(), sizeof(char) * MAX_ID_LEN);
+	p.type = CL_DUMMY_LOGIN;
+	//memcpy(p.id, id.c_str(), sizeof(char) * MAX_ID_LEN);
+	//memcpy(p.pw, pw.c_str(), sizeof(char) * MAX_ID_LEN);
+
 	SendPacket(&p, SV_LOBBY);
 }
 
-void NetCore::SendLobbySignUpPacket(std::string id, std::string pw) {
+void NetCore::SendLobbySignUpPacket(const std::string& id, const std::string& pw) {
 	//DB 업뎃 이후 
 }
 

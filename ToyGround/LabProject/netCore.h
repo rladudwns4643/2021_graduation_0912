@@ -51,8 +51,8 @@ public:
 	void RecvLobbyServer();
 
 	bool SendPacket(void* buf, eSERVER sv);
-	void SendLobbyLoginPacket(std::string id, std::string pw);
-	void SendLobbySignUpPacket(std::string id, std::string pw);
+	void SendLobbyLoginPacket(const std::string& id, const std::string& pw);
+	void SendLobbySignUpPacket(const std::string& id, const std::string& pw);
 	void SendAutoMatchPacket();
 	void SendAutoMatchCancelPacket();
 	void SendRequestUserInfoPacket();
