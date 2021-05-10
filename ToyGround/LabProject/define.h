@@ -47,7 +47,6 @@
 enum BoneIndex { Cowboy = 0, GunMan, Count };
 
 // 오브젝트 메쉬
-#define OBJECT_MESH_STR_TEST_PLAYER		"Test_Player"
 #define OBJECT_MESH_STR_CUBE_01			"Cube_01"
 #define OBJECT_MESH_STR_CUBE_02			"Cube_02"
 #define OBJECT_MESH_STR_CUBE_03			"Cube_03"

@@ -9,7 +9,7 @@
 void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 	if (argsCount == 0) {
 		cout << "[SceneMnr] event: " << (int)sEvent << endl;
-		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent);
+		//m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent);
 		return;
 	}
 	switch (sEvent) { //break 바로 들어가는건 argsCount가 0이라 위에서 처리함

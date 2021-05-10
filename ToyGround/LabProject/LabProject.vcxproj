@@ -149,6 +149,7 @@
     <ClInclude Include="ApplicationContext.h" />
     <ClInclude Include="AssertsReference.h" />
     <ClInclude Include="BattleClient.h" />
+    <ClInclude Include="BoundingBoxMesh.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterParts.h" />
@@ -205,6 +206,7 @@
     <ClCompile Include="ApplicationContext.cpp" />
     <ClCompile Include="AssertsReference.cpp" />
     <ClCompile Include="BattleClient.cpp" />
+    <ClCompile Include="BoundingBoxMesh.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CharacterParts.cpp" />
@@ -244,6 +246,9 @@
     <ClCompile Include="TOY_GROUND.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\BBox.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Shaders\Common.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

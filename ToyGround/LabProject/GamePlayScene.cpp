@@ -17,6 +17,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	case EVENT_GAME_CALLBACK_MOVE: {
 		break;
 	}
+	}
 }
 
 void GameplayScene::Initialize()
@@ -25,10 +26,10 @@ void GameplayScene::Initialize()
 	m_SceneController = new GameplayController(this);
 	m_SceneController->SetMapName(MAP_STR_GAME_MAP);
 
-	/* SkyCube */
+	// SkyCube
 	AppContext->CreateSkycube("gameplaySky", "gameplaySky", "SkyBox");
 
-	/* 맵의 오브젝트들 생성 */
+	// 맵의 오브젝트들 생성
 	AppContext->CreateProps(MAP_STR_GAME_MAP);
 }
 
@@ -92,22 +93,22 @@ void GameplayScene::Update(const float& fDeltaTime)
 		p.second->Update(fDeltaTime);
 	}
 
-	/* SkyCube */
+	// SkyCube
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
 
-	/*Props*/
+	// Props
 	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
 	{
 		GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
 	}
 
-	/*Characters*/
+	// Characters
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_COWBOY], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Cowboy, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_COWBOY].get());
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_GUNMAN], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::GunMan, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_GUNMAN].get());
 	
-	/*Materials*/
+	// Materials
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
 }
 
@@ -129,6 +130,10 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
 	}
+
+	// BoundingBox
+//	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BBoxPSO.Get());
+//	GraphicsContext::GetApp()->DrawBBox(AppContext->m_BBoxVec);
 
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());

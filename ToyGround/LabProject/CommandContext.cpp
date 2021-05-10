@@ -28,7 +28,6 @@ void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 {
 	m_InstanceBuffers[objInfo->m_Type] = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), objInfo->m_InstanceCount, false);
 }
-
 void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isFrustum)
 {
 	if (!objInfo) return;
@@ -192,6 +191,19 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 			Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCount, info.size(), ri->m_StartIndexLocation, ri->m_BaseVertexLocation, 0);
 		}
 	}
+}
+
+void GraphicsContext::DrawBBox(const std::vector<BBox*>& rItems)
+{
+	//for (auto& i : rItems.)
+	//{
+	//	Core::g_CommandList->IASetVertexBuffers(0, 1, i->m_BB->VertexBufferView());
+	//	Core::g_CommandList->IASetIndexBuffer(i->m_BB->IndexBufferView());
+	//	Core::g_CommandList->IASetPrimitiveTopology(i->m_PrimitiveType);
+	//
+	//	Core::g_CommandList->SetGraphicsRootConstantBufferView(6, 0);
+	//	Core::g_CommandList->DrawIndexedInstanced(i->m_BB->m_IndexCount, info.size(), i->m_BB->m_StartIndexLocation, i->m_BB->m_BaseVertexLocation, 0);
+	//}
 }
 
 void GraphicsContext::DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const std::vector<GameObject*>& rItems)

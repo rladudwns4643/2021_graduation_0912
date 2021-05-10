@@ -1,6 +1,7 @@
 #pragma once
 #include "Singleton.h"
 #include "GeometryMesh.h"
+#include "BoundingBoxMesh.h"
 #include "SkinnedModelInstance.h"
 
 // 같은 종류의 메쉬는 딱 한번만 생성되야한다.
@@ -15,6 +16,7 @@ public:
 	void BuildMaterials();
 
 	void BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
+	void BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList);
 	void BuildModel(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName);
 
 	void BuildSkinnedModel(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName);
@@ -39,9 +41,12 @@ private:
 
 public:
 	std::unordered_map<std::string, std::unique_ptr<GeometryMesh>>	m_GeometryMesh;
+	std::unique_ptr<BoundingBoxMesh>								m_BoundingBoxMesh;
 	std::map<std::string, std::unique_ptr<SkinnedModelInstance>> m_SkinnedModelInsts;
 	std::unordered_map<std::string, std::unique_ptr<Material>>	m_Materials;
 	std::map<std::string, std::unique_ptr<BoundingBox>> m_PropBoundingBox;
 	int mapArray[MAP_HEIGHT_BLOCK_NUM][MAP_DEPTH_BLOCK_NUM][MAP_WIDTH_BLOCK_NUM];
+
+	std::vector<std::string> m_propTypeVector;
 };
 

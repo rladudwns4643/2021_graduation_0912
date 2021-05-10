@@ -138,6 +138,9 @@ void TOY_GROUND::BuildAsserts()
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Jump");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Attack");
 
+	// Build BoundingBox
+	AssertsReference::GetApp()->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get());
+
 	// Build Materials
 	AssertsReference::GetApp()->BuildMaterials();
 }

@@ -52,6 +52,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> m_PostProcessRS;
 
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> m_Shaders;
+	std::vector<D3D12_INPUT_ELEMENT_DESC> m_BBox_InputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Instancing_InputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Skinned_InputLayout;
 

@@ -43,6 +43,20 @@ struct Vertex
 	}
 };
 
+struct BBVertex
+{
+	BBVertex() {}
+	BBVertex(
+		const DirectX::XMFLOAT3& p,
+		const DirectX::XMFLOAT4& c) :
+		Pos(p),
+		Color(c)
+	{}
+
+	DirectX::XMFLOAT3 Pos;
+	DirectX::XMFLOAT4 Color;
+};
+
 struct SkinnedVertex : Vertex
 {
 	DirectX::XMFLOAT3 BoneWeights;

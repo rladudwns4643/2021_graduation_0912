@@ -4,6 +4,7 @@
 
 class SkinnedModelInstance;
 class GameObject;
+class BBox;
 class ObjectInfo;
 class Camera;
 class GameTimer;
@@ -58,7 +59,9 @@ public:
 
 	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer = -1, bool isFrustum = false);
 	void DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const std::vector<GameObject*>& rItems);
-	
+
+	void DrawBBox(const std::vector<BBox*>& rItems);
+
 public:
 	void SetPipelineState(ID3D12PipelineState* PSO);
 	void SetGraphicsRootSignature(ID3D12RootSignature* RootSignature);

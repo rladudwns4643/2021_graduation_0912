@@ -192,6 +192,9 @@
     <ClInclude Include="SceneManager.h">
       <Filter>Scene\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingBoxMesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -324,11 +327,15 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Scene\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="BoundingBoxMesh.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Common.hlsl" />
     <FxCompile Include="Shaders\LightingUtil.hlsl" />
     <FxCompile Include="Shaders\Default.hlsl" />
     <FxCompile Include="Shaders\Sky.hlsl" />
+    <FxCompile Include="Shaders\BBox.hlsl" />
   </ItemGroup>
 </Project>
