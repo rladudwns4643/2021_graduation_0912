@@ -476,11 +476,9 @@ void Camera::Up(float d)
 void Camera::Move(const XMFLOAT3& xmf3Shift)
 {
 	if (m_CameraType == CameraType::eFree) return;
-
-	mPosition = m_Owner->GetPosition();
 	
 	mPosition.x += xmf3Shift.x;
-	mPosition.y += xmf3Shift.y + mOffset.y;
+	mPosition.y += xmf3Shift.y;
 	mPosition.z += xmf3Shift.z;
 
 	mViewDirty = true;
@@ -548,7 +546,6 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 
 			XMVECTOR projVec = XMVectorMultiply(XMVector3Dot(XMLoadFloat3(&calLook), XMLoadFloat3(&upVec)), XMLoadFloat3(&upVec));
 
-
 			float cosValue = XMVectorGetX(XMVector3Dot(XMLoadFloat3(&calLook), projVec));
 			float acosValue = 0.f;
 			if (cosValue <= -1.f)
@@ -589,20 +586,20 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
 			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
 		}
-		if (m_Owner && fRoll)
-		{
-			XMFLOAT3 xmf3Look = m_Owner->GetLook();
-			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
-			XMFLOAT3 xmPos = m_Owner->GetPosition();
-
-			mPosition = MathHelper::Subtract(mPosition, xmPos);
-			mPosition = MathHelper::TransformCoord(mPosition, xmmtxRotate);
-			mPosition = MathHelper::Add(mPosition, m_Owner->GetPosition());
-
-			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
-			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
-			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
-		}
+		//if (m_Owner && fRoll)
+		//{
+		//	XMFLOAT3 xmf3Look = m_Owner->GetLook();
+		//	XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
+		//	XMFLOAT3 xmPos = m_Owner->GetPosition();
+		//
+		//	mPosition = MathHelper::Subtract(mPosition, xmPos);
+		//	mPosition = MathHelper::TransformCoord(mPosition, xmmtxRotate);
+		//	mPosition = MathHelper::Add(mPosition, m_Owner->GetPosition());
+		//
+		//	mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
+		//	mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
+		//	mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
+		//}
 		break;
 	}
 	case CameraType::eFree:

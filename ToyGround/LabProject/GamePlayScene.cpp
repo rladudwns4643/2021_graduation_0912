@@ -132,8 +132,11 @@ void GameplayScene::Render()
 	}
 
 	// BoundingBox
-//	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BBoxPSO.Get());
-//	GraphicsContext::GetApp()->DrawBBox(AppContext->m_BBoxVec);
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BBoxPSO.Get());
+	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
+	{
+		GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+	}
 
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());

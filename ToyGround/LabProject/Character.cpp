@@ -390,7 +390,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 #elif DEBUG_SERVER
 	SetPosition(Network::GetApp()->GetPos());
 #endif
-	if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
+	//if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
 }
 
 void Character::Rotate(float pitch, float yaw, float roll)

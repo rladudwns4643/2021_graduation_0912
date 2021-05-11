@@ -2,6 +2,7 @@
 
 class SkinnedModelInstance;
 class GeometryMesh;
+class BoundingBoxMesh;
 class GameObject
 {
 protected:
@@ -28,6 +29,7 @@ public:
 	virtual void InitializeTransform();
 	virtual void Update(const float deltaT);
 	virtual bool SetMesh(std::string meshName, std::string submeshName);
+	virtual bool SetBBMesh(std::string submeshName);
 
 public:
 	virtual void SetPosition(float posX, float posY, float posZ);
@@ -75,6 +77,13 @@ public:
 	UINT m_IndexCount;
 	UINT m_StartIndexLocation;
 	int m_BaseVertexLocation;
+
+	BoundingBoxMesh* m_Bb;
+	D3D12_PRIMITIVE_TOPOLOGY m_PrimitiveTypeBb;
+	UINT m_IndexCountBb;
+	UINT m_StartIndexLocationBb;
+	int m_BaseVertexLocationBb;
+
 	BoundingBox m_Bounds;
 
 	// 재질정보

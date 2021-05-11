@@ -97,13 +97,8 @@ void PlayerController::MouseCallback()
 		// 3인칭 회전(공전)
 		else if (m_Owner->m_MyCamera->GetCameraType() == CameraType::eThird && CommandCenter::GetApp()->m_StartAttackAnim == false)
 		{
-			if (InputHandler::g_MouseChangebleY != 0.0f) {
-				m_Owner->m_MyCamera->Rotate(InputHandler::g_MouseChangebleY, 0, 0);
-			}
-
-			if (InputHandler::g_MouseChangebleX != 0.0f)
-			{
-				m_Owner->m_MyCamera->Rotate(0, InputHandler::g_MouseChangebleX, 0);
+			if (InputHandler::g_MouseChangebleY != 0.0f || InputHandler::g_MouseChangebleX != 0.0f) {
+				m_Owner->m_MyCamera->Rotate(InputHandler::g_MouseChangebleY, InputHandler::g_MouseChangebleX, 0);
 			}
 		}
 

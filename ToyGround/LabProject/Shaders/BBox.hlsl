@@ -1,21 +1,22 @@
+
 #include "Common.hlsl"
 
-struct VertexIn
+struct VIn
 {
 	float3 position : POSITION;
 	float4 color : COLOR;
 
 };
 
-struct VertexOut
+struct VOut
 {
 	float4 position : SV_POSITION;
 	float4 color : COLOR;
 };
 
-VertexOut BBoxVS(VertexIn input, uint instanceID : SV_InstanceID)
+VOut VS(VIn input, uint instanceID : SV_InstanceID)
 {
-	VertexOut output;
+	VOut output;
 
 	InstanceData instData = gInstanceData[instanceID];
 	float4x4 world = instData.World;
@@ -26,7 +27,7 @@ VertexOut BBoxVS(VertexIn input, uint instanceID : SV_InstanceID)
 	return(output);
 }
 
-float4 BBoxPS(VertexOut input) : SV_TARGET
+float4 PS(VOut input) : SV_TARGET
 {
 	return(input.color);
-}}
+}

@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "Camera.h"
 #include "GeometryMesh.h"
+#include "BoundingBoxMesh.h"
 #include "SkinnedModelInstance.h"
 #include "TOY_GROUND.h"
 
@@ -192,6 +193,41 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 		}
 	}
 }
+
+void GraphicsContext::DrawBoundingBox(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer, bool isFrustum)
+{
+	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
+
+	for (auto& i : info)
+	{
+		auto ri = rItems[i.second];
+
+		if (ri->m_ZLayer == zLayer)
+		{
+#ifdef FRUSTUM_CULLMODE
+			if (isFrustum)
+			{
+				XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
+				XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
+				if (!TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+			}
+#endif
+			Core::g_CommandList->IASetVertexBuffers(0, 1, &ri->m_Bb->VertexBufferView());
+			Core::g_CommandList->IASetIndexBuffer(&ri->m_Bb->IndexBufferView());
+			Core::g_CommandList->IASetPrimitiveTopology(ri->m_PrimitiveTypeBb);
+
+			auto instanceBuffer = m_InstanceBuffers[ri->GetMeshName()]->Resource();
+			Core::g_CommandList->SetGraphicsRootShaderResourceView(0, instanceBuffer->GetGPUVirtualAddress());
+
+			Core::g_CommandList->SetGraphicsRootConstantBufferView(5, 0);
+		
+			// instanceCount = info.size
+			// info = instance world 행렬을 갖고있는 맵
+			Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCountBb, info.size(), ri->m_StartIndexLocationBb, ri->m_BaseVertexLocationBb, 0);
+		}
+	}
+}
+
 
 void GraphicsContext::DrawBBox(const std::vector<BBox*>& rItems)
 {

@@ -44,6 +44,20 @@ bool GameObject::SetMesh(std::string meshName, std::string submeshName)
 
 	return true;
 }
+bool GameObject::SetBBMesh(std::string submeshName)
+{
+	if (!AssertsReference::GetApp()->m_BoundingBoxMesh->DrawArgs.count(submeshName)) return false;
+	if (this == nullptr) return false;
+
+	m_Bb = AssertsReference::GetApp()->m_BoundingBoxMesh.get();
+	m_IndexCountBb = m_Bb->DrawArgs[submeshName].IndexCount;
+	m_StartIndexLocationBb = m_Bb->DrawArgs[submeshName].StartIndexLocation;
+	m_BaseVertexLocationBb = m_Bb->DrawArgs[submeshName].BaseVertexLocation;
+	m_PrimitiveTypeBb = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+
+	return true;
+}
+
 
 void GameObject::SetPosition(float posX, float posY, float posZ)
 {
