@@ -177,27 +177,36 @@ void NetCore::DisconnectServer(eSERVER sv) {
 
 void NetCore::ProcessData(char* buf, size_t io_byte) {
 	char* ptr = buf;
-	char tmp_buf[MAX_BUF];
-	//memcpy(tmp_buf, buf, io_byte);
-	ZeroMemory(tmp_buf, io_byte);
+	static unsigned short in_packet_size = 0; // buf 안의 packet size
+	static unsigned short saved_packet_size = 0;
+	static char packet_buffer[MAX_BUF]; // 완전한 패킷, 일부 패킷
 
-	while (io_byte != 0) {
-		if (in_packet_size == 0) {
-			in_packet_size = (BYTE)ptr[0];
-		}
-		if (in_packet_size <= io_byte + saved_packet_size) {
-			memcpy(packet_buf + saved_packet_size, ptr, in_packet_size - saved_packet_size);
-			ProcessPacket(packet_buf);
-			ZeroMemory(packet_buf, MAX_BUF);
+	/*if( saved_packet_size != 0 )
+		cout << "Saved PacketSize = " << saved_packet_size << endl;*/
+
+	static char tmpBuf[MAX_BUF]{};
+	memcpy(tmpBuf, buf, io_byte);
+	ZeroMemory(tmpBuf, io_byte);
+
+	while (0 != io_byte) {
+		if (0 == in_packet_size) in_packet_size = (BYTE)ptr[0]; // 처음받은 메시지 크기를 저장
+		if (io_byte + saved_packet_size >= in_packet_size) {
+			// 처음받은 메시지 크기보다 새로 받은 바이트 수 + 저장하고 있던 바이트 수가 크면		
+			//processPacket 호출, 넘겨준 바이트 만큼 버퍼 포인터, 받은 바이트 수 갱신
+			memcpy(packet_buffer + saved_packet_size, ptr, in_packet_size - saved_packet_size);
+			ProcessPacket(packet_buffer);
+			ZeroMemory(packet_buffer, MAX_BUF);
 			ptr += in_packet_size - saved_packet_size;
 			io_byte -= in_packet_size - saved_packet_size;
 			in_packet_size = 0;
 			saved_packet_size = 0;
 		}
 		else {
-			memcpy(packet_buf + saved_packet_size, ptr, io_byte);
+			memcpy(packet_buffer + saved_packet_size, ptr, io_byte);   // 받은 것 만큼만 임시 저장 버퍼에 담아두기.
 			saved_packet_size += io_byte;
 			io_byte = 0;
+
+			cout << "Saved Packet Size = " << saved_packet_size << endl;
 		}
 	}
 	return;
@@ -235,7 +244,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		m_battle_clients[m_client.battle_id]->m_room_num = p->roomNum;
 		m_battle_clients[m_client.battle_id]->m_host = p->isHost;
 
-		cout << "FINDROOM: " << m_room_no << endl;
+		cout << "FINDROOM: " << p->roomNum << endl;
 		Service::GetApp()->AddEvent(EVENT_ROOM_FIND_ROOM);
 		break;
 	}

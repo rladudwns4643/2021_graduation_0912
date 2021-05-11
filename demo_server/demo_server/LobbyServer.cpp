@@ -210,7 +210,6 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		break;
 	}
 	case BL_ROOMREADY: {
-		cout << "GET BL_ROOMREADY" << endl;
 		bl_packet_room_ready p;
 		memcpy(&p, packet, sizeof(p));
 		cout << "SEND READY ROOM: " << p.room_no << endl;

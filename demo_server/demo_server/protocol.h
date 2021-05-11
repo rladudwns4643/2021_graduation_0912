@@ -492,7 +492,7 @@ struct bl_packet_room_ready {
 	BYTE type;
 
 	short id;
-	short room_no;
+	int room_no;
 	bool is_host;
 };
 

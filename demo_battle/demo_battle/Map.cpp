@@ -52,13 +52,13 @@ void Map::LoadMapInfo(string mapName) {
 			}
 		}
 	}
-	for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k) {
-		for (int i = 0; i < MAP_DEPTH_BLOCK_NUM; ++i) {
-			for (int j = 0; j < MAP_WIDTH_BLOCK_NUM; ++j) {
-				cout << data[k][i][j];
-			}
-			cout << endl;
-		}
-		cout << endl;
-	}
+	//for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k) {
+	//	for (int i = 0; i < MAP_DEPTH_BLOCK_NUM; ++i) {
+	//		for (int j = 0; j < MAP_WIDTH_BLOCK_NUM; ++j) {
+	//			cout << data[k][i][j];
+	//		}
+	//		cout << endl;
+	//	}
+	//	cout << endl;
+	//}
 }

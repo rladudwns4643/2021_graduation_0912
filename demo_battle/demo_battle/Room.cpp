@@ -657,14 +657,6 @@ void Room::ProcMsg(message msg) {
 #endif //LOG_ON
 	switch (msg.type) {
 	case CB_READY: {
-		if (m_players[0]->GetReady() == true && m_players[1]->GetReady() == true) {
-			ClearCopyMsg();
-			if (!m_isGameStarted) {
-				GameStart();
-				SendLeftTimePacket();
-			}
-			break;
-		}
 		for (auto& pl : m_players) {
 			if (pl->GetID() == msg.id) {
 				if (pl->GetReady() == false) {
@@ -672,6 +664,14 @@ void Room::ProcMsg(message msg) {
 					PushReadyMsg(msg.id, pl->GetReady());
 				}
 			}
+		}
+		if (m_players[0]->GetReady() == true && m_players[1]->GetReady() == true) {
+			ClearCopyMsg();
+			if (!m_isGameStarted) {
+				GameStart();
+				SendLeftTimePacket();
+			}
+			break;
 		}
 		break;
 	}
@@ -799,22 +799,20 @@ void Room::ProcMsg(message msg) {
 		break;
 	}
 	case CB_LOOK_VECTOR: {
-		int id{};
 		for (auto& pl : m_players) {
-			id = pl->GetID();
-			if (id != -1 && id == msg.id) {
+			int tid = pl->GetID();
+			if (tid != -1 && tid == msg.id) {
 				if (pl->GetCurObject() == nullptr) return;
 				XMFLOAT3 pre_look{ pl->GetCurObject()->GetLook() };
 				pl->GetCurObject()->SetPreLook(pre_look);
-
 				pl->GetCurObject()->SetMatrixByLook(msg.vec.x, msg.vec.y, msg.vec.z);
 				//bb rotation
-				pl->GetCurObject()->m_boundaries->SetBBLook(pl->GetCurObject()->GetLook(), 0);
-				pl->GetCurObject()->m_boundaries->SetBBRight(pl->GetCurObject()->GetRight(), 0);
+				//pl->GetCurObject()->m_boundaries->SetBBLook(pl->GetCurObject()->GetLook(), 0);
+				//pl->GetCurObject()->m_boundaries->SetBBRight(pl->GetCurObject()->GetRight(), 0);
 			}
 			else {
 				PTC_VECTOR recv_look{ msg.vec.x, msg.vec.y, msg.vec.z };
-				BattleServer::GetInstance()->SendPlayerRotation(id, msg.id, recv_look);
+				BattleServer::GetInstance()->SendPlayerRotation(tid, msg.id, recv_look);
 			}
 		}
 		break;

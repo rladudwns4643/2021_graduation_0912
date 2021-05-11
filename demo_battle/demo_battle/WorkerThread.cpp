@@ -216,9 +216,9 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		bool isJoin{ false };
 		//int slot;
 		//cb_packet_join
-		isJoin = SR::g_rooms[roomNo]->EnterRoom(id, inputPacket[6]/*isRoomMnr*/);
+		isJoin = SR::g_rooms[roomNo]->EnterRoom(id, inputPacket[3]/*isRoomMnr*/);
 		if (isJoin) {
-			BattleServer::GetInstance()->SendRoomJoinSuccess(id, inputPacket[6]); //Room Mnr이면 1P
+			BattleServer::GetInstance()->SendRoomJoinSuccess(id, inputPacket[3]); //Room Mnr이면 1P
 		}
 		else {
 			BattleServer::GetInstance()->SendRoomJoinFail(id, ROOM_FAIL_CODE_ROOM_IS_FULL);
