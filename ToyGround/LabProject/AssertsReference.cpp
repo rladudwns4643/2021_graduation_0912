@@ -349,8 +349,8 @@ void AssertsReference::CreateBB()
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
 		m_PropBoundingBox[OBJECT_MESH_STR_FENCE_01] = std::move(bb);
 	}
 	{
@@ -609,15 +609,16 @@ void AssertsReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12Graph
 		float fx = m_PropBoundingBox[propType]->Extents.x * 0.5f;
 		float fy = m_PropBoundingBox[propType]->Extents.y * 0.5f;
 		float fz = m_PropBoundingBox[propType]->Extents.z * 0.5f;
+		XMFLOAT3 c = m_PropBoundingBox[propType]->Center;
 		BBVertex pVertices[8];
-		pVertices[0] = BBVertex(XMFLOAT3(-fx, -fy, -fz), fColor);
-		pVertices[1] = BBVertex(XMFLOAT3(+fx, -fy, -fz), fColor);
-		pVertices[2] = BBVertex(XMFLOAT3(+fx, -fy, +fz), fColor);
-		pVertices[3] = BBVertex(XMFLOAT3(-fx, -fy, +fz), fColor);
-		pVertices[4] = BBVertex(XMFLOAT3(-fx, fy, -fz), fColor);
-		pVertices[5] = BBVertex(XMFLOAT3(+fx, fy, -fz), fColor);
-		pVertices[6] = BBVertex(XMFLOAT3(+fx, fy, +fz), fColor);
-		pVertices[7] = BBVertex(XMFLOAT3(-fx, fy, +fz), fColor);
+		pVertices[0] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, -fy, -fz)), fColor);
+		pVertices[1] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, -fy, -fz)), fColor);
+		pVertices[2] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, -fy, +fz)), fColor);
+		pVertices[3] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, -fy, +fz)), fColor);
+		pVertices[4] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, fy, -fz)), fColor);
+		pVertices[5] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, fy, -fz)), fColor);
+		pVertices[6] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, fy, +fz)), fColor);
+		pVertices[7] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, fy, +fz)), fColor);
 
 		for (int i = 0; i < VerticesM; ++i, ++verticesCnt)
 			vertices[verticesCnt] = pVertices[i];
@@ -670,19 +671,20 @@ void AssertsReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12Graph
 		else if (ki == 1)
 			CharacterType = CHARACTER_GUNMAN;
 
-		XMFLOAT4 fColor(0.0f, 1.0f, 0.0f, 1.0f);
+		XMFLOAT4 fColor(1.0f, 0.0f, 0.0f, 1.0f);
 		float fx = m_PropBoundingBox[CharacterType]->Extents.x * 0.5f;
 		float fy = m_PropBoundingBox[CharacterType]->Extents.y * 0.5f;
 		float fz = m_PropBoundingBox[CharacterType]->Extents.z * 0.5f;
+		XMFLOAT3 c = m_PropBoundingBox[CharacterType]->Center;
 		BBVertex pVertices[8];
-		pVertices[0] = BBVertex(XMFLOAT3(-fx, -fy, -fz), fColor);
-		pVertices[1] = BBVertex(XMFLOAT3(+fx, -fy, -fz), fColor);
-		pVertices[2] = BBVertex(XMFLOAT3(+fx, -fy, +fz), fColor);
-		pVertices[3] = BBVertex(XMFLOAT3(-fx, -fy, +fz), fColor);
-		pVertices[4] = BBVertex(XMFLOAT3(-fx, fy, -fz), fColor);
-		pVertices[5] = BBVertex(XMFLOAT3(+fx, fy, -fz), fColor);
-		pVertices[6] = BBVertex(XMFLOAT3(+fx, fy, +fz), fColor);
-		pVertices[7] = BBVertex(XMFLOAT3(-fx, fy, +fz), fColor);
+		pVertices[0] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, +fy, -fz)), fColor);
+		pVertices[1] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, +fy, -fz)), fColor);
+		pVertices[2] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, +fy, +fz)), fColor);
+		pVertices[3] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, +fy, +fz)), fColor);
+		pVertices[4] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, 0, -fz)), fColor);
+		pVertices[5] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, 0, -fz)), fColor);
+		pVertices[6] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, 0, +fz)), fColor);
+		pVertices[7] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, 0, +fz)), fColor);
 
 		for (int i = 0; i < VerticesM; ++i, ++verticesCnt)
 			vertices[verticesCnt] = pVertices[i];

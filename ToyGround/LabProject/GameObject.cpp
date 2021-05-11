@@ -39,7 +39,7 @@ bool GameObject::SetMesh(std::string meshName, std::string submeshName)
 	m_IndexCount = m_Geo->DrawArgs[submeshName].IndexCount;
 	m_StartIndexLocation = m_Geo->DrawArgs[submeshName].StartIndexLocation;
 	m_BaseVertexLocation = m_Geo->DrawArgs[submeshName].BaseVertexLocation;
-	m_PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_Bounds = m_Geo->DrawArgs[meshName].Bounds;
 
 	return true;
@@ -53,7 +53,7 @@ bool GameObject::SetBBMesh(std::string submeshName)
 	m_IndexCountBb = m_Bb->DrawArgs[submeshName].IndexCount;
 	m_StartIndexLocationBb = m_Bb->DrawArgs[submeshName].StartIndexLocation;
 	m_BaseVertexLocationBb = m_Bb->DrawArgs[submeshName].BaseVertexLocation;
-	m_PrimitiveTypeBb = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+	m_PrimitiveTypeBb = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 
 	return true;
 }
