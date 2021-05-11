@@ -92,6 +92,7 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_ROOM_JOIN_OK: {
+		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_ROOM_JOIN_OK);
 		break;
 	}
 	case EVENT_ROOM_JOIN_FAIL: { //BC_JOIN_FAIL, ¹Ì±¸Çö

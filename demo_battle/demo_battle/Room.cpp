@@ -657,21 +657,20 @@ void Room::ProcMsg(message msg) {
 #endif //LOG_ON
 	switch (msg.type) {
 	case CB_READY: {
-		for (auto& pl : m_players) {
-			if (pl->GetID() == msg.id) {
-				if (pl->GetReady() == true) {
-					break;
-				}
-				pl->SetReady(true);
-				char ready = pl->GetReady();
-				PushReadyMsg(msg.id, ready);
-			}
-		}
-		if (m_players[0]->GetReady() && m_players[1]->GetReady()) {
+		if (m_players[0]->GetReady() == true && m_players[1]->GetReady() == true) {
 			ClearCopyMsg();
 			if (!m_isGameStarted) {
 				GameStart();
 				SendLeftTimePacket();
+			}
+			break;
+		}
+		for (auto& pl : m_players) {
+			if (pl->GetID() == msg.id) {
+				if (pl->GetReady() == false) {
+					pl->SetReady(true);
+					PushReadyMsg(msg.id, pl->GetReady());
+				}
 			}
 		}
 		break;
