@@ -40,6 +40,8 @@ private:
 	std::map<int, Character*> m_Users;
 	int m_PlayerID;
 
+	std::vector<int> m_player_in_room;
+
 	// 기타 이벤트 변수들
 	std::string m_MapName;
 	int			m_Timer;

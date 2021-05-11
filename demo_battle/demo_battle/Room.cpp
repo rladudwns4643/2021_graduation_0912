@@ -99,24 +99,20 @@ void Room::Update() {
 		//WorldUpdate();
 		//Collision();
 
-		XMFLOAT3 subDistance;
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			if (m_players[i]->GetID() != -1) { //not unset
-				if (!m_players[i]->IsDead()) {
+				if (m_players[i]->IsDead() == false) {
 					auto iter = m_players[i]->GetCurObject();
 
 					XMFLOAT3 curpos = iter->GetPosition();
 					XMFLOAT3 prepos = iter->GetPrePosition();
-
-					//
-
+					XMFLOAT3 subDistance;
 					subDistance = SMathHelper::Subtract(curpos, prepos);
 
 					if (fabs(subDistance.x) >= 0.1f
 						|| fabs(subDistance.y) >= 3.f
 						|| fabs(subDistance.z) >= 0.1f) {
 						PTC_VECTOR ptc_pos;
-
 						ptc_pos.x = curpos.x;
 						ptc_pos.y = curpos.y;
 						ptc_pos.z = curpos.z;
@@ -800,19 +796,21 @@ void Room::ProcMsg(message msg) {
 	}
 	case CB_LOOK_VECTOR: {
 		for (auto& pl : m_players) {
-			int tid = pl->GetID();
-			if (tid != -1 && tid == msg.id) {
-				if (pl->GetCurObject() == nullptr) return;
-				XMFLOAT3 pre_look{ pl->GetCurObject()->GetLook() };
-				pl->GetCurObject()->SetPreLook(pre_look);
-				pl->GetCurObject()->SetMatrixByLook(msg.vec.x, msg.vec.y, msg.vec.z);
-				//bb rotation
-				//pl->GetCurObject()->m_boundaries->SetBBLook(pl->GetCurObject()->GetLook(), 0);
-				//pl->GetCurObject()->m_boundaries->SetBBRight(pl->GetCurObject()->GetRight(), 0);
-			}
-			else {
-				PTC_VECTOR recv_look{ msg.vec.x, msg.vec.y, msg.vec.z };
-				BattleServer::GetInstance()->SendPlayerRotation(tid, msg.id, recv_look);
+			int id = pl->GetID();
+			if (id != -1) {
+				if (id == msg.id) {
+					if (pl->GetCurObject() == nullptr) return;
+					XMFLOAT3 pre_look{ pl->GetCurObject()->GetLook() };
+					pl->GetCurObject()->SetPreLook(pre_look);
+					pl->GetCurObject()->SetMatrixByLook(msg.vec.x, msg.vec.y, msg.vec.z);
+					//bb rotation
+					//pl->GetCurObject()->m_boundaries->SetBBLook(pl->GetCurObject()->GetLook(), 0);
+					//pl->GetCurObject()->m_boundaries->SetBBRight(pl->GetCurObject()->GetRight(), 0);
+				}
+				else {
+					PTC_VECTOR recv_look{ msg.vec.x, msg.vec.y, msg.vec.z };
+					BattleServer::GetInstance()->SendPlayerRotation(id, msg.id, recv_look);
+				}
 			}
 		}
 		break;

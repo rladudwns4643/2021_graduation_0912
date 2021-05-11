@@ -31,9 +31,11 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 
 		//m_users »ý¼º
 		if (arg_bt_id == 1) {
+			m_player_in_room[0] = arg_bt_id;
 			m_Users[arg_bt_id] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
 		}
 		else {
+			m_player_in_room[1] = arg_bt_id;
 			m_Users[arg_bt_id] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
 		}
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
@@ -60,7 +62,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_pos = va_arg(ap, XMFLOAT3);
 		va_end(ap);
 
-		if (m_Users[arg_id] != nullptr) {
+		if (m_Users[arg_id]) {
 			m_Users[arg_id]->SetPosition(arg_pos.x, arg_pos.y, arg_pos.z);
 		}
 		break;
@@ -120,6 +122,8 @@ bool GameplayScene::Enter()
 	AppContext->DisplayProps(m_MapName);
 //	AppContext->DisplayProps(m_MapName, true, 0.5f);
 
+	int cnt = Service::GetApp()->GetBattleClientsCount();
+	m_player_in_room.resize(cnt);
 	Service::GetApp()->AddEvent(EVENT_GAME_START);
 
 	//m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
@@ -146,6 +150,7 @@ bool GameplayScene::Enter()
 void GameplayScene::Exit()
 {
 	m_Users.clear();
+	m_player_in_room.clear();
 	cout << "===========================================" << endl << endl;
 }
 

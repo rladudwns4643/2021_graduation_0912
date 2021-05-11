@@ -316,7 +316,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	}
 	case BC_READY: {
 		bc_packet_ready* p = reinterpret_cast<bc_packet_ready*>(packet_buf);
-		m_battle_clients[p->id]->m_ready = p->ready;
+		//m_battle_clients[p->id]->m_ready = p->ready;
 
 		Service::GetApp()->AddEvent(EVENT_ROOM_READY, 2, p->id, p->ready);
 		break;
