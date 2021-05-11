@@ -88,28 +88,7 @@ void Room::Update() {
 		ProcMsg(procMsg);
 	}
 
-/*	if (!m_isGameStarted) {
-		int numOfReady{};
-		for (int i = 0; i < MAX_PLAYER; ++i) {
-			if (!m_players[i]->GetEmpty()) {
-				if (m_players[i]->GetReady()) ++numOfReady;
-			}
-		}
-		if (numOfReady == m_curPlayerNum
-			&& m_curPlayerNum == 2) {
-			if (!m_isSent) {
-				PushGameStartAvailableMsg(m_RoomMnr, true);
-				m_isSent = true;
-			}
-		}
-		else {
-			if (m_isSent) {
-				m_isSent = false;
-				PushGameStartAvailableMsg(m_RoomMnr, false);
-			}
-		}
-	}
-	else */if (m_isGameStarted) {
+	if (m_isGameStarted) {
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			int id{ m_players[i]->GetID() };
 			if (id != -1) {//not unset

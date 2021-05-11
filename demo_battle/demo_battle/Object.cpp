@@ -51,8 +51,8 @@ Object& Object::operator=(const Object& other) {
 bool Object::Update(float elapsedTime, bool is_player) {
 	m_xmf3PrePosition = GetPosition();
 
-	float force{ GRAVITY * m_mass };		//수직항력
-	float friction = force * m_fricCoef;	//마찰
+	float force{ GRAVITY * m_mass };
+	float friction = force * m_fricCoef;
 
 	//direction
 	XMFLOAT3 normalrized = SMathHelper::Normalize(m_xmfVel);
@@ -242,7 +242,7 @@ void Object::InitYVelocity() {
 	m_xmfVel.y = -GRAVITY;
 }
 
-XMFLOAT3 Object::GetAccerleration() const {
+XMFLOAT3 Object::GetAcceleration() const {
 	return m_xmfAcc;
 }
 
@@ -332,9 +332,9 @@ void Object::SetMatrixByLook(float x, float y, float z) {
 	m_xmf4x4World._12 = right.y;
 	m_xmf4x4World._13 = right.z;
 
-	m_xmf4x4World._31 = right.x;
-	m_xmf4x4World._32 = right.y;
-	m_xmf4x4World._33 = right.z;
+	m_xmf4x4World._31 = x;
+	m_xmf4x4World._32 = y;
+	m_xmf4x4World._33 = z;
 }
 
 bool Object::IsStopped() {

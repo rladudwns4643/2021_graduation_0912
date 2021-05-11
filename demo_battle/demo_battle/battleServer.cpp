@@ -152,7 +152,7 @@ void BattleServer::error_display(const char* msg, int err_no) {
 		(LPTSTR)&lpMsgBuf, 0, NULL);
 	std::cout << msg;
 	std::wcout << L"error: " << err_no << lpMsgBuf << std::endl;
-	while (true); //error
+	//while (true); //error
 	LocalFree(lpMsgBuf);
 }
 

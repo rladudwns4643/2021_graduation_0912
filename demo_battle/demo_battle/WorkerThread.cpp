@@ -18,7 +18,7 @@ void WorkerThread::ProcThread() {
 
 		bool bSuccess = GetQueuedCompletionStatus(SR::g_iocp, &num_byte, (PULONG_PTR)p_key, &p_over, INFINITE);
 		if (!bSuccess) {
-			int err = WSAGetLastError();
+			int err = GetLastError();
 			BattleServer::GetInstance()->error_display("GQCS ERROR", err);
 		}
 

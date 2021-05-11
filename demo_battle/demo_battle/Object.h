@@ -47,7 +47,7 @@ public:
 	void SubVelocity(XMFLOAT3 xmfVel);
 	void InitYVelocity();	//y vel°ªÀ» 
 
-	XMFLOAT3 GetAccerleration() const;
+	XMFLOAT3 GetAcceleration() const;
 	void SetAcceleration(XMFLOAT3 xmfAcc);
 
 	float GetFricCoef() const;
