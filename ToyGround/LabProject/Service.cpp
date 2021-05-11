@@ -21,7 +21,7 @@ void Service::ActiveService() {
 	}
 }
 
-void Service::Notify(int sEvent, int argsCount, ...) {
+void Service::AddEvent(int sEvent, int argsCount, ...) {
 	switch (sEvent) {
 	//lobby
 	case EVENT_LOBBY_CONNECT_OK: {
@@ -134,7 +134,7 @@ void Service::Notify(int sEvent, int argsCount, ...) {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_ROOM_START_AVAILABLE, 1, available);
 		break;
 	}
-	//ingame
+	//////////////////ingame
 	case EVENT_ROOM_START: {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_ROOM_START);
 		break;

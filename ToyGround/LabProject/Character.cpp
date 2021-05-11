@@ -5,7 +5,7 @@
 #include "AssertsReference.h"
 #include "CommandContext.h"
 #include "CommandCenter.h"
-#include "Network.h"
+#include "netCore.h"
 
 Character::Character(std::string type, std::string id) :
 	GameObject(type, id),
@@ -388,7 +388,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 #ifdef DEBUG_CLIENT
 	SetPosition(pos.x, pos.y, pos.z);
 #elif DEBUG_SERVER
-	SetPosition(Network::GetApp()->GetPos());
+	//SetPosition(Network::GetApp()->GetPos());
 #endif
 	if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
 }

@@ -247,7 +247,6 @@ bool Room::IsEmpty() {
 	else return false;
 }
 
-//
 bool Room::EnterRoom(int id, bool is_roomMnr) {
 	if (m_curPlayerNum >= MAX_PLAYER) return false;
 
@@ -271,7 +270,6 @@ bool Room::EnterRoom(int id, bool is_roomMnr) {
 	return false;
 }
 
-//
 void Room::AnnounceRoomEnter(int id) {
 	//bool isMnr;
 	int enterID = -1;
@@ -413,6 +411,7 @@ void Room::GameStart(){
 	m_isEnterable = false;
 }
 
+//unused
 void Room::RoundStart() {
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		const int& id = m_players[i]->GetID();
@@ -485,6 +484,11 @@ void Room::FlushSendMsg() {
 }
 
 void Room::PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info) {
+	cout << "[ROOM] PushPlayerPositionMsg: " <<
+		"to: " << to << " from: " << from <<
+		" px: " << position_info->x <<
+		" py: " << position_info->y <<
+		" pz: " << position_info->x << endl;
 	bc_packet_player_pos p;
 	p.size = sizeof(p);
 	p.type = BC_PLAYER_POS;

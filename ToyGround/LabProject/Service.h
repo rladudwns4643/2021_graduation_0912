@@ -57,7 +57,7 @@ public:
 	void Clear();
 	void ActiveService();
 
-	void Notify(int sEvent, int argsCount = 0, ...);
+	void AddEvent(int sEvent, int argsCount = 0, ...);
 	void setConnectLobby(bool connect) { lobby_active = connect; }
 	bool isConnectLobby() const { return lobby_active; }
 	bool isConnectBattle() const { return battle_active; }

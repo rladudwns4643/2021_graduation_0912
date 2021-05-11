@@ -9,7 +9,7 @@
 void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	switch (sEvent) {
 	case EVENT_LOBBY_LOGIN_OK: {
-		Service::GetApp()->Notify(EVENT_LOBBY_REQUEST_USER_INFO);
+		Service::GetApp()->AddEvent(EVENT_LOBBY_REQUEST_USER_INFO);
 		cout << "login ok\n";
 		break;
 	}
@@ -23,7 +23,7 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_LOBBY_UPDATE_CLIENT_USERINFO: {
-		Service::GetApp()->Notify(EVENT_LOBBY_REQUEST_FIND_ROOM);
+		Service::GetApp()->AddEvent(EVENT_LOBBY_REQUEST_FIND_ROOM);
 		break;
 	}
 	case EVENT_LOBBY_CANCLE_FIND_ROOM: {

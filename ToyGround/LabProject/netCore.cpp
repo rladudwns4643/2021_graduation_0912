@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "Service.h"
 #include "netCore.h"
+#include "Service.h"
 
 NetCore::NetCore() {
 	Initialize();
@@ -138,7 +138,7 @@ void NetCore::ConnectServer(eSERVER sv) {
 			}
 			else {
 				cout << "[NETCORE]: SV_LOBBY CONNECT\n";
-				Service::GetApp()->Notify(EVENT_LOBBY_CONNECT_OK);
+				Service::GetApp()->AddEvent(EVENT_LOBBY_CONNECT_OK);
 			}
 		}
 		break;
@@ -209,25 +209,25 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	case LC_LOGIN_OK: {
 		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet_buf);
 		m_client.lobby_id = p->id;
-		Service::GetApp()->Notify(EVENT_LOBBY_LOGIN_OK);
+		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_OK);
 		break;
 	}
 	case LC_LOGIN_FAIL: {
-		Service::GetApp()->Notify(EVENT_LOBBY_LOGIN_FAIL);
+		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_FAIL);
 		break;
 	}
 	case LC_SIGNUP_OK: {
-		Service::GetApp()->Notify(EVENT_LOBBY_SIGNUP_OK);
+		Service::GetApp()->AddEvent(EVENT_LOBBY_SIGNUP_OK);
 		break;
 	}
 	case LC_SIGNUP_FAIL: {
-		Service::GetApp()->Notify(EVENT_LOBBY_SIGNUP_FAIL);
+		Service::GetApp()->AddEvent(EVENT_LOBBY_SIGNUP_FAIL);
 		break;
 	}
 	case LC_USERINFO: {
 		lc_packet_userinfo* p = reinterpret_cast<lc_packet_userinfo*>(packet_buf);
 		m_client.mmr = p->mmr;
-		Service::GetApp()->Notify(EVENT_LOBBY_UPDATE_CLIENT_USERINFO, 1, m_client.mmr);
+		Service::GetApp()->AddEvent(EVENT_LOBBY_UPDATE_CLIENT_USERINFO, 1, m_client.mmr);
 		break;
 	}
 	case LC_FIND_ROOM: {
@@ -236,11 +236,11 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		m_battle_clients[m_client.battle_id]->m_host = p->isHost;
 
 		cout << "FINDROOM: " << m_room_no << endl;
-		Service::GetApp()->Notify(EVENT_ROOM_FIND_ROOM);
+		Service::GetApp()->AddEvent(EVENT_ROOM_FIND_ROOM);
 		break;
 	}
 	case LC_CANCLE_FIND_ROOM: {
-		Service::GetApp()->Notify(EVENT_LOBBY_CANCLE_FIND_ROOM);
+		Service::GetApp()->AddEvent(EVENT_LOBBY_CANCLE_FIND_ROOM);
 		break;
 	}
 	case BC_BATTLE_LOGIN_OK: { //객체 생성, 나의 정보를 받아옴
@@ -263,7 +263,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 			" roomNo: " << m_battle_clients[m_client.battle_id]->m_room_num << endl;
 
 
-		Service::GetApp()->Notify(EVENT_BATTLE_LOGIN_OK);
+		Service::GetApp()->AddEvent(EVENT_BATTLE_LOGIN_OK);
 		break;
 	}
 	case BC_BATTLE_LOGIN_FAIL: {
@@ -280,7 +280,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		battleClient->m_player_num = p->player_no;
 		battleClient->m_ready = p->ready;
 		m_battle_clients[p->id] = std::move(battleClient);
-		Service::GetApp()->Notify(EVENT_ROOM_ENTER, 1, p->id);
+		Service::GetApp()->AddEvent(EVENT_ROOM_ENTER, 1, p->id);
 		break;
 	}
 	case BC_ROOM_LEAVED: {
@@ -289,32 +289,32 @@ void NetCore::ProcessPacket(char* packet_buf) {
 			m_battle_clients[p->id].release();
 			m_battle_clients.erase(p->id);
 		}
-		Service::GetApp()->Notify(EVENT_ROOM_LEAVE, 1, p->id);
+		Service::GetApp()->AddEvent(EVENT_ROOM_LEAVE, 1, p->id);
 	}
 	case BC_JOIN_OK: {
 		bc_packet_join_ok* p = reinterpret_cast<bc_packet_join_ok*>(packet_buf);
 		int& id = m_client.battle_id;
 		m_battle_clients[id]->m_player_num = p->player_no;
 
-		Service::GetApp()->Notify(EVENT_ROOM_JOIN_OK);
+		Service::GetApp()->AddEvent(EVENT_ROOM_JOIN_OK);
 		break;
 	}
 	case BC_JOIN_FAIL: {
 		bc_packet_join_fail* p = reinterpret_cast<bc_packet_join_fail*>(packet_buf);
 		m_battle_clients[m_client.battle_id]->Initialize();
-		Service::GetApp()->Notify(EVENT_ROOM_JOIN_FAIL);
+		Service::GetApp()->AddEvent(EVENT_ROOM_JOIN_FAIL);
 		break;
 	}
 	case BC_READY: {
 		bc_packet_ready* p = reinterpret_cast<bc_packet_ready*>(packet_buf);
 		m_battle_clients[p->id]->m_ready = p->ready;
 
-		Service::GetApp()->Notify(EVENT_ROOM_READY, 2, p->id, p->ready);
+		Service::GetApp()->AddEvent(EVENT_ROOM_READY, 2, p->id, p->ready);
 		break;
 	}
 	case BC_ROOM_START_AVAILABLE: {
 		bc_packet_room_start_available* p = reinterpret_cast<bc_packet_room_start_available*>(packet_buf);
-		Service::GetApp()->Notify(EVENT_ROOM_START_AVAILABLE, 1, p->available);
+		Service::GetApp()->AddEvent(EVENT_ROOM_START_AVAILABLE, 1, p->available);
 		break;
 	}
 	case BC_ROOM_START: {
@@ -327,7 +327,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		//맵정보 전달
 		//m_map_info = static_cast<int>(p->map_type);
 
-		Service::GetApp()->Notify(EVENT_ROOM_START);
+		Service::GetApp()->AddEvent(EVENT_ROOM_START);
 		break;
 	}
 	//in game
@@ -339,7 +339,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		arg_pos.y = p->pos.y;
 		arg_pos.z = p->pos.z;
 
-		Service::GetApp()->Notify(EVENT_GAME_CALLBACK_MOVE, 2, p->id, arg_pos);
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_MOVE, 2, p->id, arg_pos);
 		break;
 	}
 	case BC_PLAYER_ROT: {
@@ -350,7 +350,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		arg_look.y = p->look.y;
 		arg_look.z = p->look.z;
 
-		Service::GetApp()->Notify(EVENT_GAME_CALLBACK_MOUSE, 2, p->id, arg_look);
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_MOUSE, 2, p->id, arg_look);
 		break;
 	}
 	case BC_SHOOT_BULLET: {
@@ -361,12 +361,12 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		arg_pos.y = p->pos.y;
 		arg_pos.z = p->pos.z;
 
-		Service::GetApp()->Notify(EVENT_GAME_SHOOT_BULLET, 2, p->bullet_id, arg_pos);
+		Service::GetApp()->AddEvent(EVENT_GAME_SHOOT_BULLET, 2, p->bullet_id, arg_pos);
 		break;
 	}
 	case BC_REMOVE_BULLET: {
 		bc_packet_remove_bullet* p = reinterpret_cast<bc_packet_remove_bullet*>(packet_buf);
-		Service::GetApp()->Notify(EVENT_GAME_REMOVE_BULLET, 1, p->bullet_id);
+		Service::GetApp()->AddEvent(EVENT_GAME_REMOVE_BULLET, 1, p->bullet_id);
 		break;
 	}
 	case BC_HIT: {
@@ -375,34 +375,34 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		float arg_hp = p->hp;
 		arg_hp = round(arg_hp); // * 100 / 100;
 
-		Service::GetApp()->Notify(EVENT_GAME_HIT, 2, p->id, arg_hp);
+		Service::GetApp()->AddEvent(EVENT_GAME_HIT, 2, p->id, arg_hp);
 		break;
 	}
 	case BC_DIE: {
 		bc_packet_die* p = reinterpret_cast<bc_packet_die*>(packet_buf);
-		Service::GetApp()->Notify(EVENT_GAME_DIE, 1, p->id);
+		Service::GetApp()->AddEvent(EVENT_GAME_DIE, 1, p->id);
 		break;
 	}
 	case BC_ANIM: { //id가 어떤 anim인지
 		bc_packet_anim_type* p = reinterpret_cast<bc_packet_anim_type*>(packet_buf);
-		Service::GetApp()->Notify(EVENT_GAME_ANIM, 2, p->id, p->anim_type);
+		Service::GetApp()->AddEvent(EVENT_GAME_ANIM, 2, p->id, p->anim_type);
 		break;
 	}
 	case BC_LEFT_TIME: {
 		bc_packet_left_time* p = reinterpret_cast<bc_packet_left_time*>(packet_buf);
 		int time{ p->left_time }; //unsigned char 로 type cast 필요할까
-		Service::GetApp()->Notify(EVENT_GAME_TIMER, 1, time);
+		Service::GetApp()->AddEvent(EVENT_GAME_TIMER, 1, time);
 	}
 	case BC_GAME_OVER: {
 		bc_packet_game_over* p = reinterpret_cast<bc_packet_game_over*>(packet_buf);
 
 		m_winner = p->win_team;
 
-		Service::GetApp()->Notify(EVENT_GAME_GAMEOVER);
+		Service::GetApp()->AddEvent(EVENT_GAME_GAMEOVER);
 	}
 	case BC_UPDATED_USER_INFO: {
 		bc_packet_updated_user_info* p = reinterpret_cast<bc_packet_updated_user_info*>(packet_buf);
-		Service::GetApp()->Notify(EVENT_GAME_UPDATE_SERVER_USERINFO, 1, p->mmr);
+		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_SERVER_USERINFO, 1, p->mmr);
 		break;
 	}
 

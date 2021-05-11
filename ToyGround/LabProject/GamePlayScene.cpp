@@ -65,6 +65,20 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		}
 		break;
 	}
+	case EVENT_GAME_CALLBACK_MOUSE: {
+		int arg_id;
+		XMFLOAT3 arg_look;
+
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_look = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+		if (m_Users[arg_id] != nullptr) {
+			m_Users[arg_id]->SetMatrixByLook(arg_look.x, arg_look.y, arg_look.z);
+		}
+		break;
+	}
 	}
 }
 
@@ -106,7 +120,7 @@ bool GameplayScene::Enter()
 	AppContext->DisplayProps(m_MapName);
 //	AppContext->DisplayProps(m_MapName, true, 0.5f);
 
-	Service::GetApp()->Notify(EVENT_GAME_START);
+	Service::GetApp()->AddEvent(EVENT_GAME_START);
 
 	//m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
 	//m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;

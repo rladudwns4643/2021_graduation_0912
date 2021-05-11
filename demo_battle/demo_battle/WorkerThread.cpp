@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "WorkerThread.h"
-#define LOG_ON
+
+//#define LOG_ON
+
 void WorkerThread::InitThread() {
 	m_ServerAddr = BattleServer::GetInstance()->GetServerAdder();
 	m_AddrLen = sizeof(m_ServerAddr);
