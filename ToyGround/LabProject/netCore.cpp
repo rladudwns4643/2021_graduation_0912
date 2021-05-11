@@ -125,7 +125,6 @@ void NetCore::CreateSocket(eSERVER sv) {
 
 void NetCore::ConnectServer(eSERVER sv) {
 	int retval{ 0 };
-	ULONG make_nonblocking{ 1 };
 
 	switch (sv) {
 	case eSERVER::SV_LOBBY: {
@@ -160,6 +159,7 @@ void NetCore::ConnectServer(eSERVER sv) {
 	}
 	}
 	//set non-blocking io
+	ULONG make_nonblocking{ 1 };
 	ioctlsocket(m_client.socket[sv].socket, FIONBIO, &make_nonblocking);
 	m_client.socket[sv].connect = true;
 }
