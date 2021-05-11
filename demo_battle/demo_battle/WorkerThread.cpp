@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "WorkerThread.h"
-#define LOG_ON
+
+//#define LOG_ON
+
 void WorkerThread::InitThread() {
 	m_ServerAddr = BattleServer::GetInstance()->GetServerAdder();
 	m_AddrLen = sizeof(m_ServerAddr);
@@ -16,7 +18,7 @@ void WorkerThread::ProcThread() {
 
 		bool bSuccess = GetQueuedCompletionStatus(SR::g_iocp, &num_byte, (PULONG_PTR)p_key, &p_over, INFINITE);
 		if (!bSuccess) {
-			int err = WSAGetLastError();
+			int err = GetLastError();
 			BattleServer::GetInstance()->error_display("GQCS ERROR", err);
 		}
 
@@ -176,7 +178,9 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 			}
 			ATOMIC::g_room_no_lock.unlock();
 		}
-
+#ifdef LOG_ON
+		cout << "make room: " << roomNo << endl;
+#endif 
 		Room* new_room = new Room(roomNo);
 		SR::g_rooms[roomNo] = new_room;
 		++ATOMIC::g_RoomNum;
@@ -190,7 +194,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		SR::g_clients[id]->mmr = p->mmr;
 		ATOMIC::g_dbInfo_lock.unlock();
 
-		BattleServer::GetInstance()->SendAutoAccessOKPacket(id);
+		BattleServer::GetInstance()->SendBattleLoginOKPacket(id);
 		break;
 	}
 	case CB_JOIN: {
@@ -212,9 +216,9 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		bool isJoin{ false };
 		//int slot;
 		//cb_packet_join
-		isJoin = SR::g_rooms[roomNo]->EnterRoom(id, inputPacket[6]/*isRoomMnr*/);
+		isJoin = SR::g_rooms[roomNo]->EnterRoom(id, inputPacket[3]/*isRoomMnr*/);
 		if (isJoin) {
-			BattleServer::GetInstance()->SendRoomJoinSuccess(id, inputPacket[6]); //Room Mnr이면 1P
+			BattleServer::GetInstance()->SendRoomJoinSuccess(id, inputPacket[3]); //Room Mnr이면 1P
 		}
 		else {
 			BattleServer::GetInstance()->SendRoomJoinFail(id, ROOM_FAIL_CODE_ROOM_IS_FULL);

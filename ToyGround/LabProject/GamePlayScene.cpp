@@ -14,7 +14,71 @@
 
 void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	switch (sEvent) {
+	case EVENT_ROOM_START: {
+		cout << "씬 변경lobby -> Game, 서버에서 게임 정보 받아옴" << endl;
+		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+		break;
+	}
+	case EVENT_GAME_START: {
+		cout << "게임 시작" << endl;
+		va_list ap;
+		int arg_bt_id;
+		XMFLOAT4 arg_sl;
+		va_start(ap, argsCount);
+		arg_bt_id = va_arg(ap, int);
+		arg_sl = va_arg(ap, XMFLOAT4);
+		va_end(ap);
+
+		//m_users 생성
+		if (arg_bt_id == 1) {
+			m_player_in_room[0] = arg_bt_id;
+			m_Users[arg_bt_id] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
+		}
+		else {
+			m_player_in_room[1] = arg_bt_id;
+			m_Users[arg_bt_id] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
+		}
+		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
+		m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
+
+		break;
+	}
+	case EVENT_GAME_TIMER: {
+		va_list ap;
+		int t;
+		va_start(ap, argsCount);
+		t = va_arg(ap, int);
+		va_end(ap);
+		cout << "left Time: " << t << endl;
+		break;
+	}
 	case EVENT_GAME_CALLBACK_MOVE: {
+		int arg_id;
+		XMFLOAT3 arg_pos;
+
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_pos = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+
+		if (m_Users[arg_id]) {
+			m_Users[arg_id]->SetPosition(arg_pos.x, arg_pos.y, arg_pos.z);
+		}
+		break;
+	}
+	case EVENT_GAME_CALLBACK_MOUSE: {
+		int arg_id;
+		XMFLOAT3 arg_look;
+
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_look = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+		if (m_Users[arg_id] != nullptr) {
+			m_Users[arg_id]->SetMatrixByLook(arg_look.x, arg_look.y, arg_look.z);
+		}
 		break;
 	}
 	}
@@ -52,23 +116,30 @@ bool GameplayScene::Enter()
 	TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.57735f, -0.81735f, -1.07735 };
 
 	// Player Setting
+	m_PlayerID = Service::GetApp()->GetMyBattleID();
 	// Props Setting
-	m_PlayerID = 0;
 	m_MapName = MAP_STR_GAME_MAP;
 	AppContext->DisplayProps(m_MapName);
 //	AppContext->DisplayProps(m_MapName, true, 0.5f);
 
-	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
-	m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;
-	m_Users[m_PlayerID]->m_MapName = m_MapName;
-	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
+	int cnt = Service::GetApp()->GetBattleClientsCount();
+	m_player_in_room.resize(cnt);
+	Service::GetApp()->AddEvent(EVENT_GAME_START);
+
+	//m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
+	//m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;
+	//m_Users[m_PlayerID]->m_MapName = m_MapName;
+	//m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
 
 	///---
 	// Player type, id 등등 세팅
+	for (auto& u : m_Users) {
+		if (u.second) {
+			AppContext->DisplayCharacter(m_MapName, u.second, u.second->m_SpawnLoaction);
+		}
+	}
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
-	AppContext->DisplayCharacter(m_MapName, m_Users[m_PlayerID], 1);
-	AppContext->DisplayCharacter(m_MapName, m_Users[1], 2);
 
 	// 카메라 세팅
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
@@ -79,6 +150,7 @@ bool GameplayScene::Enter()
 void GameplayScene::Exit()
 {
 	m_Users.clear();
+	m_player_in_room.clear();
 	cout << "===========================================" << endl << endl;
 }
 

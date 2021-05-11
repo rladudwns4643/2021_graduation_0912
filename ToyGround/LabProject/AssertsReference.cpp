@@ -14,7 +14,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	prePlayerInfo.position.y = 0.f;
 	prePlayerInfo.position.z = 0.f;
 	prePlayerInfo.rotY = 0.f;
-	prePlayerInfo.spawnPos = 1;
+	prePlayerInfo.spawnPos = XMFLOAT3(0,0,0);
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
 	prePlayerInfo.playerName = "GunMan";
@@ -22,7 +22,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	prePlayerInfo.position.y = 0.f;
 	prePlayerInfo.position.z = 500.f;
 	prePlayerInfo.rotY = 180.f;
-	prePlayerInfo.spawnPos = 2;
+	prePlayerInfo.spawnPos = XMFLOAT3(0, 0, 0);
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
 	//-------------------------
@@ -61,7 +61,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		{
 			int floor;
 			fileIn >> floor;
-			cout << floor << endl;
+			//cout << floor << endl;
 			for (int i = 0; i < MAP_DEPTH_BLOCK_NUM / 2 + 1; ++i)
 			{
 				for (int j = 0; j < MAP_WIDTH_BLOCK_NUM; ++j)
@@ -69,7 +69,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 					// 배열에 맵 저장
 					int input;
 					fileIn >> input;
-					cout << input << " ";
+					//cout << input << " ";
 					if (k == 0)
 						continue;
 					rk = MAP_HEIGHT_BLOCK_NUM - k - 1;
@@ -250,7 +250,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						}
 					}
 				}
-				cout << endl;
+				//cout << endl;
 			}
 		}
 	}

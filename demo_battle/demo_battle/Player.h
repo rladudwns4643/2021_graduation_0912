@@ -24,7 +24,7 @@ public:
 	void Enter();
 	void Leave();
 
-	bool GetSlotStatus();
+	bool GetEmpty();
 
 	void SetID(const int& id);
 	int GetID();

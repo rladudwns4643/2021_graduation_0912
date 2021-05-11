@@ -25,8 +25,8 @@ public:
 public:
 	void SendPacket(int id, void* buff);
 	void SendCheckConnect();
-	void SendAutoAccessOKPacket(int id);
-	void SendAutoAccessFailPacket(int id);
+	void SendBattleLoginOKPacket(int id);
+	void SendBattleLoginFailPacket(int id);
 	void SendAutoRoomReadyPacket(int id, int room_no);
 	void SendRoomJoinSuccess(int id, bool isRoomMnr);
 	void SendRoomJoinFail(int id, int code);

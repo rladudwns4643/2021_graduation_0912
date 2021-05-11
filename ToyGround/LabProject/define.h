@@ -107,7 +107,7 @@ enum class CameraType { eFirst = 0, eThird = 1, eFree = 2 };
 #define TEMP_SECOND_MAP		1 // 두번째 맵
 
 // 인게임 맵
-#define MAP_STR_GAME_MAP	"origin"
+#define MAP_STR_GAME_MAP	"FirstMap"
 #define MAP_STR_SECONDMAP	"second_map"
 
 // 스폰 위치

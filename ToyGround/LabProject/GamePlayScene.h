@@ -21,6 +21,7 @@ class GameplayScene : public Scene
 	friend GameplayController;
 private:
 	virtual void ProcessEvent(int sEvent, int argsCount = 0, ...) override;
+
 public:
 	virtual void Initialize() override;
 	virtual void OnResize() override;
@@ -39,6 +40,8 @@ private:
 	// 플레이어들
 	std::map<int, Character*> m_Users;
 	int m_PlayerID;
+
+	std::vector<int> m_player_in_room;
 
 	// 기타 이벤트 변수들
 	std::string m_MapName;

@@ -3,12 +3,13 @@
 #include "InputHandler.h"
 #include "Camera.h"
 #include "Timer.h"
-#include "Network.h"
+#include "netCore.h"
 
 #include "Character.h"
 #include "SkinnedModelInstance.h"
 #include "CommandCenter.h"
 #include "MoveCommand.h"
+#include "Service.h"
 
 PlayerController::PlayerController(Character* player) : m_Owner(player)
 {
@@ -44,8 +45,11 @@ void PlayerController::HandleInput(const float deltaT)
 		if (GetAsyncKeyState('A') & 0x8000) dir |= DIR_LEFT;	
 		if (GetAsyncKeyState('D') & 0x8000) dir |= DIR_RIGHT;	
 
-		if (dir != 0)
-			m_Owner->Move(dir, speed);
+		if (dir != 0) {
+			if (m_Owner->Move(dir, speed)) {
+				Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOUSE, 1, m_Owner->GetLook());
+			}
+		}
 		break;
 	}
 	break;
@@ -152,8 +156,7 @@ void PlayerController::OnKeyPressed()
 #ifdef DEBUG_CLIENT
 		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
 		{
-			if (InputHandler::IsKeyDown('W'))
-			{
+			if (InputHandler::IsKeyDown('W')) {
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
 			}
 			if (InputHandler::IsKeyDown('S'))
@@ -177,28 +180,29 @@ void PlayerController::OnKeyPressed()
 #elif DEBUG_SERVER
 		if (InputHandler::IsKeyDown('W'))
 		{
-			Network::GetApp()->SendKeyDownW(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_W_DOWN);
 		}
 		if (InputHandler::IsKeyDown('S'))
 		{
-			Network::GetApp()->SendKeyDownS(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_S_DOWN);
 		}
 		if (InputHandler::IsKeyDown('A'))
 		{
-			Network::GetApp()->SendKeyDownA(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_A_DOWN);
 		}
 		if (InputHandler::IsKeyDown('D'))
 		{
-			Network::GetApp()->SendKeyDownD(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_D_DOWN);
 		}
 		if (InputHandler::IsKeyDown(VK_SPACE))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_JUMP);
 		}
 #endif
 		break;
@@ -241,23 +245,23 @@ void PlayerController::OnKeyReleased()
 #elif DEBUG_SERVER
 		if (InputHandler::IsKeyUp('W'))
 		{
-			Network::GetApp()->SendKeyUpW(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_W_UP);
 		}
 		if (InputHandler::IsKeyUp('S'))
 		{
-			Network::GetApp()->SendKeyUpS(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_S_UP);
 		}
 		if (InputHandler::IsKeyUp('A'))
 		{
-			Network::GetApp()->SendKeyUpA(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_A_UP);
 		}
 		if (InputHandler::IsKeyUp('D'))
 		{
-			Network::GetApp()->SendKeyUpD(Network::GetApp()->m_client.id);
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_D_UP);
 		}
 		if (InputHandler::IsKeyUp(VK_SPACE)) {}
 #endif

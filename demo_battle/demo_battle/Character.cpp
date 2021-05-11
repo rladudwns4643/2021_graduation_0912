@@ -22,7 +22,7 @@ Character::Character(Object& cur, const Boundary* new_bb) {
 
 	m_xmf4x4World = SMathHelper::Identity4x4();
 
-	m_xmfAcc = cur.GetAccerleration();
+	m_xmfAcc = cur.GetAcceleration();
 	m_xmfVel = cur.GetVelocity();
 
 	int numofBB = new_bb->GetNumOfBB();
@@ -77,7 +77,7 @@ void Character::Initialize() {
 
 	m_forceAmountXZ = 10.f;
 	m_forceAmountY = 5.f;
-	m_fricCoef = 0;
-	m_maxVel = 0.05f;		//이동속도
+	m_fricCoef = 0.03f;
+	m_maxVel = 0.10f;		//이동속도
 	m_mass = 50.f;
 }

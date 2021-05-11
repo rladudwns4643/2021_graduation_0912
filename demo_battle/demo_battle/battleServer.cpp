@@ -152,7 +152,7 @@ void BattleServer::error_display(const char* msg, int err_no) {
 		(LPTSTR)&lpMsgBuf, 0, NULL);
 	std::cout << msg;
 	std::wcout << L"error: " << err_no << lpMsgBuf << std::endl;
-	while (true); //error
+	//while (true); //error
 	LocalFree(lpMsgBuf);
 }
 
@@ -169,6 +169,7 @@ SOCKADDR_IN BattleServer::GetServerAdder() {
 void BattleServer::SendPacket(int id, void* buff) {
 	char* p = reinterpret_cast<char*>(buff);
 	BYTE packet_size = (BYTE)p[0];
+	cout << "[main]: Send: " << (int)p[1] << " id: " << id << endl;
 	EX_OVER* send_over = new EX_OVER;
 	//memset(send_over, 0, sizeof(EX_OVER));
 	ZeroMemory(send_over, sizeof(EX_OVER));
@@ -187,22 +188,31 @@ void BattleServer::SendCheckConnect() {
 	SendPacket(LOBBY_SERVER_KEY, &p);
 }
 
-void BattleServer::SendAutoAccessOKPacket(int id) {
-	bc_packet_accept_ok p;
+void BattleServer::SendBattleLoginOKPacket(int id) {
+#ifdef LOG_ON
+	cout << "SendBattleLoginOKPacket: " << id << endl;
+#endif
+	bc_packet_battle_login_ok p;
 	p.size = sizeof(p);
-	p.type = BC_ACCEPT_OK;
+	p.type = BC_BATTLE_LOGIN_OK;
 	p.id = id;
 	SendPacket(id, &p);
 }
 
-void BattleServer::SendAutoAccessFailPacket(int id) {
-	bc_packet_accept_fail p;
+void BattleServer::SendBattleLoginFailPacket(int id) {
+#ifdef LOG_ON
+	cout << "SendBattleLoginFailPacket: " << id << endl;
+#endif
+	bc_packet_battle_login_fail p;
 	p.size = sizeof(p);
-	p.type = BC_ACCEPT_FAIL;
+	p.type = BC_BATTLE_LOGIN_FAIL;
 	SendPacket(id, &p);
 }
 
 void BattleServer::SendAutoRoomReadyPacket(int id, int room_no) {
+#ifdef LOG_ON
+	cout << "SendAutoRoomReadyPacket: " << id << " room: "<< room_no << endl;
+#endif
 	bl_packet_room_ready p;
 	p.size = sizeof(p);
 	p.type = BL_ROOMREADY;
@@ -212,27 +222,37 @@ void BattleServer::SendAutoRoomReadyPacket(int id, int room_no) {
 }
 
 void BattleServer::SendRoomJoinSuccess(int id, bool isRoomMnr) {
+#ifdef LOG_ON
+	cout << "SendRoomJoinSuccess: " << id << " mnr: " << isRoomMnr << endl;
+#endif
 	bc_packet_join_ok p;
 	p.size = sizeof(p);
 	p.type = BC_JOIN_OK;
-#ifdef LOG_ON
-	std::cout << "send join ok\n";
-#endif
 	SendPacket(id, &p);
 }
 
 void BattleServer::SendRoomJoinFail(int id, int code) {
+#ifdef LOG_ON
+	cout << "SendRoomJoinFail: " << id << " code: " << code << endl;
+#endif
 	bc_packet_join_fail p;
 	p.size = sizeof(p);
 	p.type = BC_JOIN_FAIL;
 	p.code = code;
-#ifdef LOG_ON
-	std::cout << "send join fail\n";
-#endif
 	SendPacket(id, &p);
 }
 
 void BattleServer::SendRoomEnterPacket(int to, int enterer, bool ready, char playerNo, char* name, int mmr, bool isManager) {
+#ifdef LOG_ON
+	cout << "SendRoomEnterPacket: " <<
+		"to: " << to <<
+		" enterer: " << enterer <<
+		" ready: " << ready <<
+		" player_no: " << playerNo <<
+		" name: " << name <<
+		" mmr: " << mmr <<
+		" isMnr: " << isManager << endl;
+#endif
 	bc_packet_room_entered p;
 	p.size = sizeof(p);
 	p.type = BC_ROOM_ENTERED;
@@ -246,6 +266,11 @@ void BattleServer::SendRoomEnterPacket(int to, int enterer, bool ready, char pla
 }
 
 void BattleServer::SendRoomLeavePacket(int to, int leave) {
+#ifdef LOG_ON
+	cout << "SendRoomLeavePacket: " <<
+		"to: " << to <<
+		" leaver: " << leave << endl;
+#endif
 	bc_packet_room_leaved p;
 	p.size = sizeof(p);
 	p.type = BC_ROOM_LEAVED;
@@ -254,14 +279,20 @@ void BattleServer::SendRoomLeavePacket(int to, int leave) {
 }
 
 void BattleServer::SendGameStartPacket(int id, PTC_START_INFO* player_info) {
-	bc_packet_game_start p;
+#ifdef LOG_ON
+	cout << "SendGameStartPacket: " << id << endl;
+#endif
+	bc_packet_room_start p;
 	p.size = sizeof(p);
-	p.type = BC_GAME_START;
+	p.type = BC_ROOM_START;
 	memcpy(&p.start_info, player_info, sizeof(PTC_START_INFO));
 	SendPacket(id, &p);
 }
 
 void BattleServer::SendRoundStartPacket(int id) {
+#ifdef LOG_ON
+	cout << "SendRoundStartPacket: " << id << endl;
+#endif
 	bc_packet_round_start p;
 	p.size = sizeof(p);
 	p.type = BC_ROUND_START;
@@ -269,6 +300,11 @@ void BattleServer::SendRoundStartPacket(int id) {
 }
 
 void BattleServer::SendPlayerRotation(int to, int from, PTC_VECTOR look) {
+#ifdef LOG_ON
+	cout << "SendPlayerRotation: " <<
+		"to: " << to <<
+		" from: " << from << endl;
+#endif
 	bc_packet_player_rot p;
 	p.size = sizeof(p);
 	p.type = BC_PLAYER_ROT;
@@ -278,6 +314,9 @@ void BattleServer::SendPlayerRotation(int to, int from, PTC_VECTOR look) {
 }
 
 void BattleServer::SendLeftTimePacket(int id, char left_time) {
+#ifdef LOG_ON
+	cout << "SendLeftTimePacket: " << id << " lefttime: " << left_time << endl;
+#endif
 	bc_packet_left_time p;
 	p.size = sizeof(p);
 	p.type = BC_LEFT_TIME;
@@ -286,6 +325,10 @@ void BattleServer::SendLeftTimePacket(int id, char left_time) {
 }
 
 void BattleServer::SendShootPacket(int id, int bullet_id, PTC_VECTOR look) {
+#ifdef LOG_ON
+	cout << "SendShootPacket: " << id <<
+		"bulletid: " << bullet_id << endl;
+#endif
 	bc_packet_shoot_bullet p;
 	p.size = sizeof(p);
 	p.type = BC_SHOOT_BULLET;
@@ -295,6 +338,9 @@ void BattleServer::SendShootPacket(int id, int bullet_id, PTC_VECTOR look) {
 }
 
 void BattleServer::SendGameOverPacket(int id, int winner_id) {
+#ifdef LOG_ON
+	cout << "SendGameOverPacket: " << id << " winner: " << winner_id << endl;
+#endif
 	bc_packet_game_over p;
 	p.size = sizeof(p);
 	p.type = BC_GAME_OVER;
@@ -303,6 +349,9 @@ void BattleServer::SendGameOverPacket(int id, int winner_id) {
 }
 
 void BattleServer::SendUpdateUserInfoPacket(const int& id, const int& mmr) {
+#ifdef LOG_ON
+	cout << "SendUpdateUserInfoPacket: " << id << " newmmr: " << mmr << endl;
+#endif
 	bc_packet_updated_user_info p;
 	p.size = sizeof(p);
 	p.type = BC_UPDATED_USER_INFO;

@@ -61,6 +61,7 @@ int main() {
 	Boundary* t_b = new Boundary;
 	
 	SR::g_boundaries[OBJECT_TYPE_TOY] = t_b;
+	SR::g_map.LoadMapInfo("FirstMap");
 	BattleServer* battleserver = BattleServer::GetInstance();
 	
 	battleserver->ConncetLobbyServer();

@@ -88,28 +88,7 @@ void Room::Update() {
 		ProcMsg(procMsg);
 	}
 
-	if (!m_isGameStarted) {
-		int numOfReady{};
-		for (int i = 0; i < MAX_PLAYER; ++i) {
-			if (!m_players[i]->GetSlotStatus()) {
-				if (m_players[i]->GetReady()) ++numOfReady;
-			}
-		}
-		if (numOfReady == m_curPlayerNum
-			&& m_curPlayerNum == 2) {
-			if (!m_isSent) {
-				PushGameStartAvailableMsg(m_RoomMnr, true);
-				m_isSent = true;
-			}
-		}
-		else {
-			if (m_isSent) {
-				m_isSent = false;
-				PushGameStartAvailableMsg(m_RoomMnr, false);
-			}
-		}
-	}
-	else if (m_isGameStarted) {
+	if (m_isGameStarted) {
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			int id{ m_players[i]->GetID() };
 			if (id != -1) {//not unset
@@ -120,24 +99,20 @@ void Room::Update() {
 		//WorldUpdate();
 		//Collision();
 
-		XMFLOAT3 subDistance;
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			if (m_players[i]->GetID() != -1) { //not unset
-				if (!m_players[i]->IsDead()) {
+				if (m_players[i]->IsDead() == false) {
 					auto iter = m_players[i]->GetCurObject();
 
 					XMFLOAT3 curpos = iter->GetPosition();
 					XMFLOAT3 prepos = iter->GetPrePosition();
-
-					//
-
+					XMFLOAT3 subDistance;
 					subDistance = SMathHelper::Subtract(curpos, prepos);
 
 					if (fabs(subDistance.x) >= 0.1f
 						|| fabs(subDistance.y) >= 3.f
 						|| fabs(subDistance.z) >= 0.1f) {
 						PTC_VECTOR ptc_pos;
-
 						ptc_pos.x = curpos.x;
 						ptc_pos.y = curpos.y;
 						ptc_pos.z = curpos.z;
@@ -247,12 +222,11 @@ bool Room::IsEmpty() {
 	else return false;
 }
 
-//
 bool Room::EnterRoom(int id, bool is_roomMnr) {
 	if (m_curPlayerNum >= MAX_PLAYER) return false;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
-		if (m_players[i]->GetSlotStatus()) {
+		if (m_players[i]->GetEmpty()) {
 			m_curPlayerNum++;
 			m_players[i]->Enter();
 			m_players[i]->SetID(id);
@@ -271,7 +245,6 @@ bool Room::EnterRoom(int id, bool is_roomMnr) {
 	return false;
 }
 
-//
 void Room::AnnounceRoomEnter(int id) {
 	//bool isMnr;
 	int enterID = -1;
@@ -283,7 +256,7 @@ void Room::AnnounceRoomEnter(int id) {
 	if (m_RoomMnr == m_players[enterID]->GetID())  is_enterID_mnr = true;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
-		if (!m_players[i]->GetSlotStatus()) {
+		if (!m_players[i]->GetEmpty()) {
 			if (m_players[i]->GetID() == m_RoomMnr) {
 				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), true);
 			}
@@ -360,8 +333,10 @@ bool Room::IsRoomStarted() {
 
 void Room::SendLeftTimePacket() {
 	if (this == nullptr) return;
-	if (m_leftTime > 1
-		&& m_isGameStarted) {
+	if (m_leftTime > 1 && m_isGameStarted) {
+		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(1), EV_TICK };
+		BattleServer::GetInstance()->AddTimer(ev);
+		m_countFrame = 0;
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			int id = m_players[i]->GetID();
 			if (id != -1) BattleServer::GetInstance()->SendLeftTimePacket(id, m_leftTime);
@@ -411,6 +386,7 @@ void Room::GameStart(){
 	m_isEnterable = false;
 }
 
+//unused
 void Room::RoundStart() {
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		const int& id = m_players[i]->GetID();
@@ -424,6 +400,9 @@ void Room::GameOver(int winner) {
 	cout << winner << " winner!\n";
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EV_RESET_ROOM };
 	BattleServer::GetInstance()->AddTimer(ev);
+	for (const auto& pl : m_players) {
+		BattleServer::GetInstance()->SendGameOverPacket(pl->GetID(), winner);
+	}
 }
 
 void Room::UpdateUserInfo_DB(int winner) {
@@ -480,6 +459,11 @@ void Room::FlushSendMsg() {
 }
 
 void Room::PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info) {
+	cout << "[ROOM] PushPlayerPositionMsg: " <<
+		"to: " << to << " from: " << from <<
+		" px: " << position_info->x <<
+		" py: " << position_info->y <<
+		" pz: " << position_info->x << endl;
 	bc_packet_player_pos p;
 	p.size = sizeof(p);
 	p.type = BC_PLAYER_POS;
@@ -589,10 +573,10 @@ void Room::PushUnReadyMsg(int id) {
 	}
 }
 
-void Room::PushGameStartAvailableMsg(int id, bool available) {
-	bc_packet_gamestart_available p;
+void Room::PushRoomStartAvailableMsg(int id, bool available) {
+	bc_packet_room_start_available p;
 	p.size = sizeof(p);
-	p.type = BC_GAME_START_AVAILABLE;
+	p.type = BC_ROOM_START_AVAILABLE;
 	p.available = available;
 	PushSendMsg(id, &p);
 }
@@ -671,10 +655,19 @@ void Room::ProcMsg(message msg) {
 	case CB_READY: {
 		for (auto& pl : m_players) {
 			if (pl->GetID() == msg.id) {
-				pl->SetReady(!pl->GetReady());
-				char ready = pl->GetReady();
-				PushReadyMsg(msg.id, ready);
+				if (pl->GetReady() == false) {
+					pl->SetReady(true);
+					PushReadyMsg(msg.id, pl->GetReady());
+				}
 			}
+		}
+		if (m_players[0]->GetReady() == true && m_players[1]->GetReady() == true) {
+			ClearCopyMsg();
+			if (!m_isGameStarted) {
+				GameStart();
+				SendLeftTimePacket();
+			}
+			break;
 		}
 		break;
 	}
@@ -802,22 +795,22 @@ void Room::ProcMsg(message msg) {
 		break;
 	}
 	case CB_LOOK_VECTOR: {
-		int id{};
 		for (auto& pl : m_players) {
-			id = pl->GetID();
-			if (id != -1 && id == msg.id) {
-				if (pl->GetCurObject() == nullptr) return;
-				XMFLOAT3 pre_look{ pl->GetCurObject()->GetLook() };
-				pl->GetCurObject()->SetPreLook(pre_look);
-
-				pl->GetCurObject()->SetMatrixByLook(msg.vec.x, msg.vec.y, msg.vec.z);
-				//bb rotation
-				pl->GetCurObject()->m_boundaries->SetBBLook(pl->GetCurObject()->GetLook(), 0);
-				pl->GetCurObject()->m_boundaries->SetBBRight(pl->GetCurObject()->GetRight(), 0);
-			}
-			else {
-				PTC_VECTOR recv_look{ msg.vec.x, msg.vec.y, msg.vec.z };
-				BattleServer::GetInstance()->SendPlayerRotation(id, msg.id, recv_look);
+			int id = pl->GetID();
+			if (id != -1) {
+				if (id == msg.id) {
+					if (pl->GetCurObject() == nullptr) return;
+					XMFLOAT3 pre_look{ pl->GetCurObject()->GetLook() };
+					pl->GetCurObject()->SetPreLook(pre_look);
+					pl->GetCurObject()->SetMatrixByLook(msg.vec.x, msg.vec.y, msg.vec.z);
+					//bb rotation
+					//pl->GetCurObject()->m_boundaries->SetBBLook(pl->GetCurObject()->GetLook(), 0);
+					//pl->GetCurObject()->m_boundaries->SetBBRight(pl->GetCurObject()->GetRight(), 0);
+				}
+				else {
+					PTC_VECTOR recv_look{ msg.vec.x, msg.vec.y, msg.vec.z };
+					BattleServer::GetInstance()->SendPlayerRotation(id, msg.id, recv_look);
+				}
 			}
 		}
 		break;

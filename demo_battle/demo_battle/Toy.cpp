@@ -62,9 +62,7 @@ bool Toy::Update(float elapsedTime) {
 	XMFLOAT3 up = m_cur->GetUp();
 	XMFLOAT3 right = m_cur->GetRight();
 
-	if (m_keyW) { 
-		force = SMathHelper::Add(force, look, 1.f);
-	}
+	if (m_keyW) { force = SMathHelper::Add(force, look, 1.f); }
 	if (m_keyS) { force = SMathHelper::Add(force, look, -1.f); }
 	if (m_keyA) { force = SMathHelper::Add(force, right, -1.f); }
 	if (m_keyD) { force = SMathHelper::Add(force, right, 1.f); }
