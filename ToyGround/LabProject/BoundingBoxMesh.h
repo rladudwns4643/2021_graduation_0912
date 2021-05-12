@@ -27,6 +27,7 @@ public:
 	UINT VertexBufferByteSize = 0;
 	DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT;
 	UINT IndexBufferByteSize = 0;
+	UINT TotalIndexCount = 0;
 
 	std::unordered_map<std::string, SubmeshGeometry> DrawArgs;
 };

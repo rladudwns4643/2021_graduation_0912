@@ -126,10 +126,10 @@ bool GameplayScene::Enter()
 	m_player_in_room.resize(cnt);
 	Service::GetApp()->AddEvent(EVENT_GAME_START);
 
-	//m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
-	//m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;
-	//m_Users[m_PlayerID]->m_MapName = m_MapName;
-	//m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
+	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
+	m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;
+	m_Users[m_PlayerID]->m_MapName = m_MapName;
+	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
 
 	///---
 	// Player type, id 등등 세팅
@@ -141,7 +141,7 @@ bool GameplayScene::Enter()
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
 
-	// 카메라 세팅
+	// 카메라 세팅D
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
 
 	return false;
@@ -204,11 +204,15 @@ void GameplayScene::Render()
 	}
 
 	// BoundingBox
-	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BBoxPSO.Get());
-	//for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
-	//{
-	//	GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
-	//}
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BBoxPSO.Get());
+	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
+	{
+		GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+	}
+	for (auto& p : m_Users)
+	{
+		GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
+	}
 
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());

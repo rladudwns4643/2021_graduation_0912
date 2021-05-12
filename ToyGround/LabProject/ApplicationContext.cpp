@@ -73,6 +73,7 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 {
 	Character* chr = CreateObject<Character>(meshName, instID);
 	chr->SetMesh(meshName, meshName);
+	chr->SetBBMesh(meshName);
 	chr->SetMaterial(AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex);
 	chr->SetAnimationController(AssertsReference::GetApp()->m_SkinnedModelInsts[meshName].get());
 	chr->m_SkinnedCBIndex = skinnedCBIndex;

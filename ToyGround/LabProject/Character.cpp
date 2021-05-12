@@ -105,7 +105,6 @@ void Character::SetCamera(Camera* myCamera, CameraType cameraType)
 
 void Character::SetCamera(CameraType cameraType)
 {
-//	if (m_MyCamera == nullptr) return;
 	m_MyCamera->SetCamera(cameraType, this);
 
 	switch (cameraType)

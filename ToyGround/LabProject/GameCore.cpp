@@ -13,9 +13,9 @@ using namespace Core;
 
 namespace Core
 {
-	NetCore* g_netcore;
-	Service* g_service;
-
+	//NetCore* g_netcore;
+	//Service* g_service;
+	//
 	GameCore* g_Core = nullptr;
 	GameTimer* g_GameTimer = nullptr;
 
@@ -50,10 +50,10 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 	g_Core = GameCore::GetApp();
 	g_GameTimer = GameTimer::GetApp();
 
-	g_netcore = NetCore::GetApp();
-	g_service = Service::GetApp();
+	//g_netcore = NetCore::GetApp();
+	//g_service = Service::GetApp();
 
-	std::thread io_thread(&Service::ActiveService, g_service);
+	//std::thread io_thread(&Service::ActiveService, g_service);
 
 	MSG msg = {};
 
@@ -75,14 +75,14 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 	}
 
 	TerminateApplication(app);
-	io_thread.join();
+	//io_thread.join();
 	//worker_thread.join();
 }
 
 void Core::TerminateApplication(IGameApp& game)
 {
-	g_service->Clear();
-	g_netcore->Destory();
+	//g_service->Clear();
+	//g_netcore->Destory();
 	game.Cleanup();
 	g_Core->ShutdownCore();
 

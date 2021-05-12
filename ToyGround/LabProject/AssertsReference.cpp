@@ -181,47 +181,28 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						case 50:
 							preInfo.rotation.y = 0.f;
 							shiftZ = -STD_CUBE_SIZE / 2;
+							preInfo.meshName = OBJECT_MESH_STR_FENCE_01;
+							propTypeSet.insert(OBJECT_MESH_STR_FENCE_01);
 							break;
 						case 51:
 							preInfo.rotation.y = 90.f;
 							shiftX = STD_CUBE_SIZE / 2;
+							preInfo.meshName = OBJECT_MESH_STR_FENCE_02;
+							propTypeSet.insert(OBJECT_MESH_STR_FENCE_02);
 							break;
 						case 52:
 							preInfo.rotation.y = 0.f;
 							shiftZ = STD_CUBE_SIZE / 2;
+							preInfo.meshName = OBJECT_MESH_STR_FENCE_01;
+							propTypeSet.insert(OBJECT_MESH_STR_FENCE_01);
 							break;
 						case 53:
 							preInfo.rotation.y = 90.f;
 							shiftX = -STD_CUBE_SIZE / 2;
+							preInfo.meshName = OBJECT_MESH_STR_FENCE_02;
+							propTypeSet.insert(OBJECT_MESH_STR_FENCE_02);
 							break;
 						}
-						preInfo.meshName = OBJECT_MESH_STR_FENCE_01;
-						propTypeSet.insert(OBJECT_MESH_STR_FENCE_01);
-						break;
-					}
-					case 6:
-					{
-						switch (input)
-						{
-						case 60:
-							preInfo.rotation.y = 0.f;
-							shiftZ = -STD_CUBE_SIZE / 2;
-							break;
-						case 61:
-							preInfo.rotation.y = 90.f;
-							shiftX = STD_CUBE_SIZE / 2;
-							break;
-						case 62:
-							preInfo.rotation.y = 0.f;
-							shiftZ = STD_CUBE_SIZE / 2;
-							break;
-						case 63:
-							preInfo.rotation.y = 90.f;
-							shiftX = -STD_CUBE_SIZE / 2;
-							break;
-						}
-						preInfo.meshName = OBJECT_MESH_STR_FENCE_02;
-						propTypeSet.insert(OBJECT_MESH_STR_FENCE_02);
 						break;
 					}
 					}
@@ -272,123 +253,123 @@ void AssertsReference::CreateBB()
 	{
 		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(STD_CUBE_SIZE / 2, STD_CUBE_SIZE / 2, STD_CUBE_SIZE / 2);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
 		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_01] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_02] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_03] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_04] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(STD_CUBE_SIZE / 2, STD_CUBE_SIZE / 2, STD_CUBE_SIZE / 2);
-		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_BRIDGE] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_PLANT] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_TILE_01] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_TILE_02] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_TREE_01] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_TREE_02] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_BARREL] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_CHEST_DOWN] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		m_PropBoundingBox[OBJECT_MESH_STR_CHEST_UP] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
 		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_02] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_03] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_04] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, STD_CUBE_SIZE * 0.85, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, STD_CUBE_SIZE * 0.15, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_BRIDGE] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(45.f, 20.f, 45.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_PLANT] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(80.f, 5.f, 80.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_TILE_01] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(80.f, 5.f, 80.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_TILE_02] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(15.f, 320.f, 15.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_TREE_01] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(15.f, 320.f, 15.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_TREE_02] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(80.f, STD_CUBE_SIZE, 80.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_BARREL] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(60.f, 50.f, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CHEST_DOWN] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(15.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(60.f, 65.f, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CHEST_UP] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, 50.f, 20.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_FENCE_01] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(20.f, 60.f, STD_CUBE_SIZE);
 		m_PropBoundingBox[OBJECT_MESH_STR_FENCE_02] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(85.f, 85.f, 30.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_GRAVESTONE] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(85.f, 55.f, 65.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_LOGS] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(0.f, 0.f, 0.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_REVOLVER] = std::move(bb);
 	}
 
 	// Character
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+		bb->Center = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		bb->Extents = XMFLOAT3(PLAYER_SIZE_X, PLAYER_SIZE_Y, PLAYER_SIZE_Z);
 		m_PropBoundingBox[CHARACTER_COWBOY] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(2.5f, 2.5f, 2.5f);
-		bb->Extents = XMFLOAT3(2.5f, 2.5f, 2.5f);
+		bb->Center = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		bb->Extents = XMFLOAT3(PLAYER_SIZE_X, PLAYER_SIZE_Y, PLAYER_SIZE_Z);
 		m_PropBoundingBox[CHARACTER_GUNMAN] = std::move(bb);
 	}
 }
@@ -596,62 +577,63 @@ void AssertsReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12Graph
 
 	UINT offsetCnt = 0;
 	UINT verticesCnt = 0;
-	UINT indicesCnt = 0;
 
 	UINT propCnt = (UINT)m_propTypeVector.size() + 2;
 	UINT vvSize = propCnt * VerticesM;
-	UINT ivSize = propCnt * IndicesM;
+	UINT ivSize = IndicesM;
 	std::vector<BBVertex> vertices(vvSize);
-	std::vector<UINT> indices(ivSize);
+	std::vector<uint16_t> indices(ivSize);
+
+	// 인덱스 값 주기
+	uint16_t pnIndices[24];
+	//ⓐ 윗면(Top) 사각형의 앞쪽 라인
+	pnIndices[0] = 0; pnIndices[1] = 1;
+	//ⓑ 윗면(Top) 사각형의 오른쪽 라인
+	pnIndices[2] = 1; pnIndices[3] = 2;
+	//ⓒ 윗면(Top) 사각형의 뒷쪽 라인
+	pnIndices[4] = 2; pnIndices[5] = 3;
+	//ⓓ 윗면(Top) 사각형의 왼쪽 라인
+	pnIndices[6] = 3; pnIndices[7] = 0;
+	//ⓔ 앞면(Front) 사각형의 왼쪽 라인
+	pnIndices[8] = 0; pnIndices[9] = 4;
+	//ⓕ 앞면(Front) 사각형의 오른쪽 라인
+	pnIndices[10] = 1; pnIndices[11] = 5;
+	//ⓖ 뒷면(Back) 사각형의 오른쪽 라인
+	pnIndices[12] = 2; pnIndices[13] = 6;
+	//ⓗ 뒷면(Back) 사각형의 왼쪽 라인
+	pnIndices[14] = 3; pnIndices[15] = 7;
+	//ⓘ 아랫면(Bottom) 사각형의 앞쪽 라인
+	pnIndices[16] = 4; pnIndices[17] = 5;
+	//ⓙ 아랫면(Bottom) 사각형의 오른쪽 라인
+	pnIndices[18] = 5; pnIndices[19] = 6;
+	//ⓚ 아랫면(Bottom) 사각형의 뒷쪽 라인
+	pnIndices[20] = 6; pnIndices[21] = 7;
+	//ⓛ 아랫면(Bottom) 사각형의 왼쪽 라인
+	pnIndices[22] = 7; pnIndices[23] = 4;
+
+	for (int j = 0; j < IndicesM; ++j)
+		indices[j] = pnIndices[j];
+
 	for (auto propType : m_propTypeVector)
 	{
-		XMFLOAT4 fColor(0.0f, 1.0f, 0.0f, 1.0f);
+		XMFLOAT4 fColor(1.0f, 0.0f, 0.0f, 1.0f);
 		float fx = m_PropBoundingBox[propType]->Extents.x * 0.5f;
 		float fy = m_PropBoundingBox[propType]->Extents.y * 0.5f;
 		float fz = m_PropBoundingBox[propType]->Extents.z * 0.5f;
 		XMFLOAT3 c = m_PropBoundingBox[propType]->Center;
+		c.y += fy;
 		BBVertex pVertices[8];
 		pVertices[0] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, -fy, -fz)), fColor);
 		pVertices[1] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, -fy, -fz)), fColor);
 		pVertices[2] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, -fy, +fz)), fColor);
 		pVertices[3] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, -fy, +fz)), fColor);
-		pVertices[4] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, fy, -fz)), fColor);
-		pVertices[5] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, fy, -fz)), fColor);
-		pVertices[6] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, fy, +fz)), fColor);
-		pVertices[7] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, fy, +fz)), fColor);
+		pVertices[4] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, +fy, -fz)), fColor);
+		pVertices[5] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, +fy, -fz)), fColor);
+		pVertices[6] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, +fy, +fz)), fColor);
+		pVertices[7] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, +fy, +fz)), fColor);
 
 		for (int i = 0; i < VerticesM; ++i, ++verticesCnt)
 			vertices[verticesCnt] = pVertices[i];
-
-		// 인덱스 값 주기
-		UINT pnIndices[24];
-		//ⓐ 윗면(Top) 사각형의 앞쪽 라인
-		pnIndices[0] = 0; pnIndices[1] = 1;
-		//ⓑ 윗면(Top) 사각형의 오른쪽 라인
-		pnIndices[2] = 1; pnIndices[3] = 2;
-		//ⓒ 윗면(Top) 사각형의 뒷쪽 라인
-		pnIndices[4] = 2; pnIndices[5] = 3;
-		//ⓓ 윗면(Top) 사각형의 왼쪽 라인
-		pnIndices[6] = 3; pnIndices[7] = 0;
-		//ⓔ 앞면(Front) 사각형의 왼쪽 라인
-		pnIndices[8] = 0; pnIndices[9] = 4;
-		//ⓕ 앞면(Front) 사각형의 오른쪽 라인
-		pnIndices[10] = 1; pnIndices[11] = 5;
-		//ⓖ 뒷면(Back) 사각형의 오른쪽 라인
-		pnIndices[12] = 2; pnIndices[13] = 6;
-		//ⓗ 뒷면(Back) 사각형의 왼쪽 라인
-		pnIndices[14] = 3; pnIndices[15] = 7;
-		//ⓘ 아랫면(Bottom) 사각형의 앞쪽 라인
-		pnIndices[16] = 4; pnIndices[17] = 5;
-		//ⓙ 아랫면(Bottom) 사각형의 오른쪽 라인
-		pnIndices[18] = 5; pnIndices[19] = 6;
-		//ⓚ 아랫면(Bottom) 사각형의 뒷쪽 라인
-		pnIndices[20] = 6; pnIndices[21] = 7;
-		//ⓛ 아랫면(Bottom) 사각형의 왼쪽 라인
-		pnIndices[22] = 7; pnIndices[23] = 4;
-
-		for (int j = 0; j < IndicesM; ++j, ++indicesCnt)
-			indices[indicesCnt] = pnIndices[j];
 
 		SubmeshGeometry bbSubmesh;
 		bbSubmesh.IndexCount = IndicesM;
@@ -676,48 +658,19 @@ void AssertsReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12Graph
 		float fy = m_PropBoundingBox[CharacterType]->Extents.y * 0.5f;
 		float fz = m_PropBoundingBox[CharacterType]->Extents.z * 0.5f;
 		XMFLOAT3 c = m_PropBoundingBox[CharacterType]->Center;
+		c.y += fy;
 		BBVertex pVertices[8];
-		pVertices[0] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, +fy, -fz)), fColor);
-		pVertices[1] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, +fy, -fz)), fColor);
-		pVertices[2] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, +fy, +fz)), fColor);
-		pVertices[3] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, +fy, +fz)), fColor);
-		pVertices[4] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, 0, -fz)), fColor);
-		pVertices[5] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, 0, -fz)), fColor);
-		pVertices[6] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, 0, +fz)), fColor);
-		pVertices[7] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, 0, +fz)), fColor);
+		pVertices[0] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, -fy, -fz)), fColor);
+		pVertices[1] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, -fy, -fz)), fColor);
+		pVertices[2] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, -fy, +fz)), fColor);
+		pVertices[3] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, -fy, +fz)), fColor);
+		pVertices[4] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, +fy, -fz)), fColor);
+		pVertices[5] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, +fy, -fz)), fColor);
+		pVertices[6] = BBVertex(MathHelper::Add(c, XMFLOAT3(+fx, +fy, +fz)), fColor);
+		pVertices[7] = BBVertex(MathHelper::Add(c, XMFLOAT3(-fx, +fy, +fz)), fColor);
 
 		for (int i = 0; i < VerticesM; ++i, ++verticesCnt)
 			vertices[verticesCnt] = pVertices[i];
-
-		// 인덱스 값 주기
-		UINT pnIndices[24];
-		//ⓐ 윗면(Top) 사각형의 앞쪽 라인
-		pnIndices[0] = 0; pnIndices[1] = 1;
-		//ⓑ 윗면(Top) 사각형의 오른쪽 라인
-		pnIndices[2] = 1; pnIndices[3] = 2;
-		//ⓒ 윗면(Top) 사각형의 뒷쪽 라인
-		pnIndices[4] = 2; pnIndices[5] = 3;
-		//ⓓ 윗면(Top) 사각형의 왼쪽 라인
-		pnIndices[6] = 3; pnIndices[7] = 0;
-		//ⓔ 앞면(Front) 사각형의 왼쪽 라인
-		pnIndices[8] = 0; pnIndices[9] = 4;
-		//ⓕ 앞면(Front) 사각형의 오른쪽 라인
-		pnIndices[10] = 1; pnIndices[11] = 5;
-		//ⓖ 뒷면(Back) 사각형의 오른쪽 라인
-		pnIndices[12] = 2; pnIndices[13] = 6;
-		//ⓗ 뒷면(Back) 사각형의 왼쪽 라인
-		pnIndices[14] = 3; pnIndices[15] = 7;
-		//ⓘ 아랫면(Bottom) 사각형의 앞쪽 라인
-		pnIndices[16] = 4; pnIndices[17] = 5;
-		//ⓙ 아랫면(Bottom) 사각형의 오른쪽 라인
-		pnIndices[18] = 5; pnIndices[19] = 6;
-		//ⓚ 아랫면(Bottom) 사각형의 뒷쪽 라인
-		pnIndices[20] = 6; pnIndices[21] = 7;
-		//ⓛ 아랫면(Bottom) 사각형의 왼쪽 라인
-		pnIndices[22] = 7; pnIndices[23] = 4;
-
-		for (int j = 0; j < IndicesM; ++j, ++indicesCnt)
-			indices[indicesCnt] = pnIndices[j];
 
 		SubmeshGeometry bbSubmesh;
 		bbSubmesh.IndexCount = IndicesM;
@@ -729,7 +682,7 @@ void AssertsReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12Graph
 	}
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(BBVertex);
-	const UINT ibByteSize = (UINT)indices.size() * sizeof(UINT);
+	const UINT ibByteSize = (UINT)indices.size() * sizeof(uint16_t);
 
 	ThrowIfFailed(D3DCreateBlob(vbByteSize, &bb->VertexBufferCPU));
 	CopyMemory(bb->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);

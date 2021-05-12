@@ -29,6 +29,11 @@ void LobbyController::HandleInput(const float deltaT)
 		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
 	}
 
+
+	if (GetAsyncKeyState('T') & 0x8000 && p == false) {
+		p = true;
+		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+	}
 	//if (GetAsyncKeyState('U') & 0x8000) {
 	//	NetCore::GetApp()->SendBattleRoomJoinPacket();
 	//}

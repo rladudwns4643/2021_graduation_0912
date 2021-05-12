@@ -20,6 +20,10 @@ VOut VS(VIn input, uint instanceID : SV_InstanceID)
 
 	InstanceData instData = gInstanceData[instanceID];
 	float4x4 world = instData.World;
+	// 회전시키지 않음
+	world._m00 = 1.0f; world._m01 = 0.0f; world._m02 = 0.0f;
+	world._m10 = 0.0f; world._m11 = 1.0f; world._m12 = 0.0f;
+	world._m20 = 0.0f; world._m21 = 0.0f; world._m22 = 1.0f;
 
 	output.position = mul(mul(mul(float4(input.position, 1.0f), world), gView), gProj);
 	output.color = input.color;

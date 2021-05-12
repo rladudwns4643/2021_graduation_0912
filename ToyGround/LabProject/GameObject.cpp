@@ -53,7 +53,7 @@ bool GameObject::SetBBMesh(std::string submeshName)
 	m_IndexCountBb = m_Bb->DrawArgs[submeshName].IndexCount;
 	m_StartIndexLocationBb = m_Bb->DrawArgs[submeshName].StartIndexLocation;
 	m_BaseVertexLocationBb = m_Bb->DrawArgs[submeshName].BaseVertexLocation;
-	m_PrimitiveTypeBb = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+	m_PrimitiveTypeBb = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
 
 	return true;
 }

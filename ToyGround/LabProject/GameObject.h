@@ -84,6 +84,7 @@ public:
 	UINT m_StartIndexLocationBb;
 	int m_BaseVertexLocationBb;
 
+
 	BoundingBox m_Bounds;
 
 	// 재질정보

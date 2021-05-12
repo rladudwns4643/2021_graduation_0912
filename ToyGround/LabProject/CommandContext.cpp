@@ -212,18 +212,17 @@ void GraphicsContext::DrawBoundingBox(ObjectInfo* objInfo, const std::vector<Gam
 				if (!TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
 			}
 #endif
+			//ri->m_Bb->DrawArgs[ri->GetMeshName()].BaseVertexLocation
 			Core::g_CommandList->IASetVertexBuffers(0, 1, &ri->m_Bb->VertexBufferView());
 			Core::g_CommandList->IASetIndexBuffer(&ri->m_Bb->IndexBufferView());
-			Core::g_CommandList->IASetPrimitiveTopology(ri->m_PrimitiveTypeBb);
+			Core::g_CommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
 			auto instanceBuffer = m_InstanceBuffers[ri->GetMeshName()]->Resource();
 			Core::g_CommandList->SetGraphicsRootShaderResourceView(0, instanceBuffer->GetGPUVirtualAddress());
-
-			Core::g_CommandList->SetGraphicsRootConstantBufferView(5, 0);
 		
 			// instanceCount = info.size
 			// info = instance world 행렬을 갖고있는 맵
-			Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCountBb, info.size(), ri->m_StartIndexLocationBb, ri->m_BaseVertexLocationBb, 0);
+			Core::g_CommandList->DrawIndexedInstanced(24, info.size(), 0, ri->m_BaseVertexLocationBb, 0);
 		}
 	}
 }
