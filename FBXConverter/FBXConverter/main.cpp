@@ -25,14 +25,14 @@ int main(void)
 	//LoadFileFbx("..//FBXConverter//PolygonAdventureT//SM_Bld_Village_06");
 
 	//폴더안에 모든 메쉬 fbx만 바꾸고 싶을 때
-	//LoadFolderFbx(".//Mesh//*.fbx", "./Mesh/");
+	LoadFolderFbx(".//Mesh//*.fbx", "./Mesh/");
 
 	// 파일안에 모든 애니메이션 FBX 파일 변환을 원할 때
 	//LoadFolderAnimationFbx(".//Ani//*.fbx", "./Ani/");
 
 	// 특정 애니메이션 파일 하나만 변환을 원할 때
 	// .FBX는 제외한 이름만 넣어주어야함
-	LoadFileAnimationFbx("GunMan", "./Ani/");
+	//LoadFileAnimationFbx("GunMan", "./Ani/");
 
 	 
 	// 한 폴더 내에 있는 모든 애니메이션 한 파일로 합치기

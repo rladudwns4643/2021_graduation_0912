@@ -103,6 +103,10 @@ void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float s
 
 		obj->InitializeTransform();
 		if (isScale) obj->Scale(scaleValue, scaleValue, scaleValue);
+		if(obj->GetMeshName() == OBJECT_MESH_STR_WALL_21)
+			obj->Scale(1.0f, 5.5, 21.f);
+		else if (obj->GetMeshName() == OBJECT_MESH_STR_WALL_33)
+			obj->Scale(1.0f, 5.5, 33.f);
 		obj->Rotate(itemInfo.rotation.x, itemInfo.rotation.y, itemInfo.rotation.z);
 		obj->SetPosition(itemInfo.position);
 	}

@@ -57,6 +57,53 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 			map->mapInfoVector.emplace_back(preInfo);
 		}
 
+		// create Wall
+		propTypeSet.insert(OBJECT_MESH_STR_WALL_21);
+		preInfo.meshName = OBJECT_MESH_STR_WALL_21;
+		preInfo.rotation.x = 0.0f;
+		preInfo.rotation.y = 90.0f;
+		preInfo.rotation.z = 0.0f;
+		preInfo.position.x = 0.0f;
+		preInfo.position.y = 0.0f;
+		preInfo.position.z = -1690.f;
+		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+		preInfo.typeID = ++typeIDCount;
+		map->mapInfoVector.emplace_back(preInfo);
+
+		preInfo.meshName = OBJECT_MESH_STR_WALL_21;
+		preInfo.rotation.x = 0.0f;
+		preInfo.rotation.y = 270.0f;
+		preInfo.rotation.z = 0.0f;
+		preInfo.position.x = 0.0f;
+		preInfo.position.y = 0.0f;
+		preInfo.position.z = 1690.f;
+		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+		preInfo.typeID = ++typeIDCount;
+		map->mapInfoVector.emplace_back(preInfo);
+
+		propTypeSet.insert(OBJECT_MESH_STR_WALL_33);
+		preInfo.meshName = OBJECT_MESH_STR_WALL_33;
+		preInfo.rotation.x = 0.0f;
+		preInfo.rotation.y = 180.0f;
+		preInfo.rotation.z = 0.0f;
+		preInfo.position.x = -1090.f;
+		preInfo.position.y = 0.0f;
+		preInfo.position.z = 0.0f;
+		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+		preInfo.typeID = ++typeIDCount;
+		map->mapInfoVector.emplace_back(preInfo);
+
+		preInfo.meshName = OBJECT_MESH_STR_WALL_33;
+		preInfo.rotation.x = 0.0f;
+		preInfo.rotation.y = 0.0f;
+		preInfo.rotation.z = 0.0f;
+		preInfo.position.x = 1090.f;
+		preInfo.position.y = 0.0f;
+		preInfo.position.z = 0.0f;
+		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+		preInfo.typeID = ++typeIDCount;
+		map->mapInfoVector.emplace_back(preInfo);
+
 		for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k)
 		{
 			int floor;
@@ -70,8 +117,8 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 					int input;
 					fileIn >> input;
 					//cout << input << " ";
-					if (k == 0)
-						continue;
+					//if (k == 0)
+					//	continue;
 					rk = MAP_HEIGHT_BLOCK_NUM - k - 1;
 					ri = MAP_DEPTH_BLOCK_NUM - i - 1;
 					rj = MAP_WIDTH_BLOCK_NUM - j - 1;
@@ -89,20 +136,52 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						switch (input)
 						{
 						case 1:
-							preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
-							propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+							if (k == 0)
+							{
+								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_01;
+								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_01);
+							}
+							else
+							{
+								preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
+								propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+							}
 							break;
 						case 2:
-							preInfo.meshName = OBJECT_MESH_STR_CUBE_02;
-							propTypeSet.insert(OBJECT_MESH_STR_CUBE_02);
+							if (k == 0)
+							{
+								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_02;
+								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_02);
+							}
+							else
+							{
+								preInfo.meshName = OBJECT_MESH_STR_CUBE_02;
+								propTypeSet.insert(OBJECT_MESH_STR_CUBE_02);
+							}
 							break;
 						case 3:
-							preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
-							propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
+							if (k == 0)
+							{
+								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_03;
+								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_03);
+							}
+							else
+							{
+								preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
+								propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
+							}
 							break;
 						case 4:
-							preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
-							propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
+							if (k == 0)
+							{
+								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_04;
+								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_04);
+							}
+							else
+							{
+								preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
+								propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
+							}
 							break;
 						case 5:
 							preInfo.meshName = OBJECT_MESH_STR_PLANT;
@@ -273,6 +352,48 @@ void AssertsReference::CreateBB()
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
 		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, STD_CUBE_SIZE, STD_CUBE_SIZE);
 		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_04] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, STD_CUBE_SIZE, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, 0.15f, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_PLAT_01] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, STD_CUBE_SIZE, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, 0.15, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_PLAT_02] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, STD_CUBE_SIZE, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, 0.15, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_PLAT_03] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, STD_CUBE_SIZE, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, 0.15, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_PLAT_04] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(2100.f, 550.f, 100.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_WALL_21] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(100.f, 550.f, 3300.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_WALL_33] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, STD_CUBE_SIZE, 0.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, 0.15, STD_CUBE_SIZE);
+		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_PLAT_04] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();

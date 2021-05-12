@@ -189,11 +189,11 @@ void GameplayScene::Render()
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 
-	// Props
-	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
-	{
-		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
-	}
+	//// Props
+	//for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
+	//{
+	//	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+	//}
 
 	// Charater
 	for (auto& p : m_Users)
@@ -204,15 +204,15 @@ void GameplayScene::Render()
 	}
 
 	// BoundingBox
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BBoxPSO.Get());
-	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
-	{
-		GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
-	}
-	for (auto& p : m_Users)
-	{
-		GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
-	}
+	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BBoxPSO.Get());
+	//for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
+	//{
+	//	GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+	//}
+	//for (auto& p : m_Users)
+	//{
+	//	GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
+	//}
 
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
