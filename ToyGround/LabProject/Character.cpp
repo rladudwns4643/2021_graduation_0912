@@ -6,6 +6,7 @@
 #include "CommandContext.h"
 #include "CommandCenter.h"
 #include "netCore.h"
+#include "Service.h"
 
 Character::Character(std::string type, std::string id) :
 	GameObject(type, id),
@@ -186,8 +187,6 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 	DWORD MoveBit = 3;
 	DWORD strafeBit = 12;
 
-	
-
 	if (dwDirection)
 	{
 		if (dwDirection == 15) // 모든 키가 눌렸을 경우
@@ -196,7 +195,6 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 			return false;
 		if ((dwDirection ^ strafeBit) == 0 || (dwDirection ^ strafeBit) == 15)	// ad가 동시에 눌렸을 경우
 			return false;
-
 
 		if (dwDirection & DIR_FORWARD)			direction = direction + look;
 		if (dwDirection & DIR_BACKWARD)			direction = direction - look;
@@ -418,6 +416,8 @@ void Character::Rotate(float pitch, float yaw, float roll)
 
 	m_World._11 = m_Right.x; m_World._12 = m_Right.y; m_World._13 = m_Right.z;
 	m_World._31 = m_Look.x; m_World._32 = m_Look.y; m_World._33 = m_Look.z;
+	XMFLOAT3 t_look{ m_Look };
+	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOUSE, 1, t_look);
 }
 
 bool Character::RayMapTriangleIntersect(XMVECTOR orig, XMVECTOR dir, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, XMVECTOR& P)

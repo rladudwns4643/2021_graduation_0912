@@ -29,12 +29,12 @@ void PlayerController::HandleInput(const float deltaT)
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-
+	
 	float speed = PLAYER_SPEED * deltaT;
 	XMVECTOR direction = {};
-
+	
 	DWORD dir = 0;
-
+	
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
 	case CameraType::eFirst:
@@ -44,7 +44,7 @@ void PlayerController::HandleInput(const float deltaT)
 		if (GetAsyncKeyState('S') & 0x8000) dir |= DIR_BACKWARD;
 		if (GetAsyncKeyState('A') & 0x8000) dir |= DIR_LEFT;	
 		if (GetAsyncKeyState('D') & 0x8000) dir |= DIR_RIGHT;	
-
+	
 		if (dir != 0) {
 			if (m_Owner->Move(dir, speed)) {
 				Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOUSE, 1, m_Owner->GetLook());
@@ -52,7 +52,7 @@ void PlayerController::HandleInput(const float deltaT)
 		}
 		break;
 	}
-	break;
+	//break;
 	//case CameraType::eFree:
 	//{
 	//	if (GetAsyncKeyState('W') & 0x8000) {
@@ -75,7 +75,7 @@ void PlayerController::HandleInput(const float deltaT)
 	//	}
 	//}
 	//break;
-	}
+	//}
 }
 
 void PlayerController::MouseCallback()

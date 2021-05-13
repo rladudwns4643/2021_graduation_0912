@@ -248,20 +248,25 @@ bool Room::EnterRoom(int id, bool is_roomMnr) {
 void Room::AnnounceRoomEnter(int id) {
 	//bool isMnr;
 	int enterID = -1;
-	bool is_enterID_mnr = false;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		if (m_players[i]->GetID() == id) enterID = i;
 	}
-	if (m_RoomMnr == m_players[enterID]->GetID())  is_enterID_mnr = true;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		if (m_players[i]->GetEmpty() == false) {
-			if (m_players[i]->GetID() == m_RoomMnr) {
-				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), true);
-			}
-			else {
-				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), false);
+			if (m_players[i]->GetID() != enterID) {
+				int t_id{ m_players[i]->GetID() };
+				bool t_ready{ m_players[i]->GetReady() };
+				int t_mmr{ m_players[i]->GetMMR() };
+				char t_id_str[MAX_ID_LEN];
+				bool is_enterID_mnr = false;
+
+				memcpy(t_id_str, m_players[i]->GetID_STR(), sizeof(char) * MAX_ID_LEN);
+				//send for new user
+				BattleServer::GetInstance()->SendRoomEnterPacket(enterID, t_id, t_ready, i, t_id_str, t_mmr, false);
+				//send for old user
+				BattleServer::GetInstance()->SendRoomEnterPacket(t_id, enterID, m_players[enterID]->GetReady(), enterID, m_players[enterID]->GetID_STR(), m_players[enterID]->GetMMR(), false);
 			}
 		}
 	}
@@ -809,7 +814,7 @@ void Room::ProcMsg(message msg) {
 				}
 				else {
 					PTC_VECTOR recv_look{ msg.vec.x, msg.vec.y, msg.vec.z };
-					BattleServer::GetInstance()->SendPlayerRotation(id, msg.id, recv_look);
+					BattleServer::GetInstance()->SendPlayerLook(id, msg.id, recv_look);
 				}
 			}
 		}

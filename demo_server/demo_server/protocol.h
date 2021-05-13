@@ -388,6 +388,7 @@ struct bc_packet_updated_user_info {
 #define CB_KEY_JUMP				68
 
 #define CB_BULLET				7
+#define CB_POSITION_VECTOR		8
 #define CB_LOOK_VECTOR			9
 #define CB_TEST_TIME_PLUS		10
 #define CB_TEST_TIME_MINUS		11
@@ -448,18 +449,6 @@ struct cb_test_packet_time_mimus {
 	BYTE type;
 };
 #pragma pack (pop)
-//------------------------------------------------------------------
-
-//-------------------------------M->L------------------------------- 
-//x
-struct ml_packet_match {
-	BYTE size;
-	BYTE type;
-
-	short id;
-	short room_no;
-	char is_host;
-};
 //------------------------------------------------------------------
 
 //-------------------------------L->B------------------------------- 

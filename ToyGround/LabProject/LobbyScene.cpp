@@ -39,7 +39,9 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		cout << "LOGIN FAIL" << endl;
 		break;
 	}
-
+	case EVENT_ROOM_FIND_ROOM: {
+		break;
+	}
 	case EVENT_ROOM_JOIN_OK: {
 		break;
 	}
@@ -51,7 +53,6 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		va_end(ap);
 		cout << "ENTER ROOM id: "<< arg_id << endl; //µé¾î¿Âid
-		NetCore::GetApp()->SendReadyPacket();
 		break;
 	}
 	case EVENT_ROOM_LEAVE: {

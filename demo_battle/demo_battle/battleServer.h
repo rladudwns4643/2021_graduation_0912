@@ -36,7 +36,7 @@ public:
 	
 	//¿Œ∞‘¿”
 	void SendRoundStartPacket(int id);
-	void SendPlayerRotation(int to, int from, PTC_VECTOR look);
+	void SendPlayerLook(int to, int from, PTC_VECTOR look);
 	void SendLeftTimePacket(int id, char left_time);
 	void SendShootPacket(int id, int bullet_id, PTC_VECTOR look);
 	void SendGameOverPacket(int id, int winner_id);
