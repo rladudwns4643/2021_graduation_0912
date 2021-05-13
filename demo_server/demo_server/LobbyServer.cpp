@@ -204,7 +204,7 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		if (id != 0) {
 			userList[id]->user_info->SetPlayerMatch(true);
 			if (id == 2) {
-				SendRequestRoomPacket(1);
+				SendRequestRoomPacket();
 			}
 		}
 		break;
@@ -264,11 +264,10 @@ void LobbyServer::SendCancelFindRoomPacket(int id)
 {
 }
 
-void LobbyServer::SendRequestRoomPacket(int id) {
+void LobbyServer::SendRequestRoomPacket() {
 	lb_packet_request_room p;
 	p.size = sizeof(p);
 	p.type = LB_REQUEST_ROOM;
-	p.id = id;
 	
 	SendPacket(0, &p); //battle server·Î
 }

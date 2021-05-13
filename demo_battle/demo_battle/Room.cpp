@@ -256,7 +256,7 @@ void Room::AnnounceRoomEnter(int id) {
 	if (m_RoomMnr == m_players[enterID]->GetID())  is_enterID_mnr = true;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
-		if (!m_players[i]->GetEmpty()) {
+		if (m_players[i]->GetEmpty() == false) {
 			if (m_players[i]->GetID() == m_RoomMnr) {
 				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), true);
 			}

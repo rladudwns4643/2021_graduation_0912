@@ -475,8 +475,6 @@ struct lb_packet_check_connect {
 struct lb_packet_request_room {
 	BYTE size;
 	BYTE type;
-
-	short id; //의미가 있을까
 };
 #pragma pack (pop)
 //------------------------------------------------------------------

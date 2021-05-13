@@ -482,7 +482,7 @@ bool NetCore::SendBattleLoginPacket() {
 	cb_packet_login p;
 	p.size = sizeof(p);
 	p.type = CB_LOGIN;
-	memcpy(&p.name, m_client.lobby_id.c_str(), MAX_ID_LEN);
+	memcpy(&p.name, m_client.lobby_id.c_str(), sizeof(char) * MAX_ID_LEN);
 	p.mmr = m_client.mmr;
 	if (!SendPacket(&p, SV_BATTLE)) return false;
 	return true;
