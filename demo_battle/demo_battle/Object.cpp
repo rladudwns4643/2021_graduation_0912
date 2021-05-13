@@ -49,76 +49,77 @@ Object& Object::operator=(const Object& other) {
 }
 
 bool Object::Update(float elapsedTime, bool is_player) {
-	m_xmf3PrePosition = GetPosition();
+	//m_xmf3PrePosition = GetPosition();
 
-	float force{ GRAVITY * m_mass };
-	float friction = force * m_fricCoef;
+	//float force{ GRAVITY * m_mass };
+	//float friction = force * m_fricCoef;
 
-	//direction
-	XMFLOAT3 normalrized = SMathHelper::Normalize(m_xmfVel);
+	////direction
+	//XMFLOAT3 normalrized = SMathHelper::Normalize(m_xmfVel);
 
-	//friction force
-	float frictionX = -normalrized.x * friction;
-	float frictionZ = -normalrized.z * friction;
+	////friction force
+	//float frictionX = -normalrized.x * friction;
+	//float frictionZ = -normalrized.z * friction;
 
-	//friction acc
-	XMFLOAT3 fricAcc{};
-	if (m_isApplyGravity) {
-		fricAcc = {
-			frictionX / m_mass,
-			-GRAVITY / (float)pow(elapsedTime, 2),
-			frictionZ / m_mass
-		};
-	}
-	else {
-		fricAcc = {
-			frictionX / m_mass,
-			0,
-			frictionZ / m_mass
-		};
-	}
+	////friction acc
+	//XMFLOAT3 fricAcc{};
+	//if (m_isApplyGravity) {
+	//	fricAcc = {
+	//		frictionX / m_mass,
+	//		-GRAVITY / (float)pow(elapsedTime, 2),
+	//		frictionZ / m_mass
+	//	};
+	//}
+	//else {
+	//	fricAcc = {
+	//		frictionX / m_mass,
+	//		0,
+	//		frictionZ / m_mass
+	//	};
+	//}
 
-	//update velocity by fricion force
-	XMFLOAT3 newVel{
-		m_xmfVel.x + fricAcc.x * elapsedTime,
-		m_xmfVel.y - GRAVITY * elapsedTime,
-		m_xmfVel.z + fricAcc.z * elapsedTime
-	};
+	////update velocity by fricion force
+	//XMFLOAT3 newVel{
+	//	m_xmfVel.x + fricAcc.x * elapsedTime,
+	//	m_xmfVel.y - GRAVITY * elapsedTime,
+	//	m_xmfVel.z + fricAcc.z * elapsedTime
+	//};
 
-	if (newVel.x * m_xmfVel.x <= FLT_EPSILON) m_xmfVel.x = 0.f;
-	else m_xmfVel.x = newVel.x;
-	if (newVel.z * m_xmfVel.z <= FLT_EPSILON) m_xmfVel.z = 0.f;
-	else m_xmfVel.z = newVel.z;
-	m_xmfVel.y = newVel.y;
+	//if (newVel.x * m_xmfVel.x <= FLT_EPSILON) m_xmfVel.x = 0.f;
+	//else m_xmfVel.x = newVel.x;
+	//if (newVel.z * m_xmfVel.z <= FLT_EPSILON) m_xmfVel.z = 0.f;
+	//else m_xmfVel.z = newVel.z;
+	//m_xmfVel.y = newVel.y;
 
-	if (is_player) {
-		float velSize = sqrtf((float)pow(m_xmfVel.x, 2) + (float)pow(m_xmfVel.z, 2));
-		if (velSize > m_maxVel) {
-			m_xmfVel.x = m_xmfVel.x / velSize * m_maxVel;
-			m_xmfVel.z = m_xmfVel.z / velSize * m_maxVel;
-		}
-	}
+	//if (is_player) {
+	//	float velSize = sqrtf((float)pow(m_xmfVel.x, 2) + (float)pow(m_xmfVel.z, 2));
+	//	if (velSize > m_maxVel) {
+	//		m_xmfVel.x = m_xmfVel.x / velSize * m_maxVel;
+	//		m_xmfVel.z = m_xmfVel.z / velSize * m_maxVel;
+	//	}
+	//}
 
-	m_xmf4x4World._41 += m_xmfVel.x * elapsedTime;
-	m_xmf4x4World._42 += m_xmfVel.y * elapsedTime;
-	m_xmf4x4World._43 += m_xmfVel.z * elapsedTime;
+	//m_xmf4x4World._41 += m_xmfVel.x * elapsedTime;
+	//m_xmf4x4World._42 += m_xmfVel.y * elapsedTime;
+	//m_xmf4x4World._43 += m_xmfVel.z * elapsedTime;
 
 
-	if (m_xmf4x4World._42 < FLT_EPSILON) {
-		m_xmf4x4World._42 = 0.f;
-		m_xmfVel.y = 0.f;
-	}
+	//if (m_xmf4x4World._42 < FLT_EPSILON) {
+	//	m_xmf4x4World._42 = 0.f;
+	//	m_xmfVel.y = 0.f;
+	//}
 
-	XMFLOAT3 newPos = SMathHelper::Subtract(GetPosition(), m_xmf3PrePosition);
-	XMStoreFloat3(&newPos, XMVector3Length(XMLoadFloat3(&newPos)));
-	if (SMathHelper::IsZero(newPos)) {
-		return false;
-	}
-	else {
-		//À§Ä¡°¡ ¹Ù²î¸é boundariesµµ ¹Ù²ñ
-		//m_boundaries->BoundaryMove(change);
-		return true;
-	}
+	//XMFLOAT3 newPos = SMathHelper::Subtract(GetPosition(), m_xmf3PrePosition);
+	//XMStoreFloat3(&newPos, XMVector3Length(XMLoadFloat3(&newPos)));
+	//if (SMathHelper::IsZero(newPos)) {
+	//	return false;
+	//}
+	//else {
+	//	//À§Ä¡°¡ ¹Ù²î¸é boundariesµµ ¹Ù²ñ
+	//	//m_boundaries->BoundaryMove(change);
+	//	return true;
+	//}
+	return true;
 }
 
 bool Object::BulletUpdate(float elapsedTime) {

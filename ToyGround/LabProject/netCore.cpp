@@ -521,12 +521,23 @@ void NetCore::SendGameStartPacket() {
 	SendPacket(&p, SV_BATTLE);
 }
 
-void NetCore::SendMovePacket(char key) {
-	cb_packet_move_key_status p;
+void NetCore::SendPositionPacket(XMFLOAT3 pos) {
+	cb_packet_position p;
 	p.size = sizeof(p);
-	p.type = key;
+	p.type = CB_POSITION_VECTOR;
+	p.id = m_client.battle_id;
+	p.pos.x = pos.x;
+	p.pos.y = pos.y;
+	p.pos.z = pos.z;
 	SendPacket(&p, SV_BATTLE);
 }
+
+//void NetCore::SendMovePacket(char key) {
+//	cb_packet_move_key_status p;
+//	p.size = sizeof(p);
+//	p.type = key;
+//	SendPacket(&p, SV_BATTLE);
+//}
 
 void NetCore::SendLookVectorPacket(XMFLOAT3& look) {
 	cb_packet_look_vector p;

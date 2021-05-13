@@ -386,7 +386,8 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 #ifdef DEBUG_CLIENT
 	SetPosition(pos.x, pos.y, pos.z);
 #elif DEBUG_SERVER
-	//SetPosition(Network::GetApp()->GetPos());
+	SetPosition(pos.x, pos.y, pos.z);
+	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, GetPosition());
 #endif
 	//if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
 }
@@ -416,6 +417,7 @@ void Character::Rotate(float pitch, float yaw, float roll)
 
 	m_World._11 = m_Right.x; m_World._12 = m_Right.y; m_World._13 = m_Right.z;
 	m_World._31 = m_Look.x; m_World._32 = m_Look.y; m_World._33 = m_Look.z;
+	
 	XMFLOAT3 t_look{ m_Look };
 	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOUSE, 1, t_look);
 }

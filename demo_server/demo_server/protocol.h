@@ -376,17 +376,6 @@ struct bc_packet_updated_user_info {
 #define CB_READY				4
 #define CB_START				5
 
-//#define CB_MOVE_KEY_STATUS		6
-#define CB_KEY_W_UP				60
-#define CB_KEY_W_DOWN			61
-#define CB_KEY_A_UP				62
-#define CB_KEY_A_DOWN			63
-#define CB_KEY_S_UP				64
-#define CB_KEY_S_DOWN			65
-#define CB_KEY_D_UP				66
-#define CB_KEY_D_DOWN			67
-#define CB_KEY_JUMP				68
-
 #define CB_BULLET				7
 #define CB_POSITION_VECTOR		8
 #define CB_LOOK_VECTOR			9
@@ -421,11 +410,12 @@ struct cb_packet_start {
 	BYTE type;
 };
 //key
-struct cb_packet_move_key_status {
+struct cb_packet_position {
 	BYTE size;
 	BYTE type;
 
-	//BYTE key;	//CB_KEY_@_DOWN, UP
+	int id;
+	PTC_VECTOR pos;
 };
 struct cb_packet_bullet {
 	BYTE size;

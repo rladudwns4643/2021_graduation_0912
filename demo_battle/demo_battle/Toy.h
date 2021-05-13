@@ -28,5 +28,6 @@ private:
 	unsigned short m_HP;
 	unsigned short m_MaxHP;
 	bool m_isShoot{ false };
+	bool m_animJump{ false };
 	float m_fAttackTime{};
 };

@@ -28,7 +28,6 @@ public:
 	XMFLOAT3 GetPrePosition()const;
 	void SetPrePosition(XMFLOAT3 xmfPosition);
 
-
 	XMFLOAT3 GetLook() const;
 	void SetLook(const float& x, const float& y, const float& z);
 	XMFLOAT3 GetPreLook() const;

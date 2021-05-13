@@ -47,24 +47,16 @@ public:
 	void SetCoin(size_t coin);
 	size_t GetCoin();
 
+	void SetPosition(XMFLOAT3 pos);
+	XMFLOAT3 GetPosition();
+
+	void SetLook(XMFLOAT3 look);
+	XMFLOAT3 GetLook();
+
 public:
 	virtual int GetAnimType() = 0;
 	int GetPrevAnimType();
 	void SetPrevAnimType(int animType);
-
-public:
-	void SetKeyW(bool input);
-	void SetKeyS(bool input);
-	void SetKeyA(bool input);
-	void SetKeyD(bool input);
-
-	void SetKeyJump(bool input);
-
-	bool GetKeyW();
-	bool GetKeyA();
-	bool GetKeyS();
-	bool GetKeyD();
-	bool GetKeyJump();
 
 protected:
 	int m_id;		//=g_clients key val
@@ -77,15 +69,10 @@ protected:
 
 	char m_idStr[MAX_ID_LEN];
 	int m_mmr;
-
-	bool m_keyW{ false };
-	bool m_keyA{ false };
-	bool m_keyS{ false };
-	bool m_keyD{ false };
-	bool m_keyJump{ false };
-	bool m_animJump{ false };
-
 	char m_prevAnimType;
 
 	float m_fTimeElapsedJump{};
+
+	XMFLOAT3 m_pos;
+	XMFLOAT3 m_look;
 };

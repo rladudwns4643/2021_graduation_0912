@@ -2,7 +2,7 @@
 #include "battleServer.h"
 #include "extern.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-#define LOG_ON
+//#define LOG_ON
 
 BattleServer::BattleServer() {
 	Initialize();

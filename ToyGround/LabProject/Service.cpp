@@ -162,13 +162,14 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_MAKE_MOVE: {
-		int key = NULL;
+		XMFLOAT3 arg_pos;
+
 		va_list ap;
 		va_start(ap, argsCount);
-		key = va_arg(ap, int);
+		arg_pos = va_arg(ap, XMFLOAT3);
 		va_end(ap);
 
-		NetCore::GetApp()->SendMovePacket(key);
+		NetCore::GetApp()->SendPositionPacket(arg_pos);
 		break;
 	}
 	case EVENT_GAME_CALLBACK_MOUSE: {

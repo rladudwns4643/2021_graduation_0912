@@ -235,19 +235,17 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		}
 		break;
 	}
-	case CB_KEY_W_UP: 
-	case CB_KEY_A_UP: 
-	case CB_KEY_S_UP: 
-	case CB_KEY_D_UP: 
-	case CB_KEY_W_DOWN: 
-	case CB_KEY_S_DOWN: 
-	case CB_KEY_A_DOWN: 
-	case CB_KEY_D_DOWN: {
-		msg.type = inputPacket[1];
-		break;
-	}
-	case CB_KEY_JUMP: {
-		msg.type = CB_KEY_JUMP;
+	case CB_POSITION_VECTOR: {
+		cb_packet_position* p = reinterpret_cast<cb_packet_position*>(inputPacket);
+		if (p == nullptr) {
+			msg.type = NO_MSG;
+			break;
+		}
+		msg.id = p->id;
+		msg.type = CB_POSITION_VECTOR;
+		msg.vec.x = p->pos.x;
+		msg.vec.y = p->pos.y;
+		msg.vec.z = p->pos.z;
 		break;
 	}
 	case CB_LOOK_VECTOR: {
