@@ -227,13 +227,13 @@ bool Room::EnterRoom(int id, bool is_roomMnr) {
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		if (m_players[i]->GetEmpty()) {
+			ATOMIC::g_clients_lock.lock();
 			m_curPlayerNum++;
 			m_players[i]->Enter();
 			m_players[i]->SetID(id);
 			m_players[i]->SetID_STR(SR::g_clients[id]->id_str);
 			m_players[i]->SetMMR(SR::g_clients[id]->mmr);
-			
-			ATOMIC::g_clients_lock.lock();
+
 			SR::g_clients[id]->room_id = m_roomNo;
 			ATOMIC::g_clients_lock.unlock();
 
@@ -256,7 +256,7 @@ void Room::AnnounceRoomEnter(int id) {
 	if (m_RoomMnr == m_players[enterID]->GetID())  is_enterID_mnr = true;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
-		if (!m_players[i]->GetEmpty()) {
+		if (m_players[i]->GetEmpty() == false) {
 			if (m_players[i]->GetID() == m_RoomMnr) {
 				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), true);
 			}
