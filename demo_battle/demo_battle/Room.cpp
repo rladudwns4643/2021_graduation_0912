@@ -98,37 +98,31 @@ void Room::Update() {
 		}
 		//WorldUpdate();
 		//Collision();
-
-		for (int i = 0; i < MAX_PLAYER; ++i) {
-			if (m_players[i]->GetID() != -1) { //not unset
-				if (m_players[i]->IsDead() == false) {
-					auto iter = m_players[i]->GetCurObject();
-
-					XMFLOAT3 curpos = iter->GetPosition();
-					XMFLOAT3 prepos = iter->GetPrePosition();
-					XMFLOAT3 subDistance;
-					subDistance = SMathHelper::Subtract(curpos, prepos);
-
-					if (fabs(subDistance.x) >= 0.1f
-						|| fabs(subDistance.y) >= 3.f
-						|| fabs(subDistance.z) >= 0.1f) {
-						PTC_VECTOR ptc_pos;
-						ptc_pos.x = curpos.x;
-						ptc_pos.y = curpos.y;
-						ptc_pos.z = curpos.z;
-
-						iter->SetPrePosition(curpos);
-
-						for (int j = 0; j < MAX_PLAYER; ++j) {
-							if (m_players[j]->GetID() != -1) {
-								PushPlayerPositionMsg(m_players[j]->GetID(), m_players[i]->GetID(), &ptc_pos);
-							}
-						}
-					}
-				}
-			}
-		}
-
+		//for (int i = 0; i < MAX_PLAYER; ++i) {
+		//	if (m_players[i]->GetID() != -1) { //not unset
+		//		if (m_players[i]->IsDead() == false) {
+		//			auto iter = m_players[i]->GetCurObject();
+		//			XMFLOAT3 curpos = iter->GetPosition();
+		//			XMFLOAT3 prepos = iter->GetPrePosition();
+		//			XMFLOAT3 subDistance;
+		//			subDistance = SMathHelper::Subtract(curpos, prepos);
+		//			if (fabs(subDistance.x) >= 0.1f
+		//				|| fabs(subDistance.y) >= 3.f
+		//				|| fabs(subDistance.z) >= 0.1f) {
+		//				PTC_VECTOR ptc_pos;
+		//				ptc_pos.x = curpos.x;
+		//				ptc_pos.y = curpos.y;
+		//				ptc_pos.z = curpos.z;
+		//				iter->SetPrePosition(curpos);
+		//				for (int j = 0; j < MAX_PLAYER; ++j) {
+		//					if (m_players[j]->GetID() != -1) {
+		//						PushPlayerPositionMsg(m_players[j]->GetID(), m_players[i]->GetID(), &ptc_pos);
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 		//for (auto iter = m_map->m_obj_list[Map::NOTFIXED].begin(); iter != m_map->m_obj_list[Map::NOTFIXED].end(); ++iter) {
 		//	XMFLOAT3 curpos = (*iter)->GetPosition();
 		//	XMFLOAT3 prepos = (*iter)->GetPrePosition();
@@ -153,7 +147,6 @@ void Room::Update() {
 		//		}
 		//	}
 		//}
-
 		//for (int i = 0; i < m_bullets.size(); ++i) {
 		//	if (m_bullets[i].isShoot()) {
 		//		XMFLOAT3 pos = m_bullets[i].GetPosition();
@@ -248,20 +241,25 @@ bool Room::EnterRoom(int id, bool is_roomMnr) {
 void Room::AnnounceRoomEnter(int id) {
 	//bool isMnr;
 	int enterID = -1;
-	bool is_enterID_mnr = false;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		if (m_players[i]->GetID() == id) enterID = i;
 	}
-	if (m_RoomMnr == m_players[enterID]->GetID())  is_enterID_mnr = true;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		if (m_players[i]->GetEmpty() == false) {
-			if (m_players[i]->GetID() == m_RoomMnr) {
-				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), true);
-			}
-			else {
-				BattleServer::GetInstance()->SendRoomEnterPacket(id, m_players[i]->GetID(), m_players[i]->GetReady(), i, m_players[i]->GetID_STR(), m_players[i]->GetMMR(), false);
+			if (m_players[i]->GetID() != enterID) {
+				int t_id{ m_players[i]->GetID() };
+				bool t_ready{ m_players[i]->GetReady() };
+				int t_mmr{ m_players[i]->GetMMR() };
+				char t_id_str[MAX_ID_LEN];
+				bool is_enterID_mnr = false;
+
+				memcpy(t_id_str, m_players[i]->GetID_STR(), sizeof(char) * MAX_ID_LEN);
+				//send for new user
+				BattleServer::GetInstance()->SendRoomEnterPacket(enterID, t_id, t_ready, i, t_id_str, t_mmr, false);
+				//send for old user
+				BattleServer::GetInstance()->SendRoomEnterPacket(t_id, enterID, m_players[enterID]->GetReady(), enterID, m_players[enterID]->GetID_STR(), m_players[enterID]->GetMMR(), false);
 			}
 		}
 	}
@@ -679,83 +677,20 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_KEY_W_DOWN: {
+	case CB_POSITION_VECTOR: {
 		for (auto& pl : m_players) {
-			if (msg.id == pl->GetID()) {
-				pl->SetKeyW(true);
-				break;
+			int t_id = msg.id;
+			PTC_VECTOR t_v;
+			t_v.x = msg.vec.x;
+			t_v.y = msg.vec.y;
+			t_v.z = msg.vec.z;
+			cout << "!!: " << t_v.x << " " << t_v.y << " " << t_v.z << endl;
+			if (t_id == pl->GetID()) {
+				pl->SetPosition(XMFLOAT3{ t_v.x, t_v.y, t_v.z });
+				PushPlayerPositionMsg(t_id, pl->GetID(), &t_v);
 			}
-		}
-		break;
-	}
-	case CB_KEY_W_UP: {
-		for (auto& pl : m_players) {
-			if (msg.id == pl->GetID()) {
-				pl->SetKeyW(false);
-				break;
-			}
-		}
-		break;
-	}
-	case CB_KEY_A_DOWN: {
-		for (auto& pl : m_players) {
-			if (msg.id == pl->GetID()) {
-				pl->SetKeyA(true);
-				break;
-			}
-		}
-		break;
-	}
-	case CB_KEY_A_UP: {
-		for (auto& pl : m_players) {
-			if (msg.id == pl->GetID()) {
-				pl->SetKeyA(false);
-				break;
-			}
-		}
-		break;
-	}
-	case CB_KEY_S_DOWN: {
-		for (auto& pl : m_players) {
-			if (msg.id == pl->GetID()) {
-				pl->SetKeyS(true);
-				break;
-			}
-		}
-		break;
-	}
-	case CB_KEY_S_UP: {
-		for (auto& pl : m_players) {
-			if (msg.id == pl->GetID()) {
-				pl->SetKeyS(false);
-				break;
-			}
-		}
-		break;
-	}
-	case CB_KEY_D_DOWN: {
-		for (auto& pl : m_players) {
-			if (msg.id == pl->GetID()) {
-				pl->SetKeyD(true);
-				break;
-			}
-		}
-		break;
-	}
-	case CB_KEY_D_UP: {
-		for (auto& pl : m_players) {
-			if (msg.id == pl->GetID()) {
-				pl->SetKeyD(false);
-				break;
-			}
-		}
-		break;
-	}
-	case CB_KEY_JUMP: {
-		for (auto& pl : m_players) {
-			if (msg.id == pl->GetID()) {
-				pl->SetKeyJump(true);
-				break;
+			else {
+				PushPlayerPositionMsg(pl->GetID(), t_id, &t_v);
 			}
 		}
 		break;
@@ -809,7 +744,7 @@ void Room::ProcMsg(message msg) {
 				}
 				else {
 					PTC_VECTOR recv_look{ msg.vec.x, msg.vec.y, msg.vec.z };
-					BattleServer::GetInstance()->SendPlayerRotation(id, msg.id, recv_look);
+					BattleServer::GetInstance()->SendPlayerLook(id, msg.id, recv_look);
 				}
 			}
 		}

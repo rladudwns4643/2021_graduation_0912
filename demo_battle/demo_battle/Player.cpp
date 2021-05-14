@@ -37,6 +37,8 @@ Player::~Player() {
 }
 
 void Player::Initialize() {
+	m_pos = XMFLOAT3{};
+	m_look = XMFLOAT3{};
 	m_id = -1;
 	m_cur = nullptr;
 	m_isEmpty = true;
@@ -46,12 +48,6 @@ void Player::Initialize() {
 	ZeroMemory(&m_idStr, sizeof(char) * 10);
 	m_mmr = 0;
 	m_prevAnimType = ANIM_IDLE;
-	m_keyW = false;
-	m_keyA = false;
-	m_keyS = false;
-	m_keyD = false;
-	m_keyJump = false;
-	m_animJump = false;
 }
 
 void Player::Reset() {
@@ -60,11 +56,6 @@ void Player::Reset() {
 	m_isDead = false;
 	m_isMoveable = false;
 	m_coin_cnt = 0;
-	m_keyW = false;
-	m_keyA = false;
-	m_keyS = false;
-	m_keyD = false;
-	m_keyJump = false;
 }
 
 void Player::SetCurObject(const int& spawn_pos_idx) {
@@ -143,50 +134,26 @@ size_t Player::GetCoin() {
 	return m_coin_cnt;
 }
 
+void Player::SetPosition(XMFLOAT3 pos) {
+	m_pos = pos;
+}
+
+XMFLOAT3 Player::GetPosition() {
+	return m_pos;
+}
+
+void Player::SetLook(XMFLOAT3 look) {
+	m_look = look;
+}
+
+XMFLOAT3 Player::GetLook() {
+	return m_look;
+}
+
 int Player::GetPrevAnimType() {
 	return m_prevAnimType;
 }
 
 void Player::SetPrevAnimType(int animType) {
 	m_prevAnimType = animType;
-}
-
-void Player::SetKeyW(bool input) {
-	m_keyW = input;
-}
-
-void Player::SetKeyS(bool input) {
-	m_keyS = input;
-}
-
-void Player::SetKeyA(bool input) {
-	m_keyA = input;
-}
-
-void Player::SetKeyD(bool input) {
-	m_keyD = input;
-}
-
-void Player::SetKeyJump(bool input) {
-	m_keyJump = input;
-}
-
-bool Player::GetKeyW() {
-	return m_keyW;
-}
-
-bool Player::GetKeyA() {
-	return m_keyA;
-}
-
-bool Player::GetKeyS() {
-	return m_keyS;
-}
-
-bool Player::GetKeyD() {
-	return m_keyD;
-}
-
-bool Player::GetKeyJump() {
-	return m_keyJump;
 }

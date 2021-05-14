@@ -29,12 +29,12 @@ void PlayerController::HandleInput(const float deltaT)
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-
+	
 	float speed = PLAYER_SPEED * deltaT;
 	XMVECTOR direction = {};
-
+	
 	DWORD dir = 0;
-
+	
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
 	case CameraType::eThird:
@@ -43,15 +43,13 @@ void PlayerController::HandleInput(const float deltaT)
 		if (GetAsyncKeyState('S') & 0x8000) dir |= DIR_BACKWARD;
 		if (GetAsyncKeyState('A') & 0x8000) dir |= DIR_LEFT;	
 		if (GetAsyncKeyState('D') & 0x8000) dir |= DIR_RIGHT;	
-
+	
 		if (dir != 0) {
-			if (m_Owner->Move(dir, speed)) {
-				Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOUSE, 1, m_Owner->GetLook());
-			}
+			m_Owner->Move(dir, speed);
 		}
 		break;
 	}
-	break;
+	//break;
 	//case CameraType::eFree:
 	//{
 	//	if (GetAsyncKeyState('W') & 0x8000) {
@@ -148,28 +146,23 @@ void PlayerController::OnKeyPressed()
 		if (InputHandler::IsKeyDown('W'))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_W_DOWN);
 		}
 		if (InputHandler::IsKeyDown('S'))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_S_DOWN);
 		}
 		if (InputHandler::IsKeyDown('A'))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_A_DOWN);
 		}
 		if (InputHandler::IsKeyDown('D'))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_D_DOWN);
 		}
 		if (InputHandler::IsKeyDown(VK_SPACE))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_JUMP);
 		}
 #endif
 		break;
@@ -212,24 +205,21 @@ void PlayerController::OnKeyReleased()
 		if (InputHandler::IsKeyUp('W'))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_W_UP);
 		}
 		if (InputHandler::IsKeyUp('S'))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_S_UP);
 		}
 		if (InputHandler::IsKeyUp('A'))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_A_UP);
 		}
 		if (InputHandler::IsKeyUp('D'))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, CB_KEY_D_UP);
 		}
 		if (InputHandler::IsKeyUp(VK_SPACE)) {}
+
 #endif
 		break;
 	}

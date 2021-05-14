@@ -63,7 +63,8 @@ public:
 	void SendReadyPacket();
 	void SendGameStartPacket();
 
-	void SendMovePacket(char key);
+	//void SendMovePacket(char key);
+	void SendPositionPacket(XMFLOAT3 pos);
 	void SendLookVectorPacket(XMFLOAT3& look);
 	void SendBulletPacket(XMFLOAT3& dir);
 

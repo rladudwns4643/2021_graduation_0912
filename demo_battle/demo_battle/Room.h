@@ -68,6 +68,7 @@ public:		//send msg
 	void PushReadyMsg(int id, bool ready);
 	void PushUnReadyMsg(int id);
 	void PushRoomStartAvailableMsg(int id, bool available);
+	void PushPositionMsg(int id, XMFLOAT3 position);
 
 	void PushNewRoomMnrMsg(int id);
 

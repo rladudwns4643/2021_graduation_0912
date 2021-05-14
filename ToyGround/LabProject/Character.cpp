@@ -6,6 +6,7 @@
 #include "CommandContext.h"
 #include "CommandCenter.h"
 #include "netCore.h"
+#include "Service.h"
 
 Character::Character(std::string type, std::string id) :
 	GameObject(type, id),
@@ -122,8 +123,6 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 	DWORD MoveBit = 3;
 	DWORD strafeBit = 12;
 
-	
-
 	if (dwDirection)
 	{
 		if (dwDirection == 15) // 모든 키가 눌렸을 경우
@@ -132,7 +131,6 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 			return false;
 		if ((dwDirection ^ strafeBit) == 0 || (dwDirection ^ strafeBit) == 15)	// ad가 동시에 눌렸을 경우
 			return false;
-
 
 		if (dwDirection & DIR_FORWARD)			direction = direction + look;
 		if (dwDirection & DIR_BACKWARD)			direction = direction - look;
@@ -315,7 +313,8 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 #ifdef DEBUG_CLIENT
 	SetPosition(pos.x, pos.y, pos.z);
 #elif DEBUG_SERVER
-	//SetPosition(Network::GetApp()->GetPos());
+	SetPosition(pos.x, pos.y, pos.z);
+	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, GetPosition());
 #endif
 	if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
 }

@@ -78,6 +78,6 @@ void Character::Initialize() {
 	m_forceAmountXZ = 10.f;
 	m_forceAmountY = 5.f;
 	m_fricCoef = 0.03f;
-	m_maxVel = 0.10f;		//이동속도
+	m_maxVel = 0.15f;		//이동속도
 	m_mass = 50.f;
 }

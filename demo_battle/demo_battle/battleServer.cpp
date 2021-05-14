@@ -2,7 +2,7 @@
 #include "battleServer.h"
 #include "extern.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-#define LOG_ON
+//#define LOG_ON
 
 BattleServer::BattleServer() {
 	Initialize();
@@ -218,6 +218,7 @@ void BattleServer::SendAutoRoomReadyPacket(int id, int room_no) {
 	p.type = BL_ROOMREADY;
 	p.id = id;
 	p.room_no = room_no;
+	p.is_host = true;
 	SendPacket(id, &p);
 }
 
@@ -299,7 +300,7 @@ void BattleServer::SendRoundStartPacket(int id) {
 	SendPacket(id, &p);
 }
 
-void BattleServer::SendPlayerRotation(int to, int from, PTC_VECTOR look) {
+void BattleServer::SendPlayerLook(int to, int from, PTC_VECTOR look) {
 #ifdef LOG_ON
 	cout << "SendPlayerRotation: " <<
 		"to: " << to <<

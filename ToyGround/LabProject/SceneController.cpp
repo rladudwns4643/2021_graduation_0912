@@ -10,7 +10,8 @@
 //임시
 #include "Service.h"
 
-static bool p{ false };
+static bool y{ false };
+static bool u{ false };
 LobbyController::LobbyController(LobbyScene* myScene) : m_MyScene(myScene)
 {
 }
@@ -24,8 +25,8 @@ void LobbyController::Update(const float deltaT)
 void LobbyController::HandleInput(const float deltaT)
 {
 	//임시로 로그인 없이 바로 dummy login packet 전송
-	if (GetAsyncKeyState('Y') & 0x8000 && p == false) {
-		p = true;
+	if (GetAsyncKeyState('Y') & 0x8000 && y == false) {
+		y = true;
 		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
 	}
 

@@ -43,7 +43,7 @@ public:
 	void SendCancelFindRoomPacket(int id);
 	void SendFindRoomPacket(int id, short room_no);
 	
-	void SendRequestRoomPacket(int id);
+	void SendRequestRoomPacket();
 	
 	void SendLBCheckPacket();
 
