@@ -507,16 +507,16 @@ void AssertsReference::BuildMaterials()
 	auto Cartoon_CubeWorld_Texture = std::make_unique<Material>();
 	Cartoon_CubeWorld_Texture->MatCBIndex = TEXTURE_INDEX_Cartoon_CubeWorld_Texture;
 	Cartoon_CubeWorld_Texture->DiffuseSrvHeapIndex = TEXTURE_INDEX_Cartoon_CubeWorld_Texture;
-	Cartoon_CubeWorld_Texture->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	Cartoon_CubeWorld_Texture->FresnelR0 = XMFLOAT3(0.1f, 0.1f, 0.1f);
-	Cartoon_CubeWorld_Texture->Roughness = 0.967734f;
+	Cartoon_CubeWorld_Texture->DiffuseAlbedo = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
+	Cartoon_CubeWorld_Texture->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
+	Cartoon_CubeWorld_Texture->Roughness = 0.987734f;
 
 	auto PolygonMinis_Texture_01_A = std::make_unique<Material>();
 	PolygonMinis_Texture_01_A->MatCBIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
 	PolygonMinis_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
-	PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	PolygonMinis_Texture_01_A->Roughness = 0.717734;
+	PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
+	PolygonMinis_Texture_01_A->Roughness = 0.967734f;
 
 	m_Materials["SkyBox"] = std::move(sky);
 	m_Materials[TEXTURE_STR_Cartoon_CubeWorld_Texture] = std::move(Cartoon_CubeWorld_Texture);

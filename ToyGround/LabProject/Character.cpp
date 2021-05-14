@@ -164,7 +164,6 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 		
 		if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
 			degree = -degree;
-		degree *= 1.0f;
 		
 		bool isChange = false;
 		
@@ -175,15 +174,11 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 				Rotate(0.f, XMConvertToRadians(degree), 0.f);
 				isChange = true;
 			}
-			else
-				Move(DIR_FORWARD, fDistance, true);
+			Move(DIR_FORWARD, fDistance, true);
 			degree = 0.f;
 		}
 		else
-		{
 			Move(dwDirection, fDistance, true);
-		}
-
 		return isChange;
 	}
 	return false;
