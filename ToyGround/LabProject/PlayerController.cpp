@@ -37,7 +37,6 @@ void PlayerController::HandleInput(const float deltaT)
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
-	case CameraType::eFirst:
 	case CameraType::eThird:
 	{
 		if (GetAsyncKeyState('W') & 0x8000) dir |= DIR_FORWARD;	
@@ -86,20 +85,8 @@ void PlayerController::MouseCallback()
 	// 마우스 이동
 	if (InputHandler::g_MoveMouseCallback)
 	{
-		// 1인칭 회전(자전)
-		if (m_Owner->m_MyCamera->GetCameraType() == CameraType::eFirst)
-		{
-			if (InputHandler::g_MouseChangebleY != 0.0f)
-			{
-				m_Owner->m_MyCamera->Rotate(InputHandler::g_MouseChangebleY, 0.f, 0.f);
-			}
-			if (InputHandler::g_MouseChangebleX != 0.f)
-			{
-				m_Owner->m_MyCamera->Rotate(0.f, InputHandler::g_MouseChangebleX, 0.f);
-			}
-		}
 		// 3인칭 회전(공전)
-		else if (m_Owner->m_MyCamera->GetCameraType() == CameraType::eThird && CommandCenter::GetApp()->m_StartAttackAnim == false)
+		if (m_Owner->m_MyCamera->GetCameraType() == CameraType::eThird && CommandCenter::GetApp()->m_StartAttackAnim == false)
 		{
 			if (InputHandler::g_MouseChangebleY != 0.0f || InputHandler::g_MouseChangebleX != 0.0f) {
 				m_Owner->m_MyCamera->Rotate(InputHandler::g_MouseChangebleY, InputHandler::g_MouseChangebleX, 0);
@@ -111,25 +98,6 @@ void PlayerController::MouseCallback()
 		ClientToScreen(Core::g_hMainWnd, &ptMouse);
 		SetCursorPos(ptMouse.x, ptMouse.y);
 		InputHandler::g_MoveMouseCallback = false;
-	}
-
-	if (InputHandler::g_RightMouseCallback)
-	{
-		if (m_Owner->m_IsThirdCamera)
-		{
-			m_Owner->SetCamera(CameraType::eFirst);
-			m_Owner->m_IsThirdCamera = !m_Owner->m_IsThirdCamera;
-			return;
-		}
-	}
-	else
-	{
-		if (!m_Owner->m_IsThirdCamera)
-		{
-			m_Owner->SetCamera(CameraType::eThird);
-			m_Owner->m_IsThirdCamera = !m_Owner->m_IsThirdCamera;
-			return;
-		}
 	}
 	if (InputHandler::g_LeftMouseCallback)
 	{
@@ -151,7 +119,6 @@ void PlayerController::OnKeyPressed()
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
-	case CameraType::eFirst:
 	case CameraType::eThird:
 #ifdef DEBUG_CLIENT
 		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
@@ -218,7 +185,6 @@ void PlayerController::OnKeyReleased()
 
 	switch (m_Owner->m_MyCamera->GetCameraType())
 	{
-	case CameraType::eFirst:
 	case CameraType::eThird:
 
 #ifdef DEBUG_CLIENT

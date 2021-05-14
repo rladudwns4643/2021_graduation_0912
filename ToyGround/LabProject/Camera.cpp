@@ -9,7 +9,6 @@ void Camera::SetCamera(CameraType cameraType, Character* owner)
 
 	switch (m_CameraType)
 	{
-	case CameraType::eFirst:
 	case CameraType::eThird:
 		mUp = owner->GetUp();
 		mRight = owner->GetRight();
@@ -65,12 +64,11 @@ void Camera::Initialize()
 	mViewDirty = true;
 }
 
-void Camera::Update(const XMFLOAT3& lookAt, float deltaT)
+void Camera::Update()
 {
 	switch (m_CameraType)
 	{
 	case CameraType::eFree:
-	case CameraType::eFirst:
 	{
 		XMFLOAT4X4 xmf4x4Rotate = MathHelper::Identity4x4();
 		XMFLOAT3 xmf3Right = mRight;
@@ -110,15 +108,7 @@ void Camera::Update(const XMFLOAT3& lookAt, float deltaT)
 
 		float fLength = MathHelper::Length(xmf3Direction);
 		xmf3Direction = MathHelper::Normalize(xmf3Direction);
-		float fTimeLagScale = (mTimeLag) ? deltaT * (1.0f / mTimeLag) : 1.0f;
-		float fDistance = fLength * fTimeLagScale;
-		if (fDistance > fLength) fDistance = fLength;
-		if (fLength < 0.01f) fDistance = fLength;
-		if (fDistance > 0)
-		{
-			mPosition = MathHelper::Add(mPosition, xmf3Direction, fDistance);
-			//LookAt(mPosition, lookAt,m_Owner->GetUp());
-		}
+		mPosition = MathHelper::Add(mPosition, xmf3Direction, fLength);
 
 		break;
 	}
@@ -489,64 +479,20 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 {
 	switch (m_CameraType)
 	{
-	case CameraType::eFirst:
-	{
-		if (fPitch)
-		{
-			// - 고개 관련
-			XMFLOAT3 xmf3Right = mRight;
-			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
-			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
-			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
-			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
-		}
-		if (m_Owner && fYaw)
-		{
-			XMFLOAT3 off = mOffset;
-			float distance = sqrtf((mOffset.x * mOffset.x) + (mOffset.z * mOffset.z));
-			
-			mPosition = m_Owner->GetPosition();
-		
-			XMFLOAT3 xmf3Up = m_Owner->GetUp();
-			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), (fYaw));
-			
-			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
-			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
-			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
-			
-			mPosition = MathHelper::Add(mPosition, mLook, distance);
-			mPosition.y += mOffset.y;
-		}
-		if (m_Owner && fRoll)
-		{
-			XMFLOAT3 xmf3Look = m_Owner->GetLook();
-			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
-			XMFLOAT3 xmPos = m_Owner->GetPosition();
-		
-			mPosition = MathHelper::Subtract(mPosition, xmPos);
-			mPosition = MathHelper::TransformCoord(mPosition, xmmtxRotate);
-			mPosition = MathHelper::Add(mPosition, m_Owner->GetPosition());
-		
-			mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
-			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
-			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
-		}
-		m_Owner->Rotate(0.f, fYaw, 0.f);
-		break;
-	}
 	case CameraType::eThird:
 	{
 		if (m_Owner && fPitch)
 		{
 			XMFLOAT3 xmf3Right = mRight;
-			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
+			XMMATRIX xmmtxRotate = DirectX::XMMatrixRotationAxis(XMLoadFloat3(&xmf3Right), fPitch);
 
 			XMFLOAT3 calLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
 			XMFLOAT3 upVec = { 0.f, 1.f, 0.f };
 
 			XMVECTOR projVec = XMVectorMultiply(XMVector3Dot(XMLoadFloat3(&calLook), XMLoadFloat3(&upVec)), XMLoadFloat3(&upVec));
 
-			float cosValue = XMVectorGetX(XMVector3Dot(XMLoadFloat3(&calLook), projVec));
+
+			float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&calLook), projVec));
 			float acosValue = 0.f;
 			if (cosValue <= -1.f)
 				acosValue = 3.141592;
@@ -556,15 +502,14 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 				acosValue = acos(cosValue);
 			float degree = XMConvertToDegrees(acosValue);
 
-			float ccw = XMVectorGetX(XMVector3Dot(XMLoadFloat3(&mRight), XMVector3Cross(XMLoadFloat3(&calLook), (projVec))));
-			if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
+			float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&mRight), DirectX::XMVector3Cross(XMLoadFloat3(&calLook), (projVec))));
+			if (ccw > 0)
 				degree = -degree;
 			degree += 90.f;
 
 			// cout << degree << endl;
 
-			// pitch 각도 제한 두기
-			if (degree < 90.f)
+			if (degree < 80.f || degree > 165.f)
 			{
 				mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
 				mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
@@ -575,8 +520,6 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 
 				XMStoreFloat3(&mPosition, XMVector3Rotate(XMLoadFloat3(&mPosition), q));
 			}
-			else if(degree > 170.f)
-				degree = 170.f;
 		}
 		if (m_Owner && fYaw)
 		{
@@ -586,20 +529,7 @@ void Camera::Rotate(float fPitch, float fYaw, float fRoll)
 			mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
 			mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
 		}
-		//if (m_Owner && fRoll)
-		//{
-		//	XMFLOAT3 xmf3Look = m_Owner->GetLook();
-		//	XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (fRoll));
-		//	XMFLOAT3 xmPos = m_Owner->GetPosition();
-		//
-		//	mPosition = MathHelper::Subtract(mPosition, xmPos);
-		//	mPosition = MathHelper::TransformCoord(mPosition, xmmtxRotate);
-		//	mPosition = MathHelper::Add(mPosition, m_Owner->GetPosition());
-		//
-		//	mLook = MathHelper::TransformNormal(mLook, xmmtxRotate);
-		//	mUp = MathHelper::TransformNormal(mUp, xmmtxRotate);
-		//	mRight = MathHelper::TransformNormal(mRight, xmmtxRotate);
-		//}
+		Update();
 		break;
 	}
 	case CameraType::eFree:

@@ -39,27 +39,6 @@ void Character::Update(const float deltaT)
 
 	m_AnimationController->Update(deltaT);
 	//WeaponUpdate();
-
-	// 카메라 변환
-	if (m_MyCamera != NULL)
-	{
-		CameraType cType = m_MyCamera->GetCameraType();
-
-		if (cType == CameraType::eThird)
-		{
-			XMFLOAT3 target = GetPosition();
-			target.y += 200;
-			m_MyCamera->Update(target, deltaT);
-			//CameraUpdate(deltaT);
-		}
-		else if (cType == CameraType::eFirst)
-		{
-			XMFLOAT3 target = GetPosition();
-			// target.y += 200;
-			m_MyCamera->Update(target, deltaT);
-			//CameraUpdate(deltaT);
-		}
-	}
 }
 
 void Character::WeaponUpdate()
@@ -109,52 +88,10 @@ void Character::SetCamera(CameraType cameraType)
 
 	switch (cameraType)
 	{
-	case CameraType::eFirst:
-	{
-		m_MyCamera->SetTimeLag(0.f);
-		m_MyCamera->SetOffset(XMFLOAT3(0.0f, 160.f, 20.0f));
-
-		XMVECTOR direction = {};
-		XMFLOAT3 dir;
-		DirectX::XMStoreFloat3(&dir, m_MyCamera->GetLook());
-		dir.y = 0.f;
-		direction = DirectX::XMVector3Normalize(XMLoadFloat3(&dir));
-
-		XMFLOAT3 cLook = m_Look;
-		cLook.y = 0.f;
-		cLook = MathHelper::Normalize(cLook);
-
-		float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(direction, XMLoadFloat3(&cLook)));
-
-		XMFLOAT3 cUp = m_Up;
-		cUp.y = 0.f;
-		//cUp = MathHelper::Normalize(cUp);
-
-		float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&cUp), DirectX::XMVector3Cross(direction, XMLoadFloat3(&cLook))));
-
-		float acosValue = 0.f;
-
-		acosValue = acos(cosValue);
-
-		float degree = XMConvertToDegrees(acosValue);
-
-		if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
-			degree = -degree;
-		degree *= 0.9f;
-
-		if (fabs(degree) > 1.f)
-			Rotate(0.f, XMConvertToRadians(degree), 0.f);
-
-		//m_MyCamera->SetRotation({ 0.f, 0.f, 0.f });
-		//m_MyCamera->Rotate(InputHandler::g_MouseChangebleY, InputHandler::g_MouseChangebleX, 0.f);
-		break;
-	}
 	case CameraType::eThird:
 		m_MyCamera->SetTimeLag(0.0f);
-		if (m_Bounds.Extents.x > 100.f)
-			m_MyCamera->SetOffset(XMFLOAT3(m_Bounds.Extents.x * 0.35f, m_Bounds.Extents.y * 1.3f + STD_CUBE_SIZE, -m_Bounds.Extents.x * 2.3f - m_Bounds.Extents.y * 1.5f));
-		else
-			m_MyCamera->SetOffset({ m_Bounds.Extents.x + m_Bounds.Extents.x * 0.05f, m_Bounds.Extents.y * 2.f, -m_Bounds.Extents.x * 2 * 2.5f - m_Bounds.Extents.y * 2.f });
+		
+		m_MyCamera->SetOffset({ m_Bounds.Extents.x + m_Bounds.Extents.x * 0.5f, m_Bounds.Extents.y * 1.2f, -m_Bounds.Extents.x - m_Bounds.Extents.y * 2.f });
 		
 		m_MyCamera->SetRotation({ 0.f, 0.f, 0.f });
 		break;
@@ -215,7 +152,6 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 		float cosValue = DirectX::XMVectorGetX(DirectX::XMVector3Dot(direction, XMLoadFloat3(&cLook)));
 		
 		XMFLOAT3 cUp = m_Up;
-		//cUp.y = 0.f;
 		cUp = MathHelper::Normalize(cUp);
 		
 		float ccw = DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMLoadFloat3(&cUp), DirectX::XMVector3Cross(direction, XMLoadFloat3(&cLook))));
@@ -228,7 +164,7 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 		
 		if (ccw > 0)	// ccw가 양수이면 반시계로 돌아야함
 			degree = -degree;
-		degree *= 0.9f;
+		degree *= 1.0f;
 		
 		bool isChange = false;
 		
@@ -287,9 +223,6 @@ void Character::SetPosition(float posX, float posY, float posZ)
 	m_World._43 = posZ;
 
 	XMFLOAT3 shift = { posX - prePos.x, posY - prePos.y, posZ - prePos.z };
-
-	// FreeType일때
-	if (m_MyCamera) m_MyCamera->Move(shift);
 }
 
 void Character::SetPosition(DirectX::XMFLOAT3 xmPos)
@@ -389,7 +322,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 #elif DEBUG_SERVER
 	//SetPosition(Network::GetApp()->GetPos());
 #endif
-	//if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
+	if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
 }
 
 void Character::Rotate(float pitch, float yaw, float roll)
@@ -417,125 +350,4 @@ void Character::Rotate(float pitch, float yaw, float roll)
 
 	m_World._11 = m_Right.x; m_World._12 = m_Right.y; m_World._13 = m_Right.z;
 	m_World._31 = m_Look.x; m_World._32 = m_Look.y; m_World._33 = m_Look.z;
-}
-
-bool Character::RayMapTriangleIntersect(XMVECTOR orig, XMVECTOR dir, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, XMVECTOR& P)
-{
-	XMVECTOR v0v1 = DirectX::XMVectorSubtract(v1, v0);
-	XMVECTOR v0v2 = DirectX::XMVectorSubtract(v2, v0);
-
-	XMVECTOR N = DirectX::XMVector3Cross(v0v1, v0v2);	// 시계 방향 순서로
-	// float area2 = DirectX::XMVectorGetX(DirectX::XMVector3Length(N));
-
-	// Step1 : finding P
-
-	// check if ray and plane are parallel?
-	float NdotrayDirection = DirectX::XMVectorGetX(DirectX::XMVector3Dot(N, dir));
-	if (fabs(NdotrayDirection) < FLT_EPSILON)
-		return false;
-
-	// compute d parameter using equation 2
-	// Ax + By + Cz + D = 0
-	// (A, B, C) --> plane Normal
-	float d = DirectX::XMVectorGetX(DirectX::XMVector3Dot(N, v0));
-
-	// compute t 
-	float t = (DirectX::XMVectorGetX(DirectX::XMVector3Dot(N, orig)) + d) / NdotrayDirection;
-	// check if the triangle is in behind the ray
-	if (t < 0)
-		return false;
-
-	// compute the intersection point using equation 1
-	P = orig + t * dir;	// Local Pos
-
-	// Step 2: inside-outside test
-	XMVECTOR C;
-
-	// edge 0
-	XMVECTOR e0 = v1 - v0;
-	XMVECTOR vp0 = P - v0;
-	C = XMVector3Cross(vp0, e0);
-	float tmp = XMVectorGetX(XMVector3Dot(N, C));
-	if (XMVectorGetX(XMVector3Dot(N, C)) > 0)
-		return false;
-
-	// edge 1
-	XMVECTOR e1 = v2 - v1;
-	XMVECTOR vp1 = P - v1;
-	C = XMVector3Cross(vp1, e1);
-	tmp = XMVectorGetX(XMVector3Dot(N, C));
-	if (XMVectorGetX(XMVector3Dot(N, C)) > 0)
-		return false;
-
-	// edge 2
-	XMVECTOR e2 = v0 - v2;
-	XMVECTOR vp2 = P - v2;
-	C = XMVector3Cross(vp2, e2);
-	tmp = XMVectorGetX(XMVector3Dot(N, C));
-	if (XMVectorGetX(XMVector3Dot(N, C)) > 0)
-		return false;
-
-
-	return true;
-
-}
-
-bool Character::RayObjTriangleIntersect(XMVECTOR orig, XMVECTOR dir, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, XMVECTOR& P)
-{
-	XMVECTOR v0v1 = DirectX::XMVectorSubtract(v1, v0);
-	XMVECTOR v0v2 = DirectX::XMVectorSubtract(v2, v0);
-
-	XMVECTOR N = DirectX::XMVector3Cross(v0v1, v0v2);	// 시계 방향 순서로
-	// float area2 = DirectX::XMVectorGetX(DirectX::XMVector3Length(N));
-
-	// Step1 : finding P
-
-	// check if ray and plane are parallel?
-	float NdotrayDirection = DirectX::XMVectorGetX(DirectX::XMVector3Dot(N, dir));
-	if (fabs(NdotrayDirection) < FLT_EPSILON)
-		return false;
-
-	// compute d parameter using equation 2
-	// Ax + By + Cz + D = 0
-	// (A, B, C) --> plane Normal
-	float d = -DirectX::XMVectorGetX(DirectX::XMVector3Dot(N, v0));
-
-	// compute t 
-	float t = -(DirectX::XMVectorGetX(DirectX::XMVector3Dot(N, orig)) + d) / NdotrayDirection;
-	// check if the triangle is in behind the ray
-	// if (t < 0)
-	// 	return false;
-
-	// compute the intersection point using equation 1
-	P = orig + t * dir;	// Local Pos
-
-	// Step 2: inside-outside test
-	XMVECTOR C;
-
-	// edge 0
-	XMVECTOR e0 = v1 - v0;
-	XMVECTOR vp0 = P - v0;
-	C = XMVector3Cross(vp0, e0);
-	float tmp = XMVectorGetX(XMVector3Dot(N, C));
-	if (XMVectorGetX(XMVector3Dot(N, C)) > 0)
-		return false;
-
-	// edge 1
-	XMVECTOR e1 = v2 - v1;
-	XMVECTOR vp1 = P - v1;
-	C = XMVector3Cross(vp1, e1);
-	tmp = XMVectorGetX(XMVector3Dot(N, C));
-	if (XMVectorGetX(XMVector3Dot(N, C)) > 0)
-		return false;
-
-	// edge 2
-	XMVECTOR e2 = v0 - v2;
-	XMVECTOR vp2 = P - v2;
-	C = XMVector3Cross(vp2, e2);
-	tmp = XMVectorGetX(XMVector3Dot(N, C));
-	if (XMVectorGetX(XMVector3Dot(N, C)) > 0)
-		return false;
-
-
-	return true;
 }

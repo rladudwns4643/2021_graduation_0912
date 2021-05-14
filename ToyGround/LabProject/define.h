@@ -89,8 +89,8 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 }	
 
 // 마우스 관련(DPI = Dots Per Inch)
-#define MOUSE_DPI_X 0.3f
-#define MOUSE_DPI_Y 0.3f
+#define MOUSE_DPI_X 0.05f
+#define MOUSE_DPI_Y 0.05f
 
 // 이동관련 키보드
 #define DIR_FORWARD					0x01
@@ -106,7 +106,7 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 
 // enum class
 enum class SceneType { eLobby = 0, eGamePlay = 1, eCount = 2};
-enum class CameraType { eFirst = 0, eThird = 1, eFree = 2 };
+enum class CameraType { eThird = 0, eFree = 1 };
 
 // 맵 디파인값이 연속적이여야함
 #define GAME_MAP			0

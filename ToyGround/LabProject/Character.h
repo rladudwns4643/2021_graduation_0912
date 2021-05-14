@@ -58,10 +58,6 @@ public:
 
 	virtual void	Rotate(float pitch, float yaw, float roll) override;
 
-private:
-	bool		RayMapTriangleIntersect(XMVECTOR orig, XMVECTOR dir, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, XMVECTOR& P);
-	bool		RayObjTriangleIntersect(XMVECTOR orig, XMVECTOR dir, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, XMVECTOR& P);
-
 public:
 	// 캐릭터 컴포넌트들
 	Camera									*m_MyCamera;

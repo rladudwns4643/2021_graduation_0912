@@ -78,6 +78,8 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->SetAnimationController(AssertsReference::GetApp()->m_SkinnedModelInsts[meshName].get());
 	chr->m_SkinnedCBIndex = skinnedCBIndex;
 	chr->m_PlayerID = skinnedCBIndex;
+	chr->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[meshName]->Center;
+	chr->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[meshName]->Extents;
 }
 
 void ApplicationContext::CreateWeapon(std::string weaponName, std::string subWeaponName, std::string partName)

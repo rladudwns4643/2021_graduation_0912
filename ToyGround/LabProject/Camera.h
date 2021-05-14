@@ -30,7 +30,7 @@ public:
 	CameraType GetCameraType();
 
 	virtual void Initialize();
-	virtual void Update(const XMFLOAT3& lookAt, float deltaT);
+	virtual void Update();
 
 public:
 	explicit Camera(CameraType cameraType = CameraType::eThird);
