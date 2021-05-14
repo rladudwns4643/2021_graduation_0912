@@ -24,20 +24,25 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
+#ifdef DEBUG_SERVER
 	//임시로 로그인 없이 바로 dummy login packet 전송
 	if (GetAsyncKeyState('Y') & 0x8000 && y == false) {
 		y = true;
 		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
 	}
 
+	if (GetAsyncKeyState('U') & 0x8000 && u == false) {
+		u = true;
+		NetCore::GetApp()->SendReadyPacket();
+	}
+#endif
 
-	if (GetAsyncKeyState('T') & 0x8000 && p == false) {
-		p = true;
+#ifdef DEBUG_CLIENT
+	if (GetAsyncKeyState('T') & 0x8000 && y == false) {
+		y = true;
 		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 	}
-	//if (GetAsyncKeyState('U') & 0x8000) {
-	//	NetCore::GetApp()->SendBattleRoomJoinPacket();
-	//}
+#endif
 }
 
 void LobbyController::MouseCallback()

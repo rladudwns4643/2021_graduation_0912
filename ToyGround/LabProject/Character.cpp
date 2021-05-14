@@ -344,4 +344,7 @@ void Character::Rotate(float pitch, float yaw, float roll)
 
 	m_World._11 = m_Right.x; m_World._12 = m_Right.y; m_World._13 = m_Right.z;
 	m_World._31 = m_Look.x; m_World._32 = m_Look.y; m_World._33 = m_Look.z;
+
+	XMFLOAT3 t_look{ m_Look };
+	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOUSE, 1, t_look);
 }
