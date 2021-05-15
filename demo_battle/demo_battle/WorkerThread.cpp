@@ -116,6 +116,11 @@ void WorkerThread::ProcThread() {
 			SR::g_rooms[room_id]->FlushSendMsg();
 			break;
 		}
+		case EV_ADD_COIN: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->SendAddCoinPacket();//
+			break;
+		}
 		case EV_MOVE_ENABLE: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->MakeMove(key);

@@ -52,6 +52,16 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		cout << "left Time: " << t << endl;
 		break;
 	}
+	case EVENT_GAME_ADD_COIN: {
+		XMFLOAT3 arg_pos;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_pos = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+		//todo: draw coin
+		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
+		break;
+	}
 	case EVENT_GAME_CALLBACK_MOVE: {
 		int arg_id;
 		XMFLOAT3 arg_pos;

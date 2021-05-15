@@ -54,6 +54,7 @@
 
 //------------------------------------------------------------------
 #define MAX_ROOM_COUNT 5
+#define ADD_COIN_TIME 10 //second
 //------------------------------------------------------------------
 
 
@@ -179,6 +180,7 @@ struct cl_packet_cancel_automatch {
 #define BC_LEFT_TIME			12
 #define BC_ROUND_START			13
 
+#define BC_ADD_COIN				24
 #define BC_PLAYER_POS			14
 #define BC_PLAYER_ROT			15
 #define BC_OBJECT_POS			16
@@ -285,6 +287,12 @@ struct bc_packet_game_over {
 
 	char win_team;
 };
+struct bc_packet_add_coin {
+	BYTE size;
+	BYTE type;
+
+	PTC_VECTOR pos;
+};
 struct bc_packet_left_time {
 	BYTE size;
 	BYTE type;
@@ -376,6 +384,7 @@ struct bc_packet_updated_user_info {
 #define CB_READY				4
 #define CB_START				5
 
+#define CB_GET_COIN				6
 #define CB_BULLET				7
 #define CB_POSITION_VECTOR		8
 #define CB_LOOK_VECTOR			9
@@ -409,13 +418,16 @@ struct cb_packet_start {
 	BYTE size;
 	BYTE type;
 };
-//key
 struct cb_packet_position {
 	BYTE size;
 	BYTE type;
 
 	int id;
 	PTC_VECTOR pos;
+};
+struct cb_packet_get_coin {
+	BYTE size;
+	BYTE type;
 };
 struct cb_packet_bullet {
 	BYTE size;

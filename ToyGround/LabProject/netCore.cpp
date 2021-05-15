@@ -340,6 +340,16 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	//in game
+	case BC_ADD_COIN: {
+		bc_packet_add_coin* p = reinterpret_cast<bc_packet_add_coin*>(packet_buf);
+		XMFLOAT3 arg_pos;
+		arg_pos.x = p->pos.x;
+		arg_pos.y = p->pos.y;
+		arg_pos.z = p->pos.z;
+
+		Service::GetApp()->AddEvent(EVENT_GAME_ADD_COIN, 1, arg_pos);
+		break;
+	}
 	case BC_PLAYER_POS: {
 		bc_packet_player_pos* p = reinterpret_cast<bc_packet_player_pos*>(packet_buf);
 
@@ -538,6 +548,14 @@ void NetCore::SendPositionPacket(XMFLOAT3 pos) {
 //	p.type = key;
 //	SendPacket(&p, SV_BATTLE);
 //}
+
+void NetCore::SendGetCoinPacket() {
+	cb_packet_get_coin p;
+	p.size = sizeof(p);
+	p.type = CB_GET_COIN;
+
+	SendPacket(&p, SV_BATTLE);
+}
 
 void NetCore::SendLookVectorPacket(XMFLOAT3& look) {
 	cb_packet_look_vector p;

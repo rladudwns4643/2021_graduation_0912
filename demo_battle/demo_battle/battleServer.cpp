@@ -316,6 +316,17 @@ void BattleServer::SendPlayerLook(int to, int from, PTC_VECTOR look) {
 	SendPacket(to, &p);
 }
 
+void BattleServer::SendAddCoinPacket(int id, PTC_VECTOR coin_pos) {
+//#ifdef LOG_ON
+	cout << "SendAddCoinPacket: " << id << " coin_pos: [" << coin_pos.x << ", " << coin_pos.y << ", " << coin_pos.z << "]" << endl;
+//#endif
+	bc_packet_add_coin p;
+	p.size = sizeof(p);
+	p.type = BC_ADD_COIN;
+	p.pos = coin_pos;
+	SendPacket(id, &p);
+}
+
 void BattleServer::SendLeftTimePacket(int id, char left_time) {
 #ifdef LOG_ON
 	cout << "SendLeftTimePacket: " << id << " lefttime: " << left_time << endl;
