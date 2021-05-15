@@ -348,7 +348,7 @@ void Room::CheckGameState() {
 	if (m_leftTime <= MAX_LEFT_TIME - COUNTDOWN_TIME) {
 		if (!m_isRoundStarted) {
 			m_isRoundStarted = true;
-			cout << "---RoundStart---\n";
+			//cout << "---RoundStart---\n";
 			RoundStart();
 		}
 	}
@@ -390,6 +390,8 @@ void Room::RoundStart() {
 		const int& id = m_players[i]->GetID();
 		if (id != -1) {
 			BattleServer::GetInstance()->SendRoundStartPacket(id);
+			EVENT ev_update{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(2), EV_ADD_COIN };
+			BattleServer::GetInstance()->AddTimer(ev_update);
 		}
 	}
 }
@@ -457,11 +459,13 @@ void Room::FlushSendMsg() {
 }
 
 void Room::PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info) {
+#ifdef LOG_ON
 	cout << "[ROOM] PushPlayerPositionMsg: " <<
 		"to: " << to << " from: " << from <<
 		" px: " << position_info->x <<
 		" py: " << position_info->y <<
 		" pz: " << position_info->x << endl;
+#endif //LOG_ON
 	bc_packet_player_pos p;
 	p.size = sizeof(p);
 	p.type = BC_PLAYER_POS;
@@ -684,7 +688,6 @@ void Room::ProcMsg(message msg) {
 			t_v.x = msg.vec.x;
 			t_v.y = msg.vec.y;
 			t_v.z = msg.vec.z;
-			cout << "!!: " << t_v.x << " " << t_v.y << " " << t_v.z << endl;
 			if (t_id == pl->GetID()) {
 				pl->SetPosition(XMFLOAT3{ t_v.x, t_v.y, t_v.z });
 				PushPlayerPositionMsg(t_id, pl->GetID(), &t_v);
@@ -709,7 +712,9 @@ void Room::ProcMsg(message msg) {
 					break;
 				}
 				else if (i + 1 == MAX_BULLET_COUNT) {
+#ifdef LOG_ON
 					cout << "bullet max\n";
+#endif //LOG_ON
 				}
 			}
 		}

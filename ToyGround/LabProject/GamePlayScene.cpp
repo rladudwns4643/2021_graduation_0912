@@ -122,15 +122,18 @@ bool GameplayScene::Enter()
 	AppContext->DisplayProps(m_MapName);
 //	AppContext->DisplayProps(m_MapName, true, 0.5f);
 
+#ifdef DEBUG_SERVER
 	int cnt = Service::GetApp()->GetBattleClientsCount();
 	m_player_in_room.resize(cnt);
 	Service::GetApp()->AddEvent(EVENT_GAME_START);
+#endif
 
-	//m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
-	//m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;
-	//m_Users[m_PlayerID]->m_MapName = m_MapName;
-	//m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
-
+#ifdef DEBUG_CLIENT
+	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
+	m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;
+	m_Users[m_PlayerID]->m_MapName = m_MapName;
+	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
+#endif
 	///---
 	// Player type, id 등등 세팅
 	for (auto& u : m_Users) {

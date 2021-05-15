@@ -169,7 +169,9 @@ SOCKADDR_IN BattleServer::GetServerAdder() {
 void BattleServer::SendPacket(int id, void* buff) {
 	char* p = reinterpret_cast<char*>(buff);
 	BYTE packet_size = (BYTE)p[0];
+#ifdef LOG_ON
 	cout << "[main]: Send: " << (int)p[1] << " id: " << id << endl;
+#endif //LOG_ON
 	EX_OVER* send_over = new EX_OVER;
 	//memset(send_over, 0, sizeof(EX_OVER));
 	ZeroMemory(send_over, sizeof(EX_OVER));
