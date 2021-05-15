@@ -45,7 +45,6 @@ public:
 	std::map<std::string, std::unique_ptr<SkinnedModelInstance>> m_SkinnedModelInsts;
 	std::unordered_map<std::string, std::unique_ptr<Material>>	m_Materials;
 	std::map<std::string, std::unique_ptr<BoundingBox>> m_PropBoundingBox;
-	int mapArray[MAP_HEIGHT_BLOCK_NUM][MAP_DEPTH_BLOCK_NUM][MAP_WIDTH_BLOCK_NUM];
 
 	std::vector<std::string> m_propTypeVector;
 };

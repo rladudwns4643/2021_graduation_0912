@@ -116,7 +116,11 @@ bool GameplayScene::Enter()
 	TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.57735f, -0.81735f, -1.07735 };
 
 	// Player Setting
+#ifdef DEBUG_CLIENT
+	m_PlayerID = 0;
+#elif DEBUG_SERVER
 	m_PlayerID = Service::GetApp()->GetMyBattleID();
+#endif
 	// Props Setting
 	m_MapName = MAP_STR_GAME_MAP;
 	AppContext->DisplayProps(m_MapName);
@@ -130,6 +134,7 @@ bool GameplayScene::Enter()
 	m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;
 	m_Users[m_PlayerID]->m_MapName = m_MapName;
 	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
+	m_Users[1]->m_PlayerID = 1;
 
 	///---
 	// Player type, id 등등 세팅

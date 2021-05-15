@@ -89,8 +89,8 @@ void Core::TerminateApplication(IGameApp& game)
 	// Context Release
 	GameCore::DestroyApp();
 	GameTimer::DestroyApp();
-	NetCore::DestroyApp();
-	Service::DestroyApp();
+	//NetCore::DestroyApp();
+	//Service::DestroyApp();
 }
 
 void Core::CalculateFrameStats()

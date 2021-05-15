@@ -18,6 +18,8 @@ Character::Character(std::string type, std::string id) :
 	m_Right = { 1,0,0 };
 	m_Up = { 0,1,0 };
 	m_Look = { 0,0,1 };
+
+	SetIndexPos(m_Position);
 }
 
 Character::~Character()
@@ -41,25 +43,19 @@ void Character::Update(const float deltaT)
 
 	m_AnimationController->Update(deltaT);
 
-	//WeaponUpdate();
+	WeaponUpdate();
 }
 
 void Character::WeaponUpdate()
 {
-	Map* originMap = AppContext->m_Maps[m_MapName];
-
-	//if (m_PlayerID == 0)
-	//{
-	//	GameObject* leftWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(1));
-	//	leftWeapon->SetPosition(m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._41,
-	//							m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._42,
-	//							m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._43);
-	//	leftWeapon->
-	//	GameObject* RightWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(2));
-	//	RightWeapon->SetPosition(m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._41,
-	//							m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._42,
-	//							m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._43);
-	//}
+	if (m_PlayerID == 0)
+	{
+		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap[OBJECT_MESH_STR_REVOLVER]->GetInstanceKeyMap();
+		for (auto& i : info)
+		{
+			AppContext->m_RItemsVec[i.second]->SetPosition(GetPosition());
+		}
+	}
 	//else
 	//{
 	//	GameObject* leftWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(3));
@@ -222,11 +218,25 @@ void Character::SetPosition(float posX, float posY, float posZ)
 	m_World._43 = posZ;
 
 	XMFLOAT3 shift = { posX - prePos.x, posY - prePos.y, posZ - prePos.z };
+
+	if (m_MyCamera) m_MyCamera->Move(shift);
 }
 
 void Character::SetPosition(DirectX::XMFLOAT3 xmPos)
 {
 	SetPosition(xmPos.x, xmPos.y, xmPos.z);
+}
+
+void Character::SetIndexPos(float posX, float posY, float posZ)
+{
+	m_IndexPosX = (int)((posX + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_WIDTH_BLOCK_NUM / 2));
+	m_IndexPosY = (int)(posY / STD_CUBE_SIZE) + 1;
+	m_IndexPosZ = (int)((posZ + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_DEPTH_BLOCK_NUM / 2));
+}
+
+void Character::SetIndexPos(DirectX::XMFLOAT3 xmPos)
+{
+	SetIndexPos(xmPos.x, xmPos.y, xmPos.z);
 }
 
 void Character::SetAnimationController(SkinnedModelInstance* skinnedModelInst)
@@ -316,13 +326,77 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 {
 	XMFLOAT3 pos = MathHelper::Add(GetPosition(), xmf3Shift);
 
+	// 벽출돌 계산
+	if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.x))
+		pos.x = (MAP_WIDTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.x);
+	if (pos.x <= -((MAP_WIDTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.x)))
+		pos.x = -((MAP_WIDTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.x));
+	if (pos.z >= (MAP_DEPTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.z))
+		pos.z = (MAP_DEPTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.z);
+	if (pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.z)))
+		pos.z = -((MAP_DEPTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.z));
+	if (pos.y < 0.0f)
+		pos.y = 0.0f;
+
+	int preIndexPosX = m_IndexPosX;
+	int preIndexPosY = m_IndexPosY;
+	int preIndexPosZ = m_IndexPosZ;
+
+	SetIndexPos(pos);
+	
+	if (preIndexPosX != m_IndexPosX || preIndexPosY != m_IndexPosY || preIndexPosZ != m_IndexPosZ)
+		cout << "X: " << m_IndexPosX << " Y: " << m_IndexPosY << " Z: " << m_IndexPosZ << endl;
+
+	Map* originMap = AppContext->m_Maps[m_MapName];
+	for (auto& p : originMap->mapInfoVector)
+	{
+		for (int i = 0; i < 81; i += 3)
+		{
+			int aX = m_IndexPosX + shiftArr[i];
+			int aY = m_IndexPosY + shiftArr[i + 1];
+			int aZ = m_IndexPosZ + shiftArr[i + 2];
+
+			if (aX < 0 || aX >= MAP_WIDTH_BLOCK_NUM
+				|| aY < 0 || aY >= MAP_HEIGHT_BLOCK_NUM
+				|| aZ < 0 || aZ >= MAP_DEPTH_BLOCK_NUM)
+				continue;
+
+			if (p.typeID == AppContext->m_MapArray[aY][aZ][aX])
+			{
+				GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
+				{
+					XMFLOAT3 objPos = obj->GetPosition();
+					XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
+									objPos.y + obj->m_Bounds.Center.y - (obj->m_Bounds.Extents.y / 2),
+									objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
+					XMFLOAT3 playerMin(pos.x + m_Bounds.Center.x - (m_Bounds.Extents.x / 2),
+									   pos.y + m_Bounds.Center.y - (m_Bounds.Extents.y / 2),
+									   pos.z + m_Bounds.Center.z - (m_Bounds.Extents.z / 2));
+					XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
+									objPos.y + obj->m_Bounds.Center.y + (obj->m_Bounds.Extents.y / 2),
+									objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
+					XMFLOAT3 playerMax(pos.x + m_Bounds.Center.x + (m_Bounds.Extents.x / 2),
+									   pos.y + m_Bounds.Center.y + (m_Bounds.Extents.y / 2),
+									   pos.z + m_Bounds.Center.z + (m_Bounds.Extents.z / 2));
+
+					if (objMin.x <= playerMax.x && objMax.x >= playerMin.x &&
+						objMin.y <= playerMax.y && objMax.y >= playerMin.y &&
+						objMin.z <= playerMax.z && objMax.z >= playerMin.z)
+					{
+						cout << "Collison - " << p.meshName << ", " << p.typeID  << endl;
+						cout << "aX: " << aX << " aY: " << aY << " aZ: " << aZ << endl;
+					}
+				}
+			}
+		}
+	}
+
 #ifdef DEBUG_CLIENT
 	SetPosition(pos.x, pos.y, pos.z);
 #elif DEBUG_SERVER
 	SetPosition(pos.x, pos.y, pos.z);
 	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, GetPosition());
 #endif
-	if (m_MyCamera) m_MyCamera->Move(xmf3Shift);
 }
 
 void Character::Rotate(float pitch, float yaw, float roll)

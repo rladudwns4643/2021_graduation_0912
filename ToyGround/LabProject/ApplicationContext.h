@@ -72,5 +72,7 @@ public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;
 	std::vector<GameObject*> m_RItemsVec;
 	std::map<std::string, Map*> m_Maps;
+
+	int m_MapArray[MAP_HEIGHT_BLOCK_NUM][MAP_DEPTH_BLOCK_NUM][MAP_WIDTH_BLOCK_NUM];
 };
 

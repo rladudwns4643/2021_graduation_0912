@@ -34,6 +34,8 @@ public:
 public:
 	virtual void SetPosition(float posX, float posY, float posZ);
 	virtual void SetPosition(DirectX::XMFLOAT3 xmPos);
+	virtual void SetIndexPos(float posX, float posY, float posZ);
+	virtual void SetIndexPos(DirectX::XMFLOAT3 xmPos);
 
 	virtual void SetRight(const DirectX::XMFLOAT3& Right);
 	virtual void SetUp(const DirectX::XMFLOAT3& Up);
@@ -70,6 +72,10 @@ public:
 	XMFLOAT2 m_PositionRatio = { 0.f, 0.f }; // 화면비율
 	XMFLOAT2 m_SizeRatio = { 0.f, 0.f }; // 화면비율
 
+	// 맵에서의 위치
+	int m_IndexPosX;
+	int m_IndexPosY;
+	int m_IndexPosZ;
 
 	// 메쉬, 바운딩박스정보
 	GeometryMesh* m_Geo;
@@ -84,7 +90,6 @@ public:
 	UINT m_StartIndexLocationBb;
 	int m_BaseVertexLocationBb;
 	bool m_IsAABB = true;		// false면 OBB
-
 
 	BoundingBox m_Bounds;
 

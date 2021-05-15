@@ -4,6 +4,10 @@
 #define FRAME_BUFFER_WIDTH 1280
 #define FRAME_BUFFER_HEIGHT 720
 
+// 마우스 관련(DPI = Dots Per Inch)
+#define MOUSE_DPI_X 0.05f
+#define MOUSE_DPI_Y 0.05f
+
 // 크기변환
 #define ScaleConverter 20.f
 
@@ -88,10 +92,6 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 		ptr = nullptr;			\
 	}							\
 }	
-
-// 마우스 관련(DPI = Dots Per Inch)
-#define MOUSE_DPI_X 0.05f
-#define MOUSE_DPI_Y 0.05f
 
 // 이동관련 키보드
 #define DIR_FORWARD					0x01

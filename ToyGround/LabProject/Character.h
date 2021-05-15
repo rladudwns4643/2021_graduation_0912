@@ -45,6 +45,9 @@ public:
 	void SetPosition(float posX, float posY, float posZ);
 	void SetPosition(DirectX::XMFLOAT3 xmPos);
 
+	void SetIndexPos(float posX, float posY, float posZ);
+	void SetIndexPos(DirectX::XMFLOAT3 xmPos);
+
 	void SetAnimationController(SkinnedModelInstance* skinnedModelInst);
 	void SetAnimationPlayerState(AnimationController::PlayerState playerState);
 	void SetAnimationKeyState(AnimationController::PlayerState keyState);
@@ -89,5 +92,25 @@ private:
 	DirectX::XMFLOAT3 m_Right;
 	DirectX::XMFLOAT3 m_Up;
 	DirectX::XMFLOAT3 m_Look;
+
+	// 맵에서의 위치
+	int m_IndexPosX;
+	int m_IndexPosY;
+	int m_IndexPosZ;
+
+	// 캐릭터 주변 9칸
+	int shiftArr[54] = {
+		 1,  1, -1,  0,  1, -1,  -1,  1, -1,
+		 1,  1,  0,  0,  1,  0,  -1,  1,  0,
+		 1,  1,  1,  0,  1,  1,  -1,  1,  1,
+
+		 1,  0, -1,  0,  0, -1,  -1,  0, -1,
+		 1,  0,  0,  0,  0,  0,  -1,  0,  0,
+		 1,  0,  1,  0,  0,  1,  -1,  0,  1
+
+		//1, -1, -1,  0, -1, -1,  -1, -1, -1,
+		//1, -1,  0,  0, -1,  0,  -1, -1,  0,
+		//1, -1,  1,  0, -1,  1,  -1, -1,  1,
+	};
 };
 

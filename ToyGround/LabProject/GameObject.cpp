@@ -67,9 +67,20 @@ void GameObject::SetPosition(float posX, float posY, float posZ)
 
 void GameObject::SetPosition(DirectX::XMFLOAT3 xmPos)
 {
-	SetPosition(xmPos.x, xmPos.y, xmPos.z);
+	SetPosition(xmPos.x, xmPos.y, xmPos.z);\
 }
 
+void GameObject::SetIndexPos(float posX, float posY, float posZ)
+{
+	m_IndexPosX = (int)((posX + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_WIDTH_BLOCK_NUM / 2));
+	m_IndexPosY = (int)(posY / STD_CUBE_SIZE);
+	m_IndexPosZ = (int)((posZ + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_DEPTH_BLOCK_NUM / 2));
+}
+
+void GameObject::SetIndexPos(DirectX::XMFLOAT3 xmPos)
+{
+	SetIndexPos(xmPos.x, xmPos.y, xmPos.z);
+}
 void GameObject::SetRight(const DirectX::XMFLOAT3& Right)
 {
 	m_World._11 = Right.x;
