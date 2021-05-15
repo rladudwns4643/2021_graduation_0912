@@ -11,7 +11,8 @@ namespace Graphics
 {
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BBoxPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_AABBoxPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OBBoxPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
 }
 
@@ -154,7 +155,8 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	m_Shaders["skinnedVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", skinnedDefines, "VS", "vs_5_1");
 	m_Shaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
 
-	m_Shaders["BBoxVS"] = d3dUtil::CompileShader(L"Shaders\\BBox.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["AABBoxVS"] = d3dUtil::CompileShader(L"Shaders\\BBox.hlsl", nullptr, "AABBVS", "vs_5_1");
+	m_Shaders["OBBoxVS"] = d3dUtil::CompileShader(L"Shaders\\BBox.hlsl", nullptr, "OBBVS", "vs_5_1");
 	m_Shaders["BBoxPS"] = d3dUtil::CompileShader(L"Shaders\\BBox.hlsl", nullptr, "PS", "ps_5_1");
 
 	m_Shaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
@@ -313,24 +315,36 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&g_OpaquePSO)));
 	
 	//
-	// PSO for BondingBox pass.
+	// PSO for AABondingBox pass.
 	//
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC BBoxPsoDesc = opaquePsoDesc;
-	BBoxPsoDesc.InputLayout = { m_BBox_InputLayout.data(), (UINT)m_BBox_InputLayout.size() };
-	BBoxPsoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
-	BBoxPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-	BBoxPsoDesc.VS =
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC AABBoxPsoDesc = opaquePsoDesc;
+	AABBoxPsoDesc.InputLayout = { m_BBox_InputLayout.data(), (UINT)m_BBox_InputLayout.size() };
+	AABBoxPsoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	AABBoxPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	AABBoxPsoDesc.VS =
 	{
-		reinterpret_cast<BYTE*>(m_Shaders["BBoxVS"]->GetBufferPointer()),
-		m_Shaders["BBoxVS"]->GetBufferSize()
+		reinterpret_cast<BYTE*>(m_Shaders["AABBoxVS"]->GetBufferPointer()),
+		m_Shaders["AABBoxVS"]->GetBufferSize()
 	};
-	BBoxPsoDesc.PS =
+	AABBoxPsoDesc.PS =
 	{
 		reinterpret_cast<BYTE*>(m_Shaders["BBoxPS"]->GetBufferPointer()),
 		m_Shaders["BBoxPS"]->GetBufferSize()
 	};
-	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&BBoxPsoDesc, IID_PPV_ARGS(&g_BBoxPSO)));
-	
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&AABBoxPsoDesc, IID_PPV_ARGS(&g_AABBoxPSO)));
+
+	//
+	// PSO for OBondingBox pass.
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC OBBoxPsoDesc = AABBoxPsoDesc;
+	OBBoxPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["OBBoxVS"]->GetBufferPointer()),
+		m_Shaders["OBBoxVS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&OBBoxPsoDesc, IID_PPV_ARGS(&g_OBBoxPSO)));
+
+
 	//
 	// PSO for skinned pass.
 	//

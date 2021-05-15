@@ -203,16 +203,31 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
 	}
 
-	//// BoundingBox
-	//GraphicsContext::GetApp()->SetPipelineState(Graphics::g_BBoxPSO.Get());
-	//for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
-	//{
-	//	GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
-	//}
-	//for (auto& p : m_Users)
-	//{
-	//	GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
-	//}
+
+	// AABoundingBox
+	if (TOY_GROUND::GetApp()->bShowBoundingBox)
+	{
+		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_AABBoxPSO.Get());
+		for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
+		{
+			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+		}
+		for (auto& p : m_Users)
+		{
+			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
+		}
+	}
+
+	// Attack_Box
+	for (auto& p : m_Users)
+	{
+		if (!p.second) continue;
+		if (p.second->m_IsAiming)
+		{
+			GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OBBoxPSO.Get());
+			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX], AppContext->m_RItemsVec, false);
+		}
+	}
 
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());

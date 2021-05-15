@@ -83,6 +83,7 @@ public:
 	UINT m_IndexCountBb;
 	UINT m_StartIndexLocationBb;
 	int m_BaseVertexLocationBb;
+	bool m_IsAABB = true;		// false¸é OBB
 
 
 	BoundingBox m_Bounds;

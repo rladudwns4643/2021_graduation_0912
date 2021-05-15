@@ -103,8 +103,10 @@ void PlayerController::MouseCallback()
 		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
 		CommandCenter::GetApp()->m_StartAttackAnim = true;
 	}
-	else
+	m_Owner->m_IsAiming = false;
+	if (InputHandler::g_RightMouseCallback)
 	{
+		m_Owner->m_IsAiming = true;
 	}
 }
 

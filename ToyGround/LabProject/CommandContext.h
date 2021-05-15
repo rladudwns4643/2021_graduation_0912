@@ -58,7 +58,7 @@ public:
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
 	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer = -1, bool isFrustum = false);
-	void DrawBoundingBox(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer = -1, bool isFrustum = false);
+	void DrawBoundingBox(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool drawAABB = true, int zLayer = -1, bool isFrustum = false);
 	void DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const std::vector<GameObject*>& rItems);
 
 	void DrawBBox(const std::vector<BBox*>& rItems);

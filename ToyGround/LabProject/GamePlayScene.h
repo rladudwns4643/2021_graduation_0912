@@ -4,7 +4,8 @@
 namespace Graphics
 {
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
-	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_BBoxPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_AABBoxPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OBBoxPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
 }

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Camera.h"
 #include "Character.h"
+#include "ApplicationContext.h"
 
 void Camera::SetCamera(CameraType cameraType, Character* owner)
 {
@@ -112,6 +113,13 @@ void Camera::Update()
 
 		break;
 	}
+	}
+
+	const std::map<std::string, UINT>& info = AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX]->GetInstanceKeyMap();
+	for (auto& i : info) {
+		AppContext->m_RItemsVec[i.second]->SetLook(mUp);
+		AppContext->m_RItemsVec[i.second]->SetUp(mLook);
+		AppContext->m_RItemsVec[i.second]->SetRight(mRight);
 	}
 
 	if (mPosition.y < 0.f)

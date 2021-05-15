@@ -103,6 +103,19 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
 		preInfo.typeID = ++typeIDCount;
 		map->mapInfoVector.emplace_back(preInfo);
+		 
+		// Create Attack_Box 
+		propTypeSet.insert(OBJECT_MESH_STR_ATTACK_BOX);
+		preInfo.meshName = OBJECT_MESH_STR_ATTACK_BOX;
+		preInfo.rotation.x = 0.0f;
+		preInfo.rotation.y = 0.0f;
+		preInfo.rotation.z = 0.0f;
+		preInfo.position.x = 0.0f;
+		preInfo.position.y = 0.0f;
+		preInfo.position.z = 0.0f;
+		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+		preInfo.typeID = ++typeIDCount;
+		map->mapInfoVector.emplace_back(preInfo);
 
 		for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k)
 		{
@@ -479,6 +492,12 @@ void AssertsReference::CreateBB()
 		bb->Extents = XMFLOAT3(0.f, 0.f, 0.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_REVOLVER] = std::move(bb);
 	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 30.f, 0.f);
+		bb->Extents = XMFLOAT3(50.f, 1000.f, 50.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_ATTACK_BOX] = std::move(bb);
+	}
 
 	// Character
 	{
@@ -738,6 +757,9 @@ void AssertsReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12Graph
 	for (auto propType : m_propTypeVector)
 	{
 		XMFLOAT4 fColor(1.0f, 0.0f, 0.0f, 1.0f);
+		if(propType == OBJECT_MESH_STR_ATTACK_BOX)
+			fColor = XMFLOAT4(0.8f, 0.8f, 1.0f, 1.0f);
+
 		float fx = m_PropBoundingBox[propType]->Extents.x * 0.5f;
 		float fy = m_PropBoundingBox[propType]->Extents.y * 0.5f;
 		float fz = m_PropBoundingBox[propType]->Extents.z * 0.5f;

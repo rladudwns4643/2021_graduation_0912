@@ -38,6 +38,8 @@ public:
 	Camera* m_Camera = NULL;
 	std::map<std::string, std::unique_ptr<Light>> m_pLights;
 
+	bool bShowBoundingBox = false;
+
 private:
 	SceneManager					*m_pSceneManager = NULL;
 	ApplicationContext				*m_pAppContext = NULL;

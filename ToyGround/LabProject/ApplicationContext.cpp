@@ -66,6 +66,9 @@ void ApplicationContext::CreateProps(std::string mapName)
 		item->m_MaterialIndex = AssertsReference::GetApp()->m_Materials[itemInfo.textureName]->DiffuseSrvHeapIndex;
 		item->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[itemInfo.meshName]->Center;
 		item->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[itemInfo.meshName]->Extents;
+		item->m_IsAABB = true;
+		if (itemInfo.meshName == OBJECT_MESH_STR_ATTACK_BOX)
+			item->m_IsAABB = false;
 	}
 }
 

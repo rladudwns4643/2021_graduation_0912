@@ -18,6 +18,7 @@ public:
 public:
 	// 캐릭터 상태
 	bool m_IsMoving = false;
+	bool m_IsAiming = false;
 
 public:
 	explicit Character(std::string type, std::string id);

@@ -62,6 +62,10 @@ void GameplayController::Update(const float deltaT)
 
 void GameplayController::HandleInput(const float deltaT)
 {
+	if (InputHandler::IsKeyUp(VK_F5)) {
+		bool bNowBB = TOY_GROUND::GetApp()->bShowBoundingBox;
+		TOY_GROUND::GetApp()->bShowBoundingBox = !bNowBB;
+	}
 }
 
 void GameplayController::MouseCallback()

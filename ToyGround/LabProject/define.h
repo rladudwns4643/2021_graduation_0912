@@ -71,6 +71,7 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 #define OBJECT_MESH_STR_GRAVESTONE		"Gravestone"
 #define OBJECT_MESH_STR_LOGS			"Logs"
 #define OBJECT_MESH_STR_REVOLVER		"Revolver"
+#define OBJECT_MESH_STR_ATTACK_BOX		"Attack_Box"
 //
 #define MESH_GEOID			"geo"
 #define MESH_GEOID_RECT		"rect"
