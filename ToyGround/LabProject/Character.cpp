@@ -43,7 +43,7 @@ void Character::Update(const float deltaT)
 
 	m_AnimationController->Update(deltaT);
 
-	WeaponUpdate();
+//	WeaponUpdate();
 }
 
 void Character::WeaponUpdate()
@@ -359,11 +359,11 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 			int aZ = m_IndexPosZ + shiftArr[i + 2];
 
 			if (aX < 0 || aX >= MAP_WIDTH_BLOCK_NUM
-				|| aY < 0 || aY >= MAP_HEIGHT_BLOCK_NUM
+				|| aY <= 0 || aY >= MAP_HEIGHT_BLOCK_NUM
 				|| aZ < 0 || aZ >= MAP_DEPTH_BLOCK_NUM)
 				continue;
 
-			if (p.typeID == AppContext->m_MapArray[aY][aZ][aX])
+			if (p.typeID == AppContext->m_MapArray[aY][aZ][aX] && p.colWithChar)
 			{
 				GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
 				{
@@ -387,6 +387,14 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 					{
 						//cout << "Collison - " << p.meshName << ", " << p.typeID  << endl;
 						//cout << "aX: " << aX << " aY: " << aY << " aZ: " << aZ << endl;
+						if (objMin.x <= playerMax.x)
+							pos.x -= (objMin.x - playerMax.x);
+						if (objMax.x >= playerMin.x)
+							pos.x += (objMax.x - playerMin.x);
+						if (objMin.z <= playerMax.z)
+							pos.z -= (objMin.z - playerMax.z);
+						if (objMax.z >= playerMin.z)
+							pos.z += (objMax.z - playerMin.z);
 					}
 				}
 			}

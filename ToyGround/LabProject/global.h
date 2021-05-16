@@ -180,6 +180,7 @@ namespace MapTool
 		XMFLOAT3 rotation;
 		int typeID; // ∞Ì¿ØID
 		std::string textureName;
+		bool colWithChar;
 	};
 
 	struct PlayerInfo

@@ -33,10 +33,12 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		if (arg_bt_id == 1) {
 			m_player_in_room[0] = arg_bt_id;
 			m_Users[arg_bt_id] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
+			m_Users[arg_bt_id]->m_MapName = m_MapName;
 		}
 		else {
 			m_player_in_room[1] = arg_bt_id;
 			m_Users[arg_bt_id] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
+			m_Users[arg_bt_id]->m_MapName = m_MapName;
 		}
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
 		m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
@@ -50,6 +52,17 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		t = va_arg(ap, int);
 		va_end(ap);
 		cout << "left Time: " << t << endl;
+		break;
+	}
+	case EVENT_GAME_ADD_COIN: {
+		XMFLOAT3 arg_pos;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_pos = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+		//todo: draw coin
+
+		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
 		break;
 	}
 	case EVENT_GAME_CALLBACK_MOVE: {
@@ -126,16 +139,19 @@ bool GameplayScene::Enter()
 	AppContext->DisplayProps(m_MapName);
 //	AppContext->DisplayProps(m_MapName, true, 0.5f);
 
+#ifdef DEBUG_SERVER
 	int cnt = Service::GetApp()->GetBattleClientsCount();
 	m_player_in_room.resize(cnt);
 	Service::GetApp()->AddEvent(EVENT_GAME_START);
+#endif
 
+#ifdef DEBUG_CLIENT
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
-	m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;
+	m_Users[m_PlayerID]->m_PlayerID = 0;
 	m_Users[m_PlayerID]->m_MapName = m_MapName;
-	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
+	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN); 
 	m_Users[1]->m_PlayerID = 1;
-
+#endif
 	///---
 	// Player type, id 등등 세팅
 	for (auto& u : m_Users) {

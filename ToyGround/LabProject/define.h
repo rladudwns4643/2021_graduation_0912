@@ -13,9 +13,9 @@
 
 // 기준이되는 큐브 크기
 #define STD_CUBE_SIZE (5.0f * ScaleConverter)
-#define PLAYER_SIZE_X (4.5f * ScaleConverter)
+#define PLAYER_SIZE_X (3.0f * ScaleConverter)
 #define PLAYER_SIZE_Y (9.5f * ScaleConverter)
-#define PLAYER_SIZE_Z (4.5f * ScaleConverter)
+#define PLAYER_SIZE_Z (3.0f * ScaleConverter)
 
 // 플레이어 스피드
 #define PLAYER_SPEED (16.f * ScaleConverter)

@@ -13,9 +13,10 @@ using namespace Core;
 
 namespace Core
 {
-	//NetCore* g_netcore;
-	//Service* g_service;
-	//
+#ifdef DEBUG_SERVER
+	NetCore* g_netcore;
+	Service* g_service;
+#endif
 	GameCore* g_Core = nullptr;
 	GameTimer* g_GameTimer = nullptr;
 
@@ -50,10 +51,12 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 	g_Core = GameCore::GetApp();
 	g_GameTimer = GameTimer::GetApp();
 
-	//g_netcore = NetCore::GetApp();
-	//g_service = Service::GetApp();
+#ifdef DEBUG_SERVER
+	g_netcore = NetCore::GetApp();
+	g_service = Service::GetApp();
 
-	//std::thread io_thread(&Service::ActiveService, g_service);
+	std::thread io_thread(&Service::ActiveService, g_service);
+#endif
 
 	MSG msg = {};
 
@@ -75,22 +78,28 @@ void Core::RunApplication(IGameApp& app, const wchar_t* className)
 	}
 
 	TerminateApplication(app);
-	//io_thread.join();
-	//worker_thread.join();
+
+#ifdef DEBUG_SERVER
+	io_thread.join();
+#endif
 }
 
 void Core::TerminateApplication(IGameApp& game)
 {
-	//g_service->Clear();
-	//g_netcore->Destory();
+#ifdef DEBUG_SERVER
+	g_service->Clear();
+	g_netcore->Destory();
+#endif
 	game.Cleanup();
 	g_Core->ShutdownCore();
 
 	// Context Release
 	GameCore::DestroyApp();
 	GameTimer::DestroyApp();
-	//NetCore::DestroyApp();
-	//Service::DestroyApp();
+#ifdef DEBUG_SERVER
+	NetCore::DestroyApp();
+	Service::DestroyApp();
+#endif
 }
 
 void Core::CalculateFrameStats()

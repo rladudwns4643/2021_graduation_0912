@@ -43,20 +43,20 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		float shiftX, shiftY, shiftZ;
 
 		// Create Weapon
-		propTypeSet.insert(OBJECT_MESH_STR_REVOLVER);
-		for (int i = 0; i < 4; ++i)
-		{
-			preInfo.meshName = OBJECT_MESH_STR_REVOLVER;
-			preInfo.rotation.x = 0.0f;
-			preInfo.rotation.y = 0.0f;
-			preInfo.rotation.z = 0.0f;
-			preInfo.position.x = 0.0f;
-			preInfo.position.y = 0.0f;
-			preInfo.position.z = 0.0f;
-			preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-			preInfo.typeID = ++typeIDCount;
-			map->mapInfoVector.emplace_back(preInfo);
-		}
+		//propTypeSet.insert(OBJECT_MESH_STR_REVOLVER);
+		//for (int i = 0; i < 4; ++i)
+		//{
+		//	preInfo.meshName = OBJECT_MESH_STR_REVOLVER;
+		//	preInfo.rotation.x = 0.0f;
+		//	preInfo.rotation.y = 0.0f;
+		//	preInfo.rotation.z = 0.0f;
+		//	preInfo.position.x = 0.0f;
+		//	preInfo.position.y = 0.0f;
+		//	preInfo.position.z = 0.0f;
+		//	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+		//	preInfo.typeID = ++typeIDCount;
+		//	map->mapInfoVector.emplace_back(preInfo);
+		//}
 
 		// create Wall
 		propTypeSet.insert(OBJECT_MESH_STR_WALL_21);
@@ -154,11 +154,13 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_01;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_01);
+								preInfo.colWithChar = false;
 							}
 							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
+								preInfo.colWithChar = true;
 							}
 							break;
 						case 2:
@@ -166,11 +168,13 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_02;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_02);
+								preInfo.colWithChar = false;
 							}
 							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_02;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_02);
+								preInfo.colWithChar = true;
 							}
 							break;
 						case 3:
@@ -178,11 +182,13 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_03;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_03);
+								preInfo.colWithChar = false;
 							}
 							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
+								preInfo.colWithChar = true;
 							}
 							break;
 						case 4:
@@ -190,40 +196,49 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_04;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_04);
+								preInfo.colWithChar = false;
 							}
 							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
+								preInfo.colWithChar = true;
 							}
 							break;
 						case 5:
 							preInfo.meshName = OBJECT_MESH_STR_PLANT;
 							propTypeSet.insert(OBJECT_MESH_STR_PLANT);
+							preInfo.colWithChar = false;
 							break;
 						case 6:
 							preInfo.meshName = OBJECT_MESH_STR_TILE_01;
 							propTypeSet.insert(OBJECT_MESH_STR_TILE_01);
+							preInfo.colWithChar = false;
 							break;
 						case 7:
 							preInfo.meshName = OBJECT_MESH_STR_TILE_02;
 							propTypeSet.insert(OBJECT_MESH_STR_TILE_02);
+							preInfo.colWithChar = false;
 							break;
 						case 8:
 							preInfo.meshName = OBJECT_MESH_STR_TREE_01;
 							propTypeSet.insert(OBJECT_MESH_STR_TREE_01);
+							preInfo.colWithChar = true;
 							break;
 						case 9:
 							preInfo.meshName = OBJECT_MESH_STR_TREE_02;
 							propTypeSet.insert(OBJECT_MESH_STR_TREE_02);
+							preInfo.colWithChar = true;
 							break;
 						case 10:
 							preInfo.meshName = OBJECT_MESH_STR_BARREL;
 							propTypeSet.insert(OBJECT_MESH_STR_BARREL);
+							preInfo.colWithChar = true;
 							break;
 						case 11:
 							preInfo.meshName = OBJECT_MESH_STR_CHEST_DOWN;
 							propTypeSet.insert(OBJECT_MESH_STR_CHEST_DOWN);
+							preInfo.colWithChar = true;
 							preInfo.rotation.y = 90.f;
 							break;
 						case 12:
@@ -232,6 +247,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							shiftY = -STD_CUBE_SIZE / 2;
 							shiftX = -STD_CUBE_SIZE * 0.25;
 							preInfo.rotation.y = 90.f;
+							preInfo.colWithChar = false;
 							break;
 						}
 						break;
@@ -244,6 +260,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.rotation.y = 90.f;
 						preInfo.meshName = OBJECT_MESH_STR_CUBE_BRIDGE;
 						propTypeSet.insert(OBJECT_MESH_STR_CUBE_BRIDGE);
+						preInfo.colWithChar = true;
 						shiftY = -STD_CUBE_SIZE * 0.85;
 						break;
 					}
@@ -255,6 +272,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.rotation.y = 90.f;
 						preInfo.meshName = OBJECT_MESH_STR_LOGS;
 						propTypeSet.insert(OBJECT_MESH_STR_LOGS);
+						preInfo.colWithChar = true;
 						break;
 					}
 					case 4:
@@ -265,6 +283,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.rotation.y = 0.f;
 						preInfo.meshName = OBJECT_MESH_STR_GRAVESTONE;
 						propTypeSet.insert(OBJECT_MESH_STR_GRAVESTONE);
+						preInfo.colWithChar = true;
 						break;
 					}
 					case 5:
@@ -276,24 +295,28 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							shiftZ = -(STD_CUBE_SIZE / 2 - 5.0f);
 							preInfo.meshName = OBJECT_MESH_STR_FENCE_01;
 							propTypeSet.insert(OBJECT_MESH_STR_FENCE_01);
+							preInfo.colWithChar = true;
 							break;
 						case 51:
 							preInfo.rotation.y = 90.f;
 							shiftX = (STD_CUBE_SIZE / 2 - 5.0f);
 							preInfo.meshName = OBJECT_MESH_STR_FENCE_02;
 							propTypeSet.insert(OBJECT_MESH_STR_FENCE_02);
+							preInfo.colWithChar = true;
 							break;
 						case 52:
 							preInfo.rotation.y = 0.f;
 							shiftZ = (STD_CUBE_SIZE / 2 - 5.0f);
 							preInfo.meshName = OBJECT_MESH_STR_FENCE_01;
 							propTypeSet.insert(OBJECT_MESH_STR_FENCE_01);
+							preInfo.colWithChar = true;
 							break;
 						case 53:
 							preInfo.rotation.y = 90.f;
 							shiftX = -(STD_CUBE_SIZE / 2 - 5.0f);
 							preInfo.meshName = OBJECT_MESH_STR_FENCE_02;
 							propTypeSet.insert(OBJECT_MESH_STR_FENCE_02);
+							preInfo.colWithChar = true;
 							break;
 						}
 						break;

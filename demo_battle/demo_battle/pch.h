@@ -23,6 +23,7 @@
 #include <WS2tcpip.h>
 #include <DirectXMath.h>
 #include <cmath>
+#include <set>
 
 #include "SocketAddress.h"
 #include "TCPSocket.h"
