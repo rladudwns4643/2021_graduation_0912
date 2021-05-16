@@ -65,19 +65,6 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
 		break;
 	}
-	case EVENT_GAME_UPDATE_COIN: {
-		int arg_id;
-		int arg_coin_cnt;
-		va_list ap;
-		va_start(ap, argsCount);
-		arg_id = va_arg(ap, int);
-		arg_coin_cnt = va_arg(ap, int);
-		va_end(ap);
-		//todo: update coin (show UI, m_User[arg_id].coin = arg_coin_cnt);
-
-		cout << "COIN UPDATE: id: " << arg_id << "COIN: " << arg_coin_cnt << endl;
-		break;
-	}
 	case EVENT_GAME_CALLBACK_ANIM: {
 		int arg_id;
 		int arg_anim_type;
@@ -190,7 +177,7 @@ bool GameplayScene::Enter()
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
 
-	// 카메라 세팅D
+	// 카메라 세팅
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
 
 	// 보석 초기화

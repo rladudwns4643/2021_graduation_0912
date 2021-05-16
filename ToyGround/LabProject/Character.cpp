@@ -367,32 +367,58 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 			if (p.typeID == AppContext->m_MapArray[aY][aZ][aX] && p.colWithChar)
 			{
 				GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
-				{
-					XMFLOAT3 objPos = obj->GetPosition();
-					XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
-									objPos.y + obj->m_Bounds.Center.y - (obj->m_Bounds.Extents.y / 2),
-									objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
-					XMFLOAT3 playerMin(pos.x + m_Bounds.Center.x - (m_Bounds.Extents.x / 2),
-									   pos.y + m_Bounds.Center.y - (m_Bounds.Extents.y / 2),
-									   pos.z + m_Bounds.Center.z - (m_Bounds.Extents.z / 2));
-					XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
-									objPos.y + obj->m_Bounds.Center.y + (obj->m_Bounds.Extents.y / 2),
-									objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
-					XMFLOAT3 playerMax(pos.x + m_Bounds.Center.x + (m_Bounds.Extents.x / 2),
-									   pos.y + m_Bounds.Center.y + (m_Bounds.Extents.y / 2),
-									   pos.z + m_Bounds.Center.z + (m_Bounds.Extents.z / 2));
 
-					if (objMin.x <= playerMax.x && objMax.x >= playerMin.x &&
-						objMin.y <= playerMax.y && objMax.y >= playerMin.y &&
-						objMin.z <= playerMax.z && objMax.z >= playerMin.z)
-					{
-						XMFLOAT3 tpos = pos;
-						XMFLOAT3 d = MathHelper::Subtract(tpos, objPos);
-						XMFLOAT3 xmf3Result;
-						XMStoreFloat3(&xmf3Result, XMVector3Normalize(XMLoadFloat3(&d)) * 22.25f);
-						pos = MathHelper::Add(pos, xmf3Result);
-					}
+				XMFLOAT3 objPos = obj->GetPosition();
+				XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
+								objPos.y + obj->m_Bounds.Center.y - (obj->m_Bounds.Extents.y / 2),
+								objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
+				XMFLOAT3 playerMin(pos.x + m_Bounds.Center.x - (m_Bounds.Extents.x / 2),
+								   pos.y + m_Bounds.Center.y - (m_Bounds.Extents.y / 2),
+								   pos.z + m_Bounds.Center.z - (m_Bounds.Extents.z / 2));
+				XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
+								objPos.y + obj->m_Bounds.Center.y + (obj->m_Bounds.Extents.y / 2),
+								objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
+				XMFLOAT3 playerMax(pos.x + m_Bounds.Center.x + (m_Bounds.Extents.x / 2),
+								   pos.y + m_Bounds.Center.y + (m_Bounds.Extents.y / 2),
+								   pos.z + m_Bounds.Center.z + (m_Bounds.Extents.z / 2));
+
+				if (objMin.x <= playerMax.x && objMax.x >= playerMin.x &&
+					objMin.y <= playerMax.y && objMax.y >= playerMin.y &&
+					objMin.z <= playerMax.z && objMax.z >= playerMin.z)
+				{
+					XMFLOAT3 tpos = pos;
+					XMFLOAT3 d = MathHelper::Subtract(tpos, objPos);
+					XMFLOAT3 xmf3Result;
+					XMStoreFloat3(&xmf3Result, XMVector3Normalize(XMLoadFloat3(&d)) * 22.25f);
+					pos = MathHelper::Add(pos, xmf3Result);
 				}
+			}
+		}
+
+		// 보석 충돌
+		if (p.meshName == OBJECT_MESH_STR_GEM)
+		{
+			GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
+
+			XMFLOAT3 objPos = obj->GetPosition();
+			XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
+				objPos.y + obj->m_Bounds.Center.y - (obj->m_Bounds.Extents.y / 2),
+				objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
+			XMFLOAT3 playerMin(pos.x + m_Bounds.Center.x - (m_Bounds.Extents.x / 2),
+				pos.y + m_Bounds.Center.y - (m_Bounds.Extents.y / 2),
+				pos.z + m_Bounds.Center.z - (m_Bounds.Extents.z / 2));
+			XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
+				objPos.y + obj->m_Bounds.Center.y + (obj->m_Bounds.Extents.y / 2),
+				objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
+			XMFLOAT3 playerMax(pos.x + m_Bounds.Center.x + (m_Bounds.Extents.x / 2),
+				pos.y + m_Bounds.Center.y + (m_Bounds.Extents.y / 2),
+				pos.z + m_Bounds.Center.z + (m_Bounds.Extents.z / 2));
+
+			if (objMin.x <= playerMax.x && objMax.x >= playerMin.x &&
+				objMin.y <= playerMax.y && objMax.y >= playerMin.y &&
+				objMin.z <= playerMax.z && objMax.z >= playerMin.z)
+			{
+				AppContext->HiddenGem(p.typeID);
 			}
 		}
 	}
