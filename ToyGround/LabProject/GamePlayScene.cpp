@@ -208,6 +208,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	{
 		if (!p.second) continue;
 
+		if(p.second->m_PlayerController)
+			p.second->m_PlayerController->m_PausGame = m_PauseScene;
 		p.second->Update(fDeltaTime);
 	}
 

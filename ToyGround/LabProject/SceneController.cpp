@@ -68,12 +68,15 @@ void GameplayController::HandleInput(const float deltaT)
 		TOY_GROUND::GetApp()->bShowBoundingBox = !bNowBB;
 	}
 #ifdef DEBUG_SERVER
-	if (InputHandler::IsKeyUp(VK_F1) && c == false) {
-		cout << "!";
-		Service::GetApp()->AddEvent(EVENT_GAME_GET_COIN);
-		c = true;
-	}
+	//if (InputHandler::IsKeyUp(VK_F1) && c == false) {
+	//	cout << "!";
+	//	Service::GetApp()->AddEvent(EVENT_GAME_GET_COIN);
+	//	c = true;
+	//}
 #endif
+	if (InputHandler::IsKeyUp(VK_F10)) {
+		m_MyScene->m_PauseScene = !m_MyScene->m_PauseScene;
+	}
 }
 
 void GameplayController::MouseCallback()

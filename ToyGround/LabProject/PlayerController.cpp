@@ -18,11 +18,14 @@ PlayerController::PlayerController(Character* player) : m_Owner(player)
 
 void PlayerController::Update(const float deltaT)
 {
-	MouseCallback();
-	HandleInput(deltaT);
+	if (!m_PausGame)
+	{
+		MouseCallback();
+		HandleInput(deltaT);
 
-	OnKeyPressed();
-	OnKeyReleased();
+		OnKeyPressed();
+		OnKeyReleased();
+	}
 }
 
 void PlayerController::HandleInput(const float deltaT)

@@ -37,6 +37,9 @@ public:
 private:
 	void ChangeFreeCamera();
 
+public:
+	bool m_PauseScene = false;
+
 private:
 	// 플레이어들
 	std::map<int, Character*> m_Users;
@@ -50,7 +53,6 @@ private:
 
 private:
 	bool m_IsGameOver = false;
-
 	int m_GemId = 0;
 };
 

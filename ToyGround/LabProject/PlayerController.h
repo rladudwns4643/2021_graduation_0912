@@ -20,4 +20,7 @@ private:
 	virtual void OnKeyReleased() override;
 private:
 	Character* m_Owner;
+
+public:
+	bool m_PausGame = false;
 };
