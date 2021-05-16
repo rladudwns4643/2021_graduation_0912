@@ -110,6 +110,48 @@ void ApplicationContext::CreateWeapon(std::string weaponName, std::string subWea
 	weapon->SetPosition(0, 0, 0);
 }
 
+void ApplicationContext::CreateGem()
+{
+	for (int i = 0; i < MAX_GEM_COUNT; ++i)
+	{
+		GameObject* gem = CreateObject<GameObject>(OBJECT_MESH_STR_GEM, std::to_string(OBJECT_START_INDEX_GEM + i));
+		gem->SetMesh(OBJECT_MESH_STR_GEM, OBJECT_MESH_STR_GEM);
+		gem->SetBBMesh(OBJECT_MESH_STR_GEM);
+		gem->m_MaterialIndex = TEXTURE_INDEX_Cartoon_CubeWorld_Texture;
+		gem->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_GEM]->Center;
+		gem->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_GEM]->Extents;
+		gem->m_IsAABB = true;
+		gem->m_IsVisible = false;
+	}
+}
+void ApplicationContext::DisplayGem(int instID, float posX, float posY, float posZ)
+{
+	GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_GEM, std::to_string(OBJECT_START_INDEX_GEM + instID));
+	if (!obj) return;
+
+	obj->m_IsVisible = true;
+	obj->InitializeTransform();
+	obj->Scale(1, 1, 1);
+	obj->SetPosition(posX, posY, posZ);
+}
+
+void ApplicationContext::HiddenGem(int instID, bool isVisible)
+{
+	GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_GEM, std::to_string(OBJECT_START_INDEX_GEM + instID));
+	if (!obj) {
+		cout << "HiddenGem: cant find obj" << endl;
+		return;
+	}
+
+	ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+	ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+
+	if (isVisible)
+	{
+		GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[OBJECT_MESH_STR_GEM], m_RItemsVec);
+	}
+}
+
 void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float scaleValue)
 {
 	if (!m_Maps.count(mapName))

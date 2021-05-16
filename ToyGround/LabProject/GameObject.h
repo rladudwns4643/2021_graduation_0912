@@ -66,6 +66,8 @@ public:
 
 	int m_ZLayer = -1;
 
+	bool m_IsVisible = true;
+
 	// 월드좌표 및 텍스쳐좌표
 	DirectX::XMFLOAT4X4 m_World;
 	DirectX::XMFLOAT4X4 m_TexTransform;

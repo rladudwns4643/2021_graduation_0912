@@ -50,5 +50,7 @@ private:
 
 private:
 	bool m_IsGameOver = false;
+
+	int m_GemId = 0;
 };
 

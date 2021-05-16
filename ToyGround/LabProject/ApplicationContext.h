@@ -64,6 +64,10 @@ public:
 	void CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex);
 	void CreateWeapon(std::string weaponName, std::string subWeaponName, std::string partName);
 
+	void CreateGem();
+	void DisplayGem(int instID, float posX, float posY, float posZ);
+	void HiddenGem(int instID, bool isVisible = false);
+
 	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
 
 	void DisplayCharacter(std::string mapName, Character* user, bool isVisible = true);
@@ -75,5 +79,7 @@ public:
 	std::map<std::string, Map*> m_Maps;
 
 	int m_MapArray[MAP_HEIGHT_BLOCK_NUM][MAP_DEPTH_BLOCK_NUM][MAP_WIDTH_BLOCK_NUM];
+
+	int m_LastTypeId;
 };
 

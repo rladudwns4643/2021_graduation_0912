@@ -39,6 +39,10 @@
 // 조명 이름
 #define LIGHT_NAME_DIRECTIONAL "Directional" 
 
+// 보석 개수
+#define MAX_GEM_COUNT 32
+#define OBJECT_START_INDEX_GEM 2000
+
 // 텍스쳐
 #define TEXTURE_INDEX_SkyBox 0
 #define TEXTURE_INDEX_Cartoon_CubeWorld_Texture 1
@@ -76,6 +80,7 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 #define OBJECT_MESH_STR_LOGS			"Logs"
 #define OBJECT_MESH_STR_REVOLVER		"Revolver"
 #define OBJECT_MESH_STR_ATTACK_BOX		"Attack_Box"
+#define OBJECT_MESH_STR_GEM				"Gem"
 //
 #define MESH_GEOID			"geo"
 #define MESH_GEOID_RECT		"rect"

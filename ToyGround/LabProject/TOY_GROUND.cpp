@@ -122,6 +122,9 @@ void TOY_GROUND::BuildAsserts()
 		cout << AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector[i] << endl;
 		AssertsReference::GetApp()->BuildModel(g_Device.Get(), g_CommandList.Get(), AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector[i]);
 	}
+	
+	// Gem
+	AssertsReference::GetApp()->BuildModel(g_Device.Get(), g_CommandList.Get(), OBJECT_MESH_STR_GEM);
 
 	// Build GeoMeshes
 	AssertsReference::GetApp()->BuildGeoMeshes(g_Device.Get(), g_CommandList.Get());

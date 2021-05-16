@@ -38,19 +38,22 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 	int InstanceCount = 0;
 	for (auto& i : info)
 	{
-		XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
-		XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
-		XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
+		if (rItems[i.second]->m_IsVisible)
+		{
+			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
+			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
+			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 #ifdef FRUSTUM_CULLMODE
-		if (isFrustum && !TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+			if (isFrustum && !TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
 #endif
-		ShaderResource::InstanceData data;
-		DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
-		DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
-		data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
+			ShaderResource::InstanceData data;
+			DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
+			DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
+			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
 
-		// Write the instance data to structured buffer for the visible objects.
-		m_InstanceBuffers[objInfo->m_Type]->CopyData(InstanceCount++, data);
+			// Write the instance data to structured buffer for the visible objects.
+			m_InstanceBuffers[objInfo->m_Type]->CopyData(InstanceCount++, data);
+		}
 	}
 }
 
@@ -159,7 +162,7 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 	{
 		auto ri = rItems[i.second];
 
-		if (ri->m_ZLayer == zLayer)
+		if (ri->m_IsVisible && ri->m_ZLayer == zLayer)
 		{
 #ifdef FRUSTUM_CULLMODE
 			if (isFrustum)

@@ -118,6 +118,9 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		preInfo.typeID = ++typeIDCount;
 		map->mapInfoVector.emplace_back(preInfo);
 
+		// Gem
+		propTypeSet.insert(OBJECT_MESH_STR_GEM);
+
 		for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k)
 		{
 			int floor;
@@ -347,9 +350,9 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						}
 					}
 				}
-				//cout << endl;
 			}
 		}
+		AppContext->m_LastTypeId = typeIDCount;
 	}
 
 	// propTypeVector: 중복되는 것 없이 에셋이름만 모아놓은 vector
@@ -521,6 +524,12 @@ void AssertsReference::CreateBB()
 		bb->Center = XMFLOAT3(0.f, 30.f, 0.f);
 		bb->Extents = XMFLOAT3(50.f, 1000.f, 50.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_ATTACK_BOX] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(20.f, 40.f, 20.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_GEM] = std::move(bb);
 	}
 
 	// Character

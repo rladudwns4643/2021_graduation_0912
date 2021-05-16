@@ -57,7 +57,10 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		va_start(ap, argsCount);
 		arg_pos = va_arg(ap, XMFLOAT3);
 		va_end(ap);
-		//todo: draw coin
+
+		++m_GemId;
+		
+		AppContext->DisplayGem(m_GemId, arg_pos.x, arg_pos.y, arg_pos.z);
 
 		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
 		break;
@@ -117,6 +120,9 @@ void GameplayScene::Initialize()
 
 	// 맵의 오브젝트들 생성
 	AppContext->CreateProps(MAP_STR_GAME_MAP);
+
+	// 보석 생성
+	AppContext->CreateGem();
 }
 
 void GameplayScene::OnResize()
@@ -174,6 +180,12 @@ bool GameplayScene::Enter()
 	// 카메라 세팅D
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
 
+	// 보석 초기화
+	for (int i = 0; i < MAX_GEM_COUNT; ++i)
+	{
+		AppContext->HiddenGem(i);
+	}
+
 	return false;
 }
 
@@ -181,6 +193,10 @@ void GameplayScene::Exit()
 {
 	m_Users.clear();
 	m_player_in_room.clear();
+	for (int i = 0; i < MAX_GEM_COUNT; ++i)
+	{
+		AppContext->HiddenGem(i, true);
+	}
 	cout << "===========================================" << endl << endl;
 }
 
@@ -210,6 +226,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_GUNMAN], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::GunMan, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_GUNMAN].get());
 	
+	// Gem
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
+
 	// Materials
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
 }
@@ -258,6 +277,10 @@ void GameplayScene::Render()
 			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX], AppContext->m_RItemsVec, false);
 		}
 	}
+
+	// Gem
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
+
 
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
