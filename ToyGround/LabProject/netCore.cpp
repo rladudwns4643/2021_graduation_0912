@@ -353,6 +353,11 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_GAME_ADD_COIN, 1, arg_pos);
 		break;
 	}
+	case BC_UPDATE_COIN: {
+		bc_packet_update_coin* p = reinterpret_cast<bc_packet_update_coin*>(packet_buf);
+		cout << "update coin" << endl;
+		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_COIN, 2, p->id, p->coin_cnt);
+	}
 	case BC_PLAYER_POS: {
 		bc_packet_player_pos* p = reinterpret_cast<bc_packet_player_pos*>(packet_buf);
 
@@ -567,6 +572,7 @@ void NetCore::SendGetCoinPacket() {
 	cb_packet_get_coin p;
 	p.size = sizeof(p);
 	p.type = CB_GET_COIN;
+	p.id = m_client.battle_id;
 
 	SendPacket(&p, SV_BATTLE);
 }

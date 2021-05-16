@@ -12,6 +12,7 @@
 
 static bool y{ false };
 static bool u{ false };
+static bool c{ false };
 LobbyController::LobbyController(LobbyScene* myScene) : m_MyScene(myScene)
 {
 }
@@ -66,6 +67,13 @@ void GameplayController::HandleInput(const float deltaT)
 		bool bNowBB = TOY_GROUND::GetApp()->bShowBoundingBox;
 		TOY_GROUND::GetApp()->bShowBoundingBox = !bNowBB;
 	}
+#ifdef DEBUG_SERVER
+	if (InputHandler::IsKeyUp(VK_F1) && c == false) {
+		cout << "!";
+		Service::GetApp()->AddEvent(EVENT_GAME_GET_COIN);
+		c = true;
+	}
+#endif
 }
 
 void GameplayController::MouseCallback()

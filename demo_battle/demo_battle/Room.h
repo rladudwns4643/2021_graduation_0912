@@ -66,6 +66,7 @@ public:		//send msg
 	void PushRemoveBulletMsg(int bullet_id);
 	void PushHitMsg(int hit_id, int dmg);
 	void PushDieMsg(int die_id);
+	void PushUpdateCoinMsg(int update_id, int update_cnt);
 
 	void PushReadyMsg(int id, bool ready);
 	void PushUnReadyMsg(int id);

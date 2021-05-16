@@ -35,10 +35,12 @@
 #define EVENT_GAME_SHOOT_BULLET						0xCA5
 #define EVENT_GAME_REMOVE_BULLET					0xCA6
 #define	EVENT_GAME_ADD_COIN							0xCA7
-#define EVENT_GAME_HIT								0xCA8
-#define EVENT_GAME_DIE								0xCA9
-#define EVENT_GAME_CALLBACK_ANIM					0xCB0
-#define EVENT_GAME_MAKE_ANIM						0xCB1
+#define EVENT_GAME_GET_COIN							0xCA8
+#define EVENT_GAME_UPDATE_COIN						0xCA9
+#define EVENT_GAME_HIT								0xCB0
+#define EVENT_GAME_DIE								0xCB1
+#define EVENT_GAME_CALLBACK_ANIM					0xCB2
+#define EVENT_GAME_MAKE_ANIM						0xCB3
 
 #define EVENT_GAME_TIMER							0xD0
 #define EVENT_GAME_GAMEOVER							0xD1

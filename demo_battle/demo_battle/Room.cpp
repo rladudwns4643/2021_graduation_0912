@@ -637,6 +637,17 @@ void Room::PushAnimMsg(int id, int animType) {
 	}
 }
 
+void Room::PushUpdateCoinMsg(int update_id, int update_cnt) {
+	bc_packet_update_coin p;
+	p.size = sizeof(p);
+	p.type = BC_UPDATE_COIN;
+	p.id = update_id;
+	p.coin_cnt = update_cnt;
+	for (const auto& pl : m_players) {
+		PushSendMsg(pl->GetID(), &p);
+	}
+}
+
 void Room::MakeMove(int id) {
 	if (this == nullptr) return;
 	if (!m_isGameStarted) return;
@@ -733,7 +744,18 @@ void Room::ProcMsg(message msg) {
 		//PushAnimMsg(t_id, t_anim);
 		break;
 	}
-
+	case CB_GET_COIN: {
+		int t_id{ msg.id };
+		int t_coin{};
+		for (auto& pl : m_players) {
+			if (pl->GetID() == t_id) {
+				pl->SetCoin(pl->GetCoin() + 1);
+				t_coin = pl->GetCoin();
+				PushUpdateCoinMsg(t_id, t_coin);
+			}
+		}
+		break;
+	}
 	case CB_BULLET: {
 		if (!m_isRoundStarted) break;
 		int bullet_id{};
