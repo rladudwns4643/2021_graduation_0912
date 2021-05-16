@@ -7,18 +7,20 @@
 #include "GameplayScene.h"
 
 void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
+#ifdef LOG_ON
 	if (st == SceneType::eGamePlay) {
 		cout << "[GAME] event: " << (int)sEvent << endl;
 	}
 	if (st == SceneType::eLobby) {
 		cout << "[LOBBY] event: " << (int)sEvent << endl;
 	}
+#endif
 	if (argsCount == 0) {
-		cout << "[SceneMnr] event: " << (int)sEvent << endl;
-		//m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent);
+		//cout << "[SceneMnr] event: " << (int)sEvent << endl;
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent);
 		return;
 	}
+
 	switch (sEvent) { //break 바로 들어가는건 argsCount가 0이라 위에서 처리함
 		//lobby
 	case EVENT_LOBBY_LOGIN_OK: break;
@@ -96,6 +98,18 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		t = va_arg(ap, int);
 		va_end(ap);
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, t);
+		break;
+	}
+	case EVENT_GAME_CALLBACK_ANIM: {
+		int arg_id;
+		char arg_anim_type;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_anim_type = va_arg(ap, char);
+		va_end(ap);
+
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id, arg_anim_type);
 		break;
 	}
 	case EVENT_GAME_ADD_COIN: {
