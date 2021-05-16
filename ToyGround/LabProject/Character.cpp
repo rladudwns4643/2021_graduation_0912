@@ -386,6 +386,11 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 						objMin.y <= playerMax.y && objMax.y >= playerMin.y &&
 						objMin.z <= playerMax.z && objMax.z >= playerMin.z)
 					{
+						XMFLOAT3 tpos = pos;
+						XMFLOAT3 d = MathHelper::Subtract(tpos, objPos);
+						XMFLOAT3 xmf3Result;
+						XMStoreFloat3(&xmf3Result, XMVector3Normalize(XMLoadFloat3(&d)) * 22.25f);
+						pos = MathHelper::Add(pos, xmf3Result);
 					}
 				}
 			}
