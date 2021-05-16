@@ -101,10 +101,9 @@ void Toy::SetIsShoot(bool shoot) {
 }
 
 int Toy::GetAnimType() {
-	if(m_animJump){ 
-		return ANIM_JUMP;
-	}
-	else {
-		return ANIM_MOVE;
-	}
+	return m_anim;
+}
+
+void Toy::SetAnimType(int anim)  {
+	m_anim = anim;
 }

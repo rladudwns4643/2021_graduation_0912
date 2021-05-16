@@ -42,7 +42,7 @@ void Character::Update(const float deltaT)
 		m_PlayerController->Update(deltaT);
 
 	m_AnimationController->Update(deltaT);
-
+	cout << m_PlayerID << ": " << m_AnimationController->m_KeyState << endl;
 //	WeaponUpdate();
 }
 
@@ -401,7 +401,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 	SetPosition(pos.x, pos.y, pos.z);
 #elif DEBUG_SERVER
 	SetPosition(pos.x, pos.y, pos.z);
-	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 1, GetPosition());
+	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
 #endif
 }
 

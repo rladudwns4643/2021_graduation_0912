@@ -23,6 +23,7 @@ public:
 public:
 	void SetIsShoot(bool shoot);
 	int GetAnimType() override;
+	void SetAnimType(int anim);
 
 private:
 	unsigned short m_HP;
@@ -30,4 +31,5 @@ private:
 	bool m_isShoot{ false };
 	bool m_animJump{ false };
 	float m_fAttackTime{};
+	int m_anim;
 };

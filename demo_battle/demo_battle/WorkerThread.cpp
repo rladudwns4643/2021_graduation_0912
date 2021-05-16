@@ -262,6 +262,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		msg.vec.x = p->pos.x;
 		msg.vec.y = p->pos.y;
 		msg.vec.z = p->pos.z;
+		msg.anim_type = p->anim_type;
 		break;
 	}
 	case CB_LOOK_VECTOR: {

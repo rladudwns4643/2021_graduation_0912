@@ -66,7 +66,7 @@ public:
 	//void SendMovePacket(char key);
 	void SendAnimPacket(int anim_type);
 	void SendGetCoinPacket();
-	void SendPositionPacket(XMFLOAT3 pos);
+	void SendPositionPacket(XMFLOAT3 pos, int anim_type);
 	void SendLookVectorPacket(XMFLOAT3& look);
 	void SendBulletPacket(XMFLOAT3& dir);
 

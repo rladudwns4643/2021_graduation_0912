@@ -544,7 +544,7 @@ void NetCore::SendGameStartPacket() {
 	SendPacket(&p, SV_BATTLE);
 }
 
-void NetCore::SendPositionPacket(XMFLOAT3 pos) {
+void NetCore::SendPositionPacket(XMFLOAT3 pos, int anim_type) {
 	cb_packet_position p;
 	p.size = sizeof(p);
 	p.type = CB_POSITION_VECTOR;
@@ -552,6 +552,7 @@ void NetCore::SendPositionPacket(XMFLOAT3 pos) {
 	p.pos.x = pos.x;
 	p.pos.y = pos.y;
 	p.pos.z = pos.z;
+	p.anim_type = anim_type;
 	SendPacket(&p, SV_BATTLE);
 }
 

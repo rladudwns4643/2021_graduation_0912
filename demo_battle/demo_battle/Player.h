@@ -55,6 +55,7 @@ public:
 
 public:
 	virtual int GetAnimType() = 0;
+	virtual void SetAnimType(int) = 0;
 	int GetPrevAnimType();
 	void SetPrevAnimType(int animType);
 
@@ -69,7 +70,7 @@ protected:
 
 	char m_idStr[MAX_ID_LEN];
 	int m_mmr;
-	char m_prevAnimType;
+	int m_prevAnimType;
 
 	float m_fTimeElapsedJump{};
 

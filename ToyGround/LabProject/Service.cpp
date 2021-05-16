@@ -163,13 +163,15 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 	}
 	case EVENT_GAME_MAKE_MOVE: {
 		XMFLOAT3 arg_pos;
+		int arg_anim_type;
 
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_pos = va_arg(ap, XMFLOAT3);
+		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
 
-		NetCore::GetApp()->SendPositionPacket(arg_pos);
+		NetCore::GetApp()->SendPositionPacket(arg_pos, arg_anim_type);
 		break;
 	}
 	case EVENT_GAME_CALLBACK_MOUSE: {
@@ -195,10 +197,10 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_MAKE_ANIM: {
-		char arg_anim_type;
+		int arg_anim_type;
 		va_list ap;
 		va_start(ap, argsCount);
-		arg_anim_type = va_arg(ap, char);
+		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
 		cout << "MAKE_ANIM" << endl;
 		NetCore::GetApp()->SendAnimPacket(arg_anim_type);
@@ -213,7 +215,7 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
 
-		cout << "CALLBACK_ANIM" << endl;
+		//cout << "CALLBACK_ANIM" << endl;
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_ANIM, argsCount, arg_id, arg_anim_type);
 		break;
 	}

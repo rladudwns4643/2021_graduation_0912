@@ -97,6 +97,11 @@ void Room::Update() {
 			if (id != -1) {//not unset
 				m_players[i]->Update(elapsedMilliSec);
 				//anim
+				int anim_type{ m_players[i]->GetAnimType() };
+				if (anim_type != m_players[i]->GetPrevAnimType()) {
+					PushAnimMsg(id, anim_type);
+					m_players[i]->SetPrevAnimType(anim_type);
+				}
 			}
 		}
 		//WorldUpdate();
@@ -625,7 +630,10 @@ void Room::PushAnimMsg(int id, int animType) {
 	int tid{};
 	for (const auto& pl : m_players) {
 		tid = pl->GetID();
-		if (tid != -1 && tid != id) PushSendMsg(tid, &p);
+		if (tid != -1 && tid != id) {
+			cout << "anim: from: " << id << "to: " << tid << "anim_type: " << animType << endl;
+			PushSendMsg(tid, &p);
+		}
 	}
 }
 
@@ -702,13 +710,15 @@ void Room::ProcMsg(message msg) {
 	}
 	case CB_POSITION_VECTOR: {
 		for (auto& pl : m_players) {
-			int t_id = msg.id;
+			int t_id{ msg.id };
 			PTC_VECTOR t_v;
+			int t_anim{ msg.anim_type };
 			t_v.x = msg.vec.x;
 			t_v.y = msg.vec.y;
 			t_v.z = msg.vec.z;
 			if (t_id == pl->GetID()) {
 				pl->SetPosition(XMFLOAT3{ t_v.x, t_v.y, t_v.z });
+				pl->SetAnimType(t_anim);
 				PushPlayerPositionMsg(t_id, pl->GetID(), &t_v);
 			}
 			else {
@@ -720,11 +730,7 @@ void Room::ProcMsg(message msg) {
 	case CB_MAKE_ANIM: {
 		int t_id = msg.id;
 		int t_anim = msg.anim_type;
-		for (auto& pl : m_players) {
-			if (t_id != pl->GetID()) {
-				PushAnimMsg(t_id, t_anim);
-			}
-		}
+		//PushAnimMsg(t_id, t_anim);
 		break;
 	}
 

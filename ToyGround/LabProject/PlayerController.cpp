@@ -148,27 +148,22 @@ void PlayerController::OnKeyPressed()
 		if (InputHandler::IsKeyDown('W'))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Forward), m_Owner);
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, MoveState::Forward);
 		}
 		if (InputHandler::IsKeyDown('S'))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Backward), m_Owner);
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, MoveState::Backward);
 		}
 		if (InputHandler::IsKeyDown('A'))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::LeftStrafe), m_Owner);
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, MoveState::LeftStrafe);
 		}
 		if (InputHandler::IsKeyDown('D'))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::RightStrafe), m_Owner);
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, MoveState::RightStrafe);
 		}
 		if (InputHandler::IsKeyDown(VK_SPACE))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, MoveState::Jump);
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
 		}
 #endif

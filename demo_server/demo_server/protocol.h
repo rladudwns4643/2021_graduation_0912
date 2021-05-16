@@ -422,6 +422,7 @@ struct cb_packet_position {
 
 	int id;
 	PTC_VECTOR pos;
+	int anim_type;
 };
 struct cb_packet_get_coin {
 	BYTE size;
