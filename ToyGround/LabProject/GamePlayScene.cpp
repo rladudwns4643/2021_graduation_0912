@@ -52,6 +52,16 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		cout << "left Time: " << t << endl;
 		break;
 	}
+	case EVENT_GAME_ADD_COIN: {
+		XMFLOAT3 arg_pos;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_pos = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+		//todo: draw coin
+		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
+		break;
+	}
 	case EVENT_GAME_CALLBACK_MOVE: {
 		int arg_id;
 		XMFLOAT3 arg_pos;
@@ -126,16 +136,18 @@ bool GameplayScene::Enter()
 	AppContext->DisplayProps(m_MapName);
 //	AppContext->DisplayProps(m_MapName, true, 0.5f);
 
+#ifdef DEBUG_SERVER
 	int cnt = Service::GetApp()->GetBattleClientsCount();
 	m_player_in_room.resize(cnt);
 	Service::GetApp()->AddEvent(EVENT_GAME_START);
+#endif
 
+#ifdef DEBUG_CLIENTdddd
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
-	m_Users[m_PlayerID]->m_PlayerID = m_PlayerID;
+	m_Users[m_PlayerID]->m_PlayerID = 0;
 	m_Users[m_PlayerID]->m_MapName = m_MapName;
-	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
-	m_Users[1]->m_PlayerID = 1;
-
+	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN); m_uUsers[1] = ->m_playerid = 1;
+#endif
 	///---
 	// Player type, id 등등 세팅
 	for (auto& u : m_Users) {

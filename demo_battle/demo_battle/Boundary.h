@@ -52,6 +52,7 @@ public:
 	void BoundaryMove(XMFLOAT3 distance);
 
 private:
+	//
 	int m_obj_type;
 	int m_numOfBB;
 	XMFLOAT4X4* m_xmf4x4_BB_world;

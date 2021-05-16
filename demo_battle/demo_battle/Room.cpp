@@ -47,6 +47,9 @@ void Room::Initialize(int room_no) {
 
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(30ms), EV_UPDATE };
 	BattleServer::GetInstance()->AddTimer(ev);
+
+	EVENT ev_add_coin{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(20), EV_ADD_COIN };
+	BattleServer::GetInstance()->AddTimer(ev_add_coin);
 }
 
 void Room::Reset() {
@@ -313,6 +316,10 @@ std::wstring Room::GetRoomName() {
 	return m_roomName;
 }
 
+PTC_VECTOR Room::GetCoinRandPos() {
+	return PTC_VECTOR();
+}
+
 int Room::GetcurPlayerNum() {
 	return m_curPlayerNum;
 }
@@ -327,6 +334,19 @@ bool Room::IsGameStarted() {
 
 bool Room::IsRoomStarted() {
 	return m_isRoundStarted;
+}
+
+void Room::SendAddCoinPacket() {
+	if (this == nullptr) return;
+	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EV_ADD_COIN };
+	BattleServer::GetInstance()->AddTimer(ev);
+	PTC_VECTOR coin_pos{ rand() % 300 - 150 , 0, rand() % 300 - 150 };
+	for (int i = 0; i < MAX_PLAYER; ++i) {
+		int id = m_players[i]->GetID();
+		if (id != -1) {
+			BattleServer::GetInstance()->SendAddCoinPacket(id, coin_pos);
+		}
+	}
 }
 
 void Room::SendLeftTimePacket() {
@@ -348,7 +368,7 @@ void Room::CheckGameState() {
 	if (m_leftTime <= MAX_LEFT_TIME - COUNTDOWN_TIME) {
 		if (!m_isRoundStarted) {
 			m_isRoundStarted = true;
-			cout << "---RoundStart---\n";
+			//cout << "---RoundStart---\n";
 			RoundStart();
 		}
 	}
@@ -384,12 +404,13 @@ void Room::GameStart(){
 	m_isEnterable = false;
 }
 
-//unused
 void Room::RoundStart() {
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		const int& id = m_players[i]->GetID();
 		if (id != -1) {
 			BattleServer::GetInstance()->SendRoundStartPacket(id);
+			//EVENT ev_coin{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(2), EV_ADD_COIN };
+			//BattleServer::GetInstance()->AddTimer(ev_coin);
 		}
 	}
 }
@@ -457,11 +478,13 @@ void Room::FlushSendMsg() {
 }
 
 void Room::PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info) {
+#ifdef LOG_ON
 	cout << "[ROOM] PushPlayerPositionMsg: " <<
 		"to: " << to << " from: " << from <<
 		" px: " << position_info->x <<
 		" py: " << position_info->y <<
 		" pz: " << position_info->x << endl;
+#endif //LOG_ON
 	bc_packet_player_pos p;
 	p.size = sizeof(p);
 	p.type = BC_PLAYER_POS;
@@ -684,7 +707,6 @@ void Room::ProcMsg(message msg) {
 			t_v.x = msg.vec.x;
 			t_v.y = msg.vec.y;
 			t_v.z = msg.vec.z;
-			cout << "!!: " << t_v.x << " " << t_v.y << " " << t_v.z << endl;
 			if (t_id == pl->GetID()) {
 				pl->SetPosition(XMFLOAT3{ t_v.x, t_v.y, t_v.z });
 				PushPlayerPositionMsg(t_id, pl->GetID(), &t_v);
@@ -709,7 +731,9 @@ void Room::ProcMsg(message msg) {
 					break;
 				}
 				else if (i + 1 == MAX_BULLET_COUNT) {
+#ifdef LOG_ON
 					cout << "bullet max\n";
+#endif //LOG_ON
 				}
 			}
 		}

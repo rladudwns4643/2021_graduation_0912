@@ -98,6 +98,15 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, t);
 		break;
 	}
+	case EVENT_GAME_ADD_COIN: {
+		XMFLOAT3 arg_pos;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_pos = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_pos);
+		break;
+	}
 	case EVENT_GAME_CALLBACK_MOVE: {
 		int arg_id;
 		XMFLOAT3 arg_pos;

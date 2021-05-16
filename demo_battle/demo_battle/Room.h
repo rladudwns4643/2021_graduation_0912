@@ -31,6 +31,7 @@ public:
 	bool EnterRoom(int id, bool is_roomMnr);
 	void AnnounceRoomEnter(int id);
 	void LeaveRoom(int id);
+	PTC_VECTOR GetCoinRandPos();
 
 	void LoadMap(); //¸Ê ÇÏ³ª
 	void UpdateActive();
@@ -42,6 +43,7 @@ public:
 	bool IsRoomEnterable() { return m_isEnterable; }
 	bool IsRoomStarted();
 
+	void SendAddCoinPacket();
 	void SendLeftTimePacket();
 
 	void CheckGameState();

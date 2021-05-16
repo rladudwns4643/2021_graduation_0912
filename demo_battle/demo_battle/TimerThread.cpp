@@ -44,6 +44,11 @@ void TimerThread::ProcThread() {
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
+			case EV_ADD_COIN: {
+				ex_over->ev_type = EV_ADD_COIN;
+				*(int*)ex_over->net_buf = proc_ev.target;
+				break;
+			}
 			case EV_MOVE_ENABLE: {
 				ex_over->ev_type = EV_MOVE_ENABLE;
 				*(int*)ex_over->net_buf = proc_ev.target;
