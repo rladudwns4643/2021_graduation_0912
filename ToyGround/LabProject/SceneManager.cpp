@@ -156,6 +156,15 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id, arg_look);
 		break;
 	}
+	case EVENT_GAME_GAMEOVER: {
+		int arg_winner;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_winner = va_arg(ap, int);
+		va_end(ap);
+
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_winner);
+	}
 	}
 }
 

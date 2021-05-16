@@ -20,7 +20,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_START: {
-		cout << "게임 시작" << endl;
+		cout << "EVENT_GAME_START(cnt down start)" << endl;
 		va_list ap;
 		int arg_bt_id;
 		XMFLOAT4 arg_sl;
@@ -40,6 +40,21 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
 		//m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
 
+		break;
+	}
+	case EVENT_GAME_ROUND_START: {
+		//todo: time active (start)
+		break;
+	}
+	case EVENT_GAME_GAMEOVER: {
+		int arg_winner;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_winner = va_arg(ap, int);
+		va_end(ap);
+
+		//todo: 씬 변환?
+		cout << "WINNER: " << arg_winner << endl;
 		break;
 	}
 	case EVENT_GAME_TIMER: {

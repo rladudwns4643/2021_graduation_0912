@@ -141,6 +141,10 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_ROOM_START);
 		break;
 	}
+	case EVENT_GAME_ROUND_START: {
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_ROUND_START);
+		break;
+	}
 	case EVENT_GAME_START: {
 		std::lock_guard<std::mutex> lock(m_mutex_event);
 		for (auto& bc : NetCore::GetApp()->m_battle_clients) {
@@ -300,7 +304,14 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_GAMEOVER: { //BC_GAME_OVER
-		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_GAMEOVER);
+		int arg_winner;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_winner = va_arg(ap, int);
+		va_end(ap);
+
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_GAMEOVER, argsCount, arg_winner);
+		cout << "GAME OVER" << endl;
 		break;
 	}
 	case EVENT_GAME_UPDATE_SERVER_USERINFO: { //BC_UPDATE_USER_INFO
