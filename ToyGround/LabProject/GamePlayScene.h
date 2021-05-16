@@ -38,7 +38,7 @@ private:
 	void ChangeFreeCamera();
 
 public:
-	bool m_PauseScene = false;
+	bool m_PauseScene = true;
 
 private:
 	// 플레이어들
