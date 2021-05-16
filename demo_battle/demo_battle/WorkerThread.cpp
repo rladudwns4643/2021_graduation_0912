@@ -166,6 +166,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 	memset(&msg, 0, sizeof(message));
 	msg.id = id;
 	msg.type = NO_MSG;
+	msg.anim_type = -1;
 
 #ifdef LOG_ON
 	std::cout << "[WORKER] ProcPacket Type: " << (int)inputPacket[1] << " ID: " << id << endl;
@@ -238,6 +239,16 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		if (SR::g_rooms[roomNo]->IsEmpty()) {
 			EraseRoom(roomNo);
 		}
+		break;
+	}
+	case CB_MAKE_ANIM: {
+		cb_packet_anim* p = reinterpret_cast<cb_packet_anim*>(inputPacket);
+		if (p == nullptr) {
+			msg.type = NO_MSG;
+		}
+		msg.id = p->id;
+		msg.type = CB_MAKE_ANIM;
+		msg.anim_type = p->anim_type;
 		break;
 	}
 	case CB_POSITION_VECTOR: {

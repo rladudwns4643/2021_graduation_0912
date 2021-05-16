@@ -61,7 +61,7 @@ public:		//send msg
 	void PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info);
 	void PushPlayerDirectionMsg(int to, int from, PTC_VECTOR look);
 	void PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* position_info);
-	void PushTransformMsg(int transformer, short obj_type);
+	//void PushTransformMsg(int transformer, short obj_type);
 	void PushShootBulletMsg(int to, int bullet_id, PTC_VECTOR look);
 	void PushRemoveBulletMsg(int bullet_id);
 	void PushHitMsg(int hit_id, int dmg);

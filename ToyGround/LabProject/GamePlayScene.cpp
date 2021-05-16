@@ -65,6 +65,19 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
 		break;
 	}
+	case EVENT_GAME_CALLBACK_ANIM: {
+		int arg_id;
+		char arg_anim_type;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_anim_type = va_arg(ap, char);
+		va_end(ap);
+
+		//change anim
+
+		break;
+	}
 	case EVENT_GAME_CALLBACK_MOVE: {
 		int arg_id;
 		XMFLOAT3 arg_pos;

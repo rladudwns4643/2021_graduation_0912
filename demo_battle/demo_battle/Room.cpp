@@ -625,7 +625,7 @@ void Room::PushAnimMsg(int id, int animType) {
 	int tid{};
 	for (const auto& pl : m_players) {
 		tid = pl->GetID();
-		if (tid != -1) PushSendMsg(tid, &p);
+		if (tid != -1 && tid != id) PushSendMsg(tid, &p);
 	}
 }
 
@@ -717,6 +717,17 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
+	case CB_MAKE_ANIM: {
+		int t_id = msg.id;
+		int t_anim = msg.anim_type;
+		for (auto& pl : m_players) {
+			if (t_id != pl->GetID()) {
+				PushAnimMsg(t_id, t_anim);
+			}
+		}
+		break;
+	}
+
 	case CB_BULLET: {
 		if (!m_isRoundStarted) break;
 		int bullet_id{};

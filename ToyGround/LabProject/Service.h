@@ -37,7 +37,8 @@
 #define	EVENT_GAME_ADD_COIN							0xCA7
 #define EVENT_GAME_HIT								0xCA8
 #define EVENT_GAME_DIE								0xCA9
-#define EVENT_GAME_ANIM								0xCB0
+#define EVENT_GAME_CALLBACK_ANIM					0xCB0
+#define EVENT_GAME_MAKE_ANIM						0xCB1
 
 #define EVENT_GAME_TIMER							0xD0
 #define EVENT_GAME_GAMEOVER							0xD1

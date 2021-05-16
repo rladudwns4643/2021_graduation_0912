@@ -80,4 +80,5 @@ struct message {
 	int id;
 	char type;
 	XMFLOAT3 vec;
+	int anim_type;
 };

@@ -215,7 +215,9 @@ void NetCore::ProcessData(char* buf, size_t io_byte) {
 }
 
 void NetCore::ProcessPacket(char* packet_buf) {
+#ifdef LOG_ON
 	cout << "[NETCORE] procpacket: " << (int)packet_buf[1] << " LobbyID: " << m_client.lobby_id << " BattleID: " << m_client.battle_id << endl;
+#endif
 	switch ((BYTE)packet_buf[1]) { //type
 	case LC_LOGIN_OK: {
 		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet_buf);
@@ -246,7 +248,6 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		m_battle_clients[m_client.battle_id]->m_room_num = p->roomNum;
 		m_battle_clients[m_client.battle_id]->m_host = p->isHost;
 
-		cout << "FINDROOM: " << p->roomNum << endl;
 		Service::GetApp()->AddEvent(EVENT_ROOM_FIND_ROOM);
 		break;
 	}
@@ -406,7 +407,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	}
 	case BC_ANIM: { //id가 어떤 anim인지
 		bc_packet_anim_type* p = reinterpret_cast<bc_packet_anim_type*>(packet_buf);
-		Service::GetApp()->AddEvent(EVENT_GAME_ANIM, 2, p->id, p->anim_type);
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_ANIM, 2, p->id, p->anim_type);
 		break;
 	}
 	case BC_LEFT_TIME: {
@@ -488,6 +489,16 @@ void NetCore::SendRequestUserInfoPacket() {
 	p.size = sizeof(p);
 	p.type = CL_REQUEST_USER_INFO;
 	SendPacket(&p, SV_LOBBY);
+}
+
+void NetCore::SendAnimPacket(int anim_type) {
+	cb_packet_anim p;
+	p.size = sizeof(p);
+	p.type = CB_MAKE_ANIM;
+	p.id = m_client.battle_id;
+	p.anim_type = anim_type;
+
+	SendPacket(&p, SV_BATTLE);
 }
 
 bool NetCore::SendBattleLoginPacket() {
