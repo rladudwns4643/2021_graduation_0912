@@ -42,7 +42,7 @@ void Character::Update(const float deltaT)
 		m_PlayerController->Update(deltaT);
 
 	m_AnimationController->Update(deltaT);
-	cout << m_PlayerID << ": " << m_AnimationController->m_KeyState << endl;
+	//cout << m_PlayerID << ": " << m_AnimationController->m_KeyState << endl;
 //	WeaponUpdate();
 }
 

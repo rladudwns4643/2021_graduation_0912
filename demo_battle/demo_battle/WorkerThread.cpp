@@ -287,6 +287,12 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		msg.type = CB_READY;
 		break;
 	}
+	case CB_GET_COIN: {
+		cb_packet_get_coin* p = reinterpret_cast<cb_packet_get_coin*>(inputPacket);
+		msg.id = p->id;
+		msg.type = CB_GET_COIN;
+		break;
+	}
 	case CB_TEST_TIME_PLUS:
 	case CB_TEST_TIME_MINUS: {
 		msg.type = inputPacket[1];

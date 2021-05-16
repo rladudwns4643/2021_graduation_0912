@@ -54,7 +54,7 @@
 
 //------------------------------------------------------------------
 #define MAX_ROOM_COUNT 5
-#define ADD_COIN_TIME 10 //second
+#define ADD_COIN_TIME 5 //second
 //------------------------------------------------------------------
 
 
@@ -178,6 +178,7 @@ struct cl_packet_cancel_automatch {
 #define BC_ROUND_START			13
 
 #define BC_ADD_COIN				24
+#define BC_UPDATE_COIN			26
 #define BC_PLAYER_POS			14
 #define BC_PLAYER_ROT			15
 #define BC_OBJECT_POS			16
@@ -191,7 +192,6 @@ struct cl_packet_cancel_automatch {
 #define BC_DIE					21
 
 #define BC_UPDATED_USER_INFO	22
-#define BC_ANIM					23
 
 #pragma pack(push, 1)
 struct PTC_START_INFO {
@@ -290,6 +290,13 @@ struct bc_packet_add_coin {
 	BYTE type;
 
 	PTC_VECTOR pos;
+};
+struct bc_packet_update_coin {
+	BYTE size;
+	BYTE type;
+
+	int id;
+	int coin_cnt;
 };
 struct bc_packet_left_time {
 	BYTE size;
@@ -427,6 +434,8 @@ struct cb_packet_position {
 struct cb_packet_get_coin {
 	BYTE size;
 	BYTE type;
+
+	int id;
 };
 struct cb_packet_anim {
 	BYTE size;

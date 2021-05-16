@@ -273,6 +273,18 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_TIMER, argsCount, t);
 		break;
 	}
+	case EVENT_GAME_UPDATE_COIN: {
+		int arg_id;
+		int arg_coin_cnt;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_coin_cnt = va_arg(ap, int);
+		va_end(ap);
+
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_UPDATE_COIN, argsCount, arg_id, arg_coin_cnt);
+		break;
+	}
 	case EVENT_GAME_ADD_COIN: {
 		XMFLOAT3 arg_pos;
 		va_list ap;
@@ -281,6 +293,10 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		va_end(ap);
 
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_ADD_COIN, argsCount, arg_pos);
+		break;
+	}
+	case EVENT_GAME_GET_COIN: {
+		NetCore::GetApp()->SendGetCoinPacket();
 		break;
 	}
 	case EVENT_GAME_GAMEOVER: { //BC_GAME_OVER
