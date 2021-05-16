@@ -142,11 +142,12 @@ bool GameplayScene::Enter()
 	Service::GetApp()->AddEvent(EVENT_GAME_START);
 #endif
 
-#ifdef DEBUG_CLIENTdddd
+#ifdef DEBUG_CLIENT
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
 	m_Users[m_PlayerID]->m_PlayerID = 0;
 	m_Users[m_PlayerID]->m_MapName = m_MapName;
-	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN); m_uUsers[1] = ->m_playerid = 1;
+	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN); 
+	m_Users[1]->m_PlayerID = 1;
 #endif
 	///---
 	// Player type, id 등등 세팅
