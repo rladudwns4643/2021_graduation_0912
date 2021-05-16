@@ -164,6 +164,7 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		va_end(ap);
 
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_winner);
+		break;
 	}
 	}
 }

@@ -424,12 +424,14 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		bc_packet_left_time* p = reinterpret_cast<bc_packet_left_time*>(packet_buf);
 		int time{ p->left_time }; //unsigned char 로 type cast 필요할까
 		Service::GetApp()->AddEvent(EVENT_GAME_TIMER, 1, time);
+		break;
 	}
 	case BC_GAME_OVER: {
 		bc_packet_game_over* p = reinterpret_cast<bc_packet_game_over*>(packet_buf);
 		m_winner = p->win_team;
 
 		Service::GetApp()->AddEvent(EVENT_GAME_GAMEOVER, 1, p->win_team);
+		break;
 	}
 	case BC_UPDATED_USER_INFO: {
 		bc_packet_updated_user_info* p = reinterpret_cast<bc_packet_updated_user_info*>(packet_buf);

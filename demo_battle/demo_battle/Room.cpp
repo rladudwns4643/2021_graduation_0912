@@ -631,7 +631,7 @@ void Room::PushAnimMsg(int id, int animType) {
 	for (const auto& pl : m_players) {
 		tid = pl->GetID();
 		if (tid != -1 && tid != id) {
-			cout << "anim: from: " << id << "to: " << tid << "anim_type: " << animType << endl;
+			//cout << "anim: from: " << id << "to: " << tid << "anim_type: " << animType << endl;
 			PushSendMsg(tid, &p);
 		}
 	}
