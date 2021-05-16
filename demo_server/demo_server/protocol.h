@@ -283,7 +283,7 @@ struct bc_packet_game_over {
 	BYTE size;
 	BYTE type;
 
-	char win_team;
+	int win_team;
 };
 struct bc_packet_add_coin {
 	BYTE size;

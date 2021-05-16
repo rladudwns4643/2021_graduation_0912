@@ -342,6 +342,11 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_ROOM_START);
 		break;
 	}
+	case BC_ROUND_START: {
+		bc_packet_round_start* p = reinterpret_cast<bc_packet_round_start*>(packet_buf);
+		Service::GetApp()->AddEvent(EVENT_GAME_ROUND_START);
+		break;
+	}
 	//in game
 	case BC_ADD_COIN: {
 		bc_packet_add_coin* p = reinterpret_cast<bc_packet_add_coin*>(packet_buf);
@@ -422,10 +427,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	}
 	case BC_GAME_OVER: {
 		bc_packet_game_over* p = reinterpret_cast<bc_packet_game_over*>(packet_buf);
-
 		m_winner = p->win_team;
 
-		Service::GetApp()->AddEvent(EVENT_GAME_GAMEOVER);
+		Service::GetApp()->AddEvent(EVENT_GAME_GAMEOVER, 1, p->win_team);
 	}
 	case BC_UPDATED_USER_INFO: {
 		bc_packet_updated_user_info* p = reinterpret_cast<bc_packet_updated_user_info*>(packet_buf);

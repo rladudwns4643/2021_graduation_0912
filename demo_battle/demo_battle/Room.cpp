@@ -422,8 +422,8 @@ void Room::RoundStart() {
 
 void Room::GameOver(int winner) {
 	cout << winner << " winner!\n";
-	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EV_RESET_ROOM };
-	BattleServer::GetInstance()->AddTimer(ev);
+	//EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EV_RESET_ROOM };
+	//BattleServer::GetInstance()->AddTimer(ev);
 	for (const auto& pl : m_players) {
 		BattleServer::GetInstance()->SendGameOverPacket(pl->GetID(), winner);
 	}
@@ -446,7 +446,7 @@ void Room::UpdateUserInfo_DB(int winner) {
 
 		EVENT ev{ id, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(1), EV_UPDATE_DB };
 		BattleServer::GetInstance()->AddTimer(ev);
-		BattleServer::GetInstance()->SendGameOverPacket(id, winner);
+		//BattleServer::GetInstance()->SendGameOverPacket(id, winner);
 	}
 }
 

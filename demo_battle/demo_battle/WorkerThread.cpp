@@ -140,7 +140,7 @@ void WorkerThread::ProcThread() {
 		}
 		case EV_RESET_ROOM: {
 			int room_id = *(int*)ex_over->net_buf;
-			SR::g_rooms[room_id]->WorldUpdate();
+			//SR::g_rooms[room_id]->WorldUpdate();
 			delete ex_over;
 			break;
 		}
