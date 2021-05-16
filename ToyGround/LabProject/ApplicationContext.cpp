@@ -145,6 +145,7 @@ void ApplicationContext::HiddenGem(int instID, bool isVisible)
 
 	ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 	ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+	obj->m_IsVisible = isVisible;
 
 	if (isVisible)
 	{
