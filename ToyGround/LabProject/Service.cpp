@@ -194,6 +194,29 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		NetCore::GetApp()->SendLookVectorPacket(arg_look);
 		break;
 	}
+	case EVENT_GAME_MAKE_ANIM: {
+		char arg_anim_type;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_anim_type = va_arg(ap, char);
+		va_end(ap);
+		cout << "MAKE_ANIM" << endl;
+		NetCore::GetApp()->SendAnimPacket(arg_anim_type);
+		break;
+	}
+	case EVENT_GAME_CALLBACK_ANIM: {
+		int arg_id;
+		int arg_anim_type;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_anim_type = va_arg(ap, int);
+		va_end(ap);
+
+		cout << "CALLBACK_ANIM" << endl;
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_ANIM, argsCount, arg_id, arg_anim_type);
+		break;
+	}
 	case EVENT_GAME_SHOOT_BULLET: {
 		int arg_bullet_id;
 		XMFLOAT3 arg_start_pos;
@@ -236,29 +259,6 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		va_end(ap);
 
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_DIE, argsCount, arg_id);
-		break;
-	}
-	case EVENT_GAME_MAKE_ANIM: {
-		char arg_anim_type;
-		va_list ap;
-		va_start(ap, argsCount);
-		arg_anim_type = va_arg(ap, char);
-		va_end(ap);
-		cout << "MAKE_ANIM" << endl;
-		NetCore::GetApp()->SendAnimPacket(arg_anim_type);
-		break;
-	}
-	case EVENT_GAME_CALLBACK_ANIM: {
-		int arg_id;
-		char arg_anim_type;
-		va_list ap;
-		va_start(ap, argsCount);
-		arg_id = va_arg(ap, int);
-		arg_anim_type = va_arg(ap, char);
-		va_end(ap);
-
-		cout << "CALLBACK_ANIM" << endl;
-		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_ANIM, argsCount, arg_id, arg_anim_type);
 		break;
 	}
 	case EVENT_GAME_TIMER: { //BC_LEFT_TIME
