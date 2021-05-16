@@ -345,7 +345,9 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 	SetIndexPos(pos);
 	
 	if (preIndexPosX != m_IndexPosX || preIndexPosY != m_IndexPosY || preIndexPosZ != m_IndexPosZ)
-		cout << "X: " << m_IndexPosX << " Y: " << m_IndexPosY << " Z: " << m_IndexPosZ << endl;
+	{
+		//	cout << "X: " << m_IndexPosX << " Y: " << m_IndexPosY << " Z: " << m_IndexPosZ << endl;
+	}
 
 	Map* originMap = AppContext->m_Maps[m_MapName];
 	for (auto& p : originMap->mapInfoVector)
@@ -383,8 +385,8 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 						objMin.y <= playerMax.y && objMax.y >= playerMin.y &&
 						objMin.z <= playerMax.z && objMax.z >= playerMin.z)
 					{
-						cout << "Collison - " << p.meshName << ", " << p.typeID  << endl;
-						cout << "aX: " << aX << " aY: " << aY << " aZ: " << aZ << endl;
+						//cout << "Collison - " << p.meshName << ", " << p.typeID  << endl;
+						//cout << "aX: " << aX << " aY: " << aY << " aZ: " << aZ << endl;
 					}
 				}
 			}
