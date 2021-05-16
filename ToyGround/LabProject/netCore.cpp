@@ -3,7 +3,7 @@
 #include "Service.h"
 
 NetCore::NetCore() {
-	//Initialize();
+	Initialize();
 }
 
 NetCore::~NetCore() {
@@ -83,11 +83,13 @@ bool NetCore::SendPacket(void* buf, eSERVER sv) {
 	char* p = reinterpret_cast<char*>(buf);
 	int psize = (BYTE)p[0];
 	int retval = send(m_client.socket[sv].socket, p, psize, 0);
-	//cout << "[NETCORE] SEND: " << (int)p[1] << " for " << (int)sv << endl;
+#ifdef LOG_ON
+	cout << "[NETCORE] SEND: " << (int)p[1] << " for " << (int)sv << endl;
+#endif //LOG_ON
 	if (retval == SOCKET_ERROR) {
 		int error_no = WSAGetLastError();
 		if (error_no != WSA_IO_PENDING) {
-	//		errorDisplay("Send error");
+			errorDisplay("Send error");
 		}
 		return false;
 	}

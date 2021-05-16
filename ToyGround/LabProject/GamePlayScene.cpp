@@ -33,10 +33,12 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		if (arg_bt_id == 1) {
 			m_player_in_room[0] = arg_bt_id;
 			m_Users[arg_bt_id] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
+			m_Users[arg_bt_id]->m_MapName = m_MapName;
 		}
 		else {
 			m_player_in_room[1] = arg_bt_id;
 			m_Users[arg_bt_id] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
+			m_Users[arg_bt_id]->m_MapName = m_MapName;
 		}
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
 		m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
@@ -59,6 +61,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_pos = va_arg(ap, XMFLOAT3);
 		va_end(ap);
 		//todo: draw coin
+
 		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
 		break;
 	}
