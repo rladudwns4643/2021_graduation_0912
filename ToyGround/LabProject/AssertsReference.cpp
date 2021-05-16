@@ -10,20 +10,20 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 	set<string> propTypeSet;
 
 	MapTool::PlayerInfo prePlayerInfo;
-	prePlayerInfo.playerName = "Cowboy";
+	prePlayerInfo.playerName = CHARACTER_COWBOY;
 	prePlayerInfo.position.x = 0.f;
 	prePlayerInfo.position.y = 0.f;
-	prePlayerInfo.position.z = 0.f;
-	prePlayerInfo.rotY = 0.f;
-	prePlayerInfo.spawnPos = XMFLOAT3(0,0,0);
+	prePlayerInfo.position.z = STD_CUBE_SIZE * 14;
+	prePlayerInfo.rotY = 180.f;
+	prePlayerInfo.spawnPos = XMFLOAT3(0, 0, STD_CUBE_SIZE * 14);
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
-	prePlayerInfo.playerName = "GunMan";
+	prePlayerInfo.playerName = CHARACTER_GUNMAN;
 	prePlayerInfo.position.x = 0.f;
 	prePlayerInfo.position.y = 0.f;
-	prePlayerInfo.position.z = 0.f;
-	prePlayerInfo.rotY = 180.f;
-	prePlayerInfo.spawnPos = XMFLOAT3(0, 0, 0);
+	prePlayerInfo.position.z = -STD_CUBE_SIZE * 14;
+	prePlayerInfo.rotY = 0.f;
+	prePlayerInfo.spawnPos = XMFLOAT3(0, 0, -STD_CUBE_SIZE * 14);
 	map->playerInfoVector.emplace_back(prePlayerInfo);
 
 	//-------------------------
@@ -260,7 +260,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.rotation.y = 90.f;
 						preInfo.meshName = OBJECT_MESH_STR_CUBE_BRIDGE;
 						propTypeSet.insert(OBJECT_MESH_STR_CUBE_BRIDGE);
-						preInfo.colWithChar = true;
+						preInfo.colWithChar = false;
 						shiftY = -STD_CUBE_SIZE * 0.85;
 						break;
 					}

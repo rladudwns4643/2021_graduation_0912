@@ -56,7 +56,8 @@ public:
 
 public:
 	std::string FindMapName(int mapCode) const;
-	XMFLOAT3	FindSpawnLocation(std::string mapName, XMFLOAT4 spawnpos);
+	XMFLOAT3	FindSpawnLocation(std::string mapName, Character* user);
+	XMFLOAT3	FindSpawnLocation(std::string mapName, std::string userName);
 
 	void CreateSkycube(std::string skycubeName, std::string instID, std::string matName);
 	void CreateProps(std::string mapName);
@@ -65,8 +66,8 @@ public:
 
 	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
 
-	void DisplayCharacter(std::string mapName, Character* user, XMFLOAT4 spawnpos, bool isVisible = true);
-	void DisplayCharacter(std::string mapName, std::string userName, XMFLOAT4 spawnpos, bool isVisible = true);
+	void DisplayCharacter(std::string mapName, Character* user, bool isVisible = true);
+	void DisplayCharacter(std::string mapName, std::string userName, bool isVisible = true);
 
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;

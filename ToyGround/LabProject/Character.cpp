@@ -324,17 +324,18 @@ void Character::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 
 void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 {
+	XMFLOAT3 prePos = GetPosition();
 	XMFLOAT3 pos = MathHelper::Add(GetPosition(), xmf3Shift);
 
-	// 벽출돌 계산
-	if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.x))
-		pos.x = (MAP_WIDTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.x);
-	if (pos.x <= -((MAP_WIDTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.x)))
-		pos.x = -((MAP_WIDTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.x));
-	if (pos.z >= (MAP_DEPTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.z))
-		pos.z = (MAP_DEPTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.z);
-	if (pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.z)))
-		pos.z = -((MAP_DEPTH_BLOCK_NUM / 2 + 1) * STD_CUBE_SIZE - (m_Bounds.Extents.z));
+	// 벽충돌 계산
+	if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE)
+		pos.x = (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE;
+	if (pos.x <= -((MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE))
+		pos.x = -((MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE);
+	if (pos.z >= (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE)
+		pos.z = (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE;
+	if (pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE))
+		pos.z = -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE);
 	if (pos.y < 0.0f)
 		pos.y = 0.0f;
 
@@ -352,7 +353,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 	Map* originMap = AppContext->m_Maps[m_MapName];
 	for (auto& p : originMap->mapInfoVector)
 	{
-		for (int i = 0; i < 81; i += 3)
+		for (int i = 0; i < 54; i += 3)
 		{
 			int aX = m_IndexPosX + shiftArr[i];
 			int aY = m_IndexPosY + shiftArr[i + 1];
@@ -385,16 +386,6 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 						objMin.y <= playerMax.y && objMax.y >= playerMin.y &&
 						objMin.z <= playerMax.z && objMax.z >= playerMin.z)
 					{
-						//cout << "Collison - " << p.meshName << ", " << p.typeID  << endl;
-						//cout << "aX: " << aX << " aY: " << aY << " aZ: " << aZ << endl;
-						if (objMin.x <= playerMax.x)
-							pos.x -= (objMin.x - playerMax.x);
-						if (objMax.x >= playerMin.x)
-							pos.x += (objMax.x - playerMin.x);
-						if (objMin.z <= playerMax.z)
-							pos.z -= (objMin.z - playerMax.z);
-						if (objMax.z >= playerMin.z)
-							pos.z += (objMax.z - playerMin.z);
 					}
 				}
 			}

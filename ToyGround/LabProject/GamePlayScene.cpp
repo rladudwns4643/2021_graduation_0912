@@ -41,7 +41,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 			m_Users[arg_bt_id]->m_MapName = m_MapName;
 		}
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
-		m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
+		//m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
 
 		break;
 	}
@@ -156,7 +156,7 @@ bool GameplayScene::Enter()
 	// Player type, id 등등 세팅
 	for (auto& u : m_Users) {
 		if (u.second) {
-			AppContext->DisplayCharacter(m_MapName, u.second, u.second->m_SpawnLoaction);
+			AppContext->DisplayCharacter(m_MapName, u.second);
 		}
 	}
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);

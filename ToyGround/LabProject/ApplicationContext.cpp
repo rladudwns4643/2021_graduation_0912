@@ -27,15 +27,29 @@ std::string ApplicationContext::FindMapName(int mapCode) const
 	return mapName;
 }
 
-XMFLOAT3 ApplicationContext::FindSpawnLocation(std::string mapName, XMFLOAT4 spawnpos)
+XMFLOAT3 ApplicationContext::FindSpawnLocation(std::string mapName, Character* user)
 {
 	std::vector<MapTool::PlayerInfo> playerInfoVec = m_Maps[mapName]->playerInfoVector;
 
 	for (auto& p : playerInfoVec) {
-		XMFLOAT3 t{ spawnpos.x, spawnpos.y, spawnpos.z };
-		if (XMVector3Equal(XMLoadFloat3(&t), XMLoadFloat3(&p.spawnPos)))
+		if (user->m_UserPlayerMeshName == p.playerName)
 		{
-			return p.position;
+			return p.spawnPos;
+		}
+	}
+
+	return XMFLOAT3(0, 0, 0);
+}
+
+XMFLOAT3 ApplicationContext::FindSpawnLocation(std::string mapName, std::string userName)
+{
+	Character* user = FindObject<Character>(userName, userName);
+	std::vector<MapTool::PlayerInfo> playerInfoVec = m_Maps[mapName]->playerInfoVector;
+
+	for (auto& p : playerInfoVec) {
+		if (userName == p.playerName)
+		{
+			return p.spawnPos;
 		}
 	}
 
@@ -79,6 +93,7 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->SetBBMesh(meshName);
 	chr->SetMaterial(AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex);
 	chr->SetAnimationController(AssertsReference::GetApp()->m_SkinnedModelInsts[meshName].get());
+	chr->m_UserPlayerMeshName = meshName;
 	chr->m_SkinnedCBIndex = skinnedCBIndex;
 	chr->m_PlayerID = skinnedCBIndex;
 	chr->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[meshName]->Center;
@@ -117,7 +132,7 @@ void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float s
 	}
 }
 
-void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, XMFLOAT4 spawnpos, bool isVisible)
+void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, bool isVisible)
 {
 	if (!m_Maps.count(mapName)) return;
 	if (!user) return;
@@ -125,13 +140,11 @@ void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, 
 	std::vector<MapTool::PlayerInfo> playerInfoVec = m_Maps[mapName]->playerInfoVector;
 
 	for (auto& p : playerInfoVec) {
-		XMFLOAT3 t{ spawnpos.x, spawnpos.y, spawnpos.z };
-		if (XMVector3Equal(XMLoadFloat3(&t), XMLoadFloat3(&p.spawnPos)))
+		if (user->m_UserPlayerMeshName == p.playerName)
 		{
 			user->InitializeTransform();
 			user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
 			user->SetAnimationPlayerState(AnimationController::PlayerState::STATE_IDLE);
-
 			user->m_HP = 1.f;
 			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
 			user->SetPosition(p.position);
@@ -139,7 +152,7 @@ void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, 
 	}
 }
 
-void ApplicationContext::DisplayCharacter(std::string mapName, std::string userName, XMFLOAT4 spawnpos, bool isVisible)
+void ApplicationContext::DisplayCharacter(std::string mapName, std::string userName, bool isVisible)
 {
 	if (!m_Maps.count(mapName)) return;
 	Character* user = FindObject<Character>(userName, userName);
@@ -148,8 +161,7 @@ void ApplicationContext::DisplayCharacter(std::string mapName, std::string userN
 	std::vector<MapTool::PlayerInfo> playerInfoVec = m_Maps[mapName]->playerInfoVector;
 
 	for (auto& p : playerInfoVec){
-		XMFLOAT3 t{ spawnpos.x, spawnpos.y, spawnpos.z };
-		if (XMVector3Equal(XMLoadFloat3(&t), XMLoadFloat3(&p.spawnPos)))
+		if(userName == p.playerName)
 		{
 			user->InitializeTransform();
 			user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
