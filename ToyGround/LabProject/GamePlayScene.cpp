@@ -184,8 +184,10 @@ bool GameplayScene::Enter()
 	// Player Setting
 #ifdef DEBUG_CLIENT
 	m_PlayerID = 0;
+	m_PauseScene = false;
 #elif DEBUG_SERVER
 	m_PlayerID = Service::GetApp()->GetMyBattleID();
+	m_PauseScene = true;
 #endif
 	// Props Setting
 	m_MapName = MAP_STR_GAME_MAP;
