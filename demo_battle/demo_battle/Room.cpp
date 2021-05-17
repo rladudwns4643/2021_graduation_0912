@@ -344,8 +344,10 @@ bool Room::IsRoomStarted() {
 
 void Room::SendAddCoinPacket() {
 	if (this == nullptr) return;
-	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EV_ADD_COIN };
-	BattleServer::GetInstance()->AddTimer(ev);
+	if (IsGameStarted) {
+		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EV_ADD_COIN };
+		BattleServer::GetInstance()->AddTimer(ev);
+	}
 	PTC_VECTOR coin_pos{ rand() % 300 - 150 , 0, rand() % 300 - 150 };
 	m_coins.emplace_back(m_coin_cur);
 	for (int i = 0; i < MAX_PLAYER; ++i) {
