@@ -344,7 +344,7 @@ bool Room::IsRoomStarted() {
 
 void Room::SendAddCoinPacket() {
 	if (this == nullptr) return;
-	if (IsGameStarted) {
+	if (IsGameStarted()) {
 		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EV_ADD_COIN };
 		BattleServer::GetInstance()->AddTimer(ev);
 	}

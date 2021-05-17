@@ -403,7 +403,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 					XMFLOAT3 tpos = pos;
 					XMFLOAT3 d = MathHelper::Subtract(tpos, objPos);
 					XMFLOAT3 xmf3Result;
-					XMStoreFloat3(&xmf3Result, XMVector3Normalize(XMLoadFloat3(&d)) * 17.f);
+					XMStoreFloat3(&xmf3Result, XMVector3Normalize(XMLoadFloat3(&d)) * 25.f);
 					pos = MathHelper::Add(pos, xmf3Result);
 				}
 			}
