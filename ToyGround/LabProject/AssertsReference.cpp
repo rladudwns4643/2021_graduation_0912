@@ -355,7 +355,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		AppContext->m_LastTypeId = typeIDCount;
 	}
 
-	// propTypeVector: 중복되는 것 없이 에셋이름만 모아놓은 vector
+	// propTypeVector: 중복되는 것 없이 에셋이름만 모아놓은
 	for (auto iter = propTypeSet.begin(); iter != propTypeSet.end(); ++iter)
 	{
 		map->propTypeVector.emplace_back(*iter);

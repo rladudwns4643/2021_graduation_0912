@@ -44,7 +44,8 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
 			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 #ifdef FRUSTUM_CULLMODE
-			if (isFrustum && !TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+			if (isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX
+				&& !TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
 #endif
 			ShaderResource::InstanceData data;
 			DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
@@ -165,7 +166,7 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 		if (ri->m_IsVisible && ri->m_ZLayer == zLayer)
 		{
 #ifdef FRUSTUM_CULLMODE
-			if (isFrustum)
+			if (isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX)
 			{
 				XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
 				XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
@@ -209,7 +210,7 @@ void GraphicsContext::DrawBoundingBox(ObjectInfo* objInfo, const std::vector<Gam
 			if (ri->m_ZLayer == zLayer)
 			{
 #ifdef FRUSTUM_CULLMODE
-				if (isFrustum)
+				if (isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX)
 				{
 					XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
 					XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);

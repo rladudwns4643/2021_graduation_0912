@@ -208,8 +208,11 @@ void Character::SetMaterial(int materialIndex)
 void Character::SetPosition(float posX, float posY, float posZ)
 {
 	// Attack_Box
-	const std::map<std::string, UINT>& info = AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX]->GetInstanceKeyMap();
-	for (auto& i : info) AppContext->m_RItemsVec[i.second]->SetPosition(posX, posY + 90.f, posZ);
+	if (m_MyCamera)
+	{
+		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX]->GetInstanceKeyMap();
+		for (auto& i : info) AppContext->m_RItemsVec[i.second]->SetPosition(posX, posY + 90.f, posZ);
+	}
 
 	XMFLOAT3 prePos = { m_World._41, m_World._42, m_World._43 };
 

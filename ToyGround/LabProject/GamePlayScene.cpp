@@ -53,15 +53,8 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_winner = va_arg(ap, int);
 		va_end(ap);
 
-		Map* originMap = AppContext->m_Maps[m_MapName];
-		for (auto& p : originMap->mapInfoVector)
-		{
-			if (p.meshName == OBJECT_MESH_STR_CHEST_DOWN || p.meshName == OBJECT_MESH_STR_CHEST_UP || OBJECT_MESH_STR_GEM)
-			{
-				GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
-				obj->m_IsVisible = false;
-			}
-		}
+
+
 		cout << "WINNER: " << arg_winner << endl;
 		break;
 	}
@@ -268,17 +261,17 @@ void GameplayScene::Render()
 	{
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
 	}
-
+	// Gem
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
+	
+	
 	// Charater
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
-		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
 	}
-	// Gem
-	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
-
 	// AABoundingBox
 	if (TOY_GROUND::GetApp()->bShowBoundingBox)
 	{
@@ -292,7 +285,7 @@ void GameplayScene::Render()
 			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
 		}
 	}
-
+	
 	// Attack_Box
 	for (auto& p : m_Users)
 	{
@@ -303,7 +296,7 @@ void GameplayScene::Render()
 			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX], AppContext->m_RItemsVec, false);
 		}
 	}
-
+	
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);

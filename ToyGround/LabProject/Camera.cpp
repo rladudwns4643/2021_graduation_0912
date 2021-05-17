@@ -635,8 +635,6 @@ void Camera::UpdateViewMatrix()
 		mView(2, 2) = mLook.z;
 		mView(3, 2) = z;
 
-		// 카메라 이동과 회전이 빈번하면 실수 연산의 오차 누적으로 카메라의 축들이 서로 직교하지 않을수있음
-		// 카메라의 이동과 회전을 한 후 축들이 서로 직교하게 만들 필요가 있음
 		mView(0, 3) = 0.0f;
 		mView(1, 3) = 0.0f;
 		mView(2, 3) = 0.0f;
