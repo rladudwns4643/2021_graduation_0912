@@ -53,7 +53,15 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_winner = va_arg(ap, int);
 		va_end(ap);
 
+		for (int i = 0; i < MAX_GEM_COUNT; ++i)
+			AppContext->HiddenGem(i, false);
+		AppContext->HiddenProps(m_MapName);
 
+		for (auto& u : m_Users) {
+			if (u.second->m_PlayerID != arg_winner) {
+				AppContext->HiddenCharacter(u.second);
+			}
+		}
 
 		cout << "WINNER: " << arg_winner << endl;
 		break;

@@ -175,6 +175,35 @@ void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float s
 	}
 }
 
+void ApplicationContext::HiddenProps(std::string mapName)
+{
+	if (!m_Maps.count(mapName))
+		return;
+
+	// Props
+	std::vector<MapTool::MapInfo> mapInfoVector = m_Maps[mapName]->mapInfoVector;
+	for (auto& itemInfo : mapInfoVector)
+	{
+		GameObject* obj = FindObject<GameObject>(itemInfo.meshName, std::to_string(itemInfo.typeID));
+
+		ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+		ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+	}
+
+	// Update InstanceData
+	for (auto& prop : m_Maps[mapName]->propTypeVector)
+	{
+		GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[prop], m_RItemsVec);
+	}
+
+	// Visible Off
+	for (auto& itemInfo : mapInfoVector)
+	{
+		GameObject* obj = FindObject<GameObject>(itemInfo.meshName, std::to_string(itemInfo.typeID));
+		obj->m_IsVisible = false;
+	}
+}
+
 void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, bool isVisible)
 {
 	if (!m_Maps.count(mapName)) return;
@@ -216,4 +245,44 @@ void ApplicationContext::DisplayCharacter(std::string mapName, std::string userN
 			return;
 		}
 	}
+}
+
+void ApplicationContext::HiddenCharacter(Character* user)
+{
+	if (!user) return;
+
+	//user->m_MyCamera = nullptr;
+	//user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
+	//user->SetAnimationPlayerState(AnimationController::PlayerState::STATE_IDLE);
+	//user->m_PlayerController.release();
+	//
+	//ZeroMemory(&user->m_World, sizeof(user->m_World));
+	//ZeroMemory(&user->m_TexTransform, sizeof(user->m_TexTransform));
+	//
+	//user->ReleaseTransform();
+	//
+	//GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[user->GetMeshName()], m_RItemsVec);
+
+	user->m_IsVisible = false;
+}
+
+void ApplicationContext::HiddenCharacter(std::string userName)
+{
+	Character* user = FindObject<Character>(userName, userName);
+	//if (!user) return;
+	//
+	//user->m_MyCamera = nullptr;
+	//user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
+	//user->SetAnimationPlayerState(AnimationController::PlayerState::STATE_IDLE);
+	//user->m_PlayerController.release();
+	//
+	//ZeroMemory(&user->m_World, sizeof(user->m_World));
+	//ZeroMemory(&user->m_TexTransform, sizeof(user->m_TexTransform));
+	//
+	//user->ReleaseTransform();
+	//
+	//// Update InstanceData
+	//GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[userName], m_RItemsVec);
+
+	user->m_IsVisible = false;
 }

@@ -25,6 +25,7 @@ public:
 	virtual ~Character();
 
 	virtual void InitializeTransform() override;
+	bool ReleaseTransform();
 
 	// 업데이트 + 컴포넌트 업데이트
 	void Update(const float deltaT);

@@ -36,6 +36,19 @@ void Character::InitializeTransform()
 	m_Look = { 0,0,1 };
 }
 
+bool Character::ReleaseTransform()
+{
+	m_Geo = m_CharacterGeo;
+	m_IndexCount = m_CharacterIndexCount;
+	m_StartIndexLocation = m_CharacterStartIndexLocation;
+	m_BaseVertexLocation = m_CharacterBaseVertexLocation;
+	m_PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_Bounds = m_CharacterBounds;
+	m_MaterialIndex = m_CharacterMaterialIndex;
+
+	return true;
+}
+
 void Character::Update(const float deltaT)
 {
 	if (m_PlayerController)
@@ -392,7 +405,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 					XMFLOAT3 tpos = pos;
 					XMFLOAT3 d = MathHelper::Subtract(tpos, objPos);
 					XMFLOAT3 xmf3Result;
-					XMStoreFloat3(&xmf3Result, XMVector3Normalize(XMLoadFloat3(&d)) * 22.25f);
+					XMStoreFloat3(&xmf3Result, XMVector3Normalize(XMLoadFloat3(&d)) * 17.f);
 					pos = MathHelper::Add(pos, xmf3Result);
 				}
 			}

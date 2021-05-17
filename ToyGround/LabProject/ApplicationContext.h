@@ -69,9 +69,12 @@ public:
 	void HiddenGem(int instID, bool isVisible = false);
 
 	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
+	void HiddenProps(std::string mapName);
 
 	void DisplayCharacter(std::string mapName, Character* user, bool isVisible = true);
 	void DisplayCharacter(std::string mapName, std::string userName, bool isVisible = true);
+	void HiddenCharacter(Character* user);
+	void HiddenCharacter(std::string userName);
 
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;
