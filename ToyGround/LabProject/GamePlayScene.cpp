@@ -69,16 +69,30 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	}
 	case EVENT_GAME_ADD_COIN: {
 		XMFLOAT3 arg_pos;
+		int arg_coin_id;
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_pos = va_arg(ap, XMFLOAT3);
+		arg_coin_id = va_arg(ap, int);
 		va_end(ap);
-
-		++m_GemId;
 		
-		AppContext->DisplayGem(m_GemId, arg_pos.x, arg_pos.y, arg_pos.z);
+		AppContext->DisplayGem(arg_coin_id, arg_pos.x, arg_pos.y, arg_pos.z);
 
 		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
+		break;
+	}
+	case EVENT_GAME_UPDATE_COIN: {
+		int arg_id;
+		int arg_coin_cnt;
+		int arg_delete_coin_id;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_coin_cnt = va_arg(ap, int);
+		arg_delete_coin_id = va_arg(ap, int);
+		va_end(ap);
+		cout << "update: " << arg_delete_coin_id << endl;
+		AppContext->HiddenGem(arg_delete_coin_id, false);
 		break;
 	}
 	case EVENT_GAME_CALLBACK_ANIM: {

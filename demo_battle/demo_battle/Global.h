@@ -15,7 +15,7 @@ constexpr int MAX_CLIENT = 5100;
 
 constexpr size_t MAX_LEFT_TIME = 60 + 1; // 60초만(중간발표용)
 constexpr size_t COUNTDOWN_TIME = 5;
-constexpr size_t WIN_COIN_CNT = 10;
+constexpr size_t WIN_COIN_CNT = 3;
 
 constexpr int WINNER_PLUS_MMR = 50;
 constexpr int LOOSER_MIN_MMR = -40;

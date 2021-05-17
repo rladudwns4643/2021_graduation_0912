@@ -36,6 +36,7 @@ void Room::Initialize(int room_no) {
 	m_isGameStarted = false;
 	m_isRoundStarted = false;
 	m_leftTime = MAX_LEFT_TIME;
+	m_coin_cur = 0;
 	//m_physics = new Physics();
 	//m_map = new Map();
 	m_lastUpdate = std::chrono::system_clock::now();
@@ -346,12 +347,14 @@ void Room::SendAddCoinPacket() {
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EV_ADD_COIN };
 	BattleServer::GetInstance()->AddTimer(ev);
 	PTC_VECTOR coin_pos{ rand() % 300 - 150 , 0, rand() % 300 - 150 };
+	m_coins.emplace_back(m_coin_cur);
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		int id = m_players[i]->GetID();
 		if (id != -1) {
-			BattleServer::GetInstance()->SendAddCoinPacket(id, coin_pos);
+			BattleServer::GetInstance()->SendAddCoinPacket(id, coin_pos, m_coin_cur);
 		}
 	}
+	m_coin_cur++;
 }
 
 void Room::SendLeftTimePacket() {
@@ -631,18 +634,19 @@ void Room::PushAnimMsg(int id, int animType) {
 	for (const auto& pl : m_players) {
 		tid = pl->GetID();
 		if (tid != -1 && tid != id) {
-			cout << "anim: from: " << id << "to: " << tid << "anim_type: " << animType << endl;
+			//cout << "anim: from: " << id << "to: " << tid << "anim_type: " << animType << endl;
 			PushSendMsg(tid, &p);
 		}
 	}
 }
 
-void Room::PushUpdateCoinMsg(int update_id, int update_cnt) {
+void Room::PushUpdateCoinMsg(int update_id, int update_cnt, int delete_coin_id) {
 	bc_packet_update_coin p;
 	p.size = sizeof(p);
 	p.type = BC_UPDATE_COIN;
 	p.id = update_id;
 	p.coin_cnt = update_cnt;
+	p.delete_coin_id = delete_coin_id;
 	for (const auto& pl : m_players) {
 		PushSendMsg(pl->GetID(), &p);
 	}
@@ -747,11 +751,17 @@ void Room::ProcMsg(message msg) {
 	case CB_GET_COIN: {
 		int t_id{ msg.id };
 		int t_coin{};
+		int t_delete_coin_id{ (int)msg.vec.x };
+		cout << t_delete_coin_id << endl;
 		for (auto& pl : m_players) {
 			if (pl->GetID() == t_id) {
 				pl->SetCoin(pl->GetCoin() + 1);
 				t_coin = pl->GetCoin();
-				PushUpdateCoinMsg(t_id, t_coin);
+				if (t_coin >= WIN_COIN_CNT) {
+					GameOver(pl->GetID());
+				}
+				//m_coins.erase(m_coins.begin() + t_delete_coin_id);
+				PushUpdateCoinMsg(t_id, t_coin, t_delete_coin_id);
 			}
 		}
 		break;

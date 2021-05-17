@@ -290,6 +290,7 @@ struct bc_packet_add_coin {
 	BYTE type;
 
 	PTC_VECTOR pos;
+	int coin_id;
 };
 struct bc_packet_update_coin {
 	BYTE size;
@@ -297,6 +298,7 @@ struct bc_packet_update_coin {
 
 	int id;
 	int coin_cnt;
+	int delete_coin_id;
 };
 struct bc_packet_left_time {
 	BYTE size;
@@ -431,11 +433,12 @@ struct cb_packet_position {
 	PTC_VECTOR pos;
 	int anim_type;
 };
-struct cb_packet_get_coin {
+struct cb_packet_get_coin{
 	BYTE size;
 	BYTE type;
 
 	int id;
+	int coin_id;
 };
 struct cb_packet_anim {
 	BYTE size;

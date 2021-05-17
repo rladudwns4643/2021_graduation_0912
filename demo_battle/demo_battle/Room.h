@@ -66,7 +66,7 @@ public:		//send msg
 	void PushRemoveBulletMsg(int bullet_id);
 	void PushHitMsg(int hit_id, int dmg);
 	void PushDieMsg(int die_id);
-	void PushUpdateCoinMsg(int update_id, int update_cnt);
+	void PushUpdateCoinMsg(int update_id, int update_cnt, int delete_coin_id);
 
 	void PushReadyMsg(int id, bool ready);
 	void PushUnReadyMsg(int id);
@@ -105,6 +105,8 @@ private:
 
 	std::array<Player*, MAX_PLAYER> m_players;
 	std::array<Bullet, MAX_BULLET> m_bullets;
+	std::vector<int> m_coins;
+	int m_coin_cur;
 
 	std::queue<message> m_recvMsgQueue;
 	std::queue<message> m_copiedRecvMsgs;
