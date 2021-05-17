@@ -114,23 +114,27 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 	}
 	case EVENT_GAME_ADD_COIN: {
 		XMFLOAT3 arg_pos;
+		int arg_coin_id;
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_pos = va_arg(ap, XMFLOAT3);
+		arg_coin_id = va_arg(ap, int);
 		va_end(ap);
-		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_pos);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_pos, arg_coin_id);
 		break;
 	}
 	case EVENT_GAME_UPDATE_COIN: {
 		int arg_id;
 		int arg_coin_cnt;
+		int arg_delete_coin_id;
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
 		arg_coin_cnt = va_arg(ap, int);
+		arg_delete_coin_id = va_arg(ap, int);
 		va_end(ap);
 		
-		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id, arg_coin_cnt);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id, arg_coin_cnt, arg_delete_coin_id);
 		break;
 	}
 	case EVENT_GAME_CALLBACK_MOVE: {

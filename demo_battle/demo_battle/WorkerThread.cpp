@@ -291,6 +291,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		cb_packet_get_coin* p = reinterpret_cast<cb_packet_get_coin*>(inputPacket);
 		msg.id = p->id;
 		msg.type = CB_GET_COIN;
+		msg.vec.x = p->coin_id;
 		break;
 	}
 	case CB_TEST_TIME_PLUS:

@@ -351,17 +351,18 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	case BC_ADD_COIN: {
 		bc_packet_add_coin* p = reinterpret_cast<bc_packet_add_coin*>(packet_buf);
 		XMFLOAT3 arg_pos;
+		int arg_coin_id{ p->coin_id };
 		arg_pos.x = p->pos.x;
 		arg_pos.y = p->pos.y;
 		arg_pos.z = p->pos.z;
 
-		Service::GetApp()->AddEvent(EVENT_GAME_ADD_COIN, 1, arg_pos);
+		Service::GetApp()->AddEvent(EVENT_GAME_ADD_COIN, 2, arg_pos, arg_coin_id);
 		break;
 	}
 	case BC_UPDATE_COIN: {
 		bc_packet_update_coin* p = reinterpret_cast<bc_packet_update_coin*>(packet_buf);
 		cout << "update coin" << endl;
-		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_COIN, 2, p->id, p->coin_cnt);
+		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_COIN, 3, p->id, p->coin_cnt, p->delete_coin_id);
 	}
 	case BC_PLAYER_POS: {
 		bc_packet_player_pos* p = reinterpret_cast<bc_packet_player_pos*>(packet_buf);
@@ -574,11 +575,12 @@ void NetCore::SendPositionPacket(XMFLOAT3 pos, int anim_type) {
 //	SendPacket(&p, SV_BATTLE);
 //}
 
-void NetCore::SendGetCoinPacket() {
+void NetCore::SendGetCoinPacket(int coin_id) {
 	cb_packet_get_coin p;
 	p.size = sizeof(p);
 	p.type = CB_GET_COIN;
 	p.id = m_client.battle_id;
+	p.coin_id = coin_id;
 
 	SendPacket(&p, SV_BATTLE);
 }
