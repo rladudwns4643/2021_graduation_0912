@@ -14,6 +14,7 @@ namespace Graphics
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_AABBoxPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OBBoxPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 }
 
 using namespace Core;

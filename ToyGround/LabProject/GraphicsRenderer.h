@@ -55,6 +55,7 @@ public:
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_BBox_InputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Instancing_InputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_Skinned_InputLayout;
+	std::vector<D3D12_INPUT_ELEMENT_DESC> m_UI_InputLayout;
 
 public:
 	/* GpuResource */

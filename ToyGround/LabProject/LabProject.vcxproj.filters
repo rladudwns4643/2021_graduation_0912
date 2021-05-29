@@ -56,9 +56,6 @@
     <Filter Include="Network\NetCore">
       <UniqueIdentifier>{b0c2564e-dd7a-45e0-b255-b7cdbd5000a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{e4a48aef-a737-482f-af33-064ebf7111b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{2242ccab-735e-43e6-b1f7-eddcd4f6b664}</UniqueIdentifier>
     </Filter>
@@ -74,35 +71,17 @@
     <Filter Include="App">
       <UniqueIdentifier>{3729c138-71bf-4c21-99a0-d5a02531b638}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{e4a48aef-a737-482f-af33-064ebf7111b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Headers">
+      <UniqueIdentifier>{902e6278-7ef2-49b4-a6fc-01c3e5da87f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Utill">
+      <UniqueIdentifier>{d1e8dd0d-bc1e-47ed-974e-a509277624cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="global.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="MathHelper.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="define.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dUtil.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Service.h">
       <Filter>Network\Service</Filter>
     </ClInclude>
@@ -190,9 +169,6 @@
     <ClInclude Include="Controller.h">
       <Filter>Controller</Filter>
     </ClInclude>
-    <ClInclude Include="UploadBuffer.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="AnimationController.h">
       <Filter>Animation</Filter>
     </ClInclude>
@@ -220,6 +196,36 @@
     <ClInclude Include="AssertsReference.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dUtil.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="UploadBuffer.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -235,18 +241,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>Headers</Filter>
-    </ClCompile>
-    <ClCompile Include="d3dUtil.cpp">
-      <Filter>Headers</Filter>
-    </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Headers</Filter>
-    </ClCompile>
-    <ClCompile Include="MathHelper.cpp">
-      <Filter>Headers</Filter>
-    </ClCompile>
     <ClCompile Include="Service.cpp">
       <Filter>Network\Service</Filter>
     </ClCompile>
@@ -351,6 +345,18 @@
     </ClCompile>
     <ClCompile Include="AssertsReference.cpp">
       <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Header\Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="d3dUtil.cpp">
+      <Filter>Header\Utill</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Header\Utill</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper.cpp">
+      <Filter>Header\Utill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
