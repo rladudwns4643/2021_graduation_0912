@@ -119,8 +119,8 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		SendAutoMatchPacket(id);
 		break;
 	}
-	case BC_ACCEPT_OK: {
-		bc_packet_accept_ok* p = reinterpret_cast<bc_packet_accept_ok*>(packet);
+	case BC_BATTLE_LOGIN_OK: {
+		bc_packet_battle_login_ok* p = reinterpret_cast<bc_packet_battle_login_ok*>(packet);
 		dummy[id].battle_id = p->id;
 		dummy[id].battle_connect = true;
 		dummy[id].room_num = 1;
@@ -128,14 +128,14 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		SendJoinPacket(id, dummy[id].room_num);
 		break;
 	}
-	case LC_MATCH_START: {
+	case LC_FIND_ROOM: {
 		//scene change
 #ifdef LOG_ON
 		cout << "MATCHSTART" << endl;
 #endif
-		lc_packet_startMatch* p = reinterpret_cast<lc_packet_startMatch*>(packet);
+		lc_packet_find_room* p = reinterpret_cast<lc_packet_find_room*>(packet);
 		dummy[id].room_num = p->roomNum;
-		dummy[id].is_host = p->is_host;
+		dummy[id].is_host = p->isHost;
 		ConnectBattleServer(id);
 		break;
 	}
@@ -151,7 +151,6 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		break;
 	}
 	case BC_JOIN_FAIL: cout << "join fail\n"; break;
-	case BC_ACCEPT_FAIL: cout << "auto accept fail\n"; break;
 	case BC_ROOM_ENTERED: cout << "room entered\n"; break;
 	case BC_NEW_ROOM_HOST: cout << "new room host\n"; break;
 	case BC_LEFT_TIME: {
@@ -163,8 +162,8 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		SendGameStartPacket(id);
 		break;
 	}
-	case BC_GAME_START: cout << "start\n"; break;
-	case BC_GAME_START_AVAILABLE: {
+	case BC_ROOM_START: cout << "start\n"; break;
+	case BC_ROOM_START_AVAILABLE: {
 		//SendGameStartPacket(id);
 		break;
 	}
@@ -286,7 +285,7 @@ void Dummy::SendBattleLoginPacket(int id) {
 	cb_packet_login p;
 	p.size = sizeof(p);
 	p.type = CB_LOGIN;
-	string id_str{ "D_" };
+	std::string id_str{ "D_" };
 	id_str += std::to_string(id);
 	strcpy(p.name, id_str.c_str());
 	p.name[strlen(id_str.c_str())] = '\0';
@@ -313,9 +312,9 @@ void Dummy::SendUpdateUserInfo(int id, int mmr) {
 
 void Dummy::SendAutoMatchPacket(int id) {
 	cout << "Send AutoMath\n";
-	cl_packet_automatch p;
+	cl_packet_find_room p;
 	p.size = sizeof(p);
-	p.type = CL_AUTOMATCH;
+	p.type = CL_FIND_ROOM;
 
 	SendPacket(id, &p, ST_LOBBY);
 }
@@ -347,16 +346,6 @@ void Dummy::SendJoinPacket(int id, int room_no) {
 	p.is_roomMnr = dummy[id].is_host;
 	SendPacket(id, &p, ST_BATTLE);
 }
-
-
-void Dummy::SendKeyDownW(int id) {
-	cb_packet_move_key_status p;
-	p.size = sizeof(p);
-	p.type = CB_KEY_W_DOWN;
-
-	SendPacket(id, &p, ST_BATTLE);
-}
-
 
 void Dummy::SendPacket(int id, void* packet, SERVER_TYPE st)
 {

@@ -13,7 +13,7 @@ constexpr int MAX_BUFFER = 256;
 constexpr int MAX_ID_STR = 10;
 constexpr int MAX_CLIENT = 5100;
 
-constexpr size_t MAX_LEFT_TIME = 60 + 1; // 60초만(중간발표용)
+constexpr size_t MAX_LEFT_TIME = 180 + 1; // 180초만
 constexpr size_t COUNTDOWN_TIME = 5;
 constexpr size_t WIN_COIN_CNT = 3;
 
