@@ -152,6 +152,7 @@
     <ClInclude Include="AssertsReference.h" />
     <ClInclude Include="BattleClient.h" />
     <ClInclude Include="BoundingBoxMesh.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterParts.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="GraphicsRenderer.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="IGameApp.h" />
+    <ClInclude Include="ImageView.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LobbyScene.h" />
     <ClInclude Include="main.h" />
@@ -193,10 +195,13 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SkinnedData.h" />
     <ClInclude Include="SkinnedModelInstance.h" />
+    <ClInclude Include="SpriteAnimation.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TOY_GROUND.h" />
     <ClInclude Include="UploadBuffer.h" />
+    <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc" />
@@ -211,6 +216,7 @@
     <ClCompile Include="AssertsReference.cpp" />
     <ClCompile Include="BattleClient.cpp" />
     <ClCompile Include="BoundingBoxMesh.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CharacterParts.cpp" />
@@ -227,6 +233,7 @@
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="ICommand.cpp" />
     <ClCompile Include="IGameApp.cpp" />
+    <ClCompile Include="ImageView.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LobbyScene.cpp" />
     <ClCompile Include="main.cpp" />
@@ -250,8 +257,11 @@
     <ClCompile Include="Service.cpp" />
     <ClCompile Include="SkinnedData.cpp" />
     <ClCompile Include="SkinnedModelInstance.cpp" />
+    <ClCompile Include="SpriteAnimation.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TOY_GROUND.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\BBox.hlsl">
