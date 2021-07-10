@@ -5,6 +5,9 @@
 #include "Map.h"
 #include "Character.h"
 #include "CharacterParts.h"
+#include "UserInterface.h"
+#include "Button.h"
+#include "ImageView.h"
 
 #define WIDTH_NORMALIZE_LT(x) (x + (1980.f / 2.f))
 #define HEIGHT_NORMALIZE_LT(y) (-y + (1080.f / 2.f))
@@ -99,6 +102,31 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[meshName]->Center;
 	chr->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[meshName]->Extents;
 }
+
+void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, int uiPressedTextureIdx, int uiDisabledTextureIdx)
+{
+	UserInterface* item = CreateObject<UserInterface>(ui2dLayer, ui2dName);
+	item->SetMesh(MESH_GEOID, MESH_GEOID_GRID);
+	item->m_MaterialIndex = matIndex;
+	item->SetOriginMaterial(matIndex);
+	item->m_IsVisible = false;
+
+	item->SetReleasedTexture(matIndex);
+
+	if (uiPressedTextureIdx != -1)
+		item->SetPressedTexture(uiPressedTextureIdx);
+	if (uiDisabledTextureIdx != -1)
+		item->SetDisabledTexture(uiDisabledTextureIdx);
+
+	//// 아래 내용은 Display에서
+	//// 800, 600 -> display width / height 로 변경
+	//item->m_PositionRatio = { (posX - (sizeX / 20.f)) / Core::g_DisplayWidth, (posY - (sizeY / 20.f))/ Core::g_DisplayHeight };
+	//item->m_SizeRatio = { sizeX / sizeY, sizeY / Core::g_DisplayHeight };
+
+	//item->Scale(sizeX, sizeY, 1);
+	//item->SetPosition(posX, posY, 1.f);
+}
+
 
 void ApplicationContext::CreateWeapon(std::string weaponName, std::string subWeaponName, std::string partName)
 {
@@ -285,4 +313,116 @@ void ApplicationContext::HiddenCharacter(std::string userName)
 	//GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[userName], m_RItemsVec);
 
 	user->m_IsVisible = false;
+}
+
+
+void ApplicationContext::DisplayUI(std::string mapName)
+{
+	if (!m_Maps.count(mapName))
+		return;
+
+	// UI
+//	std::vector<MapTool::UIInfo> uiInfoVector = m_Maps[mapName]->uiInfoVector;
+//	for (auto& itemInfo : uiInfoVector)
+//	{
+//		UserInterface* obj = FindObject<UserInterface>(itemInfo.meshName, itemInfo.uiName);
+//
+//		obj->InitializeTransform();
+//		obj->m_IsVisible = true;
+//		obj->Scale(itemInfo.scale.x, itemInfo.scale.y, itemInfo.scale.z);
+//		obj->Rotate(itemInfo.rotation.x, itemInfo.rotation.y, itemInfo.rotation.z);
+//		obj->SetPosition(itemInfo.position);
+//	}
+}
+
+void ApplicationContext::HiddenUI(std::string mapName)
+{
+	if (!m_Maps.count(mapName))
+		return;
+
+	// UI
+//	std::vector<MapTool::UIInfo> uiInfoVector = m_Maps[mapName]->uiInfoVector;
+//
+//	for (auto& itemInfo : uiInfoVector)
+//	{
+//		UserInterface* obj = FindObject<UserInterface>(itemInfo.meshName, itemInfo.uiName);
+//
+//		ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+//		ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+//	}
+//
+//	// Update InstanceData
+//	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[MESH_GEOID_RECT], m_RItemsVec);
+//	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[UI_MESH_SPHERE], AppContext->m_RItemsVec);
+//
+//	// Visible Off
+//	for (auto& itemInfo : uiInfoVector)
+//	{
+//		UserInterface* obj = FindObject<UserInterface>(itemInfo.meshName, itemInfo.uiName);
+//		obj->m_IsVisible = false;
+//	}
+}
+
+void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName, XMFLOAT2 pos, XMFLOAT2 size, TextAlignType textAlignType, int zLayer, bool isText)
+{
+	UserInterface* ui = FindObject<UserInterface>(ui2dLayer, ui2dName);
+	if (!ui) return;
+
+	ui->InitializeTransform();
+	ui->m_IsVisible = true;
+	ui->m_ZLayer = zLayer;
+	ui->m_IsText = isText;
+
+	switch (textAlignType)
+	{
+	case TextAlignType::LT:
+		ui->SetTextAlignType(TextAlignType::LT);
+		ui->m_PositionRatio = { WIDTH_NORMALIZE_LT((pos.x - (size.x / 20.f))), HEIGHT_NORMALIZE_LT(pos.y + (size.y / 20.f)) };
+		ui->m_SizeRatio = { size.x / size.y, size.y };
+
+		break;
+	case TextAlignType::Center:
+		ui->SetTextAlignType(TextAlignType::Center);
+		ui->m_PositionRatio = { ((pos.x - (size.x / 20.f))), -(pos.y + (size.y / 20.f)) };
+		ui->m_SizeRatio = { size.x / size.y, size.y / 1080.f };
+
+		break;
+	default:
+		break;
+	}
+	// ui->m_PositionRatio = { (pos.x - (size.x / 20.f)) / 800.f, (pos.y - (size.y / 20.f)) / 600.f };
+	// ui->m_SizeRatio = { size.x / size.y, size.y / 1080.f };
+
+	ui->Scale(size.x, size.y, 1);
+	ui->SetPosition(pos.x, pos.y, 1.f);
+
+	ui->m_UIPos = XMFLOAT2(pos.x, pos.y);
+	ui->m_UISize = XMFLOAT2(size.x * 0.1f, size.y * 0.1f);
+}
+
+void ApplicationContext::HiddenUI2D(std::string ui2dLayer, std::string ui2dName)
+{
+	UserInterface* ui = FindObject<UserInterface>(ui2dLayer, ui2dName);
+	if (!ui) return;
+
+	ZeroMemory(&ui->m_World, sizeof(ui->m_World));
+	ZeroMemory(&ui->m_TexTransform, sizeof(ui->m_TexTransform));
+
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[ui2dLayer], m_RItemsVec);
+
+	ui->m_IsVisible = false;
+}
+
+void ApplicationContext::SetDisplayUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible)
+{
+	UserInterface* ui = FindObject<UserInterface>(ui2dLayer, ui2dName);
+	if (!ui) return;
+
+	ui->m_IsVisible = isVisible;
+}
+
+void ApplicationContext::SetPickingUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible)
+{
+	UserInterface* ui = FindObject<UserInterface>(ui2dLayer, ui2dName);
+	if (!ui) return;
 }

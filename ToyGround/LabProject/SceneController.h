@@ -1,8 +1,28 @@
 #pragma once
 #include "Controller.h"
 
+class TitleScene;
 class LobbyScene;
 class GameplayScene;
+
+class TitleController final : public Controller
+{
+public:
+	explicit TitleController(TitleScene* myScene);
+	virtual ~TitleController() = default;
+
+public:
+	virtual void Update(const float deltaT) override;
+
+private:
+	virtual void HandleInput(const float deltaT) override;
+	virtual void MouseCallback() override;
+
+private:
+	TitleScene* m_MyScene;
+	std::string m_PickedUIName;
+	std::string m_PickedUIObjectName;
+};
 
 
 class LobbyController final : public Controller

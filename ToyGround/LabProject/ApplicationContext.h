@@ -61,6 +61,7 @@ public:
 
 	void CreateSkycube(std::string skycubeName, std::string instID, std::string matName);
 	void CreateProps(std::string mapName);
+	void CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, int uiPressedTextureIdx = -1, int uiDisabledTextureIdx = -1);
 	void CreateCharacter(std::string meshName, std::string instID, std::string matName, int skinnedCBIndex);
 	void CreateWeapon(std::string weaponName, std::string subWeaponName, std::string partName);
 
@@ -75,6 +76,14 @@ public:
 	void DisplayCharacter(std::string mapName, std::string userName, bool isVisible = true);
 	void HiddenCharacter(Character* user);
 	void HiddenCharacter(std::string userName);
+
+	void DisplayUI(std::string mapName);
+	void HiddenUI(std::string mapName);
+
+	void DisplayUI2D(std::string ui2dLayer, std::string ui2dName, XMFLOAT2 pos, XMFLOAT2 size, TextAlignType textAlignType = TextAlignType::NONE, int zLayer = -1, bool isText = false);
+	void HiddenUI2D(std::string ui2dLayer, std::string ui2dName);
+	void SetDisplayUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible);
+	void SetPickingUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible);
 
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;

@@ -245,9 +245,9 @@ void UserInterface::SetDurationTime(std::string spriteName, float durationTime)
 	m_SpriteAnimations[spriteName]->SetDurationTime(durationTime);
 }
 
-void UserInterface::SetTextAlignType(TextAlignType anchorType)
+void UserInterface::SetTextAlignType(TextAlignType TextAlignType)
 {
-	m_TextAlignType = anchorType;
+	m_TextAlignType = TextAlignType;
 }
 
 TextAlignType UserInterface::GetTextAlignType() const
