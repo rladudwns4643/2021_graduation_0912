@@ -55,7 +55,7 @@
 #define TEXTURE_INDEX_UI_TITLE_EXIT_RELEASED 7
 #define TEXTURE_INDEX_UI_TITLE_EXIT_PRESSED 8
 
-// 텍스쳐 파일명
+// 텍스쳐 스트링
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture			"Cartoon_CubeWorld_Texture"
 #define TEXTURE_STR_PolygonMinis_Texture_01_A			"PolygonMinis_Texture_01_A"
 #define TEXTURE_STR_UI_TITLE_BACKGROUND					"UI_TITLE_BACKGROUND"
