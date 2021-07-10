@@ -46,7 +46,6 @@ bool TitleScene::Enter()
 
 void TitleScene::Exit()
 {
-	Core::g_InputSwitch = false;
 	AppContext->HiddenUI2D(OBJECT_NAME_BACKGROUND, OBJECT_NAME_BACKGROUND);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOGO_TOYGROUND);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_PLAY_BUTTON);
@@ -76,6 +75,6 @@ void TitleScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 }
 
-void TitleScene::RenderUI()
-{
-}
+//void TitleScene::RenderUI()
+//{
+//}
