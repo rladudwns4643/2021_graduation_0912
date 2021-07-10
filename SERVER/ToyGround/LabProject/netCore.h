@@ -1,7 +1,7 @@
 #pragma once
 #include "Singleton.h"
 #include "BattleClient.h"
-#include "../../SERVER/protocol.h"
+#include "../../protocol.h"
 
 #define MAX_BUF 2048
 #define MAX_PACKET_SIZE 2048

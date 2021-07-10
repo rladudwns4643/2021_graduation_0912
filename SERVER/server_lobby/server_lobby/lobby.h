@@ -16,14 +16,13 @@ struct EXOVER {
 struct CLIENT {
 	SOCKET m_s;
 	EXOVER m_recv_over;
+	int id;
+	bool is_active = false;
 
 	char io_buf[MAX_PACKET_SIZE];
 	int m_prev_packet_data;
 	int m_curr_packet_size;
 
-	bool is_active = false;
-
-	int id;
 	User* user = NULL;
 };
 

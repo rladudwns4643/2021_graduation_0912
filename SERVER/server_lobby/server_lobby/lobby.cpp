@@ -160,11 +160,11 @@ void Lobby::do_worker() {
 
 void Lobby::ProcessPacket(int id, void* buf)
 {
-	char* packet = reinterpret_cast<char*>(buf);
+	packet_basic* packet = reinterpret_cast<packet_basic*>(buf);
 #ifdef LOG_ON
-	std::cout << "ProcessPacket: " << (int)packet[1] << std::endl;
+	std::cout << "ProcessPacket: " << std::hex << (unsigned short)packet->type << std::endl;
 #endif
-	switch (static_cast<PacketType>(packet[1])) {
+	switch (packet->type) {
 	case PacketType::CL_LOGIN: {
 		break;
 	}
@@ -207,11 +207,18 @@ void Lobby::ProcessPacket(int id, void* buf)
 		SendFindRoomPacket(2, p.room_no);
 		break;
 	}
+	default: {
+		cout << "unknwon packet: " << (int)packet->type << endl;
+		break;
+	}
 	}
 }
 #pragma region Sender
 void Lobby::SendLoginOkPacket(int to_id)
 {
+#ifdef LOG_ON
+	cout << "SendLoginOkPacket: " << to_id << endl;
+#endif
 	lc_packet_login_ok p;
 	p.size = sizeof(p);
 	p.type = PacketType::LC_LOGIN_OK;
@@ -222,6 +229,9 @@ void Lobby::SendLoginOkPacket(int to_id)
 
 void Lobby::SendLoginFailPacket(int to_id)
 {
+#ifdef LOG_ON
+	cout << "SendLoginFailPacket: " << to_id << endl;
+#endif
 	lc_packet_login_fail p;
 	p.size = sizeof(p);
 	p.type = PacketType::LC_LOGIN_FAIL;
@@ -231,6 +241,9 @@ void Lobby::SendLoginFailPacket(int to_id)
 
 void Lobby::SendUserInfoPacket(int to_id)
 {
+#ifdef LOG_ON
+	cout << "SendUserInfoPacket: " << to_id << endl;
+#endif
 	lc_packet_userinfo p;
 	p.size = sizeof(p);
 	p.type = PacketType::LC_USERINFO;
@@ -242,6 +255,9 @@ void Lobby::SendUserInfoPacket(int to_id)
 
 //matching server 만들기 전 임시
 void Lobby::SendFindRoomPacket(int id, short room_no) {
+#ifdef LOG_ON
+	cout << "SendFindRoomPacket: " << id << " room_no: " << room_no << endl;
+#endif
 	lc_packet_find_room p;
 	p.size = sizeof(p);
 	p.type = PacketType::LC_FIND_ROOM;
@@ -254,6 +270,9 @@ void Lobby::SendFindRoomPacket(int id, short room_no) {
 
 void Lobby::SendRequestFindRoomPacket(int mmr)
 {
+#ifdef LOG_ON
+	cout << "SendRequestFindRoomPacket: " << mmr << endl;
+#endif
 	lb_packet_request_room p;
 	p.size = sizeof(p);
 	p.type = PacketType::LB_REQUEST_ROOM;
@@ -263,6 +282,9 @@ void Lobby::SendRequestFindRoomPacket(int mmr)
 
 void Lobby::SendCancelFindRoomPacket(int to_id)
 {
+#ifdef LOG_ON
+	cout << "SendCancelFindRoomPacket: " << to_id << endl;
+#endif
 }
 
 void Lobby::SendPacket(int id, void* buf)
@@ -283,9 +305,9 @@ void Lobby::SendPacket(int id, void* buf)
 		if (err_no != WSA_IO_PENDING) error_display("[Lobby::SendPacket] WSASend Error: ", err_no);
 	}
 
-#ifdef LOG_ON
-	std::cout << "Send ID: " << id << " Packet Type: " << (int)p[1] << std::endl;
-#endif
+//#ifdef LOG_ON
+//	std::cout << "Send ID: " << id << " Packet Type: " << (int)p[1] << std::endl;
+//#endif
 }
 #pragma endregion
 void Lobby::error_display(const char* msg, int err_no)

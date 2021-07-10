@@ -22,6 +22,18 @@ constexpr short MAX_ID_LEN = 10;
 constexpr short MAX_ROOM_COUNT = 5;
 constexpr short ADD_COIN_TIME = 15;
 
+constexpr short OBJECT_START_INDEX_BULLET = 1000;
+constexpr short MAX_BULLET_COUNT = 20;
+
+constexpr short OBJECT_TYPE_TOY			=	1;
+constexpr short OBJECT_TYPE_BULLET		=	2;
+
+#define ANIM_IDLE		0
+#define ANIM_JUMP		1
+#define ANIM_MOVE		2
+#define ANIM_ATTK		3
+#define ANIM_TEST		4
+
 using PacketSize = unsigned char;
 enum class PacketType : unsigned short {
 	NO_MSG = 0xFA11,
@@ -87,6 +99,11 @@ enum class PacketType : unsigned short {
 	CB_TEST_TIME_PLUS = 0xD010,
 	CB_TEST_TIME_MINUS = 0xD011,
 #pragma endregion
+};
+
+struct packet_basic {
+	PacketSize size;
+	PacketType type;
 };
 
 #pragma region L->C (+L->B, B->L)

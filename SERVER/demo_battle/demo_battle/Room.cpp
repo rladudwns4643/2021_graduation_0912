@@ -497,7 +497,7 @@ void Room::PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info) {
 #endif //LOG_ON
 	bc_packet_player_pos p;
 	p.size = sizeof(p);
-	p.type = BC_PLAYER_POS;
+	p.type = PacketType::BC_PLAYER_POS;
 	p.id = from;
 	p.pos.x = position_info->x;
 	p.pos.y = position_info->y;
@@ -508,7 +508,7 @@ void Room::PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info) {
 void Room::PushPlayerDirectionMsg(int to, int from, PTC_VECTOR look){
 	bc_packet_player_rot p;
 	p.size = sizeof(p);
-	p.type = BC_PLAYER_ROT;
+	p.type = PacketType::BC_PLAYER_ROT;
 	p.id = from;
 	p.look = look;
 	PushSendMsg(to, &p);
@@ -517,7 +517,7 @@ void Room::PushPlayerDirectionMsg(int to, int from, PTC_VECTOR look){
 void Room::PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* position_info) {
 	bc_packet_object_pos p;
 	p.size = sizeof(p);
-	p.type = BC_OBJECT_POS;
+	p.type = PacketType::BC_OBJECT_POS;
 	p.type_id = type_id;
 	p.obj_id = obj_id;
 	p.pos.x = position_info->x;
@@ -529,7 +529,7 @@ void Room::PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* 
 void Room::PushShootBulletMsg(int to, int bullet_id, PTC_VECTOR look) {
 	bc_packet_shoot_bullet p;
 	p.size = sizeof(p);
-	p.type = BC_SHOOT_BULLET;
+	p.type = PacketType::BC_SHOOT_BULLET;
 	p.bullet_id = bullet_id;
 	p.pos = look;
 	PushSendMsg(to, &p);
@@ -537,7 +537,7 @@ void Room::PushShootBulletMsg(int to, int bullet_id, PTC_VECTOR look) {
 
 void Room::PushRemoveBulletMsg(int bullet_id) {
 	bc_packet_remove_bullet p;
-	p.type = BC_REMOVE_BULLET;
+	p.type = PacketType::BC_REMOVE_BULLET;
 	p.size = sizeof(p);
 	p.bullet_id = bullet_id;
 
@@ -550,7 +550,7 @@ void Room::PushRemoveBulletMsg(int bullet_id) {
 
 void Room::PushHitMsg(int hit_id, int dmg) {
 	bc_packet_hit p;
-	p.type = BC_HIT;
+	p.type = PacketType::BC_HIT;
 	p.hp = dmg;
 	p.id = hit_id;
 
@@ -563,7 +563,7 @@ void Room::PushHitMsg(int hit_id, int dmg) {
 
 void Room::PushDieMsg(int die_id) {
 	bc_packet_die p;
-	p.type = BC_DIE;
+	p.type = PacketType::BC_DIE;
 	p.size = sizeof(p);
 	p.id = die_id;
 
@@ -579,7 +579,7 @@ void Room::PushDieMsg(int die_id) {
 void Room::PushReadyMsg(int id, bool ready) {
 	bc_packet_ready p;
 	p.size = sizeof(p);
-	p.type = BC_READY;
+	p.type = PacketType::BC_READY;
 	p.id = id;
 	p.ready = ready;
 
@@ -593,7 +593,7 @@ void Room::PushReadyMsg(int id, bool ready) {
 void Room::PushUnReadyMsg(int id) {
 	bc_packet_ready p;
 	p.size = sizeof(p);
-	p.type = BC_READY;
+	p.type = PacketType::BC_READY;
 	p.id = id;
 	p.ready = false;
 
@@ -607,7 +607,7 @@ void Room::PushUnReadyMsg(int id) {
 void Room::PushRoomStartAvailableMsg(int id, bool available) {
 	bc_packet_room_start_available p;
 	p.size = sizeof(p);
-	p.type = BC_ROOM_START_AVAILABLE;
+	p.type = PacketType::BC_ROOM_START_AVAILABLE;
 	p.available = available;
 	PushSendMsg(id, &p);
 }
@@ -615,7 +615,7 @@ void Room::PushRoomStartAvailableMsg(int id, bool available) {
 void Room::PushNewRoomMnrMsg(int id) {
 	bc_packet_new_room_host p;
 	p.size = sizeof(p);
-	p.type = BC_NEW_ROOM_HOST;
+	p.type = PacketType::BC_NEW_ROOM_HOST;
 	p.id = id;
 
 	int tid{};
@@ -628,7 +628,7 @@ void Room::PushNewRoomMnrMsg(int id) {
 void Room::PushAnimMsg(int id, int animType) {
 	bc_packet_anim_type p;
 	p.size = sizeof(p);
-	p.type = BC_ANIM;
+	p.type = PacketType::BC_ANIM;
 	p.id = id;
 	p.anim_type = animType;
 
@@ -645,7 +645,7 @@ void Room::PushAnimMsg(int id, int animType) {
 void Room::PushUpdateCoinMsg(int update_id, int update_cnt, int delete_coin_id) {
 	bc_packet_update_coin p;
 	p.size = sizeof(p);
-	p.type = BC_UPDATE_COIN;
+	p.type = PacketType::BC_UPDATE_COIN;
 	p.id = update_id;
 	p.coin_cnt = update_cnt;
 	p.delete_coin_id = delete_coin_id;
@@ -698,7 +698,7 @@ void Room::ProcMsg(message msg) {
 	cout << "[ROOM] Proc: [msg: " << (int)msg.type << " id: " << msg.id << "]\n";
 #endif //LOG_ON
 	switch (msg.type) {
-	case CB_READY: {
+	case PacketType::CB_READY: {
 		for (auto& pl : m_players) {
 			if (pl->GetID() == msg.id) {
 				if (pl->GetReady() == false) {
@@ -717,7 +717,7 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_START: {
+	case PacketType::CB_START: {
 		ClearCopyMsg();
 		if (!m_isGameStarted) {
 			GameStart();
@@ -725,7 +725,7 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_POSITION_VECTOR: {
+	case PacketType::CB_POSITION_VECTOR: {
 		for (auto& pl : m_players) {
 			int t_id{ msg.id };
 			PTC_VECTOR t_v;
@@ -744,13 +744,13 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_MAKE_ANIM: {
+	case PacketType::CB_MAKE_ANIM: {
 		int t_id = msg.id;
 		int t_anim = msg.anim_type;
 		//PushAnimMsg(t_id, t_anim);
 		break;
 	}
-	case CB_GET_COIN: {
+	case PacketType::CB_GET_COIN: {
 		int t_id{ msg.id };
 		int t_coin{};
 		int t_delete_coin_id{ (int)msg.vec.x };
@@ -768,7 +768,7 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_BULLET: {
+	case PacketType::CB_BULLET: {
 		if (!m_isRoundStarted) break;
 		int bullet_id{};
 		for (auto& pl : m_players) {
@@ -804,7 +804,7 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_LOOK_VECTOR: {
+	case PacketType::CB_LOOK_VECTOR: {
 		for (auto& pl : m_players) {
 			int id = pl->GetID();
 			if (id != -1) {
@@ -825,10 +825,10 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_TEST_TIME_MINUS: {
+	case PacketType::CB_TEST_TIME_MINUS: {
 		break;
 	}
-	case CB_TEST_TIME_PLUS: {
+	case PacketType::CB_TEST_TIME_PLUS: {
 		break;
 	}
 	default: {

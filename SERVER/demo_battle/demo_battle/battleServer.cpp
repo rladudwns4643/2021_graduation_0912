@@ -2,7 +2,7 @@
 #include "battleServer.h"
 #include "extern.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-//#define LOG_ON
+#define LOG_ON
 
 BattleServer::BattleServer() {
 	Initialize();
@@ -39,7 +39,7 @@ void BattleServer::ConncetLobbyServer() {
 	TCPSocketPtr LobbySocket;
 	LobbySocket = m_sockUtil.CreateTCPSocket(SocketAddressFamily::INET);
 	DWORD flags = 0;
-	SocketAddress s{ inet_addr(LOBBY_SERVER_IP_PUBLIC) , LOBBY_SERVER_PORT};
+	SocketAddress s{ inet_addr(LOBBY_SERVER_IP) , LOBBY_SERVER_PORT};
 	int ret = LobbySocket->Connect(s);
 	if (ret == 0) {
 		CLIENT* LobbyServer = new CLIENT;
@@ -183,20 +183,13 @@ void BattleServer::SendPacket(int id, void* buff) {
 	SR::g_clients[id]->m_s->WSASend(send_over->wsabuf, 1, 0, 0, &send_over->over);
 }
 
-void BattleServer::SendCheckConnect() {
-	bl_pakcet_check_connect p;
-	p.size = sizeof(p);
-	p.type = BL_CHECK;
-	SendPacket(LOBBY_SERVER_KEY, &p);
-}
-
 void BattleServer::SendBattleLoginOKPacket(int id) {
 #ifdef LOG_ON
 	cout << "SendBattleLoginOKPacket: " << id << endl;
 #endif
 	bc_packet_battle_login_ok p;
 	p.size = sizeof(p);
-	p.type = BC_BATTLE_LOGIN_OK;
+	p.type = PacketType::BC_BATTLE_LOGIN_OK;
 	p.id = id;
 	SendPacket(id, &p);
 }
@@ -207,7 +200,7 @@ void BattleServer::SendBattleLoginFailPacket(int id) {
 #endif
 	bc_packet_battle_login_fail p;
 	p.size = sizeof(p);
-	p.type = BC_BATTLE_LOGIN_FAIL;
+	p.type = PacketType::BC_BATTLE_LOGIN_FAIL;
 	SendPacket(id, &p);
 }
 
@@ -217,7 +210,7 @@ void BattleServer::SendAutoRoomReadyPacket(int id, int room_no) {
 #endif
 	bl_packet_room_ready p;
 	p.size = sizeof(p);
-	p.type = BL_ROOMREADY;
+	p.type = PacketType::BL_ROOMREADY;
 	p.id = id;
 	p.room_no = room_no;
 	p.is_host = true;
@@ -230,7 +223,7 @@ void BattleServer::SendRoomJoinSuccess(int id, bool isRoomMnr) {
 #endif
 	bc_packet_join_ok p;
 	p.size = sizeof(p);
-	p.type = BC_JOIN_OK;
+	p.type = PacketType::BC_JOIN_OK;
 	SendPacket(id, &p);
 }
 
@@ -240,7 +233,7 @@ void BattleServer::SendRoomJoinFail(int id, int code) {
 #endif
 	bc_packet_join_fail p;
 	p.size = sizeof(p);
-	p.type = BC_JOIN_FAIL;
+	p.type = PacketType::BC_JOIN_FAIL;
 	p.code = code;
 	SendPacket(id, &p);
 }
@@ -258,7 +251,7 @@ void BattleServer::SendRoomEnterPacket(int to, int enterer, bool ready, char pla
 #endif
 	bc_packet_room_entered p;
 	p.size = sizeof(p);
-	p.type = BC_ROOM_ENTERED;
+	p.type = PacketType::BC_ROOM_ENTERED;
 	p.id = enterer;
 	p.ready = ready;
 	p.player_no = playerNo;
@@ -276,7 +269,7 @@ void BattleServer::SendRoomLeavePacket(int to, int leave) {
 #endif
 	bc_packet_room_leaved p;
 	p.size = sizeof(p);
-	p.type = BC_ROOM_LEAVED;
+	p.type = PacketType::BC_ROOM_LEAVED;
 	p.id = leave;
 	SendPacket(to, &p);
 }
@@ -287,7 +280,7 @@ void BattleServer::SendGameStartPacket(int id, PTC_START_INFO* player_info) {
 #endif
 	bc_packet_room_start p;
 	p.size = sizeof(p);
-	p.type = BC_ROOM_START;
+	p.type = PacketType::BC_ROOM_START;
 	memcpy(&p.start_info, player_info, sizeof(PTC_START_INFO));
 	SendPacket(id, &p);
 }
@@ -298,7 +291,7 @@ void BattleServer::SendRoundStartPacket(int id) {
 #endif
 	bc_packet_round_start p;
 	p.size = sizeof(p);
-	p.type = BC_ROUND_START;
+	p.type = PacketType::BC_ROUND_START;
 	SendPacket(id, &p);
 }
 
@@ -310,7 +303,7 @@ void BattleServer::SendPlayerLook(int to, int from, PTC_VECTOR look) {
 #endif
 	bc_packet_player_rot p;
 	p.size = sizeof(p);
-	p.type = BC_PLAYER_ROT;
+	p.type = PacketType::BC_PLAYER_ROT;
 	p.id = from;
 	p.look = look;
 	SendPacket(to, &p);
@@ -322,7 +315,7 @@ void BattleServer::SendAddCoinPacket(int id, PTC_VECTOR coin_pos, int coin_id) {
 #endif
 	bc_packet_add_coin p;
 	p.size = sizeof(p);
-	p.type = BC_ADD_COIN;
+	p.type = PacketType::BC_ADD_COIN;
 	p.pos = coin_pos;
 	p.coin_id = coin_id;
 	SendPacket(id, &p);
@@ -334,7 +327,7 @@ void BattleServer::SendLeftTimePacket(int id, char left_time) {
 #endif
 	bc_packet_left_time p;
 	p.size = sizeof(p);
-	p.type = BC_LEFT_TIME;
+	p.type = PacketType::BC_LEFT_TIME;
 	p.left_time = left_time;
 	SendPacket(id, &p);
 }
@@ -346,7 +339,7 @@ void BattleServer::SendShootPacket(int id, int bullet_id, PTC_VECTOR look) {
 #endif
 	bc_packet_shoot_bullet p;
 	p.size = sizeof(p);
-	p.type = BC_SHOOT_BULLET;
+	p.type = PacketType::BC_SHOOT_BULLET;
 	p.bullet_id = bullet_id;
 	p.pos = look;
 	SendPacket(id, &p);
@@ -358,7 +351,7 @@ void BattleServer::SendGameOverPacket(int id, int winner_id) {
 #endif
 	bc_packet_game_over p;
 	p.size = sizeof(p);
-	p.type = BC_GAME_OVER;
+	p.type = PacketType::BC_GAME_OVER;
 	p.win_team = winner_id;
 	SendPacket(id, &p);
 }
@@ -369,7 +362,7 @@ void BattleServer::SendUpdateUserInfoPacket(const int& id, const int& mmr) {
 #endif
 	bc_packet_updated_user_info p;
 	p.size = sizeof(p);
-	p.type = BC_UPDATED_USER_INFO;
+	p.type = PacketType::BC_UPDATED_USER_INFO;
 	p.mmr = mmr;
 	SendPacket(id, &p);
 }
