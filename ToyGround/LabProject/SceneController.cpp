@@ -13,6 +13,28 @@
 static bool y{ false };
 static bool u{ false };
 static bool c{ false };
+
+//+++++++++++++++++++++++++++ TITLE SCENE +++++++++++++++++++++++++++++++++++++++
+TitleController::TitleController(TitleScene* myScene) :
+	m_MyScene(myScene)
+{
+}
+
+void TitleController::Update(const float deltaT)
+{
+	MouseCallback();
+	HandleInput(deltaT);
+}
+
+void TitleController::HandleInput(const float deltaT)
+{
+}
+
+void TitleController::MouseCallback()
+{
+}
+
+//++++++++++++++++++LOBBY SCENE+++++++++++++++++++++++++++++++++++++++
 LobbyController::LobbyController(LobbyScene* myScene) : m_MyScene(myScene)
 {
 }

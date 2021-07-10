@@ -8,6 +8,7 @@
 #include "GeometryMesh.h"
 #include "BoundingBoxMesh.h"
 #include "SkinnedModelInstance.h"
+#include "UserInterface.h"
 #include "TOY_GROUND.h"
 
 void GraphicsContext::Initialize()
@@ -54,6 +55,105 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 
 			// Write the instance data to structured buffer for the visible objects.
 			m_InstanceBuffers[objInfo->m_Type]->CopyData(InstanceCount++, data);
+		}
+	}
+}
+
+void GraphicsContext::Update2DPosition(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
+{
+	if (!objInfo) return;
+
+	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
+
+	for (auto& i : info)
+	{
+		UserInterface* ri = static_cast<UserInterface*>(rItems[i.second]);
+		switch (ri->GetTextAlignType())
+		{
+		case TextAlignType::NONE:
+			break;
+		case TextAlignType::Center:
+			if (Core::g_DisplayWidth > Core::g_DisplayHeight)
+			{
+				if (Core::g_DisplayHeight > 480)
+				{
+					float heightRatio = Core::g_DisplayHeight / 1080.f;
+
+					XMFLOAT2 offset = { ri->m_PositionRatio.x * heightRatio, ri->m_PositionRatio.y * heightRatio };
+					XMFLOAT2 newSize = { ri->m_SizeRatio.x, ri->m_SizeRatio.y * Core::g_DisplayHeight };
+
+					newSize.x = newSize.x * newSize.y;
+
+					XMFLOAT2 newPos = { 0.f, 0.f };
+
+					newPos.x = (offset.x + newSize.x * 0.05f);
+					newPos.y = -(offset.y + newSize.y * 0.05f);
+
+					ri->m_World._11 = newSize.x;
+					ri->m_World._22 = newSize.y;
+
+					ri->m_World._41 = newPos.x;
+					ri->m_World._42 = newPos.y;
+
+					if (ri->m_IsText)
+					{
+						ri->m_UIPos = newPos;
+						ri->m_UISize = newSize;
+					}
+
+				}
+			}
+			break;
+		case TextAlignType::Left:
+			break;
+		case TextAlignType::Right:
+			break;
+		case TextAlignType::Top:
+			break;
+		case TextAlignType::Bottom:
+			break;
+		case TextAlignType::LT:
+			if (Core::g_DisplayWidth > Core::g_DisplayHeight)
+			{
+				if (Core::g_DisplayHeight > 480)
+				{
+					float heightRatio = Core::g_DisplayHeight / 1080.f;
+
+					XMFLOAT2 offset = { ri->m_PositionRatio.x - heightRatio, ri->m_PositionRatio.y - heightRatio };
+					XMFLOAT2 newSize = { ri->m_SizeRatio.x, ri->m_SizeRatio.y };
+
+					XMFLOAT2 newPos = { 0.f, 0.f };
+
+					newSize.y = newSize.y * heightRatio;
+					newSize.x = newSize.y * newSize.x;
+
+					newPos.x = (-(Core::g_DisplayWidth / 2.f) + (offset.x + newSize.x * 0.05f));
+					newPos.y = (Core::g_DisplayHeight / 2.f) - (offset.y - newSize.y * 0.05f) * heightRatio;
+
+
+					ri->m_World._11 = newSize.x;
+					ri->m_World._22 = newSize.y;
+
+					ri->m_World._41 = newPos.x;
+					ri->m_World._42 = newPos.y;
+
+					if (ri->m_IsText)
+					{
+						ri->m_UIPos = newPos;
+						ri->m_UISize = newSize;
+					}
+				}
+			}
+
+			break;
+		case TextAlignType::LB:
+			break;
+		case TextAlignType::RT:
+			break;
+		case TextAlignType::RB:
+			break;
+		default:
+			break;
 		}
 	}
 }
