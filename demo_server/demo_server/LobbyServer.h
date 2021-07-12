@@ -36,6 +36,7 @@ public:
 	void ProcessPacket(int id, void* buf);
 
 public:
+#pragma region Sender
 	// L->C
 	void SendLoginOKPacket(int id);
 	void SendLoginFailPacket(int id);
@@ -44,12 +45,10 @@ public:
 	void SendFindRoomPacket(int id, short room_no);
 	
 	void SendRequestRoomPacket();
-	
-	void SendLBCheckPacket();
+#pragma endregion
 
 	void SendPacket(int id, void* buf);
 	void error_display(const char* msg, int err_no);
-	//void recv_packet_construct(const int& user_id, DWORD& io_byte);
 
 	std::uniform_int_distribution<int> uid{ 0, 5000 };
 	std::default_random_engine dre;
@@ -65,8 +64,8 @@ private:
 	SOCKADDR_IN clientAddr;
 	SOCKET clientSocket;
 
-	SOCKADDR_IN BattleServerAddr;
-	SOCKET BattleServerSocket;
+	SOCKADDR_IN addr_battle;
+	SOCKET socket_battle;
 
 	short lobbyID;
 	std::array<CLIENT*, MAX_PLAYER + 1> userList;
