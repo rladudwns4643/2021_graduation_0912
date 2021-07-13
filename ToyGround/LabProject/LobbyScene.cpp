@@ -106,3 +106,7 @@ void LobbyScene::Render()
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 }
+
+void LobbyScene::RenderUI()
+{
+}

@@ -326,6 +326,10 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
 }
 
+void GameplayScene::RenderUI()
+{
+}
+
 void GameplayScene::ChangeFreeCamera()
 {
 	if (TOY_GROUND::GetApp()->m_Camera->GetCameraType() == CameraType::eFree) return;

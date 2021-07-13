@@ -251,6 +251,11 @@ void SceneManager::RenderScene()
 	m_Scenes[m_CurScene]->Render();
 }
 
+void SceneManager::RenderUI()
+{
+	m_Scenes[m_CurScene]->RenderUI();
+}
+
 Scene* SceneManager::GetCurScene() const
 {
 	return m_Scenes[m_CurScene];

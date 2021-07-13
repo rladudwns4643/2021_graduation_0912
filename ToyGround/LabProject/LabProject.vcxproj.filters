@@ -406,5 +406,8 @@
     <FxCompile Include="Shaders\Sky.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="UI.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
