@@ -125,7 +125,7 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 #define CAMERA_ZFAR 5000.f
 
 // enum class
-enum class SceneType { eLobby = 0, eGamePlay = 1, eCount = 2};
+enum class SceneType { eLobby = 0, eTitle = 1, eGamePlay = 2, eCount = 3};
 enum class CameraType { eThird = 0, eFree = 1 };
 enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, RB };
 

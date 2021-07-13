@@ -5,6 +5,7 @@
 
 #include "TOY_GROUND.h"
 #include "LobbyScene.h"
+#include "TitleScene.h"
 #include "GameplayScene.h"
 
 //юс╫ц

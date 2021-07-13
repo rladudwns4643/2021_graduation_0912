@@ -87,6 +87,12 @@ cbuffer cbSkinned : register(b1)
 	float4x4 gBoneTransforms[96];
 };
 
+cbuffer cbUIPass : register(b2)
+{
+	// UI Param
+	float gHPRate; // 0 ~ 1
+};
+
 //---------------------------------------------------------------------------------------
 // Transforms a normal map sample to world space.
 //---------------------------------------------------------------------------------------
