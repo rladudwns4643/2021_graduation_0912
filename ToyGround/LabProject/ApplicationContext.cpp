@@ -368,6 +368,9 @@ void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName
 	UserInterface* ui = FindObject<UserInterface>(ui2dLayer, ui2dName);
 	if (!ui) return;
 
+	float sizeX = size.x * 15.f;
+	float sizeY = size.y * 15.f;
+
 	ui->InitializeTransform();
 	ui->m_IsVisible = true;
 	ui->m_ZLayer = zLayer;
@@ -377,14 +380,14 @@ void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName
 	{
 	case TextAlignType::LT:
 		ui->SetTextAlignType(TextAlignType::LT);
-		ui->m_PositionRatio = { WIDTH_NORMALIZE_LT((pos.x - (size.x / 20.f))), HEIGHT_NORMALIZE_LT(pos.y + (size.y / 20.f)) };
-		ui->m_SizeRatio = { size.x / size.y, size.y };
+		ui->m_PositionRatio = { WIDTH_NORMALIZE_LT((pos.x - (sizeX / 20.f))), HEIGHT_NORMALIZE_LT(pos.y + (sizeY / 20.f)) };
+		ui->m_SizeRatio = { sizeX / sizeY, sizeY };
 
 		break;
 	case TextAlignType::Center:
 		ui->SetTextAlignType(TextAlignType::Center);
-		ui->m_PositionRatio = { ((pos.x - (size.x / 20.f))), -(pos.y + (size.y / 20.f)) };
-		ui->m_SizeRatio = { size.x / size.y, size.y / 1080.f };
+		ui->m_PositionRatio = { ((pos.x - (sizeX / 20.f))), -(pos.y + (sizeY / 20.f)) };
+		ui->m_SizeRatio = { sizeX / sizeY, sizeY / 1080.f };
 
 		break;
 	default:
@@ -393,11 +396,11 @@ void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName
 	// ui->m_PositionRatio = { (pos.x - (size.x / 20.f)) / 800.f, (pos.y - (size.y / 20.f)) / 600.f };
 	// ui->m_SizeRatio = { size.x / size.y, size.y / 1080.f };
 
-	ui->Scale(size.x, size.y, 1);
+	ui->Scale(sizeX, sizeY, 1);
 	ui->SetPosition(pos.x, pos.y, 1.f);
 
 	ui->m_UIPos = XMFLOAT2(pos.x, pos.y);
-	ui->m_UISize = XMFLOAT2(size.x * 0.1f, size.y * 0.1f);
+	ui->m_UISize = XMFLOAT2(sizeX * 0.1f, sizeY * 0.1f);
 }
 
 void ApplicationContext::HiddenUI2D(std::string ui2dLayer, std::string ui2dName)

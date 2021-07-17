@@ -150,6 +150,26 @@ void Camera::CameraInitialize(SceneType sceneType)
 {
 	switch (sceneType)
 	{
+	case SceneType::eTitle:
+		// Set FovY
+		SetLens(0.35f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
+
+		m_Owner = nullptr;
+		mPosition = { 0.f, 0.f, 100.f };
+		mRight = { 1.f, 0.f, 0.f };
+		mUp = { 0.f, 1.f, 0.f };
+		mLook = { 0.f, 0.f, -1.f };
+
+		mTarget = { 0.f,0.f,0.f };
+		mOffset = { 0.f,0.f,0.f };
+		mRotation = { 0, 0, 0 };
+		mTimeLag = 0.f;
+
+		m_CameraType = CameraType::eFree;
+		mViewDirty = true;
+
+		break;
+
 	case SceneType::eLobby:
 		// Set FovY
 		SetLens(0.25f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);

@@ -198,4 +198,14 @@ namespace MapTool
 		float rotY;
 		XMFLOAT3 spawnPos;
 	};
+
+	struct UIInfo
+	{
+		std::string uiName;
+		std::string meshName;
+		XMFLOAT3 position;
+		XMFLOAT3 rotation;
+		XMFLOAT3 scale;
+		std::string type;
+	};
 }

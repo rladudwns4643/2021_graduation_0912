@@ -242,6 +242,9 @@
     <ClInclude Include="SpriteAnimation.h">
       <Filter>GameObject\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Picking.h">
+      <Filter>GameObject\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -387,6 +390,9 @@
       <Filter>GameObject\UI</Filter>
     </ClCompile>
     <ClCompile Include="SpriteAnimation.cpp">
+      <Filter>GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Picking.cpp">
       <Filter>GameObject\UI</Filter>
     </ClCompile>
   </ItemGroup>

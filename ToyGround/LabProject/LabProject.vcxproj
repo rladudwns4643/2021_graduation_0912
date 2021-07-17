@@ -186,6 +186,7 @@
     <ClInclude Include="netCore.h" />
     <ClInclude Include="Objectinfo.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Picking.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
@@ -250,6 +251,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Picking.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneController.cpp" />

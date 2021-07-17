@@ -126,7 +126,7 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 
 // enum class
 enum class SceneType { eLobby = 0, eTitle = 1, eGamePlay = 2, eCount = 3};
-enum class CameraType { eThird = 0, eFree = 1 };
+enum class CameraType { eThird = 0, eFree = 1, eFront = 2 };
 enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, RB };
 
 // 맵 디파인값이 연속적이여야함
