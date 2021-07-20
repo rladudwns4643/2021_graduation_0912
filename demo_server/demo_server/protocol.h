@@ -89,7 +89,7 @@ struct lc_packet_signup_ok {
 	BYTE size;
 	BYTE type;
 };
-struct lc_pakcet_signup_fail {
+struct lc_packet_signup_fail {
 	BYTE size;
 	BYTE type;
 };
@@ -125,7 +125,7 @@ struct cl_packet_login {
 	char id[MAX_ID_LEN];
 	char pw[MAX_ID_LEN];
 };
-struct cl_pakcet_signup {
+struct cl_packet_signup {
 	BYTE size;
 	BYTE type;
 

@@ -12,11 +12,10 @@ public:
 		mmr = UNSETMMR;
 		lobbyID = LOBBY_ID;
 		isMatching = false;
-		isAllow = false;
 	}
 	~User() {};
 
-	void SetPlayerLoginOK(std::string _name) { name = _name; isAllow = false; };
+	void SetPlayerLoginOK(std::string _name) { name = _name; };
 	std::string GetPlayerID() { return name; };
 	
 	void SetPlayerMMR(int _mmr) { mmr = _mmr; };
@@ -30,5 +29,4 @@ private:
 	int mmr;
 	short lobbyID;
 	bool isMatching;
-	bool isAllow;
 };

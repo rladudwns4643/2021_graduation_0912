@@ -1,6 +1,7 @@
 #include "LobbyServer.h"
 #include "protocol.h"
 #include "pch.h"
+#include "DataBase.h"
 
 #define LOG_ON
 
@@ -18,7 +19,7 @@ LobbyServer::LobbyServer(short lobby_id)
 	::bind(listenSocket, reinterpret_cast<sockaddr*>(&serverAddr), sizeof(SOCKADDR_IN));
 	listen(listenSocket, SOMAXCONN);
 
-	memset(&BattleServerAddr, 0, addrlen);
+	memset(&addr_battle, 0, addrlen);
 	memset(&clientAddr, 0, addrlen);
 	iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
 }
@@ -57,11 +58,11 @@ void LobbyServer::ClientAccept(int id) {
 }
 
 void LobbyServer::BattleServerAccept() {
-	BattleServerSocket = accept(listenSocket, reinterpret_cast<sockaddr*>(&BattleServerAddr), &addrlen);
+	socket_battle = accept(listenSocket, reinterpret_cast<sockaddr*>(&addr_battle), &addrlen);
 
 	CLIENT* new_btServer = new CLIENT;
 	new_btServer->id = 0;
-	new_btServer->m_s = BattleServerSocket;
+	new_btServer->m_s = socket_battle;
 	new_btServer->m_recv_over.wsabuf[0].len = MAX_BUF_SIZE;
 	new_btServer->m_recv_over.wsabuf[0].buf = new_btServer->m_recv_over.io_buf;
 	new_btServer->m_recv_over.is_recv = true;
@@ -71,10 +72,10 @@ void LobbyServer::BattleServerAccept() {
 
 	userList[0] = new_btServer;
 
-	CreateIoCompletionPort(reinterpret_cast<HANDLE>(BattleServerSocket), iocp, 0, 0);
+	CreateIoCompletionPort(reinterpret_cast<HANDLE>(socket_battle), iocp, 0, 0);
 	memset(&userList[0]->m_recv_over.over, 0, sizeof(WSAOVERLAPPED));
 	flags = 0;
-	int ret = WSARecv(BattleServerSocket, userList[0]->m_recv_over.wsabuf, 1, NULL, &flags, &(userList[0]->m_recv_over.over), NULL);
+	int ret = WSARecv(socket_battle, userList[0]->m_recv_over.wsabuf, 1, NULL, &flags, &(userList[0]->m_recv_over.over), NULL);
 	if (ret != 0) {
 		int err = WSAGetLastError();
 		if (err != WSA_IO_PENDING) error_display("WSARecv Error: ", err);
@@ -168,6 +169,24 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 #ifdef LOG_ON
 		cout << "GET CL_LOGIN" << endl;
 #endif
+		cl_packet_login* p = reinterpret_cast<cl_packet_login*>(packet);
+		
+		int mmr{};
+		if (DataBase::GetInstance()->LoginPlayer(p->id, p->pw, &mmr)) {
+			for (int i = 1; i < new_user_id; ++i) {
+				if (userList[i]->user_info->GetPlayerID() == p->id) {
+					SendLoginFailPacket(id);
+					return;
+				}
+			}
+			userList[id]->user_info->SetPlayerLoginOK(p->id);
+			userList[id]->user_info->SetPlayerMMR(mmr);
+
+			SendLoginOKPacket(id);
+		}
+		else { //db에 정보가 없으면 
+			SendLoginFailPacket(id);
+		}
 		break;
 	}
 	case CL_DUMMY_LOGIN: {
@@ -181,6 +200,19 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		cout << "GET_DUMMY_LOGIN" << endl;
 #endif
 		SendLoginOKPacket(id);
+		break;
+	}
+	case CL_SIGNUP: {
+		cl_packet_signup* p = reinterpret_cast<cl_packet_signup*>(packet);
+		int is_overlap{ false };
+		DataBase::GetInstance()->CheckId(p->id, &is_overlap);
+		if (is_overlap == 0) {
+			if (DataBase::GetInstance()->SignUpPlayer(p->id, p->pw)) {
+				SendSignUpOkPacket(id, MMRDEFAULT);
+				break;
+			}
+		}
+		SendSignUpFailPacket(id);
 		break;
 	}
 	case CL_REQUEST_USER_INFO: {
@@ -217,6 +249,10 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		SendFindRoomPacket(2, p.room_no);
 		break;
 	}
+	default: {
+		std::cout << "DONT KNOW PACKET TYPE\n";
+		break;
+	}
 	}
 }
 
@@ -235,6 +271,20 @@ void LobbyServer::SendLoginFailPacket(int id)
 	p.size = sizeof(p);
 	p.type = LC_LOGIN_FAIL;
 
+	SendPacket(id, &p);
+}
+
+void LobbyServer::SendSignUpOkPacket(int id, int mmr) {
+	lc_packet_signup_ok p;
+	p.size = sizeof(p);
+	p.type = LC_SIGNUP_OK;
+	SendPacket(id, &p);
+}
+
+void LobbyServer::SendSignUpFailPacket(int id) {
+	lc_packet_signup_fail p;
+	p.size = sizeof(p);
+	p.type = LC_SIGNUP_FAIL;
 	SendPacket(id, &p);
 }
 
@@ -270,15 +320,6 @@ void LobbyServer::SendRequestRoomPacket() {
 	p.type = LB_REQUEST_ROOM;
 	
 	SendPacket(0, &p); //battle server로
-}
-
-//unuse
-void LobbyServer::SendLBCheckPacket() {
-	lb_packet_check_connect p;
-	p.size = sizeof(p);
-	p.type = LB_CHECK;
-
-	SendPacket(0, &p);
 }
 
 void LobbyServer::SendPacket(int id, void* buf) {

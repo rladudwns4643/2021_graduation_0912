@@ -3,7 +3,7 @@
 #include "Global.h"
 #include "User.h"
 
-extern std::atomic<int> new_playerID;
+extern std::atomic<int> new_user_id;
 
 struct EXOVER {
 	WSAOVERLAPPED over;
@@ -37,9 +37,10 @@ public:
 
 public:
 #pragma region Sender
-	// L->C
 	void SendLoginOKPacket(int id);
 	void SendLoginFailPacket(int id);
+	void SendSignUpOkPacket(int id, int mmr);
+	void SendSignUpFailPacket(int id);
 	void SendUserInfoPacket(int id);
 	void SendCancelFindRoomPacket(int id);
 	void SendFindRoomPacket(int id, short room_no);

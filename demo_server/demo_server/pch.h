@@ -10,8 +10,8 @@
 
 using namespace std;
 #include <WS2tcpip.h>
-#include <MSWSock.h>
+//#include <MSWSock.h>
 #pragma comment(lib, "Ws2_32.lib")
-#pragma comment(lib, "mswsock.lib")
+//#pragma comment(lib, "mswsock.lib")
 
 #define MMRDEFAULT 1000
