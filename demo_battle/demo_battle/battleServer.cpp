@@ -50,7 +50,7 @@ void BattleServer::ConncetLobbyServer() {
 		LobbyServer->m_recv_over.wsabuf[0].buf = LobbyServer->m_recv_over.net_buf;
 
 		LobbyServer->curr_packet_size = 0;
-		LobbyServer->m_recv_over.ev_type = EV_RECV;
+		LobbyServer->m_recv_over.ev_type = EVENT_TYPE::EV_RECV;
 		LobbyServer->isConnected = true;
 		LobbyServer->prev_packet_data = 0;
 		SR::g_clients[LOBBY_SERVER_KEY] = LobbyServer;
@@ -79,7 +79,7 @@ void BattleServer::AcceptLobbyServer() {
 	LobbyServer->m_recv_over.wsabuf[0].len = MAX_BUFFER;
 	LobbyServer->m_recv_over.wsabuf[0].buf = LobbyServer->m_recv_over.net_buf;
 
-	LobbyServer->m_recv_over.ev_type = EV_RECV;
+	LobbyServer->m_recv_over.ev_type = EVENT_TYPE::EV_RECV;
 	LobbyServer->isConnected = true;
 	LobbyServer->curr_packet_size = 0;
 	LobbyServer->prev_packet_data = 0;
@@ -109,7 +109,7 @@ void BattleServer::Run() {
 		clientSocket = m_listen->Accept(clientAddress);
 
 		//isConnected == false¿Œ id¿ª user_id∑Œ
-		int user_id;
+		int user_id{ -1 };
 		for (int i = LOBBY_SERVER_KEY + 1; i < MAX_CLIENT; ++i) {
 			if (!SR::g_clients[i]->isConnected) {
 				user_id = i;
@@ -125,7 +125,7 @@ void BattleServer::Run() {
 		new_client->m_recv_over.wsabuf[0].len = MAX_BUFFER;
 		new_client->m_recv_over.wsabuf[0].buf = new_client->m_recv_over.net_buf;
 
-		new_client->m_recv_over.ev_type = EV_RECV;
+		new_client->m_recv_over.ev_type = EVENT_TYPE::EV_RECV;
 		new_client->isConnected = true;
 
 		new_client->curr_packet_size = 0;
@@ -175,7 +175,7 @@ void BattleServer::SendPacket(int id, void* buff) {
 	EX_OVER* send_over = new EX_OVER;
 	//memset(send_over, 0, sizeof(EX_OVER));
 	ZeroMemory(send_over, sizeof(EX_OVER));
-	send_over->ev_type = EV_SEND;
+	send_over->ev_type = EVENT_TYPE::EV_SEND;
 	memcpy(send_over->net_buf, p, packet_size);
 	send_over->wsabuf[0].len = packet_size;
 	send_over->wsabuf[0].buf = send_over->net_buf;

@@ -45,7 +45,7 @@ void WorkerThread::ProcThread() {
 		EX_OVER* ex_over = reinterpret_cast<EX_OVER*>(p_over);
 
 		switch (ex_over->ev_type) {
-		case EV_RECV: {
+		case EVENT_TYPE::EV_RECV: {
 			char* buf = SR::g_clients[key]->m_recv_over.net_buf;
 			unsigned int psize = SR::g_clients[key]->curr_packet_size;
 			unsigned int pr_size = SR::g_clients[key]->prev_packet_data;
@@ -82,7 +82,7 @@ void WorkerThread::ProcThread() {
 			DWORD flags = 0;
 			ZeroMemory(&ex_over->over, sizeof(WSAOVERLAPPED));
 			ZeroMemory(&msg, sizeof(message));
-			ex_over->ev_type = EV_RECV;
+			ex_over->ev_type = EVENT_TYPE::EV_RECV;
 
 			int ret = WSARecv(clientSocket, ex_over->wsabuf, 1, 0, &flags, &ex_over->over, 0);
 			if (ret == SOCKET_ERROR) {
@@ -94,63 +94,63 @@ void WorkerThread::ProcThread() {
 			}
 			break;
 		}
-		case EV_SEND: {
+		case EVENT_TYPE::EV_SEND: {
 			delete ex_over;
 			break;
 		}
-		case EV_UPDATE: {
+		case EVENT_TYPE::EV_UPDATE: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->Update();
 			delete ex_over;
 			break;
 		}
-		case EV_TICK: {
+		case EVENT_TYPE::EV_TICK: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->SendLeftTimePacket();
 			SR::g_rooms[room_id]->CheckGameState();
 			delete ex_over;
 			break;
 		}
-		case EV_FLUSH_MSG: {
+		case EVENT_TYPE::EV_FLUSH_MSG: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->FlushSendMsg();
 			break;
 		}
-		case EV_ADD_COIN: {
+		case EVENT_TYPE::EV_ADD_COIN: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->SendAddCoinPacket();//
 			break;
 		}
-		case EV_MOVE_ENABLE: {
+		case EVENT_TYPE::EV_MOVE_ENABLE: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->MakeMove(key);
 			delete ex_over;
 			break;
 		}
-		case EV_MAKE_MOVE_DISABLE: {
+		case EVENT_TYPE::EV_MAKE_MOVE_DISABLE: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->MakeStop(key);
 			delete ex_over;
 			break;
 		}
-		case EV_UPDATE_DB: {
+		case EVENT_TYPE::EV_UPDATE_DB: {
 			BattleServer::GetInstance()->SendUpdateUserInfoPacket(key, SR::g_clients[key]->mmr);
 			delete ex_over;
 			break;
 		}
-		case EV_RESET_ROOM: {
+		case EVENT_TYPE::EV_RESET_ROOM: {
 			int room_id = *(int*)ex_over->net_buf;
 			//SR::g_rooms[room_id]->WorldUpdate();
 			delete ex_over;
 			break;
 		}
-		case EV_WORLD_UPDATE: {
+		case EVENT_TYPE::EV_WORLD_UPDATE: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->WorldUpdate();
 			break;
 		}
 		default: {
-			std::cout << "[worker] unknown event type" << ex_over->ev_type << std::endl;
+			std::cout << "[worker] unknown event type" << (int)ex_over->ev_type << std::endl;
 		}
 		}
 	}

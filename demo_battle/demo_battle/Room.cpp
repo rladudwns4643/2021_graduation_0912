@@ -46,10 +46,10 @@ void Room::Initialize(int room_no) {
 	int bulletUniqueID{ OBJECT_START_INDEX_BULLET };
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i) m_bullets[i].SetuniqueID(bulletUniqueID++);
 
-	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(30ms), EV_UPDATE };
+	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(30ms), EVENT_TYPE::EV_UPDATE };
 	BattleServer::GetInstance()->AddTimer(ev);
 
-	EVENT ev_add_coin{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(20), EV_ADD_COIN };
+	EVENT ev_add_coin{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(20), EVENT_TYPE::EV_ADD_COIN };
 	BattleServer::GetInstance()->AddTimer(ev_add_coin);
 }
 
@@ -181,10 +181,10 @@ void Room::Update() {
 	int nextUpdate{ static_cast<int>((0.016f - updateTime.count()) * 1000.0f) };
 	if (nextUpdate <= 0) nextUpdate = 0;
 
-	EVENT ev_update{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(nextUpdate), EV_UPDATE };
+	EVENT ev_update{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(nextUpdate), EVENT_TYPE::EV_UPDATE };
 	BattleServer::GetInstance()->AddTimer(ev_update);
 
-	EVENT ev_flush{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(1), EV_FLUSH_MSG };
+	EVENT ev_flush{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(1), EVENT_TYPE::EV_FLUSH_MSG };
 	BattleServer::GetInstance()->AddTimer(ev_flush);
 }
 
@@ -345,7 +345,7 @@ bool Room::IsRoomStarted() {
 void Room::SendAddCoinPacket() {
 	if (this == nullptr) return;
 	if (IsGameStarted()) {
-		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EV_ADD_COIN };
+		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EVENT_TYPE::EV_ADD_COIN };
 		BattleServer::GetInstance()->AddTimer(ev);
 	}
 	PTC_VECTOR coin_pos{ rand() % 300 - 150 , 0, rand() % 300 - 150 };
@@ -362,7 +362,7 @@ void Room::SendAddCoinPacket() {
 void Room::SendLeftTimePacket() {
 	if (this == nullptr) return;
 	if (m_leftTime > 1 && m_isGameStarted) {
-		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(1), EV_TICK };
+		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(1), EVENT_TYPE::EV_TICK };
 		BattleServer::GetInstance()->AddTimer(ev);
 		m_countFrame = 0;
 		for (int i = 0; i < MAX_PLAYER; ++i) {
@@ -407,7 +407,7 @@ void Room::GameStart(){
 		BattleServer::GetInstance()->SendGameStartPacket(info.id, &info);
 	}
 
-	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(2), EV_WORLD_UPDATE };
+	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(2), EVENT_TYPE::EV_WORLD_UPDATE };
 	BattleServer::GetInstance()->AddTimer(ev);
 
 	m_isGameStarted = true;
@@ -449,7 +449,7 @@ void Room::UpdateUserInfo_DB(int winner) {
 		SR::g_clients[id]->mmr = p->GetMMR();
 		ATOMIC::g_dbInfo_lock.unlock();
 
-		EVENT ev{ id, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(1), EV_UPDATE_DB };
+		EVENT ev{ id, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(1), EVENT_TYPE::EV_UPDATE_DB };
 		BattleServer::GetInstance()->AddTimer(ev);
 		//BattleServer::GetInstance()->SendGameOverPacket(id, winner);
 	}

@@ -29,47 +29,47 @@ void TimerThread::ProcThread() {
 		EX_OVER* ex_over = new EX_OVER;
 		if (SR::g_rooms[proc_ev.target] != NULL) {
 			switch (proc_ev.et) {
-			case EV_UPDATE: {
-				ex_over->ev_type = EV_UPDATE;
+			case EVENT_TYPE::EV_UPDATE: {
+				ex_over->ev_type = EVENT_TYPE::EV_UPDATE;
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
-			case EV_TICK: {
-				ex_over->ev_type = EV_TICK;
+			case EVENT_TYPE::EV_TICK: {
+				ex_over->ev_type = EVENT_TYPE::EV_TICK;
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
-			case EV_FLUSH_MSG: {
-				ex_over->ev_type = EV_FLUSH_MSG;
+			case EVENT_TYPE::EV_FLUSH_MSG: {
+				ex_over->ev_type = EVENT_TYPE::EV_FLUSH_MSG;
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
-			case EV_ADD_COIN: {
-				ex_over->ev_type = EV_ADD_COIN;
+			case EVENT_TYPE::EV_ADD_COIN: {
+				ex_over->ev_type = EVENT_TYPE::EV_ADD_COIN;
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
-			case EV_MOVE_ENABLE: {
-				ex_over->ev_type = EV_MOVE_ENABLE;
+			case EVENT_TYPE::EV_MOVE_ENABLE: {
+				ex_over->ev_type = EVENT_TYPE::EV_MOVE_ENABLE;
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
-			case EV_MAKE_MOVE_DISABLE: {
-				ex_over->ev_type = EV_MAKE_MOVE_DISABLE;
+			case EVENT_TYPE::EV_MAKE_MOVE_DISABLE: {
+				ex_over->ev_type = EVENT_TYPE::EV_MAKE_MOVE_DISABLE;
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
-			case EV_UPDATE_DB: { //아직없음
+			case EVENT_TYPE::EV_UPDATE_DB: { //아직없음
 				//ex_over->ev_type = EV_UPDATE_DB;
 				break;
 			}
-			case EV_RESET_ROOM: {
-				ex_over->ev_type = EV_RESET_ROOM;
+			case EVENT_TYPE::EV_RESET_ROOM: {
+				ex_over->ev_type = EVENT_TYPE::EV_RESET_ROOM;
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
-			case EV_WORLD_UPDATE: {
-				ex_over->ev_type = EV_WORLD_UPDATE;
+			case EVENT_TYPE::EV_WORLD_UPDATE: {
+				ex_over->ev_type = EVENT_TYPE::EV_WORLD_UPDATE;
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}

@@ -10,7 +10,6 @@ std::atomic_int new_user_id{ 0 };
 
 int main() {
 
-
 	wcout.imbue(std::locale("korean"));
 
 	g_lobbyServer = new LobbyServer(LOBBY_ID);
