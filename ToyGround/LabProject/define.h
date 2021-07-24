@@ -75,6 +75,11 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 #define OBJECT_NAME_PLAY_BUTTON "PLAY_BUTTON"
 #define OBJECT_NAME_EXIT_BUTTON "EXIT_BUTTON"
 
+// UI Layer
+#define UI_LAYER_BACK -1
+#define UI_LAYER_0 0
+#define UI_LAYER_1 1
+
 // 오브젝트 메쉬
 #define OBJECT_MESH_STR_CUBE_01			"Cube_01"
 #define OBJECT_MESH_STR_CUBE_02			"Cube_02"
