@@ -38,11 +38,11 @@ bool TitleScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_NAME_BACKGROUND, OBJECT_NAME_BACKGROUND, XMFLOAT2(0.f, 0.f), XMFLOAT2(1280, 720), TextAlignType::Center);
 
 	// Logo
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOGO_TOYGROUND, XMFLOAT2(-500.f, 240.f), XMFLOAT2(400.f, 150.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOGO_TOYGROUND, XMFLOAT2(-650.f, 400.f), XMFLOAT2(400.f, 150.f), TextAlignType::Center);
 
 	// Button
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_PLAY_BUTTON, XMFLOAT2(-180.f, -410.f), XMFLOAT2(420.f, 120.f), TextAlignType::Center);
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_EXIT_BUTTON, XMFLOAT2(180.f, -410.f), XMFLOAT2(200.f, 90.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_PLAY_BUTTON, XMFLOAT2(0.f, -380.f), XMFLOAT2(420.f, 120.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_EXIT_BUTTON, XMFLOAT2(700.f, -380.f), XMFLOAT2(200.f, 90.f), TextAlignType::Center);
 
 	return false;
 }

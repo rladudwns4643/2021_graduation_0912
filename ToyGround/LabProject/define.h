@@ -68,6 +68,13 @@
 // 캐릭터
 enum BoneIndex { Cowboy = 0, GunMan, Count };
 
+// UI
+#define OBJECT_TYPE_UI2D "UI_2D"
+#define OBJECT_NAME_BACKGROUND "BACKGROUND"
+#define OBJECT_NAME_LOGO_TOYGROUND "LOGO_TOYGROUND"
+#define OBJECT_NAME_PLAY_BUTTON "PLAY_BUTTON"
+#define OBJECT_NAME_EXIT_BUTTON "EXIT_BUTTON"
+
 // 오브젝트 메쉬
 #define OBJECT_MESH_STR_CUBE_01			"Cube_01"
 #define OBJECT_MESH_STR_CUBE_02			"Cube_02"
@@ -159,10 +166,3 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 #define KEY_FIND "Find"
 #define KEY_WIN "Win"
 #define KEY_LOSE "Lose"
-
-// UI
-#define OBJECT_TYPE_UI2D "UI_2D"
-#define OBJECT_NAME_BACKGROUND "BACKGROUND"
-#define OBJECT_NAME_LOGO_TOYGROUND "LOGO_TOYGROUND"
-#define OBJECT_NAME_PLAY_BUTTON "PLAY_BUTTON"
-#define OBJECT_NAME_EXIT_BUTTON "EXIT_BUTTON"

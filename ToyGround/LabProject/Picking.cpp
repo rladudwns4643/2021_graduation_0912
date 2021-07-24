@@ -108,51 +108,50 @@ PickedObject Picking::RayIntersect2D(int screenX, int screenY, std::string scene
 
 PickedObject Picking::RayIntersect2DZLayer(int screenX, int screenY, std::string sceneName, std::string layer)
 {
-	//const std::map<std::string, UINT>& info = AppContext->m_RItemsMap[layer + sceneName]->GetInstanceKeyMap();
-	//
-	//if (info.size() < 1) return {};
-	//
-	//PickedObject pickedObject;
-	//
-	//
-	//for (auto& p : info)
-	//{
-	//	auto ri = AppContext->m_RItemsVec[p.second];
-	//	if (ri->m_ZLayer == UI_LAYER_0)
-	//	{
-	//		pickedObject = RayIntersect2D(screenX, screenY, sceneName, layer);
-	//	}
-	//}
-	//
-	//if (pickedObject.objectName != "")
-	//	return pickedObject;
-	//
-	//for (auto& p : info)
-	//{
-	//	auto ri = AppContext->m_RItemsVec[p.second];
-	//	if (ri->m_ZLayer == UI_LAYER_1)
-	//	{
-	//		pickedObject = RayIntersect2D(screenX, screenY, sceneName, layer);
-	//	}
-	//}
-	//
-	//if (pickedObject.objectName != "")
-	//	return pickedObject;
-	//
-	//for (auto& p : info)
-	//{
-	//	auto ri = AppContext->m_RItemsVec[p.second];
-	//	if (ri->m_ZLayer == -1)
-	//	{
-	//		pickedObject = RayIntersect2D(screenX, screenY, sceneName, layer);
-	//	}
-	//}
-	//
-	//if (pickedObject.objectName != "")
-	//	return pickedObject;
-	//
-	//
-	//return {};
+	const std::map<std::string, UINT>& info = AppContext->m_RItemsMap[layer + sceneName]->GetInstanceKeyMap();
+	
+	if (info.size() < 1) return {};
+	
+	PickedObject pickedObject;
+	
+	
+	for (auto& p : info)
+	{
+		auto ri = AppContext->m_RItemsVec[p.second];
+		if (ri->m_ZLayer == UI_LAYER_0)
+		{
+			pickedObject = RayIntersect2D(screenX, screenY, sceneName, layer);
+		}
+	}
+	
+	if (pickedObject.objectName != "")
+		return pickedObject;
+	
+	for (auto& p : info)
+	{
+		auto ri = AppContext->m_RItemsVec[p.second];
+		if (ri->m_ZLayer == UI_LAYER_1)
+		{
+			pickedObject = RayIntersect2D(screenX, screenY, sceneName, layer);
+		}
+	}
+	
+	if (pickedObject.objectName != "")
+		return pickedObject;
+	
+	for (auto& p : info)
+	{
+		auto ri = AppContext->m_RItemsVec[p.second];
+		if (ri->m_ZLayer == -1)
+		{
+			pickedObject = RayIntersect2D(screenX, screenY, sceneName, layer);
+		}
+	}
+	
+	if (pickedObject.objectName != "")
+		return pickedObject;
+	
+	return {};
 }
 
 void Picking::RayAtViewSpace(XMVECTOR& original, XMVECTOR& direction, int screenX, int screenY)
