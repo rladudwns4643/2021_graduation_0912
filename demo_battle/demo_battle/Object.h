@@ -97,5 +97,5 @@ protected:
 	bool m_isApplyGravity = true;
 
 public:
-	Boundary* m_boundaries;
+	//Boundary* m_boundaries;
 };

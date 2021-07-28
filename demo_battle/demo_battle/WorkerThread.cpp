@@ -139,8 +139,9 @@ void WorkerThread::ProcThread() {
 			break;
 		}
 		case EVENT_TYPE::EV_RESET_ROOM: {
+			std::cout << "EV_RESET_ROOM" << std::endl;
 			int room_id = *(int*)ex_over->net_buf;
-			//SR::g_rooms[room_id]->WorldUpdate();
+			SR::g_rooms[room_id]->Reset();
 			delete ex_over;
 			break;
 		}

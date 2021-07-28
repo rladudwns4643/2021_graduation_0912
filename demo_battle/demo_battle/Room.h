@@ -21,10 +21,13 @@ public:
 public:
 	void Initialize(int room_no);
 	void Reset();
+
+#pragma region Update
 	void Update(); //Battle World Update
 	void PushMsg(message&);
-	void Collision();
+	void AnimationUpdate(float elapsedMilliSec);
 	void WorldUpdate();
+#pragma endregion
 
 public:
 	bool IsEmpty(); //is Room Empty?
@@ -33,8 +36,6 @@ public:
 	void LeaveRoom(int id);
 	PTC_VECTOR GetCoinRandPos();
 
-	void LoadMap(); //맵 하나
-	void UpdateActive();
 	std::wstring GetRoomName();
 	int GetcurPlayerNum();
 	int GetRoomNo();
@@ -49,19 +50,19 @@ public:
 	void CheckGameState();
 	void GameStart();
 	void RoundStart();
-	void GameOver(int winner_role);
+	void GameOver(int winner);
 
-	void UpdateUserInfo_DB(int winner_role);
+	void UpdateUserInfo_DB(int winner);
 
 
 public:		//send msg
+#pragma region Push Msg
 	void PushSendMsg(int id, void* buff);
 	void FlushSendMsg();
 
 	void PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info);
 	void PushPlayerDirectionMsg(int to, int from, PTC_VECTOR look);
 	void PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* position_info);
-	//void PushTransformMsg(int transformer, short obj_type);
 	void PushShootBulletMsg(int to, int bullet_id, PTC_VECTOR look);
 	void PushRemoveBulletMsg(int bullet_id);
 	void PushHitMsg(int hit_id, int dmg);
@@ -71,13 +72,13 @@ public:		//send msg
 	void PushReadyMsg(int id, bool ready);
 	void PushUnReadyMsg(int id);
 	void PushRoomStartAvailableMsg(int id, bool available);
-	void PushPositionMsg(int id, XMFLOAT3 position);
 
 	void PushNewRoomMnrMsg(int id);
 
 	void PushAnimMsg(int id, int animType);
-
-public:		//
+#pragma endregion
+	
+	//set user move type
 	void MakeMove(int id);
 	void MakeStop(int id);
 
@@ -98,23 +99,27 @@ private:
 	int m_RoomMnr;
 
 	unsigned char m_leftTime;
-	std::atomic_int m_countFrame{ 0 };
 
-	std::atomic_int	m_curPlayerNum;
-	short			m_ToyNum;
 
+#pragma region objects
 	std::array<Player*, MAX_PLAYER> m_players;
+	std::atomic_int	m_curPlayerNum;
+
 	std::array<Bullet, MAX_BULLET> m_bullets;
+
 	std::vector<int> m_coins;
 	int m_coin_cur;
+#pragma endregion
 
+#pragma region msg Queue
 	std::queue<message> m_recvMsgQueue;
 	std::queue<message> m_copiedRecvMsgs;
-	std::mutex m_recvMsgQueueLock;
+	std::mutex			m_recvMsgQueueLock;
 
 	std::queue<SEND_INFO> m_sendMsgQueue;
 	std::mutex m_sendMsgQueueLock;
-
+#pragma endregion
+	
 	//Physics* m_physics = nullptr;		//충돌 처리 용
 	Map* m_map = nullptr;
 

@@ -32,7 +32,6 @@ Room::~Room() {
 void Room::Initialize(int room_no) {
 	m_roomNo = room_no;
 	m_curPlayerNum = 0;
-	m_ToyNum = 0;
 	m_isGameStarted = false;
 	m_isRoundStarted = false;
 	m_leftTime = MAX_LEFT_TIME;
@@ -58,7 +57,6 @@ void Room::Reset() {
 
 	m_isEnterable = true;
 	m_isRoundStarted = false;
-	m_ToyNum = 0;
 	m_leftTime = MAX_LEFT_TIME;
 	m_lastUpdate = std::chrono::system_clock::now();
 
@@ -73,9 +71,6 @@ void Room::Reset() {
 }
 
 void Room::Update() {
-#ifdef LOG_ON
-	std::cout << "Room::Update() called\n";
-#endif
 	if (this == nullptr) return;
 
 	m_curUpdate = std::chrono::system_clock::now();
@@ -93,18 +88,7 @@ void Room::Update() {
 	}
 
 	if (m_isGameStarted) {
-		for (int i = 0; i < MAX_PLAYER; ++i) {
-			int id{ m_players[i]->GetID() };
-			if (id != -1) {//not unset
-				m_players[i]->Update(elapsedMilliSec);
-				//anim
-				int anim_type{ m_players[i]->GetAnimType() };
-				if (anim_type != m_players[i]->GetPrevAnimType()) {
-					PushAnimMsg(id, anim_type);
-					m_players[i]->SetPrevAnimType(anim_type);
-				}
-			}
-		}
+		AnimationUpdate(elapsedMilliSec);
 		//WorldUpdate();
 		//Collision();
 		//for (int i = 0; i < MAX_PLAYER; ++i) {
@@ -171,7 +155,6 @@ void Room::Update() {
 		//		}
 		//	}
 		//}
-		++m_countFrame;
 	}
 
 	std::chrono::system_clock::time_point updateEnd{ std::chrono::system_clock::now() };
@@ -196,8 +179,20 @@ void Room::PushMsg(message& msg) {
 	ATOMIC::g_msg_lock.unlock();
 }
 
-void Room::Collision() {
-	//
+void Room::AnimationUpdate(float elapsedMilliSec)
+{
+	for (int i = 0; i < MAX_PLAYER; ++i) {
+		int id{ m_players[i]->GetID() };
+		if (id != -1) {//not unset
+			m_players[i]->Update(elapsedMilliSec);
+			//anim
+			int anim_type{ m_players[i]->GetAnimType() };
+			if (anim_type != m_players[i]->GetPrevAnimType()) {
+				PushAnimMsg(id, anim_type);
+				m_players[i]->SetPrevAnimType(anim_type);
+			}
+		}
+	}
 }
 
 void Room::WorldUpdate() {
@@ -311,8 +306,7 @@ void Room::LeaveRoom(int id) {
 
 	for (const auto& p : m_players) {
 		leaverID = p->GetID();
-		if (leaverID != -1
-			&& leaverID != id) { //나간사람일 경우
+		if (leaverID != -1 && leaverID != id) { //나간사람일 경우
 			BattleServer::GetInstance()->SendRoomLeavePacket(leaverID, id);
 		}
 	}
@@ -364,7 +358,6 @@ void Room::SendLeftTimePacket() {
 	if (m_leftTime > 1 && m_isGameStarted) {
 		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(1), EVENT_TYPE::EV_TICK };
 		BattleServer::GetInstance()->AddTimer(ev);
-		m_countFrame = 0;
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			int id = m_players[i]->GetID();
 			if (id != -1) BattleServer::GetInstance()->SendLeftTimePacket(id, m_leftTime);
@@ -427,8 +420,8 @@ void Room::RoundStart() {
 
 void Room::GameOver(int winner) {
 	cout << winner << " winner!\n";
-	//EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EV_RESET_ROOM };
-	//BattleServer::GetInstance()->AddTimer(ev);
+	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EVENT_TYPE::EV_RESET_ROOM };
+	BattleServer::GetInstance()->AddTimer(ev);
 	for (const auto& pl : m_players) {
 		BattleServer::GetInstance()->SendGameOverPacket(pl->GetID(), winner);
 	}
