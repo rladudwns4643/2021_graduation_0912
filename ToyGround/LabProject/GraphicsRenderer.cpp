@@ -75,6 +75,11 @@ void GraphicsRenderer::LoadTextures()
 		"UI_TITLE_PLAY_BUTTON_PRESSED",
 		"UI_TITLE_EXIT_BUTTON_RELEASED",
 		"UI_TITLE_EXIT_BUTTON_PRESSED",
+		"UI_LOBBY_BACKGROUND",
+		"UI_LOBBY_PLAY_BUTTON_RELEASED",
+		"UI_LOBBY_PLAY_BUTTON_PRESSED",
+		"UI_LOBBY_EXIT_BUTTON_RELEASED",
+		"UI_LOBBY_EXIT_BUTTON_PRESSED",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -87,7 +92,12 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/Title/Play_Button_R.dds",
 		L"./Textures/Title/Play_Button_P.dds",
 		L"./Textures/Title/Exit_Button_R.dds",
-		L"./Textures/Title/Exit_Button_P.dds"
+		L"./Textures/Title/Exit_Button_P.dds",
+		L"./Textures/Lobby/Lobby_BackGround.dds",
+		L"./Textures/Lobby/Lobby_Play_Button_R.dds",
+		L"./Textures/Lobby/Lobby_Play_Button_P.dds",
+		L"./Textures/Lobby/Lobby_Exit_Button_R.dds",
+		L"./Textures/Lobby/Lobby_Exit_Button_P.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -131,6 +141,11 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_UI_TITLE_PLAY_BUTTON_PRESSED]->Resource,
 		m_Textures[TEXTURE_STR_UI_TITLE_EXIT_BUTTON_RELEASED]->Resource,
 		m_Textures[TEXTURE_STR_UI_TITLE_EXIT_BUTTON_PRESSED]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_BACKGROUND]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_PLAY_BUTTON_RELEASED]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_PLAY_BUTTON_PRESSED]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_EXIT_BUTTON_RELEASED]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_EXIT_BUTTON_PRESSED]->Resource,
 	};
 
 	auto SkyBox = m_Textures["SkyBox"]->Resource;
@@ -236,7 +251,7 @@ void GraphicsRenderer::BuildRootSignatures()
 
 	// Texture - 앞의 숫자가 테스쳐 개수
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 8, 1, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 14, 1, 0);
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[7];
 

@@ -1,10 +1,13 @@
 #include "pch.h"
 #include "LobbyScene.h"
 #include "TOY_GROUND.h"
+#include "ApplicationContext.h"
 #include "CommandContext.h"
 #include "Timer.h"
 #include "InputHandler.h"
 #include "Service.h"
+#include "AssertsReference.h"
+#include "UserInterface.h"
 
 void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	switch (sEvent) {
@@ -76,7 +79,15 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 void LobbyScene::Initialize()
 {
 	// Scene-Controller
+	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eTitle);
 	m_SceneController = new LobbyController(this);
+
+	std::string ui2dName = OBJECT_TYPE_UI2D + m_SceneName;
+	AppContext->CreateUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND, TEXTURE_INDEX_UI_LOBBY_BACKGROUND);
+
+	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_LOBBY_PLAY_BUTTON, TEXTURE_INDEX_UI_LOBBY_PLAY_RELEASED, TEXTURE_INDEX_UI_LOBBY_PLAY_PRESSED);
+	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_LOBBY_EXIT_BUTTON, TEXTURE_INDEX_UI_LOBBY_EXIT_RELEASED, TEXTURE_INDEX_UI_LOBBY_EXIT_PRESSED);
+
 }
 
 void LobbyScene::OnResize()
@@ -89,22 +100,45 @@ bool LobbyScene::Enter()
 {
 	cout << "============= Lobby Scene ==============" << endl;
 
+	AppContext->DisplayUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND, XMFLOAT2(0.f, 0.f), XMFLOAT2(1280, 720), TextAlignType::Center);
+
+	// Button
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_PLAY_BUTTON, XMFLOAT2(0.f, -380.f), XMFLOAT2(420.f, 120.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_EXIT_BUTTON, XMFLOAT2(700.f, -380.f), XMFLOAT2(200.f, 90.f), TextAlignType::Center);
+
 	return false;
 }
 
 void LobbyScene::Exit()
 {
+	AppContext->HiddenUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_PLAY_BUTTON);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_EXIT_BUTTON);
 }
 
 void LobbyScene::Update(const float& fDeltaTime)
 {
 	m_SceneController->Update(fDeltaTime);
+
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_NAME_LOBBY_BACKGROUND], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_NAME_LOBBY_BACKGROUND], AppContext->m_RItemsVec);
+
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
+
+	/*Materials*/
+	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
 }
 
 void LobbyScene::Render()
 {
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
+
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_NAME_LOBBY_BACKGROUND], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
+
 }
 
 void LobbyScene::RenderUI()

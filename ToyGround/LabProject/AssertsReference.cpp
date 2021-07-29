@@ -612,6 +612,42 @@ void AssertsReference::BuildMaterials()
 	TITLE_EXIT_PRESSED->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	TITLE_EXIT_PRESSED->Roughness = 0.9;
 
+	//--------------------------------------------------------------------------------------------
+	auto LOBBY_BACKGROUND = std::make_unique<Material>();
+	LOBBY_BACKGROUND->MatCBIndex = TEXTURE_INDEX_UI_LOBBY_BACKGROUND;
+	LOBBY_BACKGROUND->DiffuseSrvHeapIndex = TEXTURE_INDEX_UI_LOBBY_BACKGROUND;
+	LOBBY_BACKGROUND->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	LOBBY_BACKGROUND->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	LOBBY_BACKGROUND->Roughness = 0.9;
+
+	auto LOBBY_PLAY_RELEASED = std::make_unique<Material>();
+	LOBBY_PLAY_RELEASED->MatCBIndex = TEXTURE_INDEX_UI_LOBBY_PLAY_RELEASED;
+	LOBBY_PLAY_RELEASED->DiffuseSrvHeapIndex = TEXTURE_INDEX_UI_LOBBY_PLAY_RELEASED;
+	LOBBY_PLAY_RELEASED->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	LOBBY_PLAY_RELEASED->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	LOBBY_PLAY_RELEASED->Roughness = 0.9;
+
+	auto LOBBY_PLAY_PRESSED = std::make_unique<Material>();
+	LOBBY_PLAY_PRESSED->MatCBIndex = TEXTURE_INDEX_UI_LOBBY_PLAY_PRESSED;
+	LOBBY_PLAY_PRESSED->DiffuseSrvHeapIndex = TEXTURE_INDEX_UI_LOBBY_PLAY_PRESSED;
+	LOBBY_PLAY_PRESSED->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	LOBBY_PLAY_PRESSED->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	LOBBY_PLAY_PRESSED->Roughness = 0.9;
+
+	auto LOBBY_EXIT_RELEASED = std::make_unique<Material>();
+	LOBBY_EXIT_RELEASED->MatCBIndex = TEXTURE_INDEX_UI_LOBBY_EXIT_RELEASED;
+	LOBBY_EXIT_RELEASED->DiffuseSrvHeapIndex = TEXTURE_INDEX_UI_LOBBY_EXIT_RELEASED;
+	LOBBY_EXIT_RELEASED->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	LOBBY_EXIT_RELEASED->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	LOBBY_EXIT_RELEASED->Roughness = 0.9;
+
+	auto LOBBY_EXIT_PRESSED = std::make_unique<Material>();
+	LOBBY_EXIT_PRESSED->MatCBIndex = TEXTURE_INDEX_UI_LOBBY_EXIT_PRESSED;
+	LOBBY_EXIT_PRESSED->DiffuseSrvHeapIndex = TEXTURE_INDEX_UI_LOBBY_EXIT_PRESSED;
+	LOBBY_EXIT_PRESSED->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	LOBBY_EXIT_PRESSED->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	LOBBY_EXIT_PRESSED->Roughness = 0.9;
+
 	m_Materials["SkyBox"] = std::move(sky);
 	m_Materials[TEXTURE_STR_Cartoon_CubeWorld_Texture] = std::move(Cartoon_CubeWorld_Texture);
 	m_Materials[TEXTURE_STR_PolygonMinis_Texture_01_A] = std::move(PolygonMinis_Texture_01_A);
@@ -621,6 +657,11 @@ void AssertsReference::BuildMaterials()
 	m_Materials[TEXTURE_STR_UI_TITLE_PLAY_BUTTON_PRESSED] = std::move(TITLE_PLAY_PRESSED);
 	m_Materials[TEXTURE_STR_UI_TITLE_EXIT_BUTTON_RELEASED] = std::move(TITLE_EXIT_RELEASED);
 	m_Materials[TEXTURE_STR_UI_TITLE_EXIT_BUTTON_PRESSED] = std::move(TITLE_EXIT_PRESSED);
+	m_Materials[TEXTURE_STR_UI_LOBBY_BACKGROUND] = std::move(LOBBY_BACKGROUND);
+	m_Materials[TEXTURE_STR_UI_LOBBY_PLAY_BUTTON_RELEASED] = std::move(LOBBY_PLAY_RELEASED);
+	m_Materials[TEXTURE_STR_UI_LOBBY_PLAY_BUTTON_PRESSED] = std::move(LOBBY_PLAY_PRESSED);
+	m_Materials[TEXTURE_STR_UI_LOBBY_EXIT_BUTTON_RELEASED] = std::move(LOBBY_EXIT_RELEASED);
+	m_Materials[TEXTURE_STR_UI_LOBBY_EXIT_BUTTON_PRESSED] = std::move(LOBBY_EXIT_PRESSED);
 }
 
 void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)

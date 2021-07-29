@@ -151,6 +151,7 @@ void Camera::CameraInitialize(SceneType sceneType)
 	switch (sceneType)
 	{
 	case SceneType::eTitle:
+	case SceneType::eLobby:
 		// Set FovY
 		SetLens(0.35f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
 
@@ -170,26 +171,25 @@ void Camera::CameraInitialize(SceneType sceneType)
 
 		break;
 
-	case SceneType::eLobby:
-		// Set FovY
-		SetLens(0.25f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
-
-		m_Owner = nullptr;
-		mPosition = { 1106.77, 238.978, 471.743 };
-		mRight = { 0.81325, 0.00145013, -0.581913 };
-		mUp = { 0.136672, 0.971549, 0.193427 };
-		mLook = { 0.565637, -0.236835, 0.789913 };
-
-		mTarget = { 0.f,0.f,0.f };
-		mOffset = { 0.f,0.f,0.f };
-		mRotation = { 0, 0, 0 };
-		mTimeLag = 0.f;
-
-		m_CameraType = CameraType::eFree;
-		mViewDirty = true;
-
-		break;
-
+	//	// Set FovY
+	//	SetLens(0.25f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
+	//
+	//	m_Owner = nullptr;
+	//	mPosition = { 1106.77, 238.978, 471.743 };
+	//	mRight = { 0.81325, 0.00145013, -0.581913 };
+	//	mUp = { 0.136672, 0.971549, 0.193427 };
+	//	mLook = { 0.565637, -0.236835, 0.789913 };
+	//
+	//	mTarget = { 0.f,0.f,0.f };
+	//	mOffset = { 0.f,0.f,0.f };
+	//	mRotation = { 0, 0, 0 };
+	//	mTimeLag = 0.f;
+	//
+	//	m_CameraType = CameraType::eFree;
+	//	mViewDirty = true;
+	//
+	//	break;
+	//
 	case SceneType::eGamePlay:
 		// Set FovY
 		SetLens(0.35f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
