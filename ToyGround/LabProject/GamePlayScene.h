@@ -8,6 +8,7 @@ namespace Graphics
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OBBoxPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 }
 
 namespace InputHandler

@@ -80,6 +80,13 @@ void GraphicsRenderer::LoadTextures()
 		"UI_LOBBY_PLAY_BUTTON_PRESSED",
 		"UI_LOBBY_EXIT_BUTTON_RELEASED",
 		"UI_LOBBY_EXIT_BUTTON_PRESSED",
+		"UI_GAMEPLAY_AIM",
+		"UI_GAMEPLAY_PLAYER1_SCORE",
+		"UI_GAMEPLAY_PLAYER2_SCORE",
+		"UI_GAMEPLAY_TIMER",
+		"UI_GAMEPLAY_HEALTH",
+		"UI_GAMEPLAY_ATTACK_GAUGE",
+		"UI_GAMEPLAY_SKILL_GAUGE",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -98,6 +105,13 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/Lobby/Lobby_Play_Button_P.dds",
 		L"./Textures/Lobby/Lobby_Exit_Button_R.dds",
 		L"./Textures/Lobby/Lobby_Exit_Button_P.dds",
+		L"./Textures/GamePlay/Aim.dds",
+		L"./Textures/GamePlay/Player1Score.dds",
+		L"./Textures/GamePlay/Player2Score.dds",
+		L"./Textures/GamePlay/Timer.dds",
+		L"./Textures/GamePlay/Health.dds",
+		L"./Textures/GamePlay/AttackGauge.dds",
+		L"./Textures/GamePlay/SkillGauge.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -146,6 +160,13 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_UI_LOBBY_PLAY_BUTTON_PRESSED]->Resource,
 		m_Textures[TEXTURE_STR_UI_LOBBY_EXIT_BUTTON_RELEASED]->Resource,
 		m_Textures[TEXTURE_STR_UI_LOBBY_EXIT_BUTTON_PRESSED]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_AIM]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_PLAYER1_SCORE]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_PLAYER2_SCORE]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_TIMER]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_HEALTH]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_ATTACK_GAUGE]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_SKILL_GAUGE]->Resource,
 	};
 
 	auto SkyBox = m_Textures["SkyBox"]->Resource;
@@ -251,7 +272,7 @@ void GraphicsRenderer::BuildRootSignatures()
 
 	// Texture - 앞의 숫자가 테스쳐 개수
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 14, 1, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 21, 1, 0);
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[7];
 

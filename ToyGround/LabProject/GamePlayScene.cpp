@@ -10,6 +10,7 @@
 
 #include "GameObject.h"
 #include "Character.h"
+#include "UserInterface.h"
 #include "Map.h"
 
 void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
