@@ -233,6 +233,7 @@ void GameplayScene::Exit()
 {
 	m_Users.clear();
 	m_player_in_room.clear();
+
 	for (int i = 0; i < MAX_GEM_COUNT; ++i)
 	{
 		AppContext->HiddenGem(i, true);
@@ -324,6 +325,10 @@ void GameplayScene::Render()
 	/*SkyBox*/
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
+}
+
+void GameplayScene::RenderUI()
+{
 }
 
 void GameplayScene::ChangeFreeCamera()

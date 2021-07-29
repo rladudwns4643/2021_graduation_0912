@@ -4,6 +4,7 @@
 #include "Service.h"
 
 #include "LobbyScene.h"
+#include "TitleScene.h"
 #include "GameplayScene.h"
 
 void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
@@ -192,6 +193,7 @@ SceneManager::~SceneManager()
 void SceneManager::InitializeScenes()
 {
 	CreateScene<LobbyScene>(SceneType::eLobby, "Lobby");
+	CreateScene<TitleScene>(SceneType::eTitle, "Title");
 	CreateScene<GameplayScene>(SceneType::eGamePlay, "GamePlay");
 }
 
@@ -249,6 +251,11 @@ void SceneManager::UpdateScene(const float& deltaT)
 void SceneManager::RenderScene()
 {
 	m_Scenes[m_CurScene]->Render();
+}
+
+void SceneManager::RenderUI()
+{
+	m_Scenes[m_CurScene]->RenderUI();
 }
 
 Scene* SceneManager::GetCurScene() const

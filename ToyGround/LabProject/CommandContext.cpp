@@ -19,6 +19,7 @@ void GraphicsContext::Initialize()
 		m_SkinnedCBs[i] = std::make_unique<UploadBuffer<ShaderResource::SkinnedConstants>>(Core::g_Device.Get(), 1, true);
 	}
 	PassCB = std::make_unique<UploadBuffer<ShaderResource::PassConstants>>(Core::g_Device.Get(), passCount, true);
+	UIPassCB = std::make_unique<UploadBuffer<ShaderResource::UIPassConstants>>(Core::g_Device.Get(), 1, true);
 	MaterialBuffer = std::make_unique<UploadBuffer<ShaderResource::MaterialData>>(Core::g_Device.Get(), materialCount, false);
 }
 

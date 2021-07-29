@@ -242,6 +242,9 @@
     <ClInclude Include="SpriteAnimation.h">
       <Filter>GameObject\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Picking.h">
+      <Filter>GameObject\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -389,6 +392,9 @@
     <ClCompile Include="SpriteAnimation.cpp">
       <Filter>GameObject\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Picking.cpp">
+      <Filter>GameObject\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\BBox.hlsl">
@@ -404,6 +410,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\Sky.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="UI.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -150,6 +150,14 @@ namespace ShaderResource
 		Light Lights[MaxLights];
 	};
 
+	struct UIPassConstants
+	{
+		// UI Param
+		float HPRate = 0.f;
+
+		// ortho,,,
+	};
+
 	struct MaterialData
 	{
 		DirectX::XMFLOAT4 DiffuseAlbedo = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -189,5 +197,15 @@ namespace MapTool
 		XMFLOAT3 position;
 		float rotY;
 		XMFLOAT3 spawnPos;
+	};
+
+	struct UIInfo
+	{
+		std::string uiName;
+		std::string meshName;
+		XMFLOAT3 position;
+		XMFLOAT3 rotation;
+		XMFLOAT3 scale;
+		std::string type;
 	};
 }

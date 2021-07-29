@@ -50,11 +50,13 @@ public:
 	void BuildInstanceBuffer(ObjectInfo* objInfo);
 
 	void Update2DPosition(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
+
 	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isFrustum = true);
 	void UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems); // 사용안함
 
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
 	void UpdateMainPassCB(Camera& camera, Light* light);
+	void UpdateUIPassCB(float hpRate);
 
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
@@ -72,8 +74,10 @@ public:
 
 public:
 	ShaderResource::PassConstants mMainPassCB;
+	ShaderResource::UIPassConstants mUIPassCB;
 
 	std::unique_ptr<UploadBuffer<ShaderResource::PassConstants>>	PassCB = nullptr;
+	std::unique_ptr<UploadBuffer<ShaderResource::UIPassConstants>>	UIPassCB = nullptr;
 	std::map<string, std::unique_ptr<UploadBuffer<ShaderResource::InstanceData>>> m_InstanceBuffers;
 	std::array< std::unique_ptr<UploadBuffer<ShaderResource::SkinnedConstants>>, BoneIndex::Count> m_SkinnedCBs;
 	std::unique_ptr<UploadBuffer<ShaderResource::MaterialData>>		MaterialBuffer = nullptr;

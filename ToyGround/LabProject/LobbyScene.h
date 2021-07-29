@@ -1,10 +1,18 @@
 #pragma once
 #include "Scene.h"
 
+#define CLIENT_EVENT_TITLE_UI_PRESSED 0xFFFF10
+#define CLIENT_EVENT_TITLE_UI_INPUT_PRESSED 0xFFFF11
 
 namespace Graphics
 {
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
+}
+
+namespace InputHandler
+{
+	extern bool g_CursorSwitch;
 }
 
 class LobbyScene : public Scene
@@ -22,5 +30,6 @@ public:
 
 	virtual void Update(const float& fDeltaTime) override;
 	virtual void Render() override;
+	virtual void RenderUI() override;
 };
 

@@ -33,6 +33,7 @@ public:
 
 	virtual void Update(const float& fDeltaTime) override;
 	virtual void Render() override;
+	virtual void RenderUI() override;
 
 private:
 	void ChangeFreeCamera();

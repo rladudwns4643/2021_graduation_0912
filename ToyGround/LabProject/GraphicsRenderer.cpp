@@ -15,6 +15,7 @@ namespace Graphics
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OBBoxPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_HPPSO;
 }
 
 using namespace Core;
@@ -51,6 +52,8 @@ void GraphicsRenderer::RenderGraphics()
 	g_CommandList->SetGraphicsRootShaderResourceView(1, matBuffer->GetGPUVirtualAddress());
 	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
 	g_CommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
+	auto uiPassCB = GraphicsContext::GetApp()->UIPassCB->Resource();
+	g_CommandList->SetGraphicsRootConstantBufferView(6, uiPassCB->GetGPUVirtualAddress());
 
 	g_CommandList->SetGraphicsRootDescriptorTable(4, m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
@@ -65,14 +68,36 @@ void GraphicsRenderer::LoadTextures()
 	{
 		"SkyBox",
 		"Cartoon_CubeWorld_Texture",
-		"PolygonMinis_Texture_01_A"
+		"PolygonMinis_Texture_01_A",
+		"UI_TITLE_BACKGROUND",
+		"UI_TITLE_LOGO_TOYGROUND",
+		"UI_TITLE_PLAY_BUTTON_RELEASED",
+		"UI_TITLE_PLAY_BUTTON_PRESSED",
+		"UI_TITLE_EXIT_BUTTON_RELEASED",
+		"UI_TITLE_EXIT_BUTTON_PRESSED",
+		"UI_LOBBY_BACKGROUND",
+		"UI_LOBBY_PLAY_BUTTON_RELEASED",
+		"UI_LOBBY_PLAY_BUTTON_PRESSED",
+		"UI_LOBBY_EXIT_BUTTON_RELEASED",
+		"UI_LOBBY_EXIT_BUTTON_PRESSED",
 	};
 
 	std::vector<std::wstring> texFilenames =
 	{
 		L"./Textures/SkyBox.dds",
 		L"./Textures/Cartoon_CubeWorld_Texture.dds",
-		L"./Textures/PolygonMinis_Texture_01_A.dds"
+		L"./Textures/PolygonMinis_Texture_01_A.dds",
+		L"./Textures/Title/BackGround.dds",
+		L"./Textures/Title/Logo_ToyGround.dds",
+		L"./Textures/Title/Play_Button_R.dds",
+		L"./Textures/Title/Play_Button_P.dds",
+		L"./Textures/Title/Exit_Button_R.dds",
+		L"./Textures/Title/Exit_Button_P.dds",
+		L"./Textures/Lobby/Lobby_BackGround.dds",
+		L"./Textures/Lobby/Lobby_Play_Button_R.dds",
+		L"./Textures/Lobby/Lobby_Play_Button_P.dds",
+		L"./Textures/Lobby/Lobby_Exit_Button_R.dds",
+		L"./Textures/Lobby/Lobby_Exit_Button_P.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -109,7 +134,18 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	std::vector<ComPtr<ID3D12Resource>> tex2DList =
 	{
 		m_Textures[TEXTURE_STR_Cartoon_CubeWorld_Texture]->Resource,
-		m_Textures[TEXTURE_STR_PolygonMinis_Texture_01_A]->Resource
+		m_Textures[TEXTURE_STR_PolygonMinis_Texture_01_A]->Resource,
+		m_Textures[TEXTURE_STR_UI_TITLE_BACKGROUND]->Resource,
+		m_Textures[TEXTURE_STR_UI_TITLE_LOGO_TOYGROUND]->Resource,
+		m_Textures[TEXTURE_STR_UI_TITLE_PLAY_BUTTON_RELEASED]->Resource,
+		m_Textures[TEXTURE_STR_UI_TITLE_PLAY_BUTTON_PRESSED]->Resource,
+		m_Textures[TEXTURE_STR_UI_TITLE_EXIT_BUTTON_RELEASED]->Resource,
+		m_Textures[TEXTURE_STR_UI_TITLE_EXIT_BUTTON_PRESSED]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_BACKGROUND]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_PLAY_BUTTON_RELEASED]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_PLAY_BUTTON_PRESSED]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_EXIT_BUTTON_RELEASED]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_EXIT_BUTTON_PRESSED]->Resource,
 	};
 
 	auto SkyBox = m_Textures["SkyBox"]->Resource;
@@ -152,6 +188,12 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 		NULL, NULL
 	};
 
+	const D3D_SHADER_MACRO hpDefines[] =
+	{
+		"HP", "1",
+		NULL, NULL
+	};
+
 	m_Shaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["skinnedVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", skinnedDefines, "VS", "vs_5_1");
 	m_Shaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_1");
@@ -162,6 +204,10 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 
 	m_Shaders["skyVS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["skyPS"] = d3dUtil::CompileShader(L"Shaders\\Sky.hlsl", nullptr, "PS", "ps_5_1");
+
+	m_Shaders["uiVS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["uiPS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", nullptr, "PS", "ps_5_1");
+	m_Shaders["hpPS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", hpDefines, "PS", "ps_5_1");
 
 	m_BBox_InputLayout =
 	{
@@ -188,6 +234,13 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 		{ "WEIGHTS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 56, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "BONEINDICES", 0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 68, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
+
+	m_UI_InputLayout =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	};
 }
 
 void GraphicsRenderer::BuildRootSignatures()
@@ -196,11 +249,11 @@ void GraphicsRenderer::BuildRootSignatures()
 	CD3DX12_DESCRIPTOR_RANGE texTable0;
 	texTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0);
 
-	// Texture
+	// Texture - 앞의 숫자가 테스쳐 개수
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 1, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 14, 1, 0);
 
-	CD3DX12_ROOT_PARAMETER slotRootParameter[6];
+	CD3DX12_ROOT_PARAMETER slotRootParameter[7];
 
 	// 성능 팁 : 사용빈도가 높은것에서 낮은 것의 순서로 나열한다.
 	/* Shader Register*/
@@ -217,11 +270,12 @@ void GraphicsRenderer::BuildRootSignatures()
 	slotRootParameter[3].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL); // sky 
 	slotRootParameter[4].InitAsDescriptorTable(1, &texTable1, D3D12_SHADER_VISIBILITY_PIXEL); // Texture
 	slotRootParameter[5].InitAsConstantBufferView(1); // bones
+	slotRootParameter[6].InitAsConstantBufferView(2); // uiPassCBParams
 
 	auto staticSamplers = GetStaticSamplers();
 
 	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(6, slotRootParameter,
+	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(7, slotRootParameter,
 		(UINT)staticSamplers.size(), staticSamplers.data(),
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -314,7 +368,23 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	opaquePsoDesc.SampleDesc.Quality = g_4xMsaaState ? (g_4xMsaaQuality - 1) : 0;
 	opaquePsoDesc.DSVFormat = g_DepthStencilFormat;
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&g_OpaquePSO)));
-	
+
+	// Alpha Blend State
+	D3D12_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(D3D12_BLEND_DESC));
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.IndependentBlendEnable = false;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	blendDesc.AlphaToCoverageEnable = true;
+
 	//
 	// PSO for AABondingBox pass.
 	//
@@ -362,6 +432,37 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 		m_Shaders["opaquePS"]->GetBufferSize()
 	};
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skinnedOpaquePsoDesc, IID_PPV_ARGS(&g_SkinnedPSO)));
+	
+	//
+	// PSO for UI
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC uiPsoDesc = opaquePsoDesc;
+	uiPsoDesc.InputLayout = { m_UI_InputLayout.data(), (UINT)m_UI_InputLayout.size() };
+	uiPsoDesc.BlendState = blendDesc;
+	uiPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+	uiPsoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	uiPsoDesc.pRootSignature = m_RenderRS.Get();
+	uiPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["uiVS"]->GetBufferPointer()),
+		m_Shaders["uiVS"]->GetBufferSize()
+	};
+	uiPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["uiPS"]->GetBufferPointer()),
+		m_Shaders["uiPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&uiPsoDesc, IID_PPV_ARGS(&g_UIPSO)));
+
+	//
+	// PSO for hp.
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC hpPsoDesc = uiPsoDesc;
+	hpPsoDesc.PS = {
+		reinterpret_cast<BYTE*>(m_Shaders["hpPS"]->GetBufferPointer()),
+		m_Shaders["hpPS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&hpPsoDesc, IID_PPV_ARGS(&g_HPPSO)));
 
 	//
 	// PSO for sky.

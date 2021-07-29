@@ -41,7 +41,7 @@ TextureCube gCubeMap : register(t0);
 
 // Texture2DArray와는 달리 이 배열에는 크기와 형식이
 // 다른 텍스처들을 담을 수 있다. 따라서 좀 더 유연하다.
-Texture2D gDiffuseMap[1] : register(t1);
+Texture2D gDiffuseMap[14] : register(t1);
 
 // 재질 자료를 space1에 배정한다. 따라서 위의 텍스처 배열과는 겹치지 않는다.
 // 위의 텍스처 배열은 space0의 레지스터 t0, t1,,, t7을 차지한다.
@@ -85,6 +85,12 @@ cbuffer cbSkinned : register(b1)
 {
 	// 캐릭터당 최대 96개의 뼈대를 지원한다.
 	float4x4 gBoneTransforms[96];
+};
+
+cbuffer cbUIPass : register(b2)
+{
+	// UI Param
+	float gHPRate; // 0 ~ 1
 };
 
 //---------------------------------------------------------------------------------------

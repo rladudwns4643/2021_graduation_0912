@@ -14,5 +14,7 @@ public:
 
 	virtual void RenderScene(void) = 0;
 
+	virtual void RenderUI(void) {};
+
 	void		Exit();
 };

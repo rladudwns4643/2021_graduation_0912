@@ -1,8 +1,8 @@
 #pragma once
 #include "Controller.h"
 
-class TitleScene;
 class LobbyScene;
+class TitleScene;
 class GameplayScene;
 
 class TitleController final : public Controller
