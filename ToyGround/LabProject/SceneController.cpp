@@ -325,6 +325,18 @@ void LobbyController::HandleInput(const float deltaT)
 		y = true;
 		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 	}
+	if (InputHandler::g_LeftMouseCallback)
+	{
+		LONG mousePosX = InputHandler::g_LastMousePos.x - FRAME_BUFFER_WIDTH / 2;
+		LONG mousePosY = InputHandler::g_LastMousePos.y - FRAME_BUFFER_HEIGHT / 2;
+		// cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+		if (-210 <= mousePosX && mousePosX <= 210
+			&& 195 <= mousePosY && mousePosY <= 315)
+		{
+			y = true;
+			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+		}
+	}
 #endif
 }
 
@@ -348,6 +360,9 @@ void GameplayController::HandleInput(const float deltaT)
 	if (InputHandler::IsKeyUp(VK_F5)) {
 		bool bNowBB = TOY_GROUND::GetApp()->bShowBoundingBox;
 		TOY_GROUND::GetApp()->bShowBoundingBox = !bNowBB;
+	}
+	if (InputHandler::IsKeyUp(VK_F4)) {
+		SceneManager::GetApp()->ChangeScene(SceneType::eLobby);
 	}
 #ifdef DEBUG_SERVER
 	//if (InputHandler::IsKeyUp(VK_F1) && c == false) {

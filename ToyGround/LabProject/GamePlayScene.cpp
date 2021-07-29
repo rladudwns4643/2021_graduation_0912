@@ -233,6 +233,7 @@ void GameplayScene::Exit()
 {
 	m_Users.clear();
 	m_player_in_room.clear();
+
 	for (int i = 0; i < MAX_GEM_COUNT; ++i)
 	{
 		AppContext->HiddenGem(i, true);

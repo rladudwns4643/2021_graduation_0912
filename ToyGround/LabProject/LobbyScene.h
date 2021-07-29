@@ -10,6 +10,11 @@ namespace Graphics
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 }
 
+namespace InputHandler
+{
+	extern bool g_CursorSwitch;
+}
+
 class LobbyScene : public Scene
 {
 	friend LobbyController;

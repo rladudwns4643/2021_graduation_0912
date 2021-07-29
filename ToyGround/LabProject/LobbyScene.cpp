@@ -79,7 +79,6 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 void LobbyScene::Initialize()
 {
 	// Scene-Controller
-	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eTitle);
 	m_SceneController = new LobbyController(this);
 
 	std::string ui2dName = OBJECT_TYPE_UI2D + m_SceneName;
@@ -99,6 +98,10 @@ void LobbyScene::OnResize()
 bool LobbyScene::Enter()
 {
 	cout << "============= Lobby Scene ==============" << endl;
+
+	InputHandler::g_CursorSwitch = true;
+
+	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eLobby);
 
 	AppContext->DisplayUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND, XMFLOAT2(0.f, 0.f), XMFLOAT2(1280, 720), TextAlignType::Center);
 
