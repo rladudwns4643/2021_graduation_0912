@@ -160,6 +160,9 @@ void GameplayScene::Initialize()
 	// 맵의 오브젝트들 생성
 	AppContext->CreateProps(MAP_STR_GAME_MAP);
 
+	// UI 생성
+	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM, TEXTURE_INDEX_UI_GAMEPLAY_AIM);
+
 	// 보석 생성
 	AppContext->CreateGem();
 }
@@ -218,6 +221,9 @@ bool GameplayScene::Enter()
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
 
+	// UI 세팅
+	AppContext->DisplayUI2D(OBJECT_NAME_GAMEPLAY_AIM, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(0.f, 0.f), XMFLOAT2(39, 38), TextAlignType::Center);
+
 	// 카메라 세팅
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
 
@@ -234,6 +240,8 @@ void GameplayScene::Exit()
 {
 	m_Users.clear();
 	m_player_in_room.clear();
+
+	AppContext->HiddenUI2D(OBJECT_NAME_GAMEPLAY_AIM, OBJECT_NAME_GAMEPLAY_AIM);
 
 	for (int i = 0; i < MAX_GEM_COUNT; ++i)
 	{
@@ -322,8 +330,12 @@ void GameplayScene::Render()
 			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX], AppContext->m_RItemsVec, false);
 		}
 	}
+
+	// UI
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_NAME_GAMEPLAY_AIM], AppContext->m_RItemsVec);
 	
-	/*SkyBox*/
+	// SkyBox
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
 }
