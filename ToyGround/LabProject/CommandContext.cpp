@@ -76,32 +76,28 @@ void GraphicsContext::Update2DPosition(ObjectInfo* objInfo, std::vector<GameObje
 		case TextAlignType::Center:
 			if (Core::g_DisplayWidth > Core::g_DisplayHeight)
 			{
-				if (Core::g_DisplayHeight > 480)
+				float heightRatio = Core::g_DisplayHeight / 1080.f;
+
+				XMFLOAT2 offset = { ri->m_PositionRatio.x * heightRatio, ri->m_PositionRatio.y * heightRatio };
+				XMFLOAT2 newSize = { ri->m_SizeRatio.x, ri->m_SizeRatio.y * Core::g_DisplayHeight };
+
+				newSize.x = newSize.x * newSize.y;
+
+				XMFLOAT2 newPos = { 0.f, 0.f };
+
+				newPos.x = (offset.x + newSize.x * 0.05f);
+				newPos.y = -(offset.y + newSize.y * 0.05f);
+
+				ri->m_World._11 = newSize.x;
+				ri->m_World._22 = newSize.y;
+
+				ri->m_World._41 = newPos.x;
+				ri->m_World._42 = newPos.y;
+
+				if (ri->m_IsText)
 				{
-					float heightRatio = Core::g_DisplayHeight / 1080.f;
-
-					XMFLOAT2 offset = { ri->m_PositionRatio.x * heightRatio, ri->m_PositionRatio.y * heightRatio };
-					XMFLOAT2 newSize = { ri->m_SizeRatio.x, ri->m_SizeRatio.y * Core::g_DisplayHeight };
-
-					newSize.x = newSize.x * newSize.y;
-
-					XMFLOAT2 newPos = { 0.f, 0.f };
-
-					newPos.x = (offset.x + newSize.x * 0.05f);
-					newPos.y = -(offset.y + newSize.y * 0.05f);
-
-					ri->m_World._11 = newSize.x;
-					ri->m_World._22 = newSize.y;
-
-					ri->m_World._41 = newPos.x;
-					ri->m_World._42 = newPos.y;
-
-					if (ri->m_IsText)
-					{
-						ri->m_UIPos = newPos;
-						ri->m_UISize = newSize;
-					}
-
+					ri->m_UIPos = newPos;
+					ri->m_UISize = newSize;
 				}
 			}
 			break;
@@ -295,6 +291,7 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 			// instanceCount = info.size
 			// info = instance world 행렬을 갖고있는 맵
 			Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCount, info.size(), ri->m_StartIndexLocation, ri->m_BaseVertexLocation, 0);
+			ri->m_IsVisible = ri->m_IsVisibleOnePassCheck;
 		}
 	}
 }

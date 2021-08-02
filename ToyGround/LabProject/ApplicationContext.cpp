@@ -67,6 +67,8 @@ void ApplicationContext::CreateSkycube(std::string skycubeName, std::string inst
 	sky->m_MaterialIndex = AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
 	sky->m_World = MathHelper::Identity4x4();
 	sky->m_TexTransform = MathHelper::Identity4x4();
+	sky->m_IsVisible = true;
+	sky->m_IsVisibleOnePassCheck = true;
 
 	sky->Scale(SKYBOX_SCALE, SKYBOX_SCALE, SKYBOX_SCALE);
 }
@@ -84,6 +86,8 @@ void ApplicationContext::CreateProps(std::string mapName)
 		item->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[itemInfo.meshName]->Center;
 		item->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[itemInfo.meshName]->Extents;
 		item->m_IsAABB = true;
+		item->m_IsVisible = false;
+		item->m_IsVisibleOnePassCheck = false;
 		if (itemInfo.meshName == OBJECT_MESH_STR_ATTACK_BOX)
 			item->m_IsAABB = false;
 	}
@@ -101,6 +105,8 @@ void ApplicationContext::CreateCharacter(std::string meshName, std::string instI
 	chr->m_PlayerID = skinnedCBIndex;
 	chr->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[meshName]->Center;
 	chr->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[meshName]->Extents;
+	chr->m_IsVisible = false;
+	chr->m_IsVisibleOnePassCheck = false;
 }
 
 void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName, int matIndex, int uiPressedTextureIdx, int uiDisabledTextureIdx)
@@ -110,6 +116,7 @@ void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName,
 	item->m_MaterialIndex = matIndex;
 	item->SetOriginMaterial(matIndex);
 	item->m_IsVisible = false;
+	item->m_IsVisibleOnePassCheck = false;
 
 	item->SetReleasedTexture(matIndex);
 
@@ -150,6 +157,7 @@ void ApplicationContext::CreateGem()
 		gem->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_GEM]->Extents;
 		gem->m_IsAABB = true;
 		gem->m_IsVisible = false;
+		gem->m_IsVisibleOnePassCheck = false;
 	}
 }
 void ApplicationContext::DisplayGem(int instID, float posX, float posY, float posZ)
@@ -158,6 +166,7 @@ void ApplicationContext::DisplayGem(int instID, float posX, float posY, float po
 	if (!obj) return;
 
 	obj->m_IsVisible = true;
+	obj->m_IsVisibleOnePassCheck = true;
 	obj->InitializeTransform();
 	obj->Scale(1, 1, 1);
 	obj->SetPosition(posX, posY, posZ);
@@ -174,6 +183,7 @@ void ApplicationContext::HiddenGem(int instID, bool isVisible)
 	ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 	ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 	obj->m_IsVisible = isVisible;
+	obj->m_IsVisibleOnePassCheck = isVisible;
 
 	if (isVisible)
 	{
@@ -193,6 +203,8 @@ void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float s
 		GameObject* obj = FindObject<GameObject>(itemInfo.meshName, std::to_string(itemInfo.typeID));
 
 		obj->InitializeTransform();
+		obj->m_IsVisible = true;
+		obj->m_IsVisibleOnePassCheck = true;
 		if (isScale) obj->Scale(scaleValue, scaleValue, scaleValue);
 		if(obj->GetMeshName() == OBJECT_MESH_STR_WALL_21)
 			obj->Scale(1.0f, 5.5, 21.f);
@@ -229,6 +241,7 @@ void ApplicationContext::HiddenProps(std::string mapName)
 	{
 		GameObject* obj = FindObject<GameObject>(itemInfo.meshName, std::to_string(itemInfo.typeID));
 		obj->m_IsVisible = false;
+		obj->m_IsVisibleOnePassCheck = false;
 	}
 }
 
@@ -245,6 +258,9 @@ void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, 
 			user->InitializeTransform();
 			user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
 			user->SetAnimationPlayerState(AnimationController::PlayerState::STATE_IDLE);
+
+			user->m_IsVisible = isVisible;
+			user->m_IsVisibleOnePassCheck = isVisible;
 			user->m_HP = 1.f;
 			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
 			user->SetPosition(p.position);
@@ -267,6 +283,8 @@ void ApplicationContext::DisplayCharacter(std::string mapName, std::string userN
 			user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
 			user->SetAnimationPlayerState(AnimationController::PlayerState::STATE_IDLE);
 
+			user->m_IsVisible = isVisible;
+			user->m_IsVisibleOnePassCheck = isVisible;
 			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
 			user->SetPosition(p.position);
 
@@ -292,6 +310,7 @@ void ApplicationContext::HiddenCharacter(Character* user)
 	//GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[user->GetMeshName()], m_RItemsVec);
 
 	user->m_IsVisible = false;
+	user->m_IsVisibleOnePassCheck = false;
 }
 
 void ApplicationContext::HiddenCharacter(std::string userName)
@@ -313,6 +332,7 @@ void ApplicationContext::HiddenCharacter(std::string userName)
 	//GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[userName], m_RItemsVec);
 
 	user->m_IsVisible = false;
+	user->m_IsVisibleOnePassCheck = false;
 }
 
 
@@ -373,6 +393,7 @@ void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName
 
 	ui->InitializeTransform();
 	ui->m_IsVisible = true;
+	ui->m_IsVisibleOnePassCheck = true;
 	ui->m_ZLayer = zLayer;
 	ui->m_IsText = isText;
 
@@ -414,6 +435,7 @@ void ApplicationContext::HiddenUI2D(std::string ui2dLayer, std::string ui2dName)
 	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[ui2dLayer], m_RItemsVec);
 
 	ui->m_IsVisible = false;
+	ui->m_IsVisibleOnePassCheck = false;
 }
 
 void ApplicationContext::SetDisplayUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible)
