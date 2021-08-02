@@ -65,8 +65,6 @@ struct CLIENT {
 
 	char id_str[10];
 	int mmr;
-	int totalGameCnt;
-	int winningGameCnt;
 };
 
 struct EVENT {

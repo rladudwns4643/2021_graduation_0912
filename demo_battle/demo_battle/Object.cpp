@@ -12,7 +12,7 @@ Object::Object() {
 	m_mass = 0.f;
 	m_fricCoef = 0.f;
 	m_maxVel = 0.f;
-	m_boundaries = new Boundary;
+	//m_boundaries = new Boundary;
 }
 
 Object::Object(const Object& other) noexcept {
@@ -27,14 +27,14 @@ Object::Object(const Object& other) noexcept {
 	m_fricCoef = other.m_fricCoef;
 	m_maxVel = other.m_maxVel;
 
-	m_boundaries = new Boundary(*other.m_boundaries);
+	//m_boundaries = new Boundary(*other.m_boundaries);
 }
 
 Object& Object::operator=(const Object& other) {
 	if (this != &other) {
-		delete m_boundaries;
+		//delete m_boundaries;
 
-		m_xmf4x4World = other.m_xmf4x4World;
+		//m_xmf4x4World = other.m_xmf4x4World;
 		m_xmfVel = other.m_xmfVel;
 		m_xmfAcc = other.m_xmfAcc;
 		m_forceAmountXZ = other.m_forceAmountXZ;
@@ -43,7 +43,7 @@ Object& Object::operator=(const Object& other) {
 		m_fricCoef = other.m_fricCoef;
 		m_maxVel = other.m_maxVel;
 
-		m_boundaries = other.m_boundaries;
+		//m_boundaries = other.m_boundaries;
 	}
 	return *this;
 }

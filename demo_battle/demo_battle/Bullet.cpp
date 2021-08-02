@@ -6,8 +6,8 @@ Bullet::Bullet() {
 }
 
 Bullet::~Bullet() {
-	delete m_boundaries;
-	m_boundaries = nullptr;
+	//delete m_boundaries;
+	//m_boundaries = nullptr;
 }
 
 void Bullet::Initialize() {
@@ -26,11 +26,11 @@ void Bullet::Initialize() {
 
 	XMFLOAT3 size{};
 	int numBB{ 1 };
-	m_boundaries->SetBB(numBB);
-	m_boundaries->SetBBPos(GetPosition(), numBB - 1);
-	m_boundaries->SetBBSize(size, numBB - 1);
+	//m_boundaries->SetBB(numBB);
+	//m_boundaries->SetBBPos(GetPosition(), numBB - 1);
+	//m_boundaries->SetBBSize(size, numBB - 1);
 
-	m_boundaries->SetObjType(OBJECT_TYPE_BULLET);
+	//m_boundaries->SetObjType(OBJECT_TYPE_BULLET);
 }
 
 void Bullet::Shoot(const XMFLOAT3& pos, const XMFLOAT3& look, XMFLOAT3& dir, float eTime = 10.f) {

@@ -250,7 +250,7 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		break;
 	}
 	default: {
-		std::cout << "DONT KNOW PACKET TYPE\n";
+		std::cout << "DONT KNOW PACKET TYPE" << (int)packet[1] << "\n";
 		break;
 	}
 	}

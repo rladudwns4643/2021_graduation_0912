@@ -45,7 +45,7 @@ public:
 	bool IsDead();
 
 	void SetCoin(size_t coin);
-	size_t GetCoin();
+	int GetCoin();
 
 	void SetPosition(XMFLOAT3 pos);
 	XMFLOAT3 GetPosition();

@@ -59,14 +59,13 @@ void Room::Reset() {
 	m_isRoundStarted = false;
 	m_leftTime = MAX_LEFT_TIME;
 	m_lastUpdate = std::chrono::system_clock::now();
+	m_curPlayerNum = 0;
 
 	//delete m_map;
 	//m_map = new Map();
 
 	for (auto& p : m_players) {
-		Toy* tmp = new Toy(*p);
-		delete p;
-		p = tmp; // player -> Toy type cast
+		p->Reset();
 	}
 }
 
@@ -89,7 +88,7 @@ void Room::Update() {
 
 	if (m_isGameStarted) {
 		AnimationUpdate(elapsedMilliSec);
-		//WorldUpdate();
+		WorldUpdate();
 		//Collision();
 		//for (int i = 0; i < MAX_PLAYER; ++i) {
 		//	if (m_players[i]->GetID() != -1) { //not unset
@@ -196,7 +195,7 @@ void Room::AnimationUpdate(float elapsedMilliSec)
 }
 
 void Room::WorldUpdate() {
-	//유동 object update
+	//유동 object update -> bullet update
 	//for (auto it = m_map->m_obj_list[Map::NOTFIXED].begin();
 	//	it != m_map->m_obj_list[Map::NOTFIXED].end();
 	//	++it) {
@@ -342,7 +341,7 @@ void Room::SendAddCoinPacket() {
 		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EVENT_TYPE::EV_ADD_COIN };
 		BattleServer::GetInstance()->AddTimer(ev);
 	}
-	PTC_VECTOR coin_pos{ rand() % 300 - 150 , 0, rand() % 300 - 150 };
+	PTC_VECTOR coin_pos{ static_cast<float>(rand() % 300 - 150) , 0, static_cast<float>(rand() % 300 - 150) };
 	m_coins.emplace_back(m_coin_cur);
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		int id = m_players[i]->GetID();

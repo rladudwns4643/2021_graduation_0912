@@ -130,7 +130,7 @@ void Player::SetCoin(size_t coin) {
 	m_coin_cnt = coin;
 }
 
-size_t Player::GetCoin() {
+int Player::GetCoin() {
 	return m_coin_cnt;
 }
 

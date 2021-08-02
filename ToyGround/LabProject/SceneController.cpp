@@ -314,9 +314,16 @@ void LobbyController::HandleInput(const float deltaT)
 		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
 	}
 
-	if (GetAsyncKeyState('U') & 0x8000 && u == false) {
-		u = true;
-		NetCore::GetApp()->SendReadyPacket();
+	if (InputHandler::g_LeftMouseCallback)
+	{
+		LONG mousePosX = InputHandler::g_LastMousePos.x - FRAME_BUFFER_WIDTH / 2;
+		LONG mousePosY = InputHandler::g_LastMousePos.y - FRAME_BUFFER_HEIGHT / 2;
+		// cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+		if (-210 <= mousePosX && mousePosX <= 210
+			&& 195 <= mousePosY && mousePosY <= 315)
+		{
+			NetCore::GetApp()->SendReadyPacket();
+		}
 	}
 #endif
 

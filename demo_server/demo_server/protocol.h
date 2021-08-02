@@ -359,7 +359,7 @@ struct bc_packet_hit {
 	BYTE type;
 
 	int id;
-	float hp;
+	int hp;
 };
 struct bc_packet_die {
 	BYTE size;
