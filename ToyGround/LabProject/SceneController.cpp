@@ -308,21 +308,22 @@ void LobbyController::Update(const float deltaT)
 void LobbyController::HandleInput(const float deltaT)
 {
 #ifdef DEBUG_SERVER
-	//임시로 로그인 없이 바로 dummy login packet 전송
-	if (GetAsyncKeyState('Y') & 0x8000 && y == false) {
-		y = true;
-		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
-	}
-
 	if (InputHandler::g_LeftMouseCallback)
 	{
 		LONG mousePosX = InputHandler::g_LastMousePos.x - FRAME_BUFFER_WIDTH / 2;
 		LONG mousePosY = InputHandler::g_LastMousePos.y - FRAME_BUFFER_HEIGHT / 2;
-		// cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
 		if (-210 <= mousePosX && mousePosX <= 210
 			&& 195 <= mousePosY && mousePosY <= 315)
 		{
 			NetCore::GetApp()->SendReadyPacket();
+		}
+		//임시로 로그인 없이 바로 dummy login packet 전송
+		if (365 <= mousePosX && mousePosX <= 565
+			&& 205 <= mousePosY && mousePosY <= 295)
+		{
+			y = true;
+			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
 		}
 	}
 #endif
