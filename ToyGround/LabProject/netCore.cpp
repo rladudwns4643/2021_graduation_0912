@@ -83,9 +83,9 @@ bool NetCore::SendPacket(void* buf, eSERVER sv) {
 	char* p = reinterpret_cast<char*>(buf);
 	int psize = (BYTE)p[0];
 	int retval = send(m_client.socket[sv].socket, p, psize, 0);
-#ifdef LOG_ON
+//#ifdef LOG_ON
 	cout << "[NETCORE] SEND: " << (int)p[1] << " for " << (int)sv << endl;
-#endif //LOG_ON
+//#endif //LOG_ON
 	if (retval == SOCKET_ERROR) {
 		int error_no = WSAGetLastError();
 		if (error_no != WSA_IO_PENDING) {
@@ -222,6 +222,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	case LC_LOGIN_OK: {
 		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet_buf);
 		m_client.lobby_id = p->id;
+		cout << "Lobby ID: " << m_client.battle_id << endl;
 		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_OK);
 		break;
 	}
@@ -258,6 +259,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	case BC_BATTLE_LOGIN_OK: { //객체 생성, 나의 정보를 받아옴
 		bc_packet_battle_login_ok* p = reinterpret_cast<bc_packet_battle_login_ok*>(packet_buf);
 		m_client.battle_id = p->id;
+		cout << "battle ID: "<<m_client.battle_id << endl;
 		if (m_client.battle_id == 0) {
 			cout << "error, BUFFER ZERO / battle ID == 0\n";
 			break;
