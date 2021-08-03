@@ -2,6 +2,7 @@
 
 namespace InputHandler
 {
+	extern POINT	g_StartMousePos;
 	extern POINT	g_LastMousePos;
 
 	extern float	g_MouseChangebleX;
@@ -16,6 +17,9 @@ namespace InputHandler
 	extern bool		g_RightMouseOverlap;
 
 	extern float	g_MouseClickTime;
+
+	extern bool	g_LeftMouseClick;
+	extern bool g_RightMouseClick;
 }
 
 class Controller abstract

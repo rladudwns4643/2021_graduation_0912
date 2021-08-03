@@ -11,6 +11,7 @@ namespace InputHandler
 	static wstring s_WGlobalString;
 
 	// 현재 안쓰이는중 하지만 로비씬이나, 다른씬에서 쓰일수도있음
+	POINT	g_StartMousePos = { 0.f,0.f };
 	POINT	g_LastMousePos = { 0.f,0.f };
 	float	g_MouseChangebleX = 0.f;
 	float	g_MouseChangebleY = 0.f;
@@ -21,6 +22,11 @@ namespace InputHandler
 	bool	g_LeftMouseOverlap = false;
 	bool	g_RightMouseCallback = false;
 	bool	g_RightMouseOverlap = false;
+
+	bool	g_PreviousStateLeftMouse = false;
+	bool	g_PreviousStateRightMouse = false;
+	bool	g_LeftMouseClick = false;
+	bool	g_RightMouseClick = false;
 
 	float	g_MouseClickTime = 0.f;
 
@@ -52,8 +58,8 @@ namespace InputHandler
 	{
 		//ClipCursorToScreen();
 
-		g_LastMousePos.x = x;
-		g_LastMousePos.y = y;
+		g_StartMousePos.x = x;
+		g_StartMousePos.y = y;
 
 		SetCapture(Core::g_hMainWnd);
 
@@ -61,11 +67,13 @@ namespace InputHandler
 		{
 			g_LeftMouseCallback = true;
 			g_LeftMouseOverlap = true;
+			g_PreviousStateLeftMouse = true;
 		}
 		if ((btnState & MK_RBUTTON) != 0)
 		{
 			g_RightMouseCallback = true;
 			g_RightMouseOverlap = true;
+			g_PreviousStateRightMouse = true;
 		}
 	}
 
@@ -73,15 +81,28 @@ namespace InputHandler
 	{
 		ReleaseCapture();
 
+		g_LastMousePos.x = x;
+		g_LastMousePos.y = y;
+
 		if ((btnState & MK_LBUTTON) == 0)
 		{
 			g_LeftMouseCallback = false;
 			g_LeftMouseOverlap = false;
+			if (g_LeftMouseCallback != g_PreviousStateLeftMouse)
+			{
+				g_PreviousStateLeftMouse = g_LeftMouseCallback;
+				g_LeftMouseClick = true;
+			}
 		}
 		if ((btnState & MK_RBUTTON) == 0)
 		{
 			g_RightMouseCallback = false;
 			g_RightMouseOverlap = false;
+			if (g_RightMouseCallback != g_PreviousStateRightMouse)
+			{
+				g_PreviousStateRightMouse = g_RightMouseCallback;
+				g_RightMouseClick = true;
+			}
 		}
 
 		g_MouseClickTime = 0.f;
@@ -165,5 +186,12 @@ namespace InputHandler
 		winRect.top += sideInteger;
 		winRect.bottom -= sideInteger;
 		ClipCursor(&winRect);
+	}
+
+	// 클릭 시 무조건 리셋해줘야 함
+	void ResetClickState()
+	{
+		g_LeftMouseClick = false;
+		g_RightMouseClick = false;
 	}
 }

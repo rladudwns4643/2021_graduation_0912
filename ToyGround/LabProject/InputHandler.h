@@ -27,4 +27,5 @@ namespace InputHandler
 
 	void ShowMouseCursor();
 	void ClipCursorToScreen();
+	void ResetClickState();
 }
