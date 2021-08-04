@@ -78,6 +78,6 @@ void TitleScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 }
 
-void TitleScene::RenderUI()
+void TitleScene::RenderText()
 {
 }

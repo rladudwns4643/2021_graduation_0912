@@ -146,7 +146,7 @@ void LobbyScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 }
 
-void LobbyScene::RenderUI()
+void LobbyScene::RenderText()
 {
 	// Font
 	GraphicsContext::GetApp()->SetTextSize(30.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);

@@ -220,7 +220,7 @@ bool GameCore::UpdateCore(IGameApp& game)
 
 		// D3D11On12 Device Rendering
 		D3D11DevicePreparePresent();
-		game.RenderUI();
+		game.RenderText();
 		D3D11DeviceExecuteCommandList();
 
 		// swap the back and front buffers

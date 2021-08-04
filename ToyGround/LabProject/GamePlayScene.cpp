@@ -181,10 +181,10 @@ bool GameplayScene::Enter()
 {
 	cout << "============= Gameplay Scene ==============" << endl;
 
-	// 게임플레이 씬에서 마우스 보이게 하고싶다면 주석처리
+	// 마우스 보이게 하고싶다면 주석처리
 	InputHandler::g_CursorSwitch = false;
 
-	/* Create SceneBounds for Shadow */
+	// Create SceneBounds for Shadow
 	m_SceneBounds.Center = XMFLOAT3(2500.f, 0.0f, 2500.f);
 	m_SceneBounds.Radius = 2700.f;
 
@@ -301,7 +301,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	// UI
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
 
 	// Materials
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
@@ -359,11 +359,19 @@ void GameplayScene::Render()
 
 	// UI
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
 }
 
-void GameplayScene::RenderUI()
+void GameplayScene::RenderText()
 {
+	//// Font
+	//GraphicsContext::GetApp()->SetTextSize(30.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	//GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
+	//
+	//wstring m_MBMainMessage;
+	//m_MBMainMessage = L"TEST TEXT";
+	//GraphicsContext::GetApp()->DrawD2DText(m_MBMainMessage, Core::g_DisplayWidth / 2 - 100.f, Core::g_DisplayHeight / 2 + 100.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+
 }
 
 void GameplayScene::ChangeFreeCamera()

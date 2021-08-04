@@ -27,7 +27,7 @@ void TOY_GROUND::Startup(void)
 	m_CommandCenter = CommandCenter::GetApp();
 
 	// LoadFont
-	GraphicsContext::GetApp()->LoadFont(L"Verdana", 20);
+	GraphicsContext::GetApp()->LoadFont(L"Showcard Gothic", 20);
 
 	// Build Asserts
 	BuildAsserts();
@@ -102,10 +102,10 @@ void TOY_GROUND::RenderScene(void)
 		SceneManager::GetApp()->RenderScene();
 }
 
-void TOY_GROUND::RenderUI(void)
+void TOY_GROUND::RenderText(void)
 {
 	if (m_pSceneManager)
-		SceneManager::GetApp()->RenderUI();
+		SceneManager::GetApp()->RenderText();
 }
 
 void TOY_GROUND::OnResize()

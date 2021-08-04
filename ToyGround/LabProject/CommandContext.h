@@ -51,7 +51,7 @@ public:
 
 	void Update2DPosition(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
 
-	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isFrustum = true);
+	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isCulling = true, bool isFrustum = true);
 	void UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems); // 사용안함
 
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
@@ -60,7 +60,7 @@ public:
 
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
-	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer = -1, bool isFrustum = true);
+	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool isCulling = true, int zLayer = -1, bool isFrustum = true);
 	void DrawBoundingBox(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool drawAABB = true, int zLayer = -1, bool isFrustum = true);
 	void DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const std::vector<GameObject*>& rItems);
 

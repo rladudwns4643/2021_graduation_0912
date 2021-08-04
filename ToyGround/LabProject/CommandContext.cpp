@@ -31,7 +31,7 @@ void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 {
 	m_InstanceBuffers[objInfo->m_Type] = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), objInfo->m_InstanceCount, false);
 }
-void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isFrustum)
+void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isCulling, bool isFrustum)
 {
 	if (!objInfo) return;
 
@@ -46,7 +46,7 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
 			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 #ifdef FRUSTUM_CULLMODE
-			if (isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX
+			if (isCulling && isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX
 				&& !TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
 #endif
 			ShaderResource::InstanceData data;
@@ -252,7 +252,7 @@ void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance
 	m_SkinnedCBs[skinnedCBIndex]->CopyData(0, skinnedConstants);
 }
 
-void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer, bool isFrustum)
+void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool isCulling, int zLayer, bool isFrustum)
 {
 	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
 
@@ -263,7 +263,7 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 		if (ri->m_IsVisible && ri->m_ZLayer == zLayer)
 		{
 #ifdef FRUSTUM_CULLMODE
-			if (isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX)
+			if (isCulling && isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX)
 			{
 				XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
 				XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
