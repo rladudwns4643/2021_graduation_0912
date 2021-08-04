@@ -26,6 +26,9 @@ void TOY_GROUND::Startup(void)
 	m_pAssetsRef = AssertsReference::GetApp();
 	m_CommandCenter = CommandCenter::GetApp();
 
+	// LoadFont
+	GraphicsContext::GetApp()->LoadFont(L"Verdana", 20);
+
 	// Build Asserts
 	BuildAsserts();
 	BuildCharacters();
@@ -36,7 +39,7 @@ void TOY_GROUND::Startup(void)
 //	SceneManager::GetApp()->EnterScene(SceneType::eGamePlay);
 
 	// Build GpuResources
-	GraphicsContext::GetApp()->passCount = 1;
+	GraphicsContext::GetApp()->passCount = 2;
 	GraphicsContext::GetApp()->skinnedObjectCount = BoneIndex::Count;
 	GraphicsContext::GetApp()->materialCount = AssertsReference::GetApp()->m_Materials.size();
 
@@ -97,6 +100,12 @@ void TOY_GROUND::RenderScene(void)
 {
 	if (m_pSceneManager)
 		SceneManager::GetApp()->RenderScene();
+}
+
+void TOY_GROUND::RenderUI(void)
+{
+	if (m_pSceneManager)
+		SceneManager::GetApp()->RenderUI();
 }
 
 void TOY_GROUND::OnResize()

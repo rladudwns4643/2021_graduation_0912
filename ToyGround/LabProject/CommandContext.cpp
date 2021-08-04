@@ -396,3 +396,124 @@ void GraphicsContext::SetGraphicsRootSignature(ID3D12RootSignature* RootSignatur
 		m_CurGraphicsRootSignature = RootSignature;
 	}
 }
+
+// Font
+void GraphicsContext::LoadFont(const wstring fontName, float fontSize)
+{
+	m_FontName = fontName;
+	m_FontSize = fontSize;
+
+	// Create D2D/DWrite objects for rendering text.
+	ThrowIfFailed(Core::g_D2dDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &m_TextBrush));
+	ThrowIfFailed(Core::g_DWriteFactory->CreateTextFormat(
+		fontName.c_str(),
+		NULL,
+		DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		fontSize,
+		L"en-us",
+		&m_TextFormat
+	));
+	ThrowIfFailed(m_TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER));
+	ThrowIfFailed(m_TextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER));
+}
+
+void GraphicsContext::SetTextSize(float fontSize)
+{
+	if (m_FontName.empty()) return;
+	if (fontSize < 1.f) return;
+	if (m_FontSize == fontSize) return;
+
+	m_TextFormat.Reset();
+	m_FontSize = fontSize;
+	// Create D2D/DWrite objects for rendering text.
+	ThrowIfFailed(Core::g_D2dDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &m_TextBrush));
+	ThrowIfFailed(Core::g_DWriteFactory->CreateTextFormat(
+		m_FontName.c_str(),
+		NULL,
+		DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		m_FontSize,
+		L"en-us",
+		&m_TextFormat
+	));
+	ThrowIfFailed(m_TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER));
+	ThrowIfFailed(m_TextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER));
+}
+
+void GraphicsContext::SetTextSize(float fontSize, DWRITE_TEXT_ALIGNMENT textType, D2D1::ColorF color)
+{
+	if (m_FontName.empty()) return;
+	if (fontSize < 1.f) return;
+	if (m_FontSize == fontSize) return;
+
+	m_TextFormat.Reset();
+	m_FontSize = fontSize;
+	// Create D2D/DWrite objects for rendering text.
+	ThrowIfFailed(Core::g_D2dDeviceContext->CreateSolidColorBrush(D2D1::ColorF(color), &m_TextBrush));
+	ThrowIfFailed(Core::g_DWriteFactory->CreateTextFormat(
+		m_FontName.c_str(),
+		NULL,
+		DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		m_FontSize,
+		L"en-us",
+		&m_TextFormat
+	));
+	ThrowIfFailed(m_TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
+	ThrowIfFailed(m_TextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER));
+}
+
+void GraphicsContext::SetTextAlignMent(DWRITE_TEXT_ALIGNMENT textAlignment)
+{
+	ThrowIfFailed(m_TextFormat->SetTextAlignment(textAlignment));
+}
+
+void GraphicsContext::SetColor(D2D1::ColorF color)
+{
+	ThrowIfFailed(Core::g_D2dDeviceContext->CreateSolidColorBrush(D2D1::ColorF(color), &m_TextBrush));
+}
+
+void GraphicsContext::DrawD2DText(const wstring wtext, float posX, float posY, float rectSize)
+{
+	D2D1_RECT_F textRect;
+	textRect.left = posX - rectSize + Core::g_DisplayWidth / 2;
+	textRect.top = posY - rectSize + Core::g_DisplayHeight / 2;
+	textRect.right = posX + rectSize + Core::g_DisplayWidth / 2;
+	textRect.bottom = posY + rectSize + Core::g_DisplayHeight / 2;
+
+
+	Core::g_D2dDeviceContext->DrawText(
+		wtext.c_str(),
+		wtext.size(),
+		m_TextFormat.Get(),
+		&textRect,
+		m_TextBrush.Get()
+	);
+}
+
+void GraphicsContext::DrawD2DText(const wstring wtext, float posX, float posY, float rectSizeX, float rectSizeY, bool aligmentLeading)
+{
+	if (!aligmentLeading)
+		return;
+
+	// 좌상단이 (0, 0)으로 설정
+	D2D1_RECT_F textRect;
+	textRect.left = posX - rectSizeX + Core::g_DisplayWidth;
+	textRect.top = posY - rectSizeY;
+	textRect.right = posX + rectSizeX;
+	textRect.bottom = posY + rectSizeY;
+
+
+	Core::g_D2dDeviceContext->DrawText(
+		wtext.c_str(),
+		wtext.size(),
+		m_TextFormat.Get(),
+		&textRect,
+		m_TextBrush.Get()
+	);
+}
+

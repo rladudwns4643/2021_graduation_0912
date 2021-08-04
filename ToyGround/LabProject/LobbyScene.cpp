@@ -9,6 +9,9 @@
 #include "AssertsReference.h"
 #include "UserInterface.h"
 
+#define WIDTH_NORMALIZE_UI(x) (x + (Core::g_DisplayWidth / 2.f))
+#define HEIGHT_NORMALIZE_UI(y) (-y + (Core::g_DisplayHeight / 2.f))
+
 void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	switch (sEvent) {
 	case EVENT_LOBBY_LOGIN_OK: {
@@ -141,9 +144,15 @@ void LobbyScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_NAME_LOBBY_BACKGROUND], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
-
 }
 
 void LobbyScene::RenderUI()
 {
+	// Font
+	GraphicsContext::GetApp()->SetTextSize(30.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
+
+	wstring m_MBMainMessage;
+	m_MBMainMessage = L"TEST TEXT";
+	GraphicsContext::GetApp()->DrawD2DText(m_MBMainMessage, Core::g_DisplayWidth / 2 - 100.f, Core::g_DisplayHeight / 2 + 100.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 }

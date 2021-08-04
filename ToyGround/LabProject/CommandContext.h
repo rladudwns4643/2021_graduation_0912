@@ -66,6 +66,26 @@ public:
 
 	void DrawBBox(const std::vector<BBox*>& rItems);
 
+// 폰트 관련----------------------------------------------------------
+public:
+	void LoadFont(const wstring fontName, float fontSize);
+
+	void SetTextSize(float fontSize);
+	void SetTextSize(float fontSize, DWRITE_TEXT_ALIGNMENT textType, D2D1::ColorF color);
+	void SetTextAlignMent(DWRITE_TEXT_ALIGNMENT textAlignment);
+	void SetColor(D2D1::ColorF color);
+	void DrawD2DText(const wstring text, float posX, float posY, float rectSize);
+	void DrawD2DText(const wstring text, float posX, float posY, float rectSizeX, float rectSizeY, bool aligmentLeading);
+
+private:
+	wstring m_FontName;
+	float	m_FontSize;
+
+	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_TextBrush;
+	Microsoft::WRL::ComPtr<IDWriteTextFormat> m_TextFormat;
+
+// ------------------------------------------------------------------
+
 public:
 	void SetPipelineState(ID3D12PipelineState* PSO);
 	void SetGraphicsRootSignature(ID3D12RootSignature* RootSignature);
