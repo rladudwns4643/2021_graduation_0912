@@ -222,7 +222,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	case LC_LOGIN_OK: {
 		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet_buf);
 		m_client.lobby_id = p->id;
-		cout << "Lobby ID: " << m_client.battle_id << endl;
+		cout << "Lobby ID: " << m_client.lobby_id << endl;
 		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_OK);
 		break;
 	}
