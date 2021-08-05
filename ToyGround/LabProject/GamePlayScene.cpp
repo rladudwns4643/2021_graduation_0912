@@ -63,7 +63,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 			}
 		}
 		//todo Scene Change /*& show result*/
-		SceneManager::GetApp()->ChangeScene(SceneType::eTitle);
+		SceneManager::GetApp()->ChangeScene(SceneType::eLobby);
 		cout << "WINNER: " << arg_winner << endl;
 		break;
 	}
