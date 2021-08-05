@@ -59,13 +59,13 @@
 
 
 //-------------------------------L->C-------------------------------
-#define LC_LOGIN_OK					30
-#define LC_LOGIN_FAIL				31
-#define LC_SIGNUP_OK				32
-#define LC_SIGNUP_FAIL				33
-#define LC_USERINFO					34
-#define LC_FIND_ROOM				35
-#define LC_CANCLE_FIND_ROOM			36
+#define LC_LOGIN_OK					1
+#define LC_LOGIN_FAIL				2
+#define LC_SIGNUP_OK				3
+#define LC_SIGNUP_FAIL				4
+#define LC_USERINFO					5
+#define LC_FIND_ROOM				6
+#define LC_CANCLE_FIND_ROOM			7
 
 #pragma pack(push, 1)
 struct lc_packet_login_ok {
@@ -109,13 +109,13 @@ struct lc_packet_find_room {
 
 
 //-------------------------------C->L-------------------------------
-#define CL_LOGIN					20
-#define CL_SIGNUP					21
-#define CL_DUMMY_LOGIN				99
-#define CL_FIND_ROOM				22
-#define CL_UPDATE_USER_INFO			23
-#define CL_REQUEST_USER_INFO		24
-#define CL_CANCEL_AUTOMATCH			25
+#define CL_LOGIN					8
+#define CL_SIGNUP					9
+#define CL_DUMMY_LOGIN				10
+#define CL_FIND_ROOM				11
+#define CL_UPDATE_USER_INFO			12
+#define CL_REQUEST_USER_INFO		13
+#define CL_CANCEL_AUTOMATCH			14
 
 #pragma pack(push, 1)
 struct cl_packet_login {
@@ -160,38 +160,38 @@ struct cl_packet_cancel_automatch {
 //------------------------------------------------------------------
 
 //-------------------------------B->C-------------------------------
-#define BC_BATTLE_LOGIN_OK		1
-#define BC_BATTLE_LOGIN_FAIL	2
-#define BC_JOIN_OK				3
-#define BC_JOIN_FAIL			4
+#define BC_BATTLE_LOGIN_OK		15
+#define BC_BATTLE_LOGIN_FAIL	16
+#define BC_JOIN_OK				17
+#define BC_JOIN_FAIL			18
 
-#define BC_ROOM_ENTERED			5
-#define BC_ROOM_LEAVED			6
-#define BC_NEW_ROOM_HOST		7
+#define BC_ROOM_ENTERED			19
+#define BC_ROOM_LEAVED			20
+#define BC_NEW_ROOM_HOST		21
 
-#define BC_READY				8
-#define BC_ROOM_START			9
-#define BC_ROOM_START_AVAILABLE	10
-#define BC_GAME_OVER			11
+#define BC_READY				22
+#define BC_ROOM_START			23
+#define BC_ROOM_START_AVAILABLE	24
+#define BC_GAME_OVER			25
 
-#define BC_LEFT_TIME			12
-#define BC_ROUND_START			13
+#define BC_LEFT_TIME			26
+#define BC_ROUND_START			27
 
-#define BC_ADD_COIN				24
-#define BC_UPDATE_COIN			26
-#define BC_PLAYER_POS			14
-#define BC_PLAYER_ROT			15
-#define BC_OBJECT_POS			16
-#define BC_OBJECT_ROT			17
-#define BC_ANIM					25
+#define BC_ADD_COIN				28
+#define BC_UPDATE_COIN			29
+#define BC_PLAYER_POS			30
+#define BC_PLAYER_ROT			31
+#define BC_OBJECT_POS			32
+#define BC_OBJECT_ROT			33
+#define BC_ANIM					34
 
-#define BC_SHOOT_BULLET			18
-#define BC_REMOVE_BULLET		19
+#define BC_SHOOT_BULLET			35
+#define BC_REMOVE_BULLET		36
 
-#define BC_HIT					20
-#define BC_DIE					21
+#define BC_HIT					37
+#define BC_DIE					38
 
-#define BC_UPDATED_USER_INFO	22
+#define BC_UPDATED_USER_INFO	39
 
 #pragma pack(push, 1)
 struct PTC_START_INFO {
@@ -384,19 +384,19 @@ struct bc_packet_updated_user_info {
 //------------------------------------------------------------------
 
 //-------------------------------C->B-------------------------------
-#define CB_LOGIN				1
-#define CB_JOIN					2
-#define CB_ROOM_LEAVE			3
-#define CB_READY				4
-#define CB_START				5
+#define CB_LOGIN				40
+#define CB_JOIN					41
+#define CB_ROOM_LEAVE			42
+#define CB_READY				43
+#define CB_START				44
 
-#define CB_GET_COIN				6
-#define CB_BULLET				7
-#define CB_POSITION_VECTOR		8
-#define CB_LOOK_VECTOR			9
-#define CB_MAKE_ANIM			10
-#define CB_TEST_TIME_PLUS		11
-#define CB_TEST_TIME_MINUS		12
+#define CB_GET_COIN				45
+#define CB_BULLET				46
+#define CB_POSITION_VECTOR		47
+#define CB_LOOK_VECTOR			48
+#define CB_MAKE_ANIM			49
+#define CB_TEST_TIME_PLUS		50
+#define CB_TEST_TIME_MINUS		51
 
 #pragma pack(push, 1)
 struct cb_packet_login {
@@ -472,8 +472,8 @@ struct cb_test_packet_time_mimus {
 //------------------------------------------------------------------
 
 //-------------------------------L->B------------------------------- 
-#define LB_REQUEST_ROOM			31
-#define LB_CHECK				32
+#define LB_REQUEST_ROOM			52
+#define LB_CHECK				53
 #pragma pack (push, 1)
 struct lb_packet_check_connect {
 	BYTE size;
@@ -487,8 +487,8 @@ struct lb_packet_request_room {
 //------------------------------------------------------------------
 
 //-------------------------------B->L-------------------------------
-#define BL_ROOMREADY			41
-#define BL_CHECK				42
+#define BL_ROOMREADY			54
+#define BL_CHECK				55
 #pragma pack (push, 1)
 struct bl_packet_room_ready {
 	BYTE size;
