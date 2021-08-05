@@ -22,7 +22,6 @@ void Toy::Initialize() {
 }
 
 void Toy::Reset() {
-
 	m_HP = 100;
 	m_MaxHP = 100;
 	m_isMoveable = true;

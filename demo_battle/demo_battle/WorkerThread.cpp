@@ -30,9 +30,6 @@ void WorkerThread::ProcThread() {
 		}
 		else {
 			if (SR::g_clients[key]->m_s == nullptr) {
-#ifdef LOG_ON
-				std::cout << key << "- socket was nullptr\n";
-#endif
 				continue;
 			}
 			clientSocket = SR::g_clients[key]->m_s->GetSocket();

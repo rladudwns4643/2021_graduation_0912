@@ -197,7 +197,7 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		newUser->SetPlayerLoginOK("dummy");
 
 #ifdef LOG_ON
-		cout << "GET_DUMMY_LOGIN" << endl;
+		cout << "GET_DUMMY_LOGIN: "<< id << endl;
 #endif
 		SendLoginOKPacket(id);
 		break;
@@ -250,7 +250,7 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		break;
 	}
 	default: {
-		std::cout << "DONT KNOW PACKET TYPE" << (int)packet[1] << " FROM: " << (int)packet[0] << "\n";
+		std::cout << "DONT KNOW PACKET TYPE" << (int)packet[1] << "\n";
 		break;
 	}
 	}

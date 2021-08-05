@@ -62,7 +62,8 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 				AppContext->HiddenCharacter(u.second);
 			}
 		}
-
+		//todo Scene Change /*& show result*/
+		SceneManager::GetApp()->ChangeScene(SceneType::eTitle);
 		cout << "WINNER: " << arg_winner << endl;
 		break;
 	}
