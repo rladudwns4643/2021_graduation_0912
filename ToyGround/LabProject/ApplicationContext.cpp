@@ -124,14 +124,6 @@ void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName,
 		item->SetPressedTexture(uiPressedTextureIdx);
 	if (uiDisabledTextureIdx != -1)
 		item->SetDisabledTexture(uiDisabledTextureIdx);
-
-	//// 아래 내용은 Display에서
-	//// 800, 600 -> display width / height 로 변경
-	//item->m_PositionRatio = { (posX - (sizeX / 20.f)) / Core::g_DisplayWidth, (posY - (sizeY / 20.f))/ Core::g_DisplayHeight };
-	//item->m_SizeRatio = { sizeX / sizeY, sizeY / Core::g_DisplayHeight };
-
-	//item->Scale(sizeX, sizeY, 1);
-	//item->SetPosition(posX, posY, 1.f);
 }
 
 

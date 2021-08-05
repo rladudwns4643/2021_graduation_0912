@@ -239,6 +239,25 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera, Light* light)
 	currPassCB->CopyData(0, mMainPassCB);
 }
 
+UITextInfo GraphicsContext::GetUIPosAndSize(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, std::string uiName)
+{
+	if (!objInfo) return UITextInfo{};
+
+	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
+
+	for (auto& i : info)
+	{
+		UserInterface* ri = static_cast<UserInterface*>(rItems[i.second]);
+
+		if (ri->m_IsText && ri->GetInstID() == uiName)
+		{
+			return UITextInfo{ ri->m_UIPos, ri->m_UISize };
+		}
+	}
+
+	return UITextInfo{};
+}
+
 void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance)
 {
 	//skinmodelInstance->UpdateSkinnedAnimation(0);

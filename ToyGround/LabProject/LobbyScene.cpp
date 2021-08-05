@@ -91,7 +91,6 @@ void LobbyScene::Initialize()
 	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_LOBBY_LOGINUI, TEXTURE_INDEX_UI_LOBBY_LOGINUI, TEXTURE_INDEX_UI_LOBBY_LOGINUI);
 	AppContext->CreateUI2D(OBJECT_TYPE_ID_INPUTATIVATE, OBJECT_NAME_LOBBY_ID_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_ID_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_ID_INPUTATIVATE);
 	AppContext->CreateUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_PW_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_PW_INPUTATIVATE);
-
 }
 
 void LobbyScene::OnResize()
@@ -113,8 +112,8 @@ bool LobbyScene::Enter()
 	// Button
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGO_TOYGORUND,  XMFLOAT2(0.f, 200.f), XMFLOAT2(920.f, 360.f), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGINUI , XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center);
-	AppContext->DisplayUI2D(OBJECT_TYPE_ID_INPUTATIVATE, OBJECT_NAME_LOBBY_ID_INPUTATIVATE, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center);
-	AppContext->DisplayUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_ID_INPUTATIVATE, OBJECT_NAME_LOBBY_ID_INPUTATIVATE, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center, -1, true);
+	AppContext->DisplayUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center, -1, true);
 
 	return false;
 }
@@ -152,21 +151,36 @@ void LobbyScene::Render()
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 
-	// 입력창 활성화
-	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ID_INPUTATIVATE], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_PW_INPUTATIVATE], AppContext->m_RItemsVec);
-
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_NAME_LOBBY_BACKGROUND], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
+
+	// 입력창 활성화
+	if(ID_Input_Ativate)
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ID_INPUTATIVATE], AppContext->m_RItemsVec);
+
+	if (PW_Input_Ativate)
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_PW_INPUTATIVATE], AppContext->m_RItemsVec);
 }
 
 void LobbyScene::RenderText()
 {
 	// Font
-	GraphicsContext::GetApp()->SetTextSize(60.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	UITextInfo LoginUI = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_ID_INPUTATIVATE], AppContext->m_RItemsVec, OBJECT_NAME_LOBBY_ID_INPUTATIVATE);
+	m_ScaleConvert.x = LoginUI.size.x / 5000.f;
+	m_ScaleConvert.y = LoginUI.size.y / 2700.f;
+	//cout << "Scale Convert: " << m_ScaleConvert.x << ", " << m_ScaleConvert.y << endl;
+
+	//cout << "Size : "<< LoginUI.size.x << ", " << LoginUI.size.y << " Pos : " << LoginUI.pos.x << ", " << LoginUI.pos.y << endl;
+	GraphicsContext::GetApp()->SetTextSize(LoginUI.size.y / 50.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
 	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
 
-	GraphicsContext::GetApp()->DrawD2DText(L"ID", Core::g_DisplayWidth / 2 - 190.f, Core::g_DisplayHeight / 2 + 100.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
-	GraphicsContext::GetApp()->DrawD2DText(L"PW", Core::g_DisplayWidth / 2 - 210.f, Core::g_DisplayHeight / 2 + 185.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	GraphicsContext::GetApp()->DrawD2DText(L"ID", LoginUI.size.x / 11.f , LoginUI.size.y / 5.8f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	GraphicsContext::GetApp()->DrawD2DText(L"PW", LoginUI.size.x / 11.5f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+
+	GraphicsContext::GetApp()->SetTextSize(LoginUI.size.y / 120.f);
+	if (!ID_Input_Ativate)
+		GraphicsContext::GetApp()->DrawD2DText(L"Please enter your ID", LoginUI.size.x / 60.f, LoginUI.size.y / 5.8f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	if (!PW_Input_Ativate)
+		GraphicsContext::GetApp()->DrawD2DText(L"Please enter your PW", LoginUI.size.x / 60.f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 }

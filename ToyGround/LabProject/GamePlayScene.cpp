@@ -231,8 +231,8 @@ bool GameplayScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(0.f, -80.f), XMFLOAT2(39, 39), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE, XMFLOAT2(-730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE, XMFLOAT2(730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER, XMFLOAT2(0.f, 450.f), XMFLOAT2(143, 47), TextAlignType::Center);
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_HEALTH, XMFLOAT2(-730.f, -360.f), XMFLOAT2(245, 45), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER, XMFLOAT2(0.f, 450.f), XMFLOAT2(143, 47), TextAlignType::Center, -1, true);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_HEALTH, XMFLOAT2(-730.f, -360.f), XMFLOAT2(245, 45), TextAlignType::Center, -1, true);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, XMFLOAT2(-730.f, -430.f), XMFLOAT2(245, 40), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, XMFLOAT2(-730.f, -495.f), XMFLOAT2(245, 35), TextAlignType::Center);
 
@@ -376,18 +376,20 @@ void GameplayScene::ChangeFreeCamera()
 void GameplayScene::RenderText()
 {
 	// Timer
-	GraphicsContext::GetApp()->SetTextSize(40.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	UITextInfo UITimer = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_TIMER);
+	GraphicsContext::GetApp()->SetTextSize(UITimer.size.y / 13.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
 	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
 	wstring TestTimerString;
 	TestTimerString = L"2:00";
-	GraphicsContext::GetApp()->DrawD2DText(TestTimerString, Core::g_DisplayWidth / 2 - 38.f, 58.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	GraphicsContext::GetApp()->DrawD2DText(TestTimerString, UITimer.size.x / 2.36f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 
 	// HP
-	GraphicsContext::GetApp()->SetTextSize(60.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	UITextInfo UIHealth = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_HEALTH);
+	GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 8.f , DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
 	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
 	wstring TestHPString;
 	TestHPString = L"4000";
-	GraphicsContext::GetApp()->DrawD2DText(TestHPString, 85.f, Core::g_DisplayHeight / 2 + 220.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	GraphicsContext::GetApp()->DrawD2DText(TestHPString, UIHealth.size.x / 27.f, UIHealth.size.y * 1.3f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 
 
 

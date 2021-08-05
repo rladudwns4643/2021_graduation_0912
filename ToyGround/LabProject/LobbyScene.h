@@ -31,5 +31,18 @@ public:
 	virtual void Update(const float& fDeltaTime) override;
 	virtual void Render() override;
 	virtual void RenderText() override;
+
+private:
+	std::string _id;
+	std::string _password;
+
+public:
+	std::wstring m_ID;
+	std::wstring m_Password;
+
+	bool ID_Input_Ativate = false;
+	bool PW_Input_Ativate = false;
+
+	XMFLOAT2 m_ScaleConvert{ 1.f, 1.f };
 };
 

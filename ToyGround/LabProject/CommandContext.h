@@ -58,6 +58,8 @@ public:
 	void UpdateMainPassCB(Camera& camera, Light* light);
 	void UpdateUIPassCB(float hpRate);
 
+	UITextInfo GetUIPosAndSize(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, std::string uiName);
+
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
 	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool isCulling = true, int zLayer = -1, bool isFrustum = true);
