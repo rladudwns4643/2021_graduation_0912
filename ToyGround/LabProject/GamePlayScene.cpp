@@ -228,7 +228,7 @@ bool GameplayScene::Enter()
 	m_Users[m_PlayerID]->SetController();
 
 	// UI ¼¼ÆÃ
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(0.f, -80.f), XMFLOAT2(39, 38), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(0.f, -80.f), XMFLOAT2(39, 39), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE, XMFLOAT2(-730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE, XMFLOAT2(730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER, XMFLOAT2(0.f, 450.f), XMFLOAT2(143, 47), TextAlignType::Center);
@@ -362,18 +362,6 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
 }
 
-void GameplayScene::RenderText()
-{
-	//// Font
-	//GraphicsContext::GetApp()->SetTextSize(30.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
-	//GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
-	//
-	//wstring m_MBMainMessage;
-	//m_MBMainMessage = L"TEST TEXT";
-	//GraphicsContext::GetApp()->DrawD2DText(m_MBMainMessage, Core::g_DisplayWidth / 2 - 100.f, Core::g_DisplayHeight / 2 + 100.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
-
-}
-
 void GameplayScene::ChangeFreeCamera()
 {
 	if (TOY_GROUND::GetApp()->m_Camera->GetCameraType() == CameraType::eFree) return;
@@ -383,4 +371,24 @@ void GameplayScene::ChangeFreeCamera()
 	XMFLOAT3 right = m_Users[m_PlayerID]->GetRight();
 
 	TOY_GROUND::GetApp()->m_Camera->SetCamera(look, up, right);
+}
+
+void GameplayScene::RenderText()
+{
+	// Timer
+	GraphicsContext::GetApp()->SetTextSize(40.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
+	wstring TestTimerString;
+	TestTimerString = L"2:00";
+	GraphicsContext::GetApp()->DrawD2DText(TestTimerString, Core::g_DisplayWidth / 2 - 38.f, 58.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+
+	// HP
+	GraphicsContext::GetApp()->SetTextSize(60.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
+	wstring TestHPString;
+	TestHPString = L"4000";
+	GraphicsContext::GetApp()->DrawD2DText(TestHPString, 85.f, Core::g_DisplayHeight / 2 + 220.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+
+
+
 }
