@@ -245,20 +245,20 @@ void Room::AnnounceRoomEnter(int id) {
 	//bool isMnr;
 	int enterID = -1;
 
-	for (int i = 0; i < MAX_PLAYER; ++i) {
+	for (int i = 1; i < MAX_PLAYER; ++i) {
 		if (m_players[i]->GetID() == id) enterID = i;
 	}
 
-	for (int i = 0; i < MAX_PLAYER; ++i) {
+	for (int i = 1; i < MAX_PLAYER; ++i) {
 		if (m_players[i]->GetEmpty() == false) {
 			if (m_players[i]->GetID() != enterID) {
 				int t_id{ m_players[i]->GetID() };
 				bool t_ready{ m_players[i]->GetReady() };
 				int t_mmr{ m_players[i]->GetMMR() };
 				char t_id_str[MAX_ID_LEN];
+				memcpy(t_id_str, m_players[i]->GetID_STR(), sizeof(char) * MAX_ID_LEN);
 				bool is_enterID_mnr = false;
 
-				memcpy(t_id_str, m_players[i]->GetID_STR(), sizeof(char) * MAX_ID_LEN);
 				//send for new user
 				BattleServer::GetInstance()->SendRoomEnterPacket(enterID, t_id, t_ready, i, t_id_str, t_mmr, false);
 				//send for old user
