@@ -329,12 +329,27 @@ void LobbyController::HandleInput(const float deltaT)
 	{
 		LONG mousePosX = InputHandler::g_LastMousePos.x - FRAME_BUFFER_WIDTH / 2;
 		LONG mousePosY = InputHandler::g_LastMousePos.y - FRAME_BUFFER_HEIGHT / 2;
-		// cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
-		if (-210 <= mousePosX && mousePosX <= 210
-			&& 195 <= mousePosY && mousePosY <= 315)
+		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+
+		// NewID Button
+		if (-230 <= mousePosX && mousePosX <= -90
+			&& 245 <= mousePosY && mousePosY <= 305)
 		{
+			cout << "New Id Button Click" << endl;
+		}
+		// Login Button
+		if (-70 <= mousePosX && mousePosX <= 70
+			&& 245 <= mousePosY && mousePosY <= 305)
+		{
+			cout << "Login Button Click" << endl;
 			y = true;
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+		}
+		// EXit Button
+		if (90 <= mousePosX && mousePosX <= 230
+			&& 245 <= mousePosY && mousePosY <= 305)
+		{
+			cout << "Exit Button Click" << endl;
 		}
 	}
 #endif

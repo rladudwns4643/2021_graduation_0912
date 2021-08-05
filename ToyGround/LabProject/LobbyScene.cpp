@@ -87,8 +87,10 @@ void LobbyScene::Initialize()
 	std::string ui2dName = OBJECT_TYPE_UI2D + m_SceneName;
 	AppContext->CreateUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND, TEXTURE_INDEX_UI_LOBBY_BACKGROUND);
 
-	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_LOBBY_PLAY_BUTTON, TEXTURE_INDEX_UI_LOBBY_PLAY_RELEASED, TEXTURE_INDEX_UI_LOBBY_PLAY_PRESSED);
-	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_LOBBY_EXIT_BUTTON, TEXTURE_INDEX_UI_LOBBY_EXIT_RELEASED, TEXTURE_INDEX_UI_LOBBY_EXIT_PRESSED);
+	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_LOBBY_LOGO_TOYGORUND, TEXTURE_INDEX_UI_LOBBY_LOGO_TOYGROUND, TEXTURE_INDEX_UI_LOBBY_LOGO_TOYGROUND);
+	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_LOBBY_LOGINUI, TEXTURE_INDEX_UI_LOBBY_LOGINUI, TEXTURE_INDEX_UI_LOBBY_LOGINUI);
+	AppContext->CreateUI2D(OBJECT_TYPE_ID_INPUTATIVATE, OBJECT_NAME_LOBBY_ID_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_ID_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_ID_INPUTATIVATE);
+	AppContext->CreateUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_PW_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_PW_INPUTATIVATE);
 
 }
 
@@ -109,8 +111,10 @@ bool LobbyScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND, XMFLOAT2(0.f, 0.f), XMFLOAT2(1280, 720), TextAlignType::Center);
 
 	// Button
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_PLAY_BUTTON, XMFLOAT2(0.f, -380.f), XMFLOAT2(420.f, 120.f), TextAlignType::Center);
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_EXIT_BUTTON, XMFLOAT2(700.f, -380.f), XMFLOAT2(200.f, 90.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGO_TOYGORUND,  XMFLOAT2(0.f, 200.f), XMFLOAT2(920.f, 360.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGINUI , XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_ID_INPUTATIVATE, OBJECT_NAME_LOBBY_ID_INPUTATIVATE, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center);
 
 	return false;
 }
@@ -118,8 +122,10 @@ bool LobbyScene::Enter()
 void LobbyScene::Exit()
 {
 	AppContext->HiddenUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND);
-	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_PLAY_BUTTON);
-	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_EXIT_BUTTON);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGO_TOYGORUND);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGINUI);
+	AppContext->HiddenUI2D(OBJECT_TYPE_ID_INPUTATIVATE, OBJECT_NAME_LOBBY_ID_INPUTATIVATE);
+	AppContext->HiddenUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE);
 }
 
 void LobbyScene::Update(const float& fDeltaTime)
@@ -132,6 +138,11 @@ void LobbyScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_ID_INPUTATIVATE], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_ID_INPUTATIVATE], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_PW_INPUTATIVATE], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_PW_INPUTATIVATE], AppContext->m_RItemsVec);
+
 	/*Materials*/
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
 }
@@ -141,6 +152,10 @@ void LobbyScene::Render()
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 
+	// 입력창 활성화
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ID_INPUTATIVATE], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_PW_INPUTATIVATE], AppContext->m_RItemsVec);
+
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_NAME_LOBBY_BACKGROUND], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
@@ -149,10 +164,9 @@ void LobbyScene::Render()
 void LobbyScene::RenderText()
 {
 	// Font
-	GraphicsContext::GetApp()->SetTextSize(30.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	GraphicsContext::GetApp()->SetTextSize(60.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
 	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
 
-	wstring m_MBMainMessage;
-	m_MBMainMessage = L"TEST TEXT";
-	GraphicsContext::GetApp()->DrawD2DText(m_MBMainMessage, Core::g_DisplayWidth / 2 - 100.f, Core::g_DisplayHeight / 2 + 100.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	GraphicsContext::GetApp()->DrawD2DText(L"ID", Core::g_DisplayWidth / 2 - 190.f, Core::g_DisplayHeight / 2 + 100.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	GraphicsContext::GetApp()->DrawD2DText(L"PW", Core::g_DisplayWidth / 2 - 210.f, Core::g_DisplayHeight / 2 + 185.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 }
