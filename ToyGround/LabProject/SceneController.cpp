@@ -13,10 +13,6 @@
 //임시
 #include "Service.h"
 
-static bool y{ false };
-static bool u{ false };
-static bool c{ false };
-
 //+++++++++++++++++++++++++++ TITLE SCENE +++++++++++++++++++++++++++++++++++++++
 TitleController::TitleController(TitleScene* myScene) :
 	m_MyScene(myScene)
@@ -308,16 +304,7 @@ void LobbyController::Update(const float deltaT)
 void LobbyController::HandleInput(const float deltaT)
 {
 #ifdef DEBUG_SERVER
-	//임시로 로그인 없이 바로 dummy login packet 전송
-	if (GetAsyncKeyState('Y') & 0x8000 && y == false) {
-		y = true;
-		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
-	}
 
-	if (GetAsyncKeyState('U') & 0x8000 && u == false) {
-		u = true;
-		NetCore::GetApp()->SendReadyPacket();
-	}
 #endif
 
 #ifdef DEBUG_CLIENT
@@ -328,39 +315,59 @@ void LobbyController::HandleInput(const float deltaT)
 void LobbyController::MouseCallback()
 {
 #ifdef DEBUG_SERVER
-	if (InputHandler::g_LeftMouseCallback)
+	if (InputHandler::g_LeftMouseClick)
 	{
-		LONG mousePosX = InputHandler::g_LastMousePos.x - FRAME_BUFFER_WIDTH / 2;
-		LONG mousePosY = InputHandler::g_LastMousePos.y - FRAME_BUFFER_HEIGHT / 2;
+		LONG mousePosX = InputHandler::g_LastMousePos.x;
+		LONG mousePosY = InputHandler::g_LastMousePos.y;
 		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
 
-		// NewID Button
-		if (-230 <= mousePosX && mousePosX <= -90
-			&& 245 <= mousePosY && mousePosY <= 305)
+		XMFLOAT2 ScaleConvert = m_MyScene->m_ScaleConvert;
+
+		m_MyScene->ID_Input_Ativate = false;
+		m_MyScene->PW_Input_Ativate = false;
+
+		// ID Input
+		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+			&& 430 * ScaleConvert.y <= mousePosY && mousePosY <= 495 * ScaleConvert.y)
 		{
-			cout << "New Id Button Click" << endl;
+			//cout << "Id Input Click" << endl;
+			m_MyScene->ID_Input_Ativate = true;
+		}
+		// PW Input
+		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+			&& 515 * ScaleConvert.y <= mousePosY && mousePosY <= 580 * ScaleConvert.y)
+		{
+			//cout << "PW Input Click" << endl;
+			m_MyScene->PW_Input_Ativate = true;
+		}
+
+		// NewID Button
+		if (410 * ScaleConvert.x <= mousePosX && mousePosX <= 550 * ScaleConvert.x
+			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
+		{
+			//cout << "New Id Button Click" << endl;
 			NetCore::GetApp()->SendReadyPacket();
 		}
 		// Login Button
-		if (-70 <= mousePosX && mousePosX <= 70
-			&& 245 <= mousePosY && mousePosY <= 305)
+		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 710 * ScaleConvert.x
+			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
-			cout << "Login Button Click" << endl;
-			y = true;
-			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
+			//cout << "Login Button Click" << endl;
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 		}
 		// EXit Button
-		if (90 <= mousePosX && mousePosX <= 230
-			&& 245 <= mousePosY && mousePosY <= 305)
+		if (530 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
-			cout << "Exit Button Click" << endl;
+			//cout << "Exit Button Click" << endl;
+			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
 		}
+		InputHandler::ResetClickState();
 	}
 #endif
 
 #ifdef DEBUG_CLIENT
-	if (InputHandler::g_LeftMouseCallback)
+	if (InputHandler::g_LeftMouseClick)
 	{
 		LONG mousePosX = InputHandler::g_LastMousePos.x;
 		LONG mousePosY = InputHandler::g_LastMousePos.y;
@@ -397,7 +404,6 @@ void LobbyController::MouseCallback()
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "Login Button Click" << endl;
-			y = true;
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 		}
 		// EXit Button
@@ -406,6 +412,7 @@ void LobbyController::MouseCallback()
 		{
 			//cout << "Exit Button Click" << endl;
 		}
+		InputHandler::ResetClickState();
 	}
 #endif
 }
