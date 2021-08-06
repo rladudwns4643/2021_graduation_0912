@@ -263,6 +263,111 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	switch (msg)
 	{
+
+	case WM_IME_COMPOSITION:
+	{
+		if (!g_InputSwitch) return 0;
+
+		if (g_Chating != 2) return 0;
+
+		std::wcout.imbue(std::locale("kor"));
+		tc[0] = wParam;
+		tc[1] = 0;
+
+		if (lParam & GCS_RESULTSTR)
+		{
+			wcscat(g_ChatBuf, tc);
+			//wcout << L"완성 - " << g_ChatBuf << endl;
+			g_TempChatBuf[0] = 0;
+		}
+		else if (lParam & GCS_COMPSTR)
+		{
+			wcscpy(g_TempChatBuf, tc);
+			//wcout << L"조합 - " << g_ChatBuf << g_TempChatBuf << endl;
+		}
+
+		return 0;
+	}
+	case WM_CHAR:
+		if (!g_InputSwitch)
+		{
+			// if (wParam == 13)
+			// {
+			// 	// cout << "core - enter" << endl;
+			// }
+			InputHandler::ResetWString();
+			InputHandler::OnOffInputStringState(true);
+			InputHandler::SetWString(wParam);
+			return 0;
+		}
+
+
+		if (g_Chating < 1) return 0;
+		else if (g_Chating == 1)
+		{
+			if (wParam == 13)
+			{
+				//cout << "채팅 입력 가능" << endl;
+				g_Chating = 2;
+			}
+			else
+			{
+				//cout << wParam << endl;
+				InputHandler::SetWString(wParam);
+			}
+			return 0;
+		}
+
+		if (wParam == 8)	// backspace
+		{
+			int len = wcslen(g_ChatBuf);
+			if (len < 1)
+			{
+				// cout << "길이가 0보다 작아!" << endl;
+				return 0;
+			}
+			// cout << "길이 - " << len << endl;
+			if (g_ChatBuf[len - 1] != 0)
+			{
+				g_ChatBuf[len - 1] = 0;
+				// wcout << g_ChatBuf << endl;
+				return 0;
+			}
+		}
+		else if (wParam == 32)	// space
+		{
+			tc[0] = 0x20;
+			tc[1] = 0;
+			wcscat(g_ChatBuf, tc);
+			// wcout << g_ChatBuf << endl;
+		}
+		else if (wParam == 13)	// enter
+		{
+			if (g_Chating == 2)
+			{
+				//cout << "g_EndChating off" << endl;
+				g_Chating = 3;
+			}
+			else
+			{
+				//cout << "ggggg" << endl;
+				g_Chating = 2;
+			}
+			return 0;
+		}
+		else
+		{
+			// 그 외 다른 문자
+			tc[0] = wParam;
+			tc[1] = 0;
+			wcscat(g_ChatBuf, tc);
+			// wcout << g_ChatBuf << endl;
+		}
+
+		// InputHandler::SetWString(wParam);
+
+		return 0;  
+
 	case WM_ACTIVATE:
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
