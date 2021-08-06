@@ -103,6 +103,12 @@ bool LobbyScene::Enter()
 {
 	cout << "============= Lobby Scene ==============" << endl;
 
+	Core::g_InputSwitch = true;
+	m_ID = L"";
+	m_Password = L"";
+	ID_Input_Ativate = false;
+	PW_Input_Ativate = false;
+
 	InputHandler::g_CursorSwitch = true;
 
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eLobby);
@@ -120,6 +126,8 @@ bool LobbyScene::Enter()
 
 void LobbyScene::Exit()
 {
+	Core::g_InputSwitch = false;
+
 	AppContext->HiddenUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGO_TOYGORUND);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGINUI);
@@ -179,8 +187,65 @@ void LobbyScene::RenderText()
 	GraphicsContext::GetApp()->DrawD2DText(L"PW", LoginUI.size.x / 11.5f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 
 	GraphicsContext::GetApp()->SetTextSize(LoginUI.size.y / 120.f);
-	if (!ID_Input_Ativate)
+	if (!ID_Input_Ativate && m_ID.empty())
 		GraphicsContext::GetApp()->DrawD2DText(L"Please enter your ID", LoginUI.size.x / 60.f, LoginUI.size.y / 5.8f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
-	if (!PW_Input_Ativate)
+	if (!PW_Input_Ativate && m_Password.empty())
 		GraphicsContext::GetApp()->DrawD2DText(L"Please enter your PW", LoginUI.size.x / 60.f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+
+	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::Black);
+	
+	wstring ws = L"";
+	wstring pws = L"";
+	int count = m_Password.size();
+	for (int i = 0; i < count; ++i)
+		pws = pws + L"*";
+	switch (m_ChatType)
+	{
+	case NONE:
+	{
+		GraphicsContext::GetApp()->DrawD2DText(m_ID, LoginUI.size.x / 60.f, LoginUI.size.y / 5.8f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+		
+		GraphicsContext::GetApp()->DrawD2DText(pws, LoginUI.size.x / 60.f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+		break;
+	}
+	case ID:
+		if (Core::g_Chating == 2)
+		{
+			ws = ws + Core::g_ChatBuf + Core::g_TempChatBuf;
+			GraphicsContext::GetApp()->DrawD2DText(ws, LoginUI.size.x / 60.f, LoginUI.size.y / 5.8f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+			GraphicsContext::GetApp()->DrawD2DText(pws, LoginUI.size.x / 60.f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+			m_ID = L"" + ws;
+		}
+		else
+		{
+			GraphicsContext::GetApp()->DrawD2DText(m_ID, LoginUI.size.x / 60.f, LoginUI.size.y / 5.8f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+			GraphicsContext::GetApp()->DrawD2DText(pws, LoginUI.size.x / 60.f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+		}
+		break;
+
+	case PASSWORD:
+		if (Core::g_Chating == 2)
+		{
+			wstring ps = L"";
+			ps = ps + Core::g_ChatBuf + Core::g_TempChatBuf;
+			m_Password = L"" + ps;
+
+			int count = wcslen(Core::g_ChatBuf) + wcslen(Core::g_TempChatBuf);
+			for (int i = 0; i < count; ++i)
+				ws = ws + L"*";
+			GraphicsContext::GetApp()->DrawD2DText(m_ID, LoginUI.size.x / 60.f, LoginUI.size.y / 5.8f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+			GraphicsContext::GetApp()->DrawD2DText(ws, LoginUI.size.x / 60.f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+		}
+		else
+		{
+			GraphicsContext::GetApp()->DrawD2DText(m_ID, LoginUI.size.x / 60.f, LoginUI.size.y / 5.8f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+			GraphicsContext::GetApp()->DrawD2DText(pws, LoginUI.size.x / 60.f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	//wcout << "ID: " << m_ID << ", " << "Password: " << m_Password << endl;
 }

@@ -312,7 +312,7 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			}
 			else
 			{
-				//cout << wParam << endl;
+				//cout << "wParam: " << wParam << endl;
 				InputHandler::SetWString(wParam);
 			}
 			return 0;
@@ -323,14 +323,14 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			int len = wcslen(g_ChatBuf);
 			if (len < 1)
 			{
-				// cout << "길이가 0보다 작아!" << endl;
+				//cout << "BackSpace Press 길이가 0보다 작습니다." << endl;
 				return 0;
 			}
 			// cout << "길이 - " << len << endl;
 			if (g_ChatBuf[len - 1] != 0)
 			{
 				g_ChatBuf[len - 1] = 0;
-				// wcout << g_ChatBuf << endl;
+				//wcout<< "BackSpace Press and ChatBuf: " << g_ChatBuf << endl;
 				return 0;
 			}
 		}
@@ -339,29 +339,29 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			tc[0] = 0x20;
 			tc[1] = 0;
 			wcscat(g_ChatBuf, tc);
-			// wcout << g_ChatBuf << endl;
+			//wcout << "Space Press and ChatBuf: " << g_ChatBuf << endl;
 		}
-		else if (wParam == 13)	// enter
-		{
-			if (g_Chating == 2)
-			{
-				//cout << "g_EndChating off" << endl;
-				g_Chating = 3;
-			}
-			else
-			{
-				//cout << "ggggg" << endl;
-				g_Chating = 2;
-			}
-			return 0;
-		}
+		//else if (wParam == 13)	// enter
+		//{
+		//	if (g_Chating == 2)
+		//	{
+		//		//cout << "g_EndChating off" << endl;
+		//		g_Chating = 3;
+		//	}
+		//	else
+		//	{
+		//		//cout << "ggggg" << endl;
+		//		g_Chating = 2;
+		//	}
+		//	return 0;
+		//}
 		else
 		{
 			// 그 외 다른 문자
 			tc[0] = wParam;
 			tc[1] = 0;
 			wcscat(g_ChatBuf, tc);
-			// wcout << g_ChatBuf << endl;
+			//wcout << "Etc Press and ChatBuf: " << g_ChatBuf << endl;
 		}
 
 		// InputHandler::SetWString(wParam);

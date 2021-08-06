@@ -319,7 +319,7 @@ void LobbyController::MouseCallback()
 	{
 		LONG mousePosX = InputHandler::g_LastMousePos.x;
 		LONG mousePosY = InputHandler::g_LastMousePos.y;
-		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+		cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
 
 		XMFLOAT2 ScaleConvert = m_MyScene->m_ScaleConvert;
 
@@ -332,6 +332,13 @@ void LobbyController::MouseCallback()
 		{
 			//cout << "Id Input Click" << endl;
 			m_MyScene->ID_Input_Ativate = true;
+
+			memset(Core::g_ChatBuf, 0, sizeof(WCHAR));
+			memset(Core::g_TempChatBuf, 0, sizeof(WCHAR));
+
+			Core::g_Chating = 2;
+			m_MyScene->m_ID = L"";
+			m_MyScene->m_ChatType = 1;
 		}
 		// PW Input
 		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
@@ -339,6 +346,13 @@ void LobbyController::MouseCallback()
 		{
 			//cout << "PW Input Click" << endl;
 			m_MyScene->PW_Input_Ativate = true;
+
+			memset(Core::g_ChatBuf, 0, sizeof(WCHAR));
+			memset(Core::g_TempChatBuf, 0, sizeof(WCHAR));
+
+			Core::g_Chating = 2;
+			m_MyScene->m_Password = L"";
+			m_MyScene->m_ChatType = 2;
 		}
 
 		// NewID Button
@@ -353,6 +367,7 @@ void LobbyController::MouseCallback()
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "Login Button Click" << endl;
+			Core::g_Chating = 0;
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 		}
 		// EXit Button
@@ -362,7 +377,6 @@ void LobbyController::MouseCallback()
 			//cout << "Exit Button Click" << endl;
 			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
 		}
-		InputHandler::ResetClickState();
 	}
 #endif
 
@@ -384,6 +398,13 @@ void LobbyController::MouseCallback()
 		{
 			//cout << "Id Input Click" << endl;
 			m_MyScene->ID_Input_Ativate = true;
+
+			memset(Core::g_ChatBuf, 0, sizeof(WCHAR));
+			memset(Core::g_TempChatBuf, 0, sizeof(WCHAR));
+
+			Core::g_Chating = 2;
+			m_MyScene->m_ID = L"";
+			m_MyScene->m_ChatType = 1;
 		}
 		// PW Input
 		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
@@ -391,6 +412,13 @@ void LobbyController::MouseCallback()
 		{
 			//cout << "PW Input Click" << endl;
 			m_MyScene->PW_Input_Ativate = true;
+
+			memset(Core::g_ChatBuf, 0, sizeof(WCHAR));
+			memset(Core::g_TempChatBuf, 0, sizeof(WCHAR));
+
+			Core::g_Chating = 2;
+			m_MyScene->m_Password = L"";
+			m_MyScene->m_ChatType = 2;
 		}
 
 		// NewID Button
@@ -404,6 +432,7 @@ void LobbyController::MouseCallback()
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "Login Button Click" << endl;
+			Core::g_Chating = 0;
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 		}
 		// EXit Button
@@ -412,9 +441,9 @@ void LobbyController::MouseCallback()
 		{
 			//cout << "Exit Button Click" << endl;
 		}
-		InputHandler::ResetClickState();
 	}
 #endif
+	InputHandler::ResetClickState();
 }
 
 

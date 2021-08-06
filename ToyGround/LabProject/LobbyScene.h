@@ -10,6 +10,11 @@ namespace Graphics
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 }
 
+enum CHATTYPE
+{
+	NONE, ID, PASSWORD
+};
+
 namespace InputHandler
 {
 	extern bool g_CursorSwitch;
@@ -39,6 +44,8 @@ private:
 public:
 	std::wstring m_ID;
 	std::wstring m_Password;
+
+	int m_ChatType;
 
 	bool ID_Input_Ativate = false;
 	bool PW_Input_Ativate = false;
