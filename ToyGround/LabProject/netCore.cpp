@@ -214,12 +214,16 @@ void NetCore::ProcessData(char* buf, size_t io_byte) {
 	return;
 }
 
+#define DEB
 void NetCore::ProcessPacket(char* packet_buf) {
 #ifdef LOG_ON
 	cout << "[NETCORE] procpacket: " << (int)packet_buf[1] << " LobbyID: " << m_client.lobby_id << " BattleID: " << m_client.battle_id << endl;
 #endif
 	switch ((BYTE)packet_buf[1]) { //type
 	case LC_LOGIN_OK: {
+#ifdef DEB
+		cout << "LC_LOGIN_OK\n";
+#endif
 		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet_buf);
 		m_client.lobby_id = p->id;
 		cout << "Lobby ID: " << m_client.lobby_id << endl;
@@ -227,24 +231,39 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case LC_LOGIN_FAIL: {
+#ifdef DEB
+		cout << "LC_LOGIN_FAIL\n";
+#endif
 		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_FAIL);
 		break;
 	}
 	case LC_SIGNUP_OK: {
+#ifdef DEB
+		cout << "LC_SIGNUP_OK\n";
+#endif
 		Service::GetApp()->AddEvent(EVENT_LOBBY_SIGNUP_OK);
 		break;
 	}
 	case LC_SIGNUP_FAIL: {
+#ifdef DEB
+		cout << "LC_SIGNUP_FAIL\n";
+#endif
 		Service::GetApp()->AddEvent(EVENT_LOBBY_SIGNUP_FAIL);
 		break;
 	}
 	case LC_USERINFO: {
+#ifdef DEB
+		cout << "LC_USERINFO\n";
+#endif
 		lc_packet_userinfo* p = reinterpret_cast<lc_packet_userinfo*>(packet_buf);
 		m_client.mmr = p->mmr;
 		Service::GetApp()->AddEvent(EVENT_LOBBY_UPDATE_CLIENT_USERINFO, 1, m_client.mmr);
 		break;
 	}
 	case LC_FIND_ROOM: {
+#ifdef DEB
+		cout << "LC_FIND_ROOM\n";
+#endif
 		lc_packet_find_room* p = reinterpret_cast<lc_packet_find_room*>(packet_buf);
 		m_battle_clients[m_client.battle_id]->m_room_num = p->roomNum;
 		m_battle_clients[m_client.battle_id]->m_host = p->isHost;
@@ -253,10 +272,16 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case LC_CANCLE_FIND_ROOM: {
+#ifdef DEB
+		cout << "LC_CANCLE_FIND_ROOM\n";
+#endif
 		Service::GetApp()->AddEvent(EVENT_LOBBY_CANCLE_FIND_ROOM);
 		break;
 	}
 	case BC_BATTLE_LOGIN_OK: { //객체 생성, 나의 정보를 받아옴
+#ifdef DEB
+		cout << "BC_BATTLE_LOGIN_OK\n";
+#endif
 		bc_packet_battle_login_ok* p = reinterpret_cast<bc_packet_battle_login_ok*>(packet_buf);
 		m_client.battle_id = p->id;
 		cout << "battle ID: "<<m_client.battle_id << endl;
@@ -285,6 +310,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_ROOM_ENTERED: {
+#ifdef DEB
+		cout << "BC_ROOM_ENTERED\n";
+#endif
 		bc_packet_room_entered* p = reinterpret_cast<bc_packet_room_entered*>(packet_buf);
 
 		std::unique_ptr<BattleClient> battleClient = std::make_unique<BattleClient>(p->id);
@@ -298,6 +326,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_ROOM_LEAVED: {
+#ifdef DEB
+		cout << "BC_ROOM_LEAVED\n";
+#endif
 		bc_packet_room_leaved* p = reinterpret_cast<bc_packet_room_leaved*>(packet_buf);
 		if (m_client.battle_id != p->id) {
 			m_battle_clients[p->id].release();
@@ -306,6 +337,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_ROOM_LEAVE, 1, p->id);
 	}
 	case BC_JOIN_OK: {
+#ifdef DEB
+		cout << "BC_JOIN_OK\n";
+#endif
 		bc_packet_join_ok* p = reinterpret_cast<bc_packet_join_ok*>(packet_buf);
 		int& id = m_client.battle_id;
 		m_battle_clients[id]->m_player_num = p->player_no;
@@ -314,12 +348,18 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_JOIN_FAIL: {
+#ifdef DEB
+		cout << "BC_JOIN_FAIL\n";
+#endif
 		bc_packet_join_fail* p = reinterpret_cast<bc_packet_join_fail*>(packet_buf);
 		m_battle_clients[m_client.battle_id]->Initialize();
 		Service::GetApp()->AddEvent(EVENT_ROOM_JOIN_FAIL);
 		break;
 	}
 	case BC_READY: {
+#ifdef DEB
+		cout << "BC_READY\n";
+#endif
 		bc_packet_ready* p = reinterpret_cast<bc_packet_ready*>(packet_buf);
 		//m_battle_clients[p->id]->m_ready = p->ready;
 
@@ -327,11 +367,17 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_ROOM_START_AVAILABLE: {
+#ifdef DEB
+		cout << "BC_ROOM_START_AVAILABLE\n";
+#endif
 		bc_packet_room_start_available* p = reinterpret_cast<bc_packet_room_start_available*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_ROOM_START_AVAILABLE, 1, p->available);
 		break;
 	}
 	case BC_ROOM_START: {
+#ifdef DEB
+		cout << "BC_ROOM_START\n";
+#endif
 		bc_packet_room_start* p = reinterpret_cast<bc_packet_room_start*>(packet_buf);
 		for (auto& st : p->start_info) {
 			if (m_battle_clients.count(st.id)) {
@@ -345,12 +391,18 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_ROUND_START: {
+#ifdef DEB
+		cout << "BC_ROUND_START\n";
+#endif
 		bc_packet_round_start* p = reinterpret_cast<bc_packet_round_start*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_ROUND_START);
 		break;
 	}
 	//in game
 	case BC_ADD_COIN: {
+#ifdef DEB
+		cout << "BC_ADD_COIN\n";
+#endif
 		bc_packet_add_coin* p = reinterpret_cast<bc_packet_add_coin*>(packet_buf);
 		XMFLOAT3 arg_pos;
 		int arg_coin_id{ p->coin_id };
@@ -362,11 +414,17 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_UPDATE_COIN: {
+#ifdef DEB
+		cout << "BC_UPDATE_COIN\n";
+#endif
 		bc_packet_update_coin* p = reinterpret_cast<bc_packet_update_coin*>(packet_buf);
 		cout << "update coin" << endl;
 		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_COIN, 3, p->id, p->coin_cnt, p->delete_coin_id);
 	}
 	case BC_PLAYER_POS: {
+#ifdef DEB
+		cout << "BC_PLAYER_POS\n";
+#endif
 		bc_packet_player_pos* p = reinterpret_cast<bc_packet_player_pos*>(packet_buf);
 
 		XMFLOAT3 arg_pos;
@@ -378,6 +436,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_PLAYER_ROT: {
+#ifdef DEB
+		cout << "BC_PLAYER_ROT\n";
+#endif
 		bc_packet_player_rot* p = reinterpret_cast<bc_packet_player_rot*>(packet_buf);
 
 		XMFLOAT3 arg_look;
@@ -389,6 +450,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_SHOOT_BULLET: {
+#ifdef DEB
+		cout << "BC_SHOOT_BULLET\n";
+#endif
 		bc_packet_shoot_bullet* p = reinterpret_cast<bc_packet_shoot_bullet*>(packet_buf);
 		
 		XMFLOAT3 arg_pos;
@@ -400,11 +464,17 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_REMOVE_BULLET: {
+#ifdef DEB
+		cout << "BC_REMOVE_BULLET\n";
+#endif
 		bc_packet_remove_bullet* p = reinterpret_cast<bc_packet_remove_bullet*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_REMOVE_BULLET, 1, p->bullet_id);
 		break;
 	}
 	case BC_HIT: {
+#ifdef DEB
+		cout << "BC_HIT\n";
+#endif
 		bc_packet_hit* p = reinterpret_cast<bc_packet_hit*>(packet_buf);
 
 		float arg_hp = p->hp;
@@ -414,22 +484,34 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_DIE: {
+#ifdef DEB
+		cout << "BC_DIE\n";
+#endif
 		bc_packet_die* p = reinterpret_cast<bc_packet_die*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_DIE, 1, p->id);
 		break;
 	}
 	case BC_ANIM: { //id가 어떤 anim인지
+#ifdef DEB
+		cout << "BC_ANIM\n";
+#endif
 		bc_packet_anim_type* p = reinterpret_cast<bc_packet_anim_type*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_ANIM, 2, p->id, p->anim_type);
 		break;
 	}
 	case BC_LEFT_TIME: {
+#ifdef DEB
+		cout << "BC_LEFT_TIME\n";
+#endif
 		bc_packet_left_time* p = reinterpret_cast<bc_packet_left_time*>(packet_buf);
 		int time{ p->left_time }; //unsigned char 로 type cast 필요할까
 		Service::GetApp()->AddEvent(EVENT_GAME_TIMER, 1, time);
 		break;
 	}
 	case BC_GAME_OVER: {
+#ifdef DEB
+		cout << "BC_GAME_OVER\n";
+#endif
 		bc_packet_game_over* p = reinterpret_cast<bc_packet_game_over*>(packet_buf);
 		m_winner = p->win_team;
 
@@ -437,6 +519,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_UPDATED_USER_INFO: {
+#ifdef DEB
+		cout << "BC_UPDATED_USER_INFO\n";
+#endif
 		bc_packet_updated_user_info* p = reinterpret_cast<bc_packet_updated_user_info*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_SERVER_USERINFO, 1, p->mmr);
 		break;

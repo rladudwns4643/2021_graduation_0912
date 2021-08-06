@@ -15,8 +15,8 @@
 #include "d3dUtil.h"
 
 // 클라 서버 작업분리
-#define DEBUG_CLIENT 0x00FF1
-//#define DEBUG_SERVER 0x00FF2
+//#define DEBUG_CLIENT 0x00FF1
+#define DEBUG_SERVER 0x00FF2
 
 #define FRUSTUM_CULLMODE 0x00FF3
 // 풀스크린 모드

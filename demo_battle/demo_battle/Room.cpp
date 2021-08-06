@@ -65,7 +65,7 @@ void Room::Reset() {
 	//m_map = new Map();
 
 	for (auto& p : m_players) {
-		p->Reset();
+		static_cast<Toy*>(p)->Reset();
 	}
 }
 
