@@ -39,20 +39,20 @@ void TitleController::MouseCallback()
 	//{
 	//	if (m_MyScene->m_IsMB)
 	//	{
-	//		auto po = Picking::RayIntersect2DZLayer(InputHandler::g_StartMousePos.x, InputHandler::g_StartMousePos.y, m_MyScene->m_SceneName, OBJECT_TYPE_UI2D_TITLE_MB);
+	//		auto po = Picking::RayIntersect2DZLayer(InputHandler::g_LastMousePos.x, InputHandler::g_LastMousePos.y, m_MyScene->m_SceneName, OBJECT_TYPE_UI2D_TITLE_MB);
 	//		m_PickedUIName = po.instName;
 	//		m_PickedUIObjectName = po.objectName;
 	//	}
 	//	else if (m_MyScene->m_IsSignUp)
 	//	{
-	//		auto po = Picking::RayIntersect2DZLayer(InputHandler::g_StartMousePos.x, InputHandler::g_StartMousePos.y, m_MyScene->m_SceneName, OBJECT_TYPE_UI2D_SIGN_UP);
+	//		auto po = Picking::RayIntersect2DZLayer(InputHandler::g_LastMousePos.x, InputHandler::g_LastMousePos.y, m_MyScene->m_SceneName, OBJECT_TYPE_UI2D_SIGN_UP);
 	//		m_PickedUIName = po.instName;
 	//		m_PickedUIObjectName = po.objectName;
 	//
 	//		if (m_PickedUIName != "") m_MyScene->UIEvent(CLIENT_EVENT_TITLE_UI_PRESSED, 3, m_PickedUIName, true, string(OBJECT_TYPE_UI2D_SIGN_UP));
 	//		else
 	//		{
-	//			auto po = Picking::RayIntersect2DZLayer(InputHandler::g_StartMousePos.x, InputHandler::g_StartMousePos.y, m_MyScene->m_SceneName, OBJECT_TYPE_UI2D_SIGN_UP_INPUT);
+	//			auto po = Picking::RayIntersect2DZLayer(InputHandler::g_LastMousePos.x, InputHandler::g_LastMousePos.y, m_MyScene->m_SceneName, OBJECT_TYPE_UI2D_SIGN_UP_INPUT);
 	//			m_PickedUIName = po.instName;
 	//			m_PickedUIObjectName = po.objectName;
 	//			// cout << "Pick 2D UI: " << po.objectName << ", " << po.instName << endl;
@@ -61,7 +61,7 @@ void TitleController::MouseCallback()
 	//	}
 	//	else
 	//	{
-	//		auto po = Picking::RayIntersect2DZLayer(InputHandler::g_StartMousePos.x, InputHandler::g_StartMousePos.y, m_MyScene->m_SceneName, OBJECT_TYPE_UI2D);
+	//		auto po = Picking::RayIntersect2DZLayer(InputHandler::g_LastMousePos.x, InputHandler::g_LastMousePos.y, m_MyScene->m_SceneName, OBJECT_TYPE_UI2D);
 	//		m_PickedUIName = po.instName;
 	//		m_PickedUIObjectName = po.objectName;
 	//		// cout << "Pick 2D UI: " << po.objectName << ", " << po.instName << endl;
@@ -308,50 +308,106 @@ void LobbyController::Update(const float deltaT)
 void LobbyController::HandleInput(const float deltaT)
 {
 #ifdef DEBUG_SERVER
-	if (InputHandler::g_LeftMouseClick)
-	{
-		LONG mousePosX = InputHandler::g_LastMousePos.x - FRAME_BUFFER_WIDTH / 2;
-		LONG mousePosY = InputHandler::g_LastMousePos.y - FRAME_BUFFER_HEIGHT / 2;
-		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
-		if (-210 <= mousePosX && mousePosX <= 210
-			&& 195 <= mousePosY && mousePosY <= 315)
-		{
-			NetCore::GetApp()->SendReadyPacket();
-		}
-		//임시로 로그인 없이 바로 dummy login packet 전송
-		if (365 <= mousePosX && mousePosX <= 565
-			&& 205 <= mousePosY && mousePosY <= 295)
-		{
-			y = true;
-			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
-		}
-		InputHandler::ResetClickState();
+	//임시로 로그인 없이 바로 dummy login packet 전송
+	if (GetAsyncKeyState('Y') & 0x8000 && y == false) {
+		y = true;
+		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
+	}
+
+	if (GetAsyncKeyState('U') & 0x8000 && u == false) {
+		u = true;
+		NetCore::GetApp()->SendReadyPacket();
 	}
 #endif
 
 #ifdef DEBUG_CLIENT
-	if (GetAsyncKeyState('T') & 0x8000 && y == false) {
-		y = true;
-		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
-	}
-	if (InputHandler::g_LeftMouseClick)
-	{
-		LONG mousePosX = InputHandler::g_LastMousePos.x - FRAME_BUFFER_WIDTH / 2;
-		LONG mousePosY = InputHandler::g_LastMousePos.y - FRAME_BUFFER_HEIGHT / 2;
-		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
-		if (-210 <= mousePosX && mousePosX <= 210
-			&& 195 <= mousePosY && mousePosY <= 315)
-		{
-			y = true;
-			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
-		}
-		InputHandler::ResetClickState();
-	}
+	
 #endif
 }
 
 void LobbyController::MouseCallback()
 {
+#ifdef DEBUG_SERVER
+	if (InputHandler::g_LeftMouseCallback)
+	{
+		LONG mousePosX = InputHandler::g_LastMousePos.x - FRAME_BUFFER_WIDTH / 2;
+		LONG mousePosY = InputHandler::g_LastMousePos.y - FRAME_BUFFER_HEIGHT / 2;
+		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+
+		// NewID Button
+		if (-230 <= mousePosX && mousePosX <= -90
+			&& 245 <= mousePosY && mousePosY <= 305)
+		{
+			cout << "New Id Button Click" << endl;
+			NetCore::GetApp()->SendReadyPacket();
+		}
+		// Login Button
+		if (-70 <= mousePosX && mousePosX <= 70
+			&& 245 <= mousePosY && mousePosY <= 305)
+		{
+			cout << "Login Button Click" << endl;
+			y = true;
+			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
+			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+		}
+		// EXit Button
+		if (90 <= mousePosX && mousePosX <= 230
+			&& 245 <= mousePosY && mousePosY <= 305)
+		{
+			cout << "Exit Button Click" << endl;
+		}
+	}
+#endif
+
+#ifdef DEBUG_CLIENT
+	if (InputHandler::g_LeftMouseCallback)
+	{
+		LONG mousePosX = InputHandler::g_LastMousePos.x;
+		LONG mousePosY = InputHandler::g_LastMousePos.y;
+		cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+		
+		XMFLOAT2 ScaleConvert = m_MyScene->m_ScaleConvert;
+
+		m_MyScene->ID_Input_Ativate = false;
+		m_MyScene->PW_Input_Ativate = false;
+
+		// ID Input
+		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+			&& 430 * ScaleConvert.y <= mousePosY && mousePosY <= 495 * ScaleConvert.y)
+		{
+			//cout << "Id Input Click" << endl;
+			m_MyScene->ID_Input_Ativate = true;
+		}
+		// PW Input
+		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+			&& 515 * ScaleConvert.y <= mousePosY && mousePosY <= 580 * ScaleConvert.y)
+		{
+			//cout << "PW Input Click" << endl;
+			m_MyScene->PW_Input_Ativate = true;
+		}
+
+		// NewID Button
+		if (410 * ScaleConvert.x <= mousePosX && mousePosX <= 550 * ScaleConvert.x
+			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
+		{
+			//cout << "New Id Button Click" << endl;
+		}
+		// Login Button
+		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 710 * ScaleConvert.x
+			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
+		{
+			//cout << "Login Button Click" << endl;
+			y = true;
+			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+		}
+		// EXit Button
+		if (530 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
+		{
+			//cout << "Exit Button Click" << endl;
+		}
+	}
+#endif
 }
 
 

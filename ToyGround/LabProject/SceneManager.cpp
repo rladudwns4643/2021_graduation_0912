@@ -253,9 +253,9 @@ void SceneManager::RenderScene()
 	m_Scenes[m_CurScene]->Render();
 }
 
-void SceneManager::RenderUI()
+void SceneManager::RenderText()
 {
-	m_Scenes[m_CurScene]->RenderUI();
+	m_Scenes[m_CurScene]->RenderText();
 }
 
 Scene* SceneManager::GetCurScene() const

@@ -32,7 +32,7 @@ public:
 
 	void	UpdateScene(const float& deltaT);
 	void	RenderScene();
-	void	RenderUI();
+	void	RenderText();
 
 	Scene* GetCurScene() const;
 	UINT   GetCurSceneIndex() const;

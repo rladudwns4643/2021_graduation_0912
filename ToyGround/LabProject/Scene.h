@@ -38,7 +38,7 @@ public:
 
 	virtual void	Update(const float& fDeltaTime) = 0;
 	virtual void	Render() = 0;
-	virtual void	RenderUI() = 0;
+	virtual void	RenderText() = 0;
 
 protected:
 	std::string m_SceneName;

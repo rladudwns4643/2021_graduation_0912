@@ -10,6 +10,7 @@
 
 #include "GameObject.h"
 #include "Character.h"
+#include "UserInterface.h"
 #include "Map.h"
 
 void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
@@ -160,6 +161,15 @@ void GameplayScene::Initialize()
 	// 맵의 오브젝트들 생성
 	AppContext->CreateProps(MAP_STR_GAME_MAP);
 
+	// UI 생성
+	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM, TEXTURE_INDEX_UI_GAMEPLAY_AIM);
+	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE, TEXTURE_INDEX_UI_GAMEPLAY_PLAYER1_SCORE);
+	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE, TEXTURE_INDEX_UI_GAMEPLAY_PLAYER2_SCORE);
+	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER, TEXTURE_INDEX_UI_GAMEPLAY_TIMER);
+	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_HEALTH, TEXTURE_INDEX_UI_GAMEPLAY_HEALTH);
+	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, TEXTURE_INDEX_UI_GAMEPLAY_ATTACK_GAUGE);
+	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, TEXTURE_INDEX_UI_GAMEPLAY_SKILL_GAUGE);
+
 	// 보석 생성
 	AppContext->CreateGem();
 }
@@ -172,10 +182,10 @@ bool GameplayScene::Enter()
 {
 	cout << "============= Gameplay Scene ==============" << endl;
 
-	// 게임플레이 씬에서 마우스 보이게 하고싶다면 주석처리
+	// 마우스 보이게 하고싶다면 주석처리
 	InputHandler::g_CursorSwitch = false;
 
-	/* Create SceneBounds for Shadow */
+	// Create SceneBounds for Shadow
 	m_SceneBounds.Center = XMFLOAT3(2500.f, 0.0f, 2500.f);
 	m_SceneBounds.Radius = 2700.f;
 
@@ -218,6 +228,15 @@ bool GameplayScene::Enter()
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
 
+	// UI 세팅
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(0.f, -80.f), XMFLOAT2(39, 39), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE, XMFLOAT2(-730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE, XMFLOAT2(730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER, XMFLOAT2(0.f, 450.f), XMFLOAT2(143, 47), TextAlignType::Center, -1, true);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_HEALTH, XMFLOAT2(-730.f, -360.f), XMFLOAT2(245, 45), TextAlignType::Center, -1, true);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, XMFLOAT2(-730.f, -430.f), XMFLOAT2(245, 40), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, XMFLOAT2(-730.f, -495.f), XMFLOAT2(245, 35), TextAlignType::Center);
+
 	// 카메라 세팅
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
 
@@ -234,6 +253,14 @@ void GameplayScene::Exit()
 {
 	m_Users.clear();
 	m_player_in_room.clear();
+
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_HEALTH);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE);
 
 	for (int i = 0; i < MAX_GEM_COUNT; ++i)
 	{
@@ -269,9 +296,13 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::Cowboy, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_COWBOY].get());
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_GUNMAN], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateSkinnedCBs(BoneIndex::GunMan, AssertsReference::GetApp()->m_SkinnedModelInsts[CHARACTER_GUNMAN].get());
-	
+
 	// Gem
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
+
+	// UI
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
 
 	// Materials
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
@@ -279,6 +310,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 void GameplayScene::Render()
 {
+	// SkyBox
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
+
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 
@@ -322,14 +357,10 @@ void GameplayScene::Render()
 			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX], AppContext->m_RItemsVec, false);
 		}
 	}
-	
-	/*SkyBox*/
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
-}
 
-void GameplayScene::RenderUI()
-{
+	// UI
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
 }
 
 void GameplayScene::ChangeFreeCamera()
@@ -341,4 +372,26 @@ void GameplayScene::ChangeFreeCamera()
 	XMFLOAT3 right = m_Users[m_PlayerID]->GetRight();
 
 	TOY_GROUND::GetApp()->m_Camera->SetCamera(look, up, right);
+}
+
+void GameplayScene::RenderText()
+{
+	// Timer
+	UITextInfo UITimer = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_TIMER);
+	GraphicsContext::GetApp()->SetTextSize(UITimer.size.y / 13.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
+	wstring TestTimerString;
+	TestTimerString = L"2:00";
+	GraphicsContext::GetApp()->DrawD2DText(TestTimerString, UITimer.size.x / 2.36f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+
+	// HP
+	UITextInfo UIHealth = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_HEALTH);
+	GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 8.f , DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
+	wstring TestHPString;
+	TestHPString = L"4000";
+	GraphicsContext::GetApp()->DrawD2DText(TestHPString, UIHealth.size.x / 27.f, UIHealth.size.y * 1.3f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+
+
+
 }

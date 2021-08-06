@@ -51,20 +51,42 @@ public:
 
 	void Update2DPosition(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
 
-	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isFrustum = true);
+	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isCulling = true, bool isFrustum = true);
 	void UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems); // 사용안함
 
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
 	void UpdateMainPassCB(Camera& camera, Light* light);
 	void UpdateUIPassCB(float hpRate);
 
+	UITextInfo GetUIPosAndSize(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, std::string uiName);
+
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
-	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer = -1, bool isFrustum = true);
+	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool isCulling = true, int zLayer = -1, bool isFrustum = true);
 	void DrawBoundingBox(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool drawAABB = true, int zLayer = -1, bool isFrustum = true);
 	void DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const std::vector<GameObject*>& rItems);
 
 	void DrawBBox(const std::vector<BBox*>& rItems);
+
+// 폰트 관련----------------------------------------------------------
+public:
+	void LoadFont(const wstring fontName, float fontSize);
+
+	void SetTextSize(float fontSize);
+	void SetTextSize(float fontSize, DWRITE_TEXT_ALIGNMENT textType, D2D1::ColorF color);
+	void SetTextAlignMent(DWRITE_TEXT_ALIGNMENT textAlignment);
+	void SetColor(D2D1::ColorF color);
+	void DrawD2DText(const wstring text, float posX, float posY, float rectSize);
+	void DrawD2DText(const wstring text, float posX, float posY, float rectSizeX, float rectSizeY, bool aligmentLeading);
+
+private:
+	wstring m_FontName;
+	float	m_FontSize;
+
+	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_TextBrush;
+	Microsoft::WRL::ComPtr<IDWriteTextFormat> m_TextFormat;
+
+// ------------------------------------------------------------------
 
 public:
 	void SetPipelineState(ID3D12PipelineState* PSO);

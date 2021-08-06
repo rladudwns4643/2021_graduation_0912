@@ -21,7 +21,7 @@ void TitleScene::Initialize()
 	std::string ui2dName = OBJECT_TYPE_UI2D + m_SceneName;
 	AppContext->CreateUI2D(OBJECT_NAME_TITLE_BACKGROUND, OBJECT_NAME_TITLE_BACKGROUND, TEXTURE_INDEX_UI_TITLE_BACKGROUND);
 
-	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_LOGO_TOYGROUND, TEXTURE_INDEX_UI_TITLE_LOGO_TOYGROUND);
+	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_TITLE_LOGO_TOYGROUND, TEXTURE_INDEX_UI_TITLE_LOGO_TOYGROUND);
 	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_TITLE_PLAY_BUTTON, TEXTURE_INDEX_UI_TITLE_PLAY_RELEASED, TEXTURE_INDEX_UI_TITLE_PLAY_PRESSED);
 	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_TITLE_EXIT_BUTTON, TEXTURE_INDEX_UI_TITLE_EXIT_RELEASED, TEXTURE_INDEX_UI_TITLE_EXIT_PRESSED);
 }
@@ -38,7 +38,7 @@ bool TitleScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_NAME_TITLE_BACKGROUND, OBJECT_NAME_TITLE_BACKGROUND, XMFLOAT2(0.f, 0.f), XMFLOAT2(1280, 720), TextAlignType::Center);
 
 	// Logo
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOGO_TOYGROUND, XMFLOAT2(-650.f, 400.f), XMFLOAT2(400.f, 150.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_TITLE_LOGO_TOYGROUND, XMFLOAT2(-650.f, 400.f), XMFLOAT2(400.f, 150.f), TextAlignType::Center);
 
 	// Button
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_TITLE_PLAY_BUTTON, XMFLOAT2(0.f, -380.f), XMFLOAT2(420.f, 120.f), TextAlignType::Center);
@@ -50,7 +50,7 @@ bool TitleScene::Enter()
 void TitleScene::Exit()
 {
 	AppContext->HiddenUI2D(OBJECT_NAME_TITLE_BACKGROUND, OBJECT_NAME_TITLE_BACKGROUND);
-	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOGO_TOYGROUND);
+	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_TITLE_LOGO_TOYGROUND);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_TITLE_PLAY_BUTTON);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_TITLE_EXIT_BUTTON);
 
@@ -78,6 +78,6 @@ void TitleScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 }
 
-void TitleScene::RenderUI()
+void TitleScene::RenderText()
 {
 }

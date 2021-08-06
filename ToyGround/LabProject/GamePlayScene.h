@@ -8,6 +8,7 @@ namespace Graphics
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OBBoxPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 }
 
 namespace InputHandler
@@ -33,7 +34,7 @@ public:
 
 	virtual void Update(const float& fDeltaTime) override;
 	virtual void Render() override;
-	virtual void RenderUI() override;
+	virtual void RenderText() override;
 
 private:
 	void ChangeFreeCamera();

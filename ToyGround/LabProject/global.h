@@ -209,3 +209,9 @@ namespace MapTool
 		std::string type;
 	};
 }
+
+struct UITextInfo
+{
+	XMFLOAT2 pos;
+	XMFLOAT2 size;
+};
