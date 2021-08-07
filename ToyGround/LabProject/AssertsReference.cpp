@@ -535,14 +535,14 @@ void AssertsReference::CreateBB()
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(20.f, 40.f, 20.f);
+		bb->Center = XMFLOAT3(0.f, -19.f, 0.f);
+		bb->Extents = XMFLOAT3(38.f, 38.f, 38.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_BULLET_01] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(20.f, 40.f, 20.f);
+		bb->Center = XMFLOAT3(0.f, -19.f, 0.f);
+		bb->Extents = XMFLOAT3(38.f, 38.f, 38.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_BULLET_02] = std::move(bb);
 	}
 

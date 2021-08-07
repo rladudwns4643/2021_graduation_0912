@@ -6,6 +6,7 @@
 #include "netCore.h"
 
 #include "Character.h"
+#include "ApplicationContext.h"
 #include "SkinnedModelInstance.h"
 #include "CommandCenter.h"
 #include "MoveCommand.h"

@@ -466,6 +466,7 @@ void GameplayController::HandleInput(const float deltaT)
 	if (InputHandler::IsKeyUp(VK_F4)) {
 		SceneManager::GetApp()->ChangeScene(SceneType::eLobby);
 	}
+
 #ifdef DEBUG_SERVER
 	//if (InputHandler::IsKeyUp(VK_F1) && c == false) {
 	//	cout << "!";
@@ -480,4 +481,7 @@ void GameplayController::HandleInput(const float deltaT)
 
 void GameplayController::MouseCallback()
 {
+	if (InputHandler::g_LeftMouseClick)
+	{
+	}
 }
