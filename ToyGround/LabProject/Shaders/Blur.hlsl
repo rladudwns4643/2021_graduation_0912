@@ -32,7 +32,7 @@ Texture2D gInput : register(t0);
 RWTexture2D<float4> gOutput : register(u0);
 
 #define N 256
-#define CacheSize (N + 2*gMaxBlurRadius)
+#define CacheSize (N + 2 * gMaxBlurRadius)
 groupshared float4 gCache[CacheSize];
 
 [numthreads(N, 1, 1)]

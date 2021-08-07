@@ -1,5 +1,36 @@
 #pragma once
 
+namespace MapTool
+{
+	struct MapInfo
+	{
+		string meshName;
+		XMFLOAT3 position;
+		XMFLOAT3 rotation;
+		int typeID; // 고유ID
+		std::string textureName;
+		bool colWithChar;
+	};
+
+	struct PlayerInfo
+	{
+		string playerName;
+		XMFLOAT3 position;
+		float rotY;
+		XMFLOAT3 spawnPos;
+	};
+
+	struct UIInfo
+	{
+		std::string uiName;
+		std::string meshName;
+		XMFLOAT3 position;
+		XMFLOAT3 rotation;
+		XMFLOAT3 scale;
+		std::string type;
+	};
+}
+
 struct Vertex
 {
 	Vertex() {}
@@ -42,6 +73,16 @@ struct Vertex
 		return true;
 	}
 };
+
+struct SubmeshGeometry
+{
+	UINT IndexCount = 0;
+	UINT StartIndexLocation = 0;
+	INT BaseVertexLocation = 0;
+
+	DirectX::BoundingBox Bounds;
+};
+
 
 struct BBVertex
 {
@@ -107,16 +148,6 @@ struct Texture
 	Microsoft::WRL::ComPtr<ID3D12Resource> UploadHeap = nullptr;
 };
 
-struct SubmeshGeometry
-{
-	UINT IndexCount = 0;
-	UINT StartIndexLocation = 0;
-	INT BaseVertexLocation = 0;
-
-	DirectX::BoundingBox Bounds;
-};
-
-
 namespace ShaderResource
 {
 	struct InstanceData
@@ -178,38 +209,7 @@ namespace ShaderResource
 	{
 		DirectX::XMFLOAT4X4 BoneTransforms[96];
 	};
-}
-
-namespace MapTool
-{
-	struct MapInfo
-	{
-		string meshName;
-		XMFLOAT3 position;
-		XMFLOAT3 rotation;
-		int typeID; // 고유ID
-		std::string textureName;
-		bool colWithChar;
-	};
-
-	struct PlayerInfo
-	{
-		string playerName;
-		XMFLOAT3 position;
-		float rotY;
-		XMFLOAT3 spawnPos;
-	};
-
-	struct UIInfo
-	{
-		std::string uiName;
-		std::string meshName;
-		XMFLOAT3 position;
-		XMFLOAT3 rotation;
-		XMFLOAT3 scale;
-		std::string type;
-	};
-}
+};
 
 struct UITextInfo
 {

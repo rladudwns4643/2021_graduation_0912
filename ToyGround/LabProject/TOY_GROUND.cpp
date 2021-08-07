@@ -18,7 +18,7 @@ void TOY_GROUND::Startup(void)
 	// Lights
 	m_pLights[LIGHT_NAME_DIRECTIONAL] = std::make_unique<Light>();
 	m_pLights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.8964f, 0.9563f, 0.9242f };
-	m_pLights[LIGHT_NAME_DIRECTIONAL]->Strength = { 0.55f, 0.55f, 0.55f };
+	m_pLights[LIGHT_NAME_DIRECTIONAL]->Strength = { 0.65f, 0.65f, 0.65f };
 
 	// Create Tools
 	m_pSceneManager = SceneManager::GetApp();
@@ -106,6 +106,12 @@ void TOY_GROUND::RenderText(void)
 {
 	if (m_pSceneManager)
 		SceneManager::GetApp()->RenderText();
+}
+
+void TOY_GROUND::WriteShadow(void)
+{
+	if (m_pSceneManager)
+		m_pSceneManager->WriteShadow();
 }
 
 void TOY_GROUND::OnResize()

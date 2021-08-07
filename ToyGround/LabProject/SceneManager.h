@@ -33,6 +33,7 @@ public:
 	void	UpdateScene(const float& deltaT);
 	void	RenderScene();
 	void	RenderText();
+	void	WriteShadow();
 
 	Scene* GetCurScene() const;
 	UINT   GetCurSceneIndex() const;

@@ -258,6 +258,11 @@ void SceneManager::RenderText()
 	m_Scenes[m_CurScene]->RenderText();
 }
 
+void SceneManager::WriteShadow()
+{
+	m_Scenes[m_CurScene]->WriteShadow();
+}
+
 Scene* SceneManager::GetCurScene() const
 {
 	return m_Scenes[m_CurScene];

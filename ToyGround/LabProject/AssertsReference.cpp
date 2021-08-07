@@ -582,21 +582,21 @@ void AssertsReference::BuildMaterials()
 	PolygonMinis_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
 	PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
-	PolygonMinis_Texture_01_A->Roughness = 0.967734f;
+	PolygonMinis_Texture_01_A->Roughness = 0.717734;
 
 	auto Polygon_Plane_Texture_02 = std::make_unique<Material>();
 	Polygon_Plane_Texture_02->MatCBIndex = TEXTURE_INDEX_Polygon_Plane_Texture_02;
 	Polygon_Plane_Texture_02->DiffuseSrvHeapIndex = TEXTURE_INDEX_Polygon_Plane_Texture_02;
 	Polygon_Plane_Texture_02->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	Polygon_Plane_Texture_02->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
-	Polygon_Plane_Texture_02->Roughness = 0.967734f;
+	Polygon_Plane_Texture_02->Roughness = 0.717734;
 
 	auto Polygon_Plane_Texture_03 = std::make_unique<Material>();
 	Polygon_Plane_Texture_03->MatCBIndex = TEXTURE_INDEX_Polygon_Plane_Texture_03;
 	Polygon_Plane_Texture_03->DiffuseSrvHeapIndex = TEXTURE_INDEX_Polygon_Plane_Texture_03;
 	Polygon_Plane_Texture_03->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	Polygon_Plane_Texture_03->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
-	Polygon_Plane_Texture_03->Roughness = 0.967734f;
+	Polygon_Plane_Texture_03->Roughness = 0.717734;
 
 	auto TITLE_BACKGROUND = std::make_unique<Material>();
 	TITLE_BACKGROUND->MatCBIndex = TEXTURE_INDEX_UI_TITLE_BACKGROUND;

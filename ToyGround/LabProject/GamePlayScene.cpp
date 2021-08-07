@@ -190,12 +190,12 @@ bool GameplayScene::Enter()
 	InputHandler::g_CursorSwitch = false;
 
 	// Create SceneBounds for Shadow
-	m_SceneBounds.Center = XMFLOAT3(2500.f, 0.0f, 2500.f);
-	m_SceneBounds.Radius = 2700.f;
+	m_SceneBounds.Center = XMFLOAT3(0.f, 0.f, 0.f);
+	m_SceneBounds.Radius = 3000.f;
 
 	/* Light Setting */
-	TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.57735f, -0.81735f, -1.07735 };
-
+	TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.643f, -0.663f, -0.383f };
+	TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL]->Strength = { 0.75f, 0.75f, 0.75f };
 	// Player Setting
 #ifdef DEBUG_CLIENT
 	m_PlayerID = 0;
@@ -217,10 +217,15 @@ bool GameplayScene::Enter()
 
 #ifdef DEBUG_CLIENT
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
+	m_Users[m_PlayerID]->m_IsVisible = true;
+	m_Users[m_PlayerID]->m_IsVisibleOnePassCheck = true;
 	m_Users[m_PlayerID]->m_PlayerID = 0;
 	m_Users[m_PlayerID]->m_MapName = m_MapName;
 	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN); 
 	m_Users[1]->m_PlayerID = 1;
+	m_Users[1]->m_IsVisible = true;
+	m_Users[1]->m_IsVisibleOnePassCheck = true;
+	m_Users[1]->m_MapName = m_MapName;
 #endif
 	///---
 	// Player type, id 등등 세팅
@@ -338,10 +343,6 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 void GameplayScene::Render()
 {
-	// SkyBox
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
-
 	// Main rendering pass
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OpaquePSO.Get());
 
@@ -358,14 +359,6 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_01], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_02], AppContext->m_RItemsVec);
 	
-	
-	// Charater
-	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
-	for (auto& p : m_Users)
-	{
-		if (!p.second) continue;
-		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
-	}
 	// AABoundingBox
 	if (TOY_GROUND::GetApp()->bShowBoundingBox)
 	{
@@ -380,6 +373,14 @@ void GameplayScene::Render()
 		}
 	}
 	
+	// Charater
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedPSO.Get());
+	for (auto& p : m_Users)
+	{
+		if (!p.second) continue;
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
+	}
+	
 	bool AimCheck = false;
 	// Attack_Box
 	for (auto& p : m_Users)
@@ -392,7 +393,11 @@ void GameplayScene::Render()
 			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX], AppContext->m_RItemsVec, false);
 		}
 	}
-	
+
+	// SkyBox
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
+
 	// UI
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);

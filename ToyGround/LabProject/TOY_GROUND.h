@@ -28,6 +28,7 @@ public:
 	virtual void Update(float deltaT) override;
 	virtual void RenderScene(void) override;
 	virtual void RenderText(void) override;
+	virtual void WriteShadow(void) override;
 
 	void OnResize();
 	
