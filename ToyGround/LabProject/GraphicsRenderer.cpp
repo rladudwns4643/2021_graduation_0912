@@ -69,6 +69,8 @@ void GraphicsRenderer::LoadTextures()
 		"SkyBox",
 		"Cartoon_CubeWorld_Texture",
 		"PolygonMinis_Texture_01_A",
+		"Polygon_Plane_Texture_02",
+		"Polygon_Plane_Texture_03",
 		"UI_TITLE_BACKGROUND",
 		"UI_TITLE_LOGO_TOYGROUND",
 		"UI_TITLE_PLAY_BUTTON_RELEASED",
@@ -94,6 +96,8 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/SkyBox.dds",
 		L"./Textures/Cartoon_CubeWorld_Texture.dds",
 		L"./Textures/PolygonMinis_Texture_01_A.dds",
+		L"./Textures/Polygon_Plane_Texture_02.dds",
+		L"./Textures/Polygon_Plane_Texture_03.dds",
 		L"./Textures/Title/BackGround.dds",
 		L"./Textures/Title/Logo_ToyGround.dds",
 		L"./Textures/Title/Play_Button_R.dds",
@@ -149,6 +153,8 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 	{
 		m_Textures[TEXTURE_STR_Cartoon_CubeWorld_Texture]->Resource,
 		m_Textures[TEXTURE_STR_PolygonMinis_Texture_01_A]->Resource,
+		m_Textures[TEXTURE_STR_Polygon_Plane_Texture_02]->Resource,
+		m_Textures[TEXTURE_STR_Polygon_Plane_Texture_03]->Resource,
 		m_Textures[TEXTURE_STR_UI_TITLE_BACKGROUND]->Resource,
 		m_Textures[TEXTURE_STR_UI_TITLE_LOGO_TOYGROUND]->Resource,
 		m_Textures[TEXTURE_STR_UI_TITLE_PLAY_BUTTON_RELEASED]->Resource,
@@ -272,7 +278,7 @@ void GraphicsRenderer::BuildRootSignatures()
 
 	// Texture - 앞의 숫자가 테스쳐 개수
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 21, 1, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 23, 1, 0);
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[7];
 

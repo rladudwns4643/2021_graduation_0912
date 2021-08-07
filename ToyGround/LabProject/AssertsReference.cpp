@@ -120,6 +120,8 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 
 		// Gem
 		propTypeSet.insert(OBJECT_MESH_STR_GEM);
+		propTypeSet.insert(OBJECT_MESH_STR_BULLET_01);
+		propTypeSet.insert(OBJECT_MESH_STR_BULLET_02);
 
 		for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k)
 		{
@@ -531,6 +533,18 @@ void AssertsReference::CreateBB()
 		bb->Extents = XMFLOAT3(20.f, 40.f, 20.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_GEM] = std::move(bb);
 	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(20.f, 40.f, 20.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_BULLET_01] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(20.f, 40.f, 20.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_BULLET_02] = std::move(bb);
+	}
 
 	// Character
 	{
@@ -569,6 +583,20 @@ void AssertsReference::BuildMaterials()
 	PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
 	PolygonMinis_Texture_01_A->Roughness = 0.967734f;
+
+	auto Polygon_Plane_Texture_02 = std::make_unique<Material>();
+	Polygon_Plane_Texture_02->MatCBIndex = TEXTURE_INDEX_Polygon_Plane_Texture_02;
+	Polygon_Plane_Texture_02->DiffuseSrvHeapIndex = TEXTURE_INDEX_Polygon_Plane_Texture_02;
+	Polygon_Plane_Texture_02->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	Polygon_Plane_Texture_02->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
+	Polygon_Plane_Texture_02->Roughness = 0.967734f;
+
+	auto Polygon_Plane_Texture_03 = std::make_unique<Material>();
+	Polygon_Plane_Texture_03->MatCBIndex = TEXTURE_INDEX_Polygon_Plane_Texture_03;
+	Polygon_Plane_Texture_03->DiffuseSrvHeapIndex = TEXTURE_INDEX_Polygon_Plane_Texture_03;
+	Polygon_Plane_Texture_03->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	Polygon_Plane_Texture_03->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
+	Polygon_Plane_Texture_03->Roughness = 0.967734f;
 
 	auto TITLE_BACKGROUND = std::make_unique<Material>();
 	TITLE_BACKGROUND->MatCBIndex = TEXTURE_INDEX_UI_TITLE_BACKGROUND;
@@ -701,6 +729,8 @@ void AssertsReference::BuildMaterials()
 	m_Materials["SkyBox"] = std::move(sky);
 	m_Materials[TEXTURE_STR_Cartoon_CubeWorld_Texture] = std::move(Cartoon_CubeWorld_Texture);
 	m_Materials[TEXTURE_STR_PolygonMinis_Texture_01_A] = std::move(PolygonMinis_Texture_01_A);
+	m_Materials[TEXTURE_STR_Polygon_Plane_Texture_02] = std::move(Polygon_Plane_Texture_02);
+	m_Materials[TEXTURE_STR_Polygon_Plane_Texture_03] = std::move(Polygon_Plane_Texture_03);
 
 	m_Materials[TEXTURE_STR_UI_TITLE_BACKGROUND] = std::move(TITLE_BACKGROUND);
 	m_Materials[TEXTURE_STR_UI_TITLE_LOGO_TOYGROUND] = std::move(TITLE_LOGO_TOYGROUND);

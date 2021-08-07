@@ -152,6 +152,7 @@ void ApplicationContext::CreateGem()
 		gem->m_IsVisibleOnePassCheck = false;
 	}
 }
+
 void ApplicationContext::DisplayGem(int instID, float posX, float posY, float posZ)
 {
 	GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_GEM, std::to_string(OBJECT_START_INDEX_GEM + instID));
@@ -180,6 +181,100 @@ void ApplicationContext::HiddenGem(int instID, bool isVisible)
 	if (isVisible)
 	{
 		GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[OBJECT_MESH_STR_GEM], m_RItemsVec);
+	}
+}
+
+void ApplicationContext::CreateBullet()
+{
+	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	{
+		GameObject* Bullet = CreateObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + i));
+		Bullet->SetMesh(OBJECT_MESH_STR_BULLET_01, OBJECT_MESH_STR_BULLET_01);
+		Bullet->SetBBMesh(OBJECT_MESH_STR_BULLET_01);
+		Bullet->m_MaterialIndex = TEXTURE_INDEX_Polygon_Plane_Texture_03;
+		Bullet->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_BULLET_01]->Center;
+		Bullet->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_BULLET_01]->Extents;
+		Bullet->m_IsAABB = true;
+		Bullet->m_IsVisible = false;
+		Bullet->m_IsVisibleOnePassCheck = false;
+	}
+	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	{
+		GameObject* Bullet = CreateObject<GameObject>(OBJECT_MESH_STR_BULLET_02, std::to_string(OBJECT_START_INDEX_BULLET_02 + i));
+		Bullet->SetMesh(OBJECT_MESH_STR_BULLET_02, OBJECT_MESH_STR_BULLET_02);
+		Bullet->SetBBMesh(OBJECT_MESH_STR_BULLET_02);
+		Bullet->m_MaterialIndex = TEXTURE_INDEX_Polygon_Plane_Texture_02;
+		Bullet->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_BULLET_02]->Center;
+		Bullet->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_BULLET_02]->Extents;
+		Bullet->m_IsAABB = true;
+		Bullet->m_IsVisible = false;
+		Bullet->m_IsVisibleOnePassCheck = false;
+	}
+}
+
+void ApplicationContext::DisplayBullet(int instID, float posX, float posY, float posZ, int bulletNum)
+{
+	if (bulletNum == 1)
+	{
+		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + instID));
+		if (!obj) return;
+
+		obj->m_IsVisible = true;
+		obj->m_IsVisibleOnePassCheck = true;
+		obj->InitializeTransform();
+		obj->Scale(1, 1, 1);
+		obj->SetPosition(posX, posY, posZ);
+	}
+	else
+	{
+		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_02, std::to_string(OBJECT_START_INDEX_BULLET_02 + instID));
+		if (!obj) return;
+
+		obj->m_IsVisible = true;
+		obj->m_IsVisibleOnePassCheck = true;
+		obj->InitializeTransform();
+		obj->Scale(1, 1, 1);
+		obj->SetPosition(posX, posY, posZ);
+	}
+}
+
+void ApplicationContext::HiddenBullet(int instID, bool isVisible, int bulletNum)
+{
+	if (bulletNum == 1)
+	{
+		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + instID));
+		if (!obj) {
+			cout << "HiddenBullet: cant find obj" << endl;
+			return;
+		}
+
+		ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+		ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+		obj->m_IsVisible = isVisible;
+		obj->m_IsVisibleOnePassCheck = isVisible;
+
+		if (isVisible)
+		{
+			GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[OBJECT_MESH_STR_BULLET_01], m_RItemsVec);
+		}
+	}
+	else
+	{
+		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_02, std::to_string(OBJECT_START_INDEX_BULLET_02 + instID));
+		if (!obj) {
+			cout << "HiddenBullet: cant find obj" << endl;
+			return;
+		}
+
+		ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+		ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+		obj->m_IsVisible = isVisible;
+		obj->m_IsVisibleOnePassCheck = isVisible;
+
+		if (isVisible)
+		{
+			GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[OBJECT_MESH_STR_BULLET_02], m_RItemsVec);
+		}
 	}
 }
 

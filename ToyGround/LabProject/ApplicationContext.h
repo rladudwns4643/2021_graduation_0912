@@ -69,6 +69,10 @@ public:
 	void DisplayGem(int instID, float posX, float posY, float posZ);
 	void HiddenGem(int instID, bool isVisible = false);
 
+	void CreateBullet();
+	void DisplayBullet(int instID, float posX, float posY, float posZ, int bulletNum = 1);
+	void HiddenBullet(int instID, bool isVisible = false, int bulletNum = 1);
+
 	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
 	void HiddenProps(std::string mapName);
 

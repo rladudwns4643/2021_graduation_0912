@@ -172,6 +172,9 @@ void GameplayScene::Initialize()
 
 	// 보석 생성
 	AppContext->CreateGem();
+
+	// 총알 생성
+	AppContext->CreateBullet();
 }
 
 void GameplayScene::OnResize()
@@ -246,6 +249,13 @@ bool GameplayScene::Enter()
 		AppContext->HiddenGem(i);
 	}
 
+	// 총알 초기화
+	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	{
+		AppContext->HiddenBullet(i, false, 1);
+		AppContext->HiddenBullet(i, false, 2);
+	}
+
 	return false;
 }
 
@@ -266,6 +276,13 @@ void GameplayScene::Exit()
 	{
 		AppContext->HiddenGem(i, true);
 	}
+
+	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	{
+		AppContext->HiddenBullet(i, false, 1);
+		AppContext->HiddenBullet(i, false, 2);
+	}
+
 	cout << "===========================================" << endl << endl;
 }
 
@@ -300,6 +317,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 	// Gem
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
 
+	// Bullet
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_01], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_02], AppContext->m_RItemsVec);
+
 	// UI
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
@@ -322,8 +343,13 @@ void GameplayScene::Render()
 	{
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
 	}
+
 	// Gem
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
+
+	// Bullet
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_01], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_02], AppContext->m_RItemsVec);
 	
 	
 	// Charater
@@ -391,7 +417,4 @@ void GameplayScene::RenderText()
 	wstring TestHPString;
 	TestHPString = L"4000";
 	GraphicsContext::GetApp()->DrawD2DText(TestHPString, UIHealth.size.x / 27.f, UIHealth.size.y * 1.3f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
-
-
-
 }
