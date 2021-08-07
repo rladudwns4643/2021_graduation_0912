@@ -214,6 +214,8 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera, Light* light)
 	XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
 	XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
 
+	XMMATRIX shadowTransform = XMLoadFloat4x4(&mShadowTransform);
+
 	XMStoreFloat4x4(&mMainPassCB.View, XMMatrixTranspose(view));
 	XMStoreFloat4x4(&mMainPassCB.InvView, XMMatrixTranspose(invView));
 	XMStoreFloat4x4(&mMainPassCB.Proj, XMMatrixTranspose(proj));
@@ -221,6 +223,7 @@ void GraphicsContext::UpdateMainPassCB(Camera& camera, Light* light)
 	XMStoreFloat4x4(&mMainPassCB.ViewProj, XMMatrixTranspose(viewProj));
 	XMStoreFloat4x4(&mMainPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
 	XMStoreFloat4x4(&mMainPassCB.Ortho, XMMatrixTranspose(ortho));
+	XMStoreFloat4x4(&mMainPassCB.ShadowTransform, XMMatrixTranspose(shadowTransform));
 
 	mMainPassCB.EyePosW = camera.GetPosition3f();
 	mMainPassCB.RenderTargetSize = XMFLOAT2((float)Core::g_DisplayWidth, (float)Core::g_DisplayHeight);
@@ -536,3 +539,112 @@ void GraphicsContext::DrawD2DText(const wstring wtext, float posX, float posY, f
 	);
 }
 
+void GraphicsContext::UpdateShadowPassCB()
+{
+	XMMATRIX view = XMLoadFloat4x4(&mLightView);
+	XMMATRIX proj = XMLoadFloat4x4(&mLightProj);
+
+	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
+	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
+	XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
+	XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
+
+	UINT w = GraphicsRenderer::GetApp()->mShadowMap->Width();
+	UINT h = GraphicsRenderer::GetApp()->mShadowMap->Height();
+
+	XMStoreFloat4x4(&mShadowPassCB.View, XMMatrixTranspose(view));
+	XMStoreFloat4x4(&mShadowPassCB.InvView, XMMatrixTranspose(invView));
+	XMStoreFloat4x4(&mShadowPassCB.Proj, XMMatrixTranspose(proj));
+	XMStoreFloat4x4(&mShadowPassCB.InvProj, XMMatrixTranspose(invProj));
+	XMStoreFloat4x4(&mShadowPassCB.ViewProj, XMMatrixTranspose(viewProj));
+	XMStoreFloat4x4(&mShadowPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
+	mShadowPassCB.EyePosW = mLightPosW;
+	mShadowPassCB.RenderTargetSize = XMFLOAT2((float)w, (float)h);
+	mShadowPassCB.InvRenderTargetSize = XMFLOAT2(1.0f / w, 1.0f / h);
+	mShadowPassCB.NearZ = mLightNearZ;
+	mShadowPassCB.FarZ = mLightFarZ;
+
+	auto currPassCB = PassCB.get();
+	currPassCB->CopyData(1, mShadowPassCB);
+}
+
+void GraphicsContext::UpdateShadowTransform(Light* light, DirectX::BoundingSphere sceneBounds)
+{
+	// Only the first "main" light casts a shadow.
+	XMVECTOR lightDir = DirectX::XMLoadFloat3(&light->Direction);
+	XMVECTOR lightPos = -2.0f * sceneBounds.Radius * lightDir;
+	XMVECTOR targetPos = DirectX::XMLoadFloat3(&sceneBounds.Center);
+	XMVECTOR lightUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	XMMATRIX lightView = DirectX::XMMatrixLookAtLH(lightPos, targetPos, lightUp);
+
+	XMStoreFloat3(&mLightPosW, lightPos);
+
+	// Transform bounding sphere to light space.
+	XMFLOAT3 sphereCenterLS;
+	XMStoreFloat3(&sphereCenterLS, XMVector3TransformCoord(targetPos, lightView));
+
+	// Ortho frustum in light space encloses scene.
+	float l = sphereCenterLS.x - sceneBounds.Radius;
+	float b = sphereCenterLS.y - sceneBounds.Radius;
+	float n = sphereCenterLS.z - sceneBounds.Radius;
+	float r = sphereCenterLS.x + sceneBounds.Radius;
+	float t = sphereCenterLS.y + sceneBounds.Radius;
+	float f = sphereCenterLS.z + sceneBounds.Radius;
+
+	mLightNearZ = n;
+	mLightFarZ = f;
+	XMMATRIX lightProj = XMMatrixOrthographicOffCenterLH(l, r, b, t, n, f);
+
+	// Transform NDC space [-1,+1]^2 to texture space [0,1]^2
+	XMMATRIX T(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, -0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.0f, 1.0f);
+
+	XMMATRIX S = lightView * lightProj * T;
+	DirectX::XMStoreFloat4x4(&mLightView, lightView);
+	XMStoreFloat4x4(&mLightProj, lightProj);
+	XMStoreFloat4x4(&mShadowTransform, S);
+}
+
+void GraphicsContext::SetResourceShadowPassCB()
+{
+	Core::g_CommandList->RSSetViewports(1, &GraphicsRenderer::GetApp()->mShadowMap->Viewport());
+	Core::g_CommandList->RSSetScissorRects(1, &GraphicsRenderer::GetApp()->mShadowMap->ScissorRect());
+
+	// Change to DEPTH_WRITE.
+	Core::g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GraphicsRenderer::GetApp()->mShadowMap->Resource(),
+		D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE));
+
+	UINT passCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ShaderResource::PassConstants));
+
+	// Clear the back buffer and depth buffer.
+	Core::g_CommandList->ClearDepthStencilView(GraphicsRenderer::GetApp()->mShadowMap->Dsv(),
+		D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+	// Specify the buffers we are going to render to.
+	Core::g_CommandList->OMSetRenderTargets(0, nullptr, false, &GraphicsRenderer::GetApp()->mShadowMap->Dsv());
+
+	// Bind the pass constant buffer for the shadow map pass.
+	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
+	D3D12_GPU_VIRTUAL_ADDRESS passCBAddress = passCB->GetGPUVirtualAddress() + 1 * passCBByteSize;
+	Core::g_CommandList->SetGraphicsRootConstantBufferView(2, passCBAddress);
+}
+
+void GraphicsContext::ShadowTransitionResourceBarrier()
+{
+	// Change back to GENERIC_READ so we can read the texture in a shader.
+	Core::g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GraphicsRenderer::GetApp()->mShadowMap->Resource(),
+		D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ));
+}
+
+void GraphicsContext::OnBlurEffect(bool onoff)
+{
+	GraphicsRenderer::GetApp()->m_SwitchBlur = onoff;
+}
+
+void GraphicsContext::OnResizeBlur()
+{
+	GraphicsRenderer::GetApp()->ExecuteResizeBlur();
+}

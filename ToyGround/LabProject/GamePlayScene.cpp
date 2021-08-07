@@ -162,7 +162,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateProps(MAP_STR_GAME_MAP);
 
 	// UI 생성
-	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM, TEXTURE_INDEX_UI_GAMEPLAY_AIM);
+	AppContext->CreateUI2D(OBJECT_TYPE_AIM, OBJECT_NAME_GAMEPLAY_AIM, TEXTURE_INDEX_UI_GAMEPLAY_AIM);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE, TEXTURE_INDEX_UI_GAMEPLAY_PLAYER1_SCORE);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE, TEXTURE_INDEX_UI_GAMEPLAY_PLAYER2_SCORE);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER, TEXTURE_INDEX_UI_GAMEPLAY_TIMER);
@@ -179,6 +179,7 @@ void GameplayScene::Initialize()
 
 void GameplayScene::OnResize()
 {
+	GraphicsContext::GetApp()->OnResizeBlur();
 }
 
 bool GameplayScene::Enter()
@@ -232,7 +233,7 @@ bool GameplayScene::Enter()
 	m_Users[m_PlayerID]->SetController();
 
 	// UI 세팅
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(0.f, -80.f), XMFLOAT2(39, 39), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_AIM, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(-60.f, -80.f), XMFLOAT2(39, 39), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE, XMFLOAT2(-730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE, XMFLOAT2(730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER, XMFLOAT2(0.f, 450.f), XMFLOAT2(143, 47), TextAlignType::Center, -1, true);
@@ -264,7 +265,7 @@ void GameplayScene::Exit()
 	m_Users.clear();
 	m_player_in_room.clear();
 
-	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_AIM);
+	AppContext->HiddenUI2D(OBJECT_TYPE_AIM, OBJECT_NAME_GAMEPLAY_AIM);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER);
@@ -324,6 +325,12 @@ void GameplayScene::Update(const float& fDeltaTime)
 	// UI
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec, false);
+
+	// Shadow
+	GraphicsContext::GetApp()->UpdateShadowTransform(TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
+	GraphicsContext::GetApp()->UpdateShadowPassCB();
 
 	// Materials
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
@@ -373,20 +380,24 @@ void GameplayScene::Render()
 		}
 	}
 	
+	bool AimCheck = false;
 	// Attack_Box
 	for (auto& p : m_Users)
 	{
 		if (!p.second) continue;
 		if (p.second->m_IsAiming)
 		{
+			AimCheck = true;
 			GraphicsContext::GetApp()->SetPipelineState(Graphics::g_OBBoxPSO.Get());
 			GraphicsContext::GetApp()->DrawBoundingBox(AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX], AppContext->m_RItemsVec, false);
 		}
 	}
-
+	
 	// UI
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
+	if(!AimCheck)
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec, false);
 }
 
 void GameplayScene::ChangeFreeCamera()
@@ -417,4 +428,37 @@ void GameplayScene::RenderText()
 	wstring TestHPString;
 	TestHPString = L"4000";
 	GraphicsContext::GetApp()->DrawD2DText(TestHPString, UIHealth.size.x / 27.f, UIHealth.size.y * 1.3f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+}
+
+void GameplayScene::WriteShadow()
+{
+	//
+	// Shadow map pass.
+	//
+	GraphicsContext::GetApp()->SetResourceShadowPassCB();
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ShadowOpaquePSO.Get());
+
+	// Shadow Props
+	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
+	{
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+	}
+
+	// Gem
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
+
+	// Bullet
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_01], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_02], AppContext->m_RItemsVec);
+
+	// Shadow Characters
+	for (auto& p : m_Users)
+	{
+		if (!p.second) continue;
+
+		GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkinnedShadowOpaquePSO.Get());
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[p.second->GetMeshName()], AppContext->m_RItemsVec);
+	}
+
+	GraphicsContext::GetApp()->ShadowTransitionResourceBarrier();
 }

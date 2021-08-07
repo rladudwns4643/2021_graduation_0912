@@ -83,6 +83,12 @@
     <Filter Include="Scene\Title">
       <UniqueIdentifier>{51b3ea27-5758-43dd-b191-e5e791f0c99e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\Shadow">
+      <UniqueIdentifier>{22c3ca09-107a-4a02-8d55-036097b96aa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Blur">
+      <UniqueIdentifier>{b762dac1-9fbd-4c76-ab31-009bb2f1b103}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Service.h">
@@ -245,6 +251,12 @@
     <ClInclude Include="Picking.h">
       <Filter>GameObject\UI</Filter>
     </ClInclude>
+    <ClInclude Include="ShadowMap.h">
+      <Filter>Resource\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurFilter.h">
+      <Filter>Resource\Blur</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -395,6 +407,12 @@
     <ClCompile Include="Picking.cpp">
       <Filter>GameObject\UI</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowMap.cpp">
+      <Filter>Resource\Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="BlurFilter.cpp">
+      <Filter>Resource\Blur</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\BBox.hlsl">
@@ -413,6 +431,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="UI.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Shadows.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Blur.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

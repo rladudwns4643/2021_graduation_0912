@@ -62,6 +62,15 @@ public:
 
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
 
+	void UpdateShadowPassCB();
+	void UpdateShadowTransform(Light* light, DirectX::BoundingSphere sceneBounds);
+
+	void SetResourceShadowPassCB();
+	void ShadowTransitionResourceBarrier();
+
+	void OnBlurEffect(bool onoff);
+	void OnResizeBlur();
+
 	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool isCulling = true, int zLayer = -1, bool isFrustum = true);
 	void DrawBoundingBox(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool drawAABB = true, int zLayer = -1, bool isFrustum = true);
 	void DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const std::vector<GameObject*>& rItems);
@@ -96,6 +105,7 @@ public:
 
 public:
 	ShaderResource::PassConstants mMainPassCB;
+	ShaderResource::PassConstants mShadowPassCB;
 	ShaderResource::UIPassConstants mUIPassCB;
 
 	std::unique_ptr<UploadBuffer<ShaderResource::PassConstants>>	PassCB = nullptr;
@@ -114,6 +124,7 @@ private:
 	XMFLOAT3 mLightPosW;
 	XMFLOAT4X4 mLightView = MathHelper::Identity4x4();
 	XMFLOAT4X4 mLightProj = MathHelper::Identity4x4();
+	XMFLOAT4X4 mShadowTransform = MathHelper::Identity4x4();
 
 	float mLightRotationAngle = 0.0f;
 	XMFLOAT3 mRotatedLightDirections;

@@ -2,6 +2,8 @@
 #include "Singleton.h"
 #include "Camera.h"
 #include "UploadBuffer.h"
+#include "ShadowMap.h"
+#include "BlurFilter.h"
 
 class GameObject;
 class GameTimer;
@@ -36,6 +38,10 @@ public:
 public:
 	void SetGraphicsDescriptorHeap();
 	void RenderGraphics();
+	void RenderGraphicsShadow();
+
+	void ExecuteBlurEffects();
+	void ExecuteResizeBlur();
 
 private:
 	void LoadTextures();
@@ -59,11 +65,18 @@ public:
 
 public:
 	/* GpuResource */
+	std::unique_ptr<ShadowMap> mShadowMap;
+	std::unique_ptr<BlurFilter> mBlurFilter;
 	std::unordered_map<std::string, std::unique_ptr<Texture>> m_Textures;
 
 	UINT mSkyTexHeapIndex = 0;
+	UINT mShadowMapHeapIndex = 0;
+	UINT mBlurHeapIndex = 0;
 
 	// Descriptorheap
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_SrvDescriptorHeap = nullptr;
+
+public:
+	bool	m_SwitchBlur = false;
 };
 

@@ -196,6 +196,9 @@ bool GameCore::UpdateCore(IGameApp& game)
 
 		m_GraphicsRenderer->SetGraphicsDescriptorHeap();
 
+		m_GraphicsRenderer->RenderGraphicsShadow();
+		game.WriteShadow();
+
 		g_CommandList->RSSetViewports(1, &mScreenViewport);
 		g_CommandList->RSSetScissorRects(1, &mScissorRect);
 
@@ -211,6 +214,7 @@ bool GameCore::UpdateCore(IGameApp& game)
 
 		m_GraphicsRenderer->RenderGraphics();
 		game.RenderScene();
+		m_GraphicsRenderer->ExecuteBlurEffects();
 
 		g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));

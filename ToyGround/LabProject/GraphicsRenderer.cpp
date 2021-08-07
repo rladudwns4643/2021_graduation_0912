@@ -10,12 +10,17 @@
 namespace Graphics
 {
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpaquePSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OpacityPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_AABBoxPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_OBBoxPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkyPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_HPPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ShadowOpaquePSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedShadowOpaquePSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_HorzBlurPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_VertBlurPSO;
 }
 
 using namespace Core;
@@ -23,6 +28,10 @@ using namespace Graphics;
 
 void GraphicsRenderer::Initialize()
 {
+	mShadowMap = std::make_unique<ShadowMap>(Core::g_Device.Get(), 3500, 3500);
+	mBlurFilter = std::make_unique<BlurFilter>(Core::g_Device.Get(),
+		Core::g_DisplayWidth, Core::g_DisplayHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
+
 	LoadTextures();
 	BuildDescriptorHeaps();
 
@@ -53,13 +62,44 @@ void GraphicsRenderer::RenderGraphics()
 	auto passCB = GraphicsContext::GetApp()->PassCB->Resource();
 	g_CommandList->SetGraphicsRootConstantBufferView(2, passCB->GetGPUVirtualAddress());
 	auto uiPassCB = GraphicsContext::GetApp()->UIPassCB->Resource();
-	g_CommandList->SetGraphicsRootConstantBufferView(6, uiPassCB->GetGPUVirtualAddress());
+	g_CommandList->SetGraphicsRootConstantBufferView(7, uiPassCB->GetGPUVirtualAddress());
 
 	g_CommandList->SetGraphicsRootDescriptorTable(4, m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE skyTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 	skyTexDescriptor.Offset(mSkyTexHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 	g_CommandList->SetGraphicsRootDescriptorTable(3, skyTexDescriptor);
+}
+
+void GraphicsRenderer::RenderGraphicsShadow()
+{
+	g_CommandList->SetGraphicsRootSignature(m_RenderRS.Get());
+
+	auto matBuffer = GraphicsContext::GetApp()->MaterialBuffer->Resource();
+	g_CommandList->SetGraphicsRootShaderResourceView(1, matBuffer->GetGPUVirtualAddress());
+
+	CD3DX12_GPU_DESCRIPTOR_HANDLE shadowTexDescriptor(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	shadowTexDescriptor.Offset(mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize);
+	g_CommandList->SetGraphicsRootDescriptorTable(6, shadowTexDescriptor);
+}
+
+void GraphicsRenderer::ExecuteBlurEffects()
+{
+	if (m_SwitchBlur) {
+		mBlurFilter->Execute(Core::g_CommandList.Get(), m_PostProcessRS.Get(),
+			g_HorzBlurPSO.Get(), g_VertBlurPSO.Get(), GameCore::GetApp()->CurrentBackBuffer(), 4);
+
+		// Prepare to copy blurred output to the back buffer.
+		Core::g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GameCore::GetApp()->CurrentBackBuffer(),
+			D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+
+		Core::g_CommandList->CopyResource(GameCore::GetApp()->CurrentBackBuffer(), mBlurFilter->Output());
+	}
+}
+
+void GraphicsRenderer::ExecuteResizeBlur()
+{
+	mBlurFilter->OnResize(Core::g_DisplayWidth, Core::g_DisplayHeight);
 }
 
 void GraphicsRenderer::LoadTextures()
@@ -134,12 +174,14 @@ void GraphicsRenderer::LoadTextures()
 void GraphicsRenderer::BuildDescriptorHeaps()
 {
 	constexpr int skyboxDescriptorCount = 1;
+	constexpr int shadowMapDescriptorCount = 1;
+	constexpr int blurDescriptorCount = 4;
 
 	//
 	// Create the SRV heap.
 	//
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = m_Textures.size() + skyboxDescriptorCount;
+	srvHeapDesc.NumDescriptors = m_Textures.size() + skyboxDescriptorCount + shadowMapDescriptorCount + blurDescriptorCount;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(Core::g_Device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_SrvDescriptorHeap)));
@@ -200,15 +242,34 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		srvDesc.Texture2D.MipLevels = tex2DList[i]->GetDesc().MipLevels;
 		Core::g_Device->CreateShaderResourceView(tex2DList[i].Get(), &srvDesc, hDescriptor);
 	}
+
 	mSkyTexHeapIndex = 0;
+	mShadowMapHeapIndex = (UINT)tex2DList.size() + 1;
+	mBlurHeapIndex = mShadowMapHeapIndex + 1;
 
 	auto srvCpuStart = m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	auto srvGpuStart = m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
 	auto dsvCpuStart = GameCore::GetApp()->mDsvHeap->GetCPUDescriptorHandleForHeapStart();
+
+	mShadowMap->BuildDescriptors(
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(srvCpuStart, mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(srvGpuStart, mShadowMapHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(dsvCpuStart, 1, GameCore::GetApp()->mDsvDescriptorSize));
+
+	mBlurFilter->BuildDescriptors(
+		CD3DX12_CPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(m_SrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart(), mBlurHeapIndex, GameCore::GetApp()->mCbvSrvUavDescriptorSize),
+		GameCore::GetApp()->mCbvSrvUavDescriptorSize);
 }
 
 void GraphicsRenderer::BuildShaderAndInputLayout()
 {
+	const D3D_SHADER_MACRO alphaTestDefines[] =
+	{
+		"ALPHA_TEST", "1",
+		NULL, NULL
+	};
+
 	const D3D_SHADER_MACRO skinnedDefines[] =
 	{
 		"SKINNED", "1",
@@ -235,6 +296,14 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	m_Shaders["uiVS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", nullptr, "VS", "vs_5_1");
 	m_Shaders["uiPS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", nullptr, "PS", "ps_5_1");
 	m_Shaders["hpPS"] = d3dUtil::CompileShader(L"Shaders\\UI.hlsl", hpDefines, "PS", "ps_5_1");
+
+	m_Shaders["shadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["skinnedShadowVS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", skinnedDefines, "VS", "vs_5_1");
+	m_Shaders["shadowOpaquePS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", nullptr, "PS", "ps_5_1");
+	m_Shaders["shadowAlphaTestedPS"] = d3dUtil::CompileShader(L"Shaders\\Shadows.hlsl", alphaTestDefines, "PS", "ps_5_1");
+
+	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_0");
+	m_Shaders["vertBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "VertBlurCS", "cs_5_0");
 
 	m_BBox_InputLayout =
 	{
@@ -278,9 +347,13 @@ void GraphicsRenderer::BuildRootSignatures()
 
 	// Texture - 앞의 숫자가 테스쳐 개수
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 23, 1, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 23, 2, 0);
 
-	CD3DX12_ROOT_PARAMETER slotRootParameter[7];
+	// Shadow
+	CD3DX12_DESCRIPTOR_RANGE texTable2;
+	texTable2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1, 0);
+
+	CD3DX12_ROOT_PARAMETER slotRootParameter[8];
 
 	// 성능 팁 : 사용빈도가 높은것에서 낮은 것의 순서로 나열한다.
 	/* Shader Register*/
@@ -297,12 +370,13 @@ void GraphicsRenderer::BuildRootSignatures()
 	slotRootParameter[3].InitAsDescriptorTable(1, &texTable0, D3D12_SHADER_VISIBILITY_PIXEL); // sky 
 	slotRootParameter[4].InitAsDescriptorTable(1, &texTable1, D3D12_SHADER_VISIBILITY_PIXEL); // Texture
 	slotRootParameter[5].InitAsConstantBufferView(1); // bones
-	slotRootParameter[6].InitAsConstantBufferView(2); // uiPassCBParams
+	slotRootParameter[6].InitAsDescriptorTable(1, &texTable2, D3D12_SHADER_VISIBILITY_PIXEL); // shadow
+	slotRootParameter[7].InitAsConstantBufferView(2); // uiPassCBParams
 
 	auto staticSamplers = GetStaticSamplers();
 
 	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(7, slotRootParameter,
+	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(8, slotRootParameter,
 		(UINT)staticSamplers.size(), staticSamplers.data(),
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -413,6 +487,13 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	blendDesc.AlphaToCoverageEnable = true;
 
 	//
+	// PSO for opacity objects.
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC opacityPsoDesc = opaquePsoDesc;
+	opacityPsoDesc.BlendState = blendDesc;
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&opacityPsoDesc, IID_PPV_ARGS(&g_OpacityPSO)));
+
+	//
 	// PSO for AABondingBox pass.
 	//
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC AABBoxPsoDesc = opaquePsoDesc;
@@ -509,6 +590,70 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 		m_Shaders["skyPS"]->GetBufferSize()
 	};
 	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skyPsoDesc, IID_PPV_ARGS(&g_SkyPSO)));
+
+	//
+	// PSO for shadow map pass.
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC smapPsoDesc = opaquePsoDesc;
+	smapPsoDesc.RasterizerState.DepthBias = 10000;
+	smapPsoDesc.RasterizerState.DepthBiasClamp = 0.0f;
+	smapPsoDesc.RasterizerState.SlopeScaledDepthBias = 1.0f;
+	smapPsoDesc.pRootSignature = m_RenderRS.Get();
+	smapPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["shadowVS"]->GetBufferPointer()),
+		m_Shaders["shadowVS"]->GetBufferSize()
+	};
+	smapPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["shadowOpaquePS"]->GetBufferPointer()),
+		m_Shaders["shadowOpaquePS"]->GetBufferSize()
+	};
+
+	// Shadow map pass does not have a render target.
+	smapPsoDesc.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
+	smapPsoDesc.NumRenderTargets = 0;
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&smapPsoDesc, IID_PPV_ARGS(&g_ShadowOpaquePSO)));
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC skinnedSmapPsoDesc = smapPsoDesc;
+	skinnedSmapPsoDesc.InputLayout = { m_Skinned_InputLayout.data(), (UINT)m_Skinned_InputLayout.size() };
+	skinnedSmapPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["skinnedShadowVS"]->GetBufferPointer()),
+		m_Shaders["skinnedShadowVS"]->GetBufferSize()
+	};
+	skinnedSmapPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["shadowOpaquePS"]->GetBufferPointer()),
+		m_Shaders["shadowOpaquePS"]->GetBufferSize()
+	};
+	ThrowIfFailed(g_Device->CreateGraphicsPipelineState(&skinnedSmapPsoDesc, IID_PPV_ARGS(&g_SkinnedShadowOpaquePSO)));
+
+	//
+	// PSO for horizontal blur
+	//
+	D3D12_COMPUTE_PIPELINE_STATE_DESC horzBlurPSO = {};
+	horzBlurPSO.pRootSignature = m_PostProcessRS.Get();
+	horzBlurPSO.CS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["horzBlurCS"]->GetBufferPointer()),
+		m_Shaders["horzBlurCS"]->GetBufferSize()
+	};
+	horzBlurPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	ThrowIfFailed(Core::g_Device->CreateComputePipelineState(&horzBlurPSO, IID_PPV_ARGS(&g_HorzBlurPSO)));
+
+	//
+	// PSO for vertical blur
+	//
+	D3D12_COMPUTE_PIPELINE_STATE_DESC vertBlurPSO = {};
+	vertBlurPSO.pRootSignature = m_PostProcessRS.Get();
+	vertBlurPSO.CS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["vertBlurCS"]->GetBufferPointer()),
+		m_Shaders["vertBlurCS"]->GetBufferSize()
+	};
+	vertBlurPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+	ThrowIfFailed(Core::g_Device->CreateComputePipelineState(&vertBlurPSO, IID_PPV_ARGS(&g_VertBlurPSO)));
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GraphicsRenderer::GetStaticSamplers()

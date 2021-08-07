@@ -16,5 +16,7 @@ public:
 
 	virtual void RenderText(void) {};
 
+	virtual void WriteShadow(void) {};
+
 	void		Exit();
 };

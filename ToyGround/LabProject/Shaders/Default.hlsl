@@ -12,6 +12,7 @@ struct VertexIn
     float2 TexC    : TEXCOORD;
     float3 TangentL : TANGENT;
     float3 BinormalL : BINORMAL;
+
 #ifdef SKINNED
     float3 BoneWeights : WEIGHTS;
     uint4 BoneIndices  : BONEINDICES;
@@ -21,6 +22,7 @@ struct VertexIn
 struct VertexOut
 {
     float4 PosH    : SV_POSITION;
+    float4 ShadowPosH : POSITION0;
     float3 PosW    : POSITION1;
     float3 NormalW : NORMAL;
     float2 TexC    : TEXCOORD;
@@ -60,6 +62,9 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
 
     for (int i = 0; i < 4; ++i)
     {
+        // 변환들에 비균등 비례가 전혀 없다고 가정한다(따라서
+        // 법선 변환 시 역전치 행렬을 사용할 필요가 없다.)
+
         posL += weights[i] * mul(float4(vin.PosL, 1.0f), gBoneTransforms[vin.BoneIndices[i]]).xyz;
         normalL += weights[i] * mul(vin.NormalL, (float3x3) gBoneTransforms[vin.BoneIndices[i]]);
         tangentL += weights[i] * mul(vin.TangentL.xyz, (float3x3) gBoneTransforms[vin.BoneIndices[i]]);
@@ -89,6 +94,9 @@ VertexOut VS(VertexIn vin, uint instanceID : SV_InstanceID)
     float4 texC = mul(float4(vin.TexC, 0.0f, 1.0f), texTransform);
     vout.TexC = mul(texC, matData.MatTransform).xy;
 
+    // Generate projective tex-coords to project shadow map onto scene.
+    vout.ShadowPosH = mul(posW, gShadowTransform);
+
     return vout;
 }
 
@@ -113,7 +121,9 @@ float4 PS(VertexOut pin) : SV_Target
     // Light terms.
     float4 ambient = gAmbientLight * diffuseAlbedo;
 
+    // Only the first light casts a shadow.
     float3 shadowFactor = float3(1.0f, 1.0f, 1.0f);
+    shadowFactor[0] = CalcShadowFactor(pin.ShadowPosH);
 
     const float shininess = 1.0f - roughness;
     Material mat = { diffuseAlbedo, fresnelR0, shininess };
