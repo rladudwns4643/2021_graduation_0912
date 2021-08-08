@@ -31,7 +31,7 @@ void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 {
 	m_InstanceBuffers[objInfo->m_Type] = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), objInfo->m_InstanceCount, false);
 }
-void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isCulling, bool isFrustum)
+void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
 {
 	if (!objInfo) return;
 
@@ -46,8 +46,10 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
 			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 #ifdef FRUSTUM_CULLMODE
-			if (isCulling && isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX
-				&& !TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+			if (rItems[i.second]->m_IsCulling)
+			{
+				if (!TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+			}
 #endif
 			ShaderResource::InstanceData data;
 			DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
@@ -274,7 +276,7 @@ void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance
 	m_SkinnedCBs[skinnedCBIndex]->CopyData(0, skinnedConstants);
 }
 
-void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool isCulling, int zLayer, bool isFrustum)
+void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer)
 {
 	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
 
@@ -285,7 +287,7 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 		if (ri->m_IsVisible && ri->m_ZLayer == zLayer)
 		{
 #ifdef FRUSTUM_CULLMODE
-			if (isCulling && isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX)
+			if (rItems[i.second]->m_IsCulling)
 			{
 				XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
 				XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
@@ -310,15 +312,13 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 				Core::g_CommandList->SetGraphicsRootConstantBufferView(5, 0);
 			}
 
-			// instanceCount = info.size
-			// info = instance world 행렬을 갖고있는 맵
 			Core::g_CommandList->DrawIndexedInstanced(ri->m_IndexCount, info.size(), ri->m_StartIndexLocation, ri->m_BaseVertexLocation, 0);
 			ri->m_IsVisible = ri->m_IsVisibleOnePassCheck;
 		}
 	}
 }
 
-void GraphicsContext::DrawBoundingBox(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool drawAABB, int zLayer, bool isFrustum)
+void GraphicsContext::DrawBoundingBox(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool drawAABB, int zLayer)
 {
 	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
 	// Draw AABB
@@ -330,14 +330,13 @@ void GraphicsContext::DrawBoundingBox(ObjectInfo* objInfo, const std::vector<Gam
 			if (ri->m_ZLayer == zLayer)
 			{
 #ifdef FRUSTUM_CULLMODE
-				if (isFrustum && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_21 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_WALL_33 && rItems[i.second]->GetMeshName() != OBJECT_MESH_STR_ATTACK_BOX)
+				if (rItems[i.second]->m_IsCulling)
 				{
 					XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
 					XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 					if (!TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
 				}
 #endif
-				//ri->m_Bb->DrawArgs[ri->GetMeshName()].BaseVertexLocation
 				Core::g_CommandList->IASetVertexBuffers(0, 1, &ri->m_Bb->VertexBufferView());
 				Core::g_CommandList->IASetIndexBuffer(&ri->m_Bb->IndexBufferView());
 				Core::g_CommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -345,8 +344,6 @@ void GraphicsContext::DrawBoundingBox(ObjectInfo* objInfo, const std::vector<Gam
 				auto instanceBuffer = m_InstanceBuffers[ri->GetMeshName()]->Resource();
 				Core::g_CommandList->SetGraphicsRootShaderResourceView(0, instanceBuffer->GetGPUVirtualAddress());
 
-				// instanceCount = info.size
-				// info = instance world 행렬을 갖고있는 맵
 				Core::g_CommandList->DrawIndexedInstanced(24, info.size(), 0, ri->m_BaseVertexLocationBb, 0);
 			}
 		}

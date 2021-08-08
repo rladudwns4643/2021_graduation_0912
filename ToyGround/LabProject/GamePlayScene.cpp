@@ -329,9 +329,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 
 	// UI
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec, false);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec);
 
 	// Shadow
 	GraphicsContext::GetApp()->UpdateShadowTransform(TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
@@ -400,9 +400,9 @@ void GameplayScene::Render()
 
 	// UI
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, false);
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
 	if(!AimCheck)
-		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec, false);
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec);
 }
 
 void GameplayScene::ChangeFreeCamera()

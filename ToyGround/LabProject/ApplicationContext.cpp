@@ -88,6 +88,7 @@ void ApplicationContext::CreateProps(std::string mapName)
 		item->m_IsAABB = true;
 		item->m_IsVisible = false;
 		item->m_IsVisibleOnePassCheck = false;
+		item->m_IsCulling = itemInfo.isCulling;
 		if (itemInfo.meshName == OBJECT_MESH_STR_ATTACK_BOX)
 			item->m_IsAABB = false;
 	}
@@ -117,6 +118,7 @@ void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName,
 	item->SetOriginMaterial(matIndex);
 	item->m_IsVisible = false;
 	item->m_IsVisibleOnePassCheck = false;
+	item->m_IsCulling = false;
 
 	item->SetReleasedTexture(matIndex);
 
@@ -150,6 +152,7 @@ void ApplicationContext::CreateGem()
 		gem->m_IsAABB = true;
 		gem->m_IsVisible = false;
 		gem->m_IsVisibleOnePassCheck = false;
+		gem->m_IsCulling = true;
 	}
 }
 
@@ -197,6 +200,7 @@ void ApplicationContext::CreateBullet()
 		Bullet->m_IsAABB = true;
 		Bullet->m_IsVisible = false;
 		Bullet->m_IsVisibleOnePassCheck = false;
+		Bullet->m_IsCulling = true;
 	}
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 	{
@@ -209,6 +213,7 @@ void ApplicationContext::CreateBullet()
 		Bullet->m_IsAABB = true;
 		Bullet->m_IsVisible = false;
 		Bullet->m_IsVisibleOnePassCheck = false;
+		Bullet->m_IsCulling = true;
 	}
 }
 
@@ -384,18 +389,6 @@ void ApplicationContext::HiddenCharacter(Character* user)
 {
 	if (!user) return;
 
-	//user->m_MyCamera = nullptr;
-	//user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
-	//user->SetAnimationPlayerState(AnimationController::PlayerState::STATE_IDLE);
-	//user->m_PlayerController.release();
-	//
-	//ZeroMemory(&user->m_World, sizeof(user->m_World));
-	//ZeroMemory(&user->m_TexTransform, sizeof(user->m_TexTransform));
-	//
-	//user->ReleaseTransform();
-	//
-	//GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[user->GetMeshName()], m_RItemsVec);
-
 	user->m_IsVisible = false;
 	user->m_IsVisibleOnePassCheck = false;
 }
@@ -403,71 +396,9 @@ void ApplicationContext::HiddenCharacter(Character* user)
 void ApplicationContext::HiddenCharacter(std::string userName)
 {
 	Character* user = FindObject<Character>(userName, userName);
-	//if (!user) return;
-	//
-	//user->m_MyCamera = nullptr;
-	//user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
-	//user->SetAnimationPlayerState(AnimationController::PlayerState::STATE_IDLE);
-	//user->m_PlayerController.release();
-	//
-	//ZeroMemory(&user->m_World, sizeof(user->m_World));
-	//ZeroMemory(&user->m_TexTransform, sizeof(user->m_TexTransform));
-	//
-	//user->ReleaseTransform();
-	//
-	//// Update InstanceData
-	//GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[userName], m_RItemsVec);
 
 	user->m_IsVisible = false;
 	user->m_IsVisibleOnePassCheck = false;
-}
-
-
-void ApplicationContext::DisplayUI(std::string mapName)
-{
-	if (!m_Maps.count(mapName))
-		return;
-
-	// UI
-//	std::vector<MapTool::UIInfo> uiInfoVector = m_Maps[mapName]->uiInfoVector;
-//	for (auto& itemInfo : uiInfoVector)
-//	{
-//		UserInterface* obj = FindObject<UserInterface>(itemInfo.meshName, itemInfo.uiName);
-//
-//		obj->InitializeTransform();
-//		obj->m_IsVisible = true;
-//		obj->Scale(itemInfo.scale.x, itemInfo.scale.y, itemInfo.scale.z);
-//		obj->Rotate(itemInfo.rotation.x, itemInfo.rotation.y, itemInfo.rotation.z);
-//		obj->SetPosition(itemInfo.position);
-//	}
-}
-
-void ApplicationContext::HiddenUI(std::string mapName)
-{
-	if (!m_Maps.count(mapName))
-		return;
-
-	// UI
-//	std::vector<MapTool::UIInfo> uiInfoVector = m_Maps[mapName]->uiInfoVector;
-//
-//	for (auto& itemInfo : uiInfoVector)
-//	{
-//		UserInterface* obj = FindObject<UserInterface>(itemInfo.meshName, itemInfo.uiName);
-//
-//		ZeroMemory(&obj->m_World, sizeof(obj->m_World));
-//		ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
-//	}
-//
-//	// Update InstanceData
-//	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[MESH_GEOID_RECT], m_RItemsVec);
-//	//GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[UI_MESH_SPHERE], AppContext->m_RItemsVec);
-//
-//	// Visible Off
-//	for (auto& itemInfo : uiInfoVector)
-//	{
-//		UserInterface* obj = FindObject<UserInterface>(itemInfo.meshName, itemInfo.uiName);
-//		obj->m_IsVisible = false;
-//	}
 }
 
 void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName, XMFLOAT2 pos, XMFLOAT2 size, TextAlignType textAlignType, int zLayer, bool isText)
@@ -501,8 +432,6 @@ void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName
 	default:
 		break;
 	}
-	// ui->m_PositionRatio = { (pos.x - (size.x / 20.f)) / 800.f, (pos.y - (size.y / 20.f)) / 600.f };
-	// ui->m_SizeRatio = { size.x / size.y, size.y / 1080.f };
 
 	ui->Scale(sizeX, sizeY, 1);
 	ui->SetPosition(pos.x, pos.y, 1.f);

@@ -69,6 +69,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		preInfo.position.z = -1690.f;
 		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
 		preInfo.typeID = ++typeIDCount;
+		preInfo.isCulling = false;
 		map->mapInfoVector.emplace_back(preInfo);
 
 		preInfo.meshName = OBJECT_MESH_STR_WALL_21;
@@ -80,6 +81,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		preInfo.position.z = 1690.f;
 		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
 		preInfo.typeID = ++typeIDCount;
+		preInfo.isCulling = false;
 		map->mapInfoVector.emplace_back(preInfo);
 
 		propTypeSet.insert(OBJECT_MESH_STR_WALL_33);
@@ -92,6 +94,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		preInfo.position.z = 0.0f;
 		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
 		preInfo.typeID = ++typeIDCount;
+		preInfo.isCulling = false;
 		map->mapInfoVector.emplace_back(preInfo);
 
 		preInfo.meshName = OBJECT_MESH_STR_WALL_33;
@@ -103,6 +106,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		preInfo.position.z = 0.0f;
 		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
 		preInfo.typeID = ++typeIDCount;
+		preInfo.isCulling = false;
 		map->mapInfoVector.emplace_back(preInfo);
 		 
 		// Create Attack_Box 
@@ -116,6 +120,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		preInfo.position.z = 0.0f;
 		preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
 		preInfo.typeID = ++typeIDCount;
+		preInfo.isCulling = false;
 		map->mapInfoVector.emplace_back(preInfo);
 
 		// Gem
@@ -160,12 +165,14 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_01;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_01);
 								preInfo.colWithChar = false;
+								preInfo.isCulling = false;
 							}
 							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
 								preInfo.colWithChar = true;
+								preInfo.isCulling = true;
 							}
 							break;
 						case 2:
@@ -174,12 +181,14 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_02;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_02);
 								preInfo.colWithChar = false;
+								preInfo.isCulling = false;
 							}
 							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_02;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_02);
 								preInfo.colWithChar = true;
+								preInfo.isCulling = true;
 							}
 							break;
 						case 3:
@@ -188,12 +197,14 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_03;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_03);
 								preInfo.colWithChar = false;
+								preInfo.isCulling = false;
 							}
 							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
 								preInfo.colWithChar = true;
+								preInfo.isCulling = true;
 							}
 							break;
 						case 4:
@@ -202,49 +213,58 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_04;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_04);
 								preInfo.colWithChar = false;
+								preInfo.isCulling = false;
 							}
 							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
 								preInfo.colWithChar = true;
+								preInfo.isCulling = true;
 							}
 							break;
 						case 5:
 							preInfo.meshName = OBJECT_MESH_STR_PLANT;
 							propTypeSet.insert(OBJECT_MESH_STR_PLANT);
 							preInfo.colWithChar = false;
+							preInfo.isCulling = true;
 							break;
 						case 6:
 							preInfo.meshName = OBJECT_MESH_STR_TILE_01;
 							propTypeSet.insert(OBJECT_MESH_STR_TILE_01);
 							preInfo.colWithChar = false;
+							preInfo.isCulling = true;
 							break;
 						case 7:
 							preInfo.meshName = OBJECT_MESH_STR_TILE_02;
 							propTypeSet.insert(OBJECT_MESH_STR_TILE_02);
 							preInfo.colWithChar = false;
+							preInfo.isCulling = true;
 							break;
 						case 8:
 							preInfo.meshName = OBJECT_MESH_STR_TREE_01;
 							propTypeSet.insert(OBJECT_MESH_STR_TREE_01);
 							preInfo.colWithChar = true;
+							preInfo.isCulling = true;
 							break;
 						case 9:
 							preInfo.meshName = OBJECT_MESH_STR_TREE_02;
 							propTypeSet.insert(OBJECT_MESH_STR_TREE_02);
 							preInfo.colWithChar = true;
+							preInfo.isCulling = true;
 							break;
 						case 10:
 							preInfo.meshName = OBJECT_MESH_STR_BARREL;
 							propTypeSet.insert(OBJECT_MESH_STR_BARREL);
 							preInfo.colWithChar = true;
+							preInfo.isCulling = true;
 							break;
 						case 11:
 							preInfo.meshName = OBJECT_MESH_STR_CHEST_DOWN;
 							propTypeSet.insert(OBJECT_MESH_STR_CHEST_DOWN);
 							preInfo.colWithChar = true;
 							preInfo.rotation.y = 90.f;
+							preInfo.isCulling = true;
 							break;
 						case 12:
 							preInfo.meshName = OBJECT_MESH_STR_CHEST_UP;
@@ -253,6 +273,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							shiftX = -STD_CUBE_SIZE * 0.25;
 							preInfo.rotation.y = 90.f;
 							preInfo.colWithChar = false;
+							preInfo.isCulling = true;
 							break;
 						}
 						break;
@@ -267,6 +288,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						propTypeSet.insert(OBJECT_MESH_STR_CUBE_BRIDGE);
 						preInfo.colWithChar = false;
 						shiftY = -STD_CUBE_SIZE * 0.85;
+						preInfo.isCulling = true;
 						break;
 					}
 					case 3:
@@ -278,6 +300,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						preInfo.meshName = OBJECT_MESH_STR_LOGS;
 						propTypeSet.insert(OBJECT_MESH_STR_LOGS);
 						preInfo.colWithChar = true;
+						preInfo.isCulling = true;
 						break;
 					}
 					case 4:
@@ -289,6 +312,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						preInfo.meshName = OBJECT_MESH_STR_GRAVESTONE;
 						propTypeSet.insert(OBJECT_MESH_STR_GRAVESTONE);
 						preInfo.colWithChar = true;
+						preInfo.isCulling = true;
 						break;
 					}
 					case 5:
@@ -301,6 +325,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.meshName = OBJECT_MESH_STR_FENCE_01;
 							propTypeSet.insert(OBJECT_MESH_STR_FENCE_01);
 							preInfo.colWithChar = true;
+							preInfo.isCulling = true;
 							break;
 						case 51:
 							preInfo.rotation.y = 90.f;
@@ -308,6 +333,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.meshName = OBJECT_MESH_STR_FENCE_02;
 							propTypeSet.insert(OBJECT_MESH_STR_FENCE_02);
 							preInfo.colWithChar = true;
+							preInfo.isCulling = true;
 							break;
 						case 52:
 							preInfo.rotation.y = 0.f;
@@ -315,6 +341,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.meshName = OBJECT_MESH_STR_FENCE_01;
 							propTypeSet.insert(OBJECT_MESH_STR_FENCE_01);
 							preInfo.colWithChar = true;
+							preInfo.isCulling = true;
 							break;
 						case 53:
 							preInfo.rotation.y = 90.f;
@@ -322,6 +349,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.meshName = OBJECT_MESH_STR_FENCE_02;
 							propTypeSet.insert(OBJECT_MESH_STR_FENCE_02);
 							preInfo.colWithChar = true;
+							preInfo.isCulling = true;
 							break;
 						}
 						break;
