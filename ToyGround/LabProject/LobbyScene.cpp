@@ -181,10 +181,7 @@ void LobbyScene::RenderText()
 
 	//cout << "Size : "<< LoginUI.size.x << ", " << LoginUI.size.y << " Pos : " << LoginUI.pos.x << ", " << LoginUI.pos.y << endl;
 	GraphicsContext::GetApp()->SetTextSize(LoginUI.size.y / 50.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
-	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
 
-	GraphicsContext::GetApp()->DrawD2DText(L"ID", LoginUI.size.x / 11.f , LoginUI.size.y / 5.8f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
-	GraphicsContext::GetApp()->DrawD2DText(L"PW", LoginUI.size.x / 11.5f, LoginUI.size.y / 4.9f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 
 	GraphicsContext::GetApp()->SetTextSize(LoginUI.size.y / 120.f);
 	if (!ID_Input_Ativate && m_ID.empty())
