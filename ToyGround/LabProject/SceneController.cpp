@@ -371,11 +371,17 @@ void LobbyController::MouseCallback()
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 		}
 		// EXit Button
+
+		// EXit Button
 		if (530 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "Exit Button Click" << endl;
-			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST);
+			string id;
+			string pw;
+			id.assign(m_MyScene->m_ID.begin(), m_MyScene->m_ID.end());
+			pw.assign(m_MyScene->m_Password.begin(), m_MyScene->m_Password.end());
+			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST, 2, id, pw);
 		}
 	}
 #endif

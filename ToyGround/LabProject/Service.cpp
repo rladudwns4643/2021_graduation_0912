@@ -36,6 +36,14 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 	case EVENT_LOBBY_LOGIN_REQUEST: {
 		std::string id{};
 		std::string pw{};
+		va_list ap;
+		va_start(ap, argsCount);
+		id = va_arg(ap, std::string);
+		pw = va_arg(ap, std::string);
+		va_end(ap);
+
+		cout << "ID: " << id << " PW: " << pw << endl;
+
 		NetCore::GetApp()->SendLobbyLoginPacket(id, pw);
 		break;
 	}

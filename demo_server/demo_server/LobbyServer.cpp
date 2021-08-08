@@ -172,6 +172,8 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		cl_packet_login* p = reinterpret_cast<cl_packet_login*>(packet);
 		
 		int mmr{};
+
+		cout << "get ID: " << p->id << " PW: " << p->pw << endl;
 		if (DataBase::GetInstance()->LoginPlayer(p->id, p->pw, &mmr)) {
 			for (int i = 1; i < new_user_id; ++i) {
 				if (userList[i]->user_info->GetPlayerID() == p->id) {
