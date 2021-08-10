@@ -51,7 +51,7 @@ public:
 
 	void Update2DPosition(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
 
-	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
+	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool IsCharacter = false);
 	void UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems); // 사용안함
 
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);

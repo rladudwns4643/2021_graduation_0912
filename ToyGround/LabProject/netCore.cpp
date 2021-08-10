@@ -84,7 +84,7 @@ bool NetCore::SendPacket(void* buf, eSERVER sv) {
 	int psize = (BYTE)p[0];
 	int retval = send(m_client.socket[sv].socket, p, psize, 0);
 //#ifdef LOG_ON
-	cout << "[NETCORE] SEND: " << (int)p[1] << " for " << (int)sv << endl;
+//	cout << "[NETCORE] SEND: " << (int)p[1] << " for " << (int)sv << endl;
 //#endif //LOG_ON
 	if (retval == SOCKET_ERROR) {
 		int error_no = WSAGetLastError();
