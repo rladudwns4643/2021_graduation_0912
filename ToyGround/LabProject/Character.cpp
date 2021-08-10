@@ -321,6 +321,8 @@ void Character::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 	if (dwDirection & DIR_LEFT) checkRL--;
 	if (checkFB != 0 && checkRL != 0)
 		tfDistance = tfDistance / sqrt(2);
+	m_tSpeed = tfDistance;
+	cout << "Speed: " << m_tSpeed << endl;
 
 	if (dwDirection)
 	{
@@ -341,6 +343,8 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 	XMFLOAT3 prePos = GetPosition();
 	XMFLOAT3 pos = MathHelper::Add(GetPosition(), xmf3Shift);
 
+	cout << "x: " << prePos.x - pos.x << ", z: " << prePos.z - pos.z << endl;
+
 	// 벽충돌 계산
 	if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE)
 		pos.x = (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE;
@@ -350,6 +354,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 		pos.z = (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE;
 	if (pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE))
 		pos.z = -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE);
+	// 바닥
 	if (pos.y < 0.0f)
 		pos.y = 0.0f;
 
@@ -364,6 +369,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 		//	cout << "X: " << m_IndexPosX << " Y: " << m_IndexPosY << " Z: " << m_IndexPosZ << endl;
 	}
 
+	// x, z 충돌검사
 	Map* originMap = AppContext->m_Maps[m_MapName];
 	for (auto& p : originMap->mapInfoVector)
 	{
@@ -384,27 +390,46 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 
 				XMFLOAT3 objPos = obj->GetPosition();
 				XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
-					objPos.y + obj->m_Bounds.Center.y - (obj->m_Bounds.Extents.y / 2),
+					objPos.y + obj->m_Bounds.Center.y,
 					objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
 				XMFLOAT3 playerMin(pos.x + m_Bounds.Center.x - (m_Bounds.Extents.x / 2),
-					pos.y + m_Bounds.Center.y - (m_Bounds.Extents.y / 2),
+					pos.y + m_Bounds.Center.y,
 					pos.z + m_Bounds.Center.z - (m_Bounds.Extents.z / 2));
 				XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
-					objPos.y + obj->m_Bounds.Center.y + (obj->m_Bounds.Extents.y / 2),
+					objPos.y + obj->m_Bounds.Center.y + obj->m_Bounds.Extents.y,
 					objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
 				XMFLOAT3 playerMax(pos.x + m_Bounds.Center.x + (m_Bounds.Extents.x / 2),
-					pos.y + m_Bounds.Center.y + (m_Bounds.Extents.y / 2),
+					pos.y + m_Bounds.Center.y + m_Bounds.Extents.y,
 					pos.z + m_Bounds.Center.z + (m_Bounds.Extents.z / 2));
 
-				if (objMin.x <= playerMax.x && objMax.x >= playerMin.x &&
-					objMin.y <= playerMax.y && objMax.y >= playerMin.y &&
-					objMin.z <= playerMax.z && objMax.z >= playerMin.z)
+				if (objMin.x < playerMax.x && objMax.x > playerMin.x &&
+					objMin.y < playerMax.y && objMax.y > playerMin.y &&
+					objMin.z < playerMax.z && objMax.z > playerMin.z)
 				{
-					XMFLOAT3 tpos = pos;
-					XMFLOAT3 d = MathHelper::Subtract(tpos, objPos);
-					XMFLOAT3 xmf3Result;
-					XMStoreFloat3(&xmf3Result, XMVector3Normalize(XMLoadFloat3(&d)) * 25.f);
-					pos = MathHelper::Add(pos, xmf3Result);
+					XMFLOAT3 overlapMaxVertex{ min(objMax.x, playerMax.x), min(objMax.y, playerMax.y), min(objMax.z, playerMax.z) };
+					XMFLOAT3 overlapMinVertex{ max(objMin.x, playerMin.x), max(objMin.y, playerMin.y), max(objMin.z, playerMin.z) };
+					XMFLOAT3 overlapDepth{
+					   overlapMaxVertex.x - overlapMinVertex.x,
+					   overlapMaxVertex.y - overlapMinVertex.y,
+					   overlapMaxVertex.z - overlapMinVertex.z
+					};
+					
+					if (overlapDepth.x < overlapDepth.z)
+					{
+						if (objPos.x > pos.x)
+							overlapDepth.x *= -1;
+						overlapDepth.z = 0;
+					}
+
+					else
+					{
+						if (objPos.z > pos.z)
+							overlapDepth.z *= -1;
+						overlapDepth.x = 0;
+					}
+					overlapDepth.y = 0;
+					
+					pos = MathHelper::Add(pos, overlapDepth);
 				}
 			}
 		}
@@ -418,16 +443,16 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 		{
 			XMFLOAT3 objPos = obj->GetPosition();
 			XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
-				objPos.y + obj->m_Bounds.Center.y - (obj->m_Bounds.Extents.y / 2),
+				objPos.y + obj->m_Bounds.Center.y,
 				objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
 			XMFLOAT3 playerMin(pos.x + m_Bounds.Center.x - (m_Bounds.Extents.x / 2),
-				pos.y + m_Bounds.Center.y - (m_Bounds.Extents.y / 2),
+				pos.y + m_Bounds.Center.y,
 				pos.z + m_Bounds.Center.z - (m_Bounds.Extents.z / 2));
 			XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
-				objPos.y + obj->m_Bounds.Center.y + (obj->m_Bounds.Extents.y / 2),
+				objPos.y + obj->m_Bounds.Center.y + obj->m_Bounds.Extents.y,
 				objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
 			XMFLOAT3 playerMax(pos.x + m_Bounds.Center.x + (m_Bounds.Extents.x / 2),
-				pos.y + m_Bounds.Center.y + (m_Bounds.Extents.y / 2),
+				pos.y + m_Bounds.Center.y + m_Bounds.Extents.y,
 				pos.z + m_Bounds.Center.z + (m_Bounds.Extents.z / 2));
 
 			if (objMin.x <= playerMax.x && objMax.x >= playerMin.x &&

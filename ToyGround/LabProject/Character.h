@@ -94,6 +94,8 @@ private:
 	DirectX::XMFLOAT3 m_Up;
 	DirectX::XMFLOAT3 m_Look;
 
+	float m_tSpeed;
+
 	// 맵에서의 위치
 	int m_IndexPosX;
 	int m_IndexPosY;

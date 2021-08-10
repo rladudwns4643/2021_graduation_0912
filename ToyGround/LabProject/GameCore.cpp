@@ -20,9 +20,9 @@ namespace Core
 	GameCore* g_Core = nullptr;
 	GameTimer* g_GameTimer = nullptr;
 
-	HINSTANCE			g_hAppInst = nullptr; // application instance handle
-	HWND				g_hMainWnd = nullptr; // main window handle
-	HWND				g_hVideoWnd = nullptr; // logo video handle
+	HINSTANCE			g_hAppInst = nullptr; 
+	HWND				g_hMainWnd = nullptr; 
+	HWND				g_hVideoWnd = nullptr;
 	const wchar_t* g_AppName = nullptr;
 
 	Microsoft::WRL::ComPtr<ID3D12Device> g_Device;
@@ -42,9 +42,9 @@ namespace Core
 	UINT      g_4xMsaaQuality = 0;		// quality level of 4X MSAA
 
 	bool g_InputSwitch = false;
-	int g_Chating = 0;	// 0: 입력 못함		1: 입력 할 수 있음		2: 입력 중			3: 서버에 전송
-	WCHAR g_ChatBuf[256] = L"";	// 완성된 문자들 저장
-	WCHAR g_TempChatBuf[2] = L"";	// 조합 중인 문자를 임시 저장
+	int g_Chating = 0;	
+	WCHAR g_ChatBuf[256] = L"";
+	WCHAR g_TempChatBuf[2] = L"";
 }
 
 void Core::RunApplication(IGameApp& app, const wchar_t* className)

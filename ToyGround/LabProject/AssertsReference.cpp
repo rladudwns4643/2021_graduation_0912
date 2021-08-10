@@ -141,8 +141,8 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 					int input;
 					fileIn >> input;
 					//cout << input << " ";
-					//if (k == 0)
-					//	continue;
+					if (k == 0)
+						continue;
 					rk = k;
 					ri = MAP_DEPTH_BLOCK_NUM - i - 1;
 					rj = MAP_WIDTH_BLOCK_NUM - j - 1;
@@ -492,13 +492,13 @@ void AssertsReference::CreateBB()
 	{
 		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(15.f, 320.f, 15.f);
+		bb->Extents = XMFLOAT3(35.f, 320.f, 35.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_TREE_01] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(15.f, 320.f, 15.f);
+		bb->Extents = XMFLOAT3(35.f, 320.f, 35.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_TREE_02] = std::move(bb);
 	}
 	{
@@ -522,13 +522,13 @@ void AssertsReference::CreateBB()
 	{
 		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, 50.f, 20.f);
+		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, 50.f, 35.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_FENCE_01] = std::move(bb);
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(20.f, 60.f, STD_CUBE_SIZE);
+		bb->Extents = XMFLOAT3(35.f, 60.f, STD_CUBE_SIZE);
 		m_PropBoundingBox[OBJECT_MESH_STR_FENCE_02] = std::move(bb);
 	}
 	{
