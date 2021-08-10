@@ -92,6 +92,7 @@ public:
 	std::map<std::string, Map*> m_Maps;
 
 	int m_MapArray[MAP_HEIGHT_BLOCK_NUM][MAP_DEPTH_BLOCK_NUM][MAP_WIDTH_BLOCK_NUM];
+	XMINT2 m_WaterMap[MAP_WATER_NUM];
 
 	int m_LastTypeId;
 };

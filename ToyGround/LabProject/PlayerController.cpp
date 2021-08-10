@@ -146,6 +146,7 @@ void PlayerController::OnKeyPressed()
 			{
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
 				CommandCenter::GetApp()->m_StartJumpAnim = true;
+				m_Owner->Jump();
 			}
 		}
 #elif DEBUG_SERVER

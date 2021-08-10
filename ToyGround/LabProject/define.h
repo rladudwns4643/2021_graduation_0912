@@ -1,5 +1,8 @@
 #pragma once
 
+// 중력
+#define GRAVITY 9.8f
+
 // 주 윈도우 크기 설정
 #define FRAME_BUFFER_WIDTH 1280
 #define FRAME_BUFFER_HEIGHT 720
@@ -24,6 +27,9 @@
 #define MAP_WIDTH_BLOCK_NUM 21
 #define MAP_DEPTH_BLOCK_NUM 33
 #define MAP_HEIGHT_BLOCK_NUM 5
+
+// 물 개수
+#define MAP_WATER_NUM 86
 
 // 스카이박스 크기
 #define SKYBOX_SCALE 5000.f

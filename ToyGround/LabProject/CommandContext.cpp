@@ -31,7 +31,7 @@ void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 {
 	m_InstanceBuffers[objInfo->m_Type] = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), objInfo->m_InstanceCount, false);
 }
-void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
+void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool IsCharacter)
 {
 	if (!objInfo) return;
 
@@ -42,7 +42,10 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 	{
 		if (rItems[i.second]->m_IsVisible)
 		{
-			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
+			DirectX::XMFLOAT4X4 tWorld = rItems[i.second]->m_World;
+			if(IsCharacter)
+				tWorld._42 -= 10.f;
+			XMMATRIX world = XMLoadFloat4x4(&tWorld);
 			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
 			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
 #ifdef FRUSTUM_CULLMODE

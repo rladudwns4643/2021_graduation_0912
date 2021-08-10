@@ -19,6 +19,12 @@ Character::Character(std::string type, std::string id) :
 	m_Up = { 0,1,0 };
 	m_Look = { 0,0,1 };
 
+	m_JumpCount = 1;
+	m_isGround = true;
+	m_JumpForce.x = 0.f;
+	m_JumpForce.y = 0.f;
+	m_JumpForce.z = 0.f;
+
 	SetIndexPos(m_Position);
 }
 
@@ -55,6 +61,9 @@ void Character::Update(const float deltaT)
 		m_PlayerController->Update(deltaT);
 
 	m_AnimationController->Update(deltaT);
+
+	Falling();
+
 	//cout << m_PlayerID << ": " << m_AnimationController->m_KeyState << endl;
 //	WeaponUpdate();
 }
@@ -246,6 +255,8 @@ void Character::SetIndexPos(float posX, float posY, float posZ)
 	m_IndexPosX = (int)((posX + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_WIDTH_BLOCK_NUM / 2));
 	m_IndexPosY = (int)(posY / STD_CUBE_SIZE) + 1;
 	m_IndexPosZ = (int)((posZ + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_DEPTH_BLOCK_NUM / 2));
+
+	cout << "index posY: " << m_IndexPosY << endl;
 }
 
 void Character::SetIndexPos(DirectX::XMFLOAT3 xmPos)
@@ -321,8 +332,13 @@ void Character::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 	if (dwDirection & DIR_LEFT) checkRL--;
 	if (checkFB != 0 && checkRL != 0)
 		tfDistance = tfDistance / sqrt(2);
+	
+	//// 물 위 인지 체크
+	//if (OnWater())
+	//	tfDistance *= 0.75;
+
 	m_tSpeed = tfDistance;
-	cout << "Speed: " << m_tSpeed << endl;
+	//cout << "Speed: " << m_tSpeed << endl;
 
 	if (dwDirection)
 	{
@@ -343,7 +359,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 	XMFLOAT3 prePos = GetPosition();
 	XMFLOAT3 pos = MathHelper::Add(GetPosition(), xmf3Shift);
 
-	cout << "x: " << prePos.x - pos.x << ", z: " << prePos.z - pos.z << endl;
+	//cout << "x: " << prePos.x - pos.x << ", z: " << prePos.z - pos.z << endl;
 
 	// 벽충돌 계산
 	if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE)
@@ -354,26 +370,24 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 		pos.z = (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE;
 	if (pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE))
 		pos.z = -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE);
-	// 바닥
-	if (pos.y < 0.0f)
-		pos.y = 0.0f;
 
 	int preIndexPosX = m_IndexPosX;
 	int preIndexPosY = m_IndexPosY;
 	int preIndexPosZ = m_IndexPosZ;
 
-	SetIndexPos(pos);
 
-	if (preIndexPosX != m_IndexPosX || preIndexPosY != m_IndexPosY || preIndexPosZ != m_IndexPosZ)
-	{
-		//	cout << "X: " << m_IndexPosX << " Y: " << m_IndexPosY << " Z: " << m_IndexPosZ << endl;
-	}
+	//if (preIndexPosX != m_IndexPosX || preIndexPosY != m_IndexPosY || preIndexPosZ != m_IndexPosZ)
+	//{
+	//		cout << "X: " << m_IndexPosX << " Y: " << m_IndexPosY << " Z: " << m_IndexPosZ << endl;
+	//}
 
 	// x, z 충돌검사
+	SetIndexPos(pos);
+	bool checkColl = false;
 	Map* originMap = AppContext->m_Maps[m_MapName];
 	for (auto& p : originMap->mapInfoVector)
 	{
-		for (int i = 0; i < 54; i += 3)
+		for (int i = 0; i < 81; i += 3)
 		{
 			int aX = m_IndexPosX + shiftArr[i];
 			int aY = m_IndexPosY + shiftArr[i + 1];
@@ -428,7 +442,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 						overlapDepth.x = 0;
 					}
 					overlapDepth.y = 0;
-					
+
 					pos = MathHelper::Add(pos, overlapDepth);
 				}
 			}
@@ -467,13 +481,119 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 		}
 	}
 
-
 #ifdef DEBUG_CLIENT
 	SetPosition(pos.x, pos.y, pos.z);
 #elif DEBUG_SERVER
 	SetPosition(pos.x, pos.y, pos.z);
 	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
 #endif
+}
+
+void Character::Jump()
+{
+	if (m_JumpCount < 1 || !m_isGround)
+		return;
+	
+	m_JumpCount = 0;
+	m_isGround = false;
+	m_JumpForce.y = 55.f;
+}
+
+void Character::Falling()
+{
+	m_JumpForce.y -= GRAVITY;
+	XMFLOAT3 prePos = GetPosition();
+	XMFLOAT3 pos = MathHelper::Add(prePos, m_JumpForce);
+
+	// 바닥
+	if (pos.y < 0.0f)
+	{
+		pos.y = 0.0f;
+		OnGround();
+	}
+
+	// y축 충돌검사
+	float yGap = m_JumpForce.y;
+	float tyPos = pos.y;
+	SetIndexPos(pos);
+	Map* originMap = AppContext->m_Maps[m_MapName];
+	for (auto& p : originMap->mapInfoVector)
+	{
+		for (int i = 0; i < 54; i += 3)
+		{
+			int aX = m_IndexPosX + shiftArrY[i];
+			int aY = m_IndexPosY + shiftArrY[i + 1];
+			int aZ = m_IndexPosZ + shiftArrY[i + 2];
+
+			if (aX < 0 || aX >= MAP_WIDTH_BLOCK_NUM
+				|| aY <= 0 || aY >= MAP_HEIGHT_BLOCK_NUM
+				|| aZ < 0 || aZ >= MAP_DEPTH_BLOCK_NUM)
+				continue;
+
+			if (p.typeID == AppContext->m_MapArray[aY][aZ][aX] && p.colWithChar)
+			{
+				GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
+
+				XMFLOAT3 objPos = obj->GetPosition();
+				XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
+					objPos.y + obj->m_Bounds.Center.y,
+					objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
+				XMFLOAT3 playerMin(pos.x + m_Bounds.Center.x - (m_Bounds.Extents.x / 2),
+					pos.y + m_Bounds.Center.y,
+					pos.z + m_Bounds.Center.z - (m_Bounds.Extents.z / 2));
+				XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
+					objPos.y + obj->m_Bounds.Center.y + obj->m_Bounds.Extents.y,
+					objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
+				XMFLOAT3 playerMax(pos.x + m_Bounds.Center.x + (m_Bounds.Extents.x / 2),
+					pos.y + m_Bounds.Center.y + m_Bounds.Extents.y,
+					pos.z + m_Bounds.Center.z + (m_Bounds.Extents.z / 2));
+
+				if (objMin.x < playerMax.x && objMax.x > playerMin.x &&
+					objMin.y < playerMax.y && objMax.y > playerMin.y &&
+					objMin.z < playerMax.z && objMax.z > playerMin.z)
+				{
+					XMFLOAT3 overlapMaxVertex{ min(objMax.x, playerMax.x), min(objMax.y, playerMax.y), min(objMax.z, playerMax.z) };
+					XMFLOAT3 overlapMinVertex{ max(objMin.x, playerMin.x), max(objMin.y, playerMin.y), max(objMin.z, playerMin.z) };
+					XMFLOAT3 overlapDepth{
+					   overlapMaxVertex.x - overlapMinVertex.x,
+					   overlapMaxVertex.y - overlapMinVertex.y,
+					   overlapMaxVertex.z - overlapMinVertex.z
+					};
+					if (yGap < overlapDepth.y 
+						&& p.meshName != OBJECT_MESH_STR_TREE_01
+						&& p.meshName != OBJECT_MESH_STR_TREE_02)
+					{
+						yGap = overlapDepth.y;
+						tyPos = objMax.y;
+					}
+				}
+			}
+		}
+	}
+	if (m_JumpForce.y != yGap)
+		OnGround();
+
+	pos.y = tyPos;
+	SetPosition(pos.x, pos.y, pos.z);
+}
+
+void Character::OnGround()
+{
+	m_JumpCount = 1;
+	m_isGround = true;
+	m_JumpForce.y = 0;
+}
+
+bool Character::OnWater()
+{
+	SetIndexPos(GetPosition());
+	for (int i = 0; i < MAP_WATER_NUM; ++i)
+	{
+		if (AppContext->m_WaterMap[i].y == m_IndexPosX
+			&& AppContext->m_WaterMap[i].x == m_IndexPosZ)
+			return true;
+	}
+	return false;
 }
 
 void Character::Rotate(float pitch, float yaw, float roll)

@@ -61,8 +61,14 @@ public:
 	virtual void	Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity) override;
 	virtual void	Move(const XMFLOAT3& xmf3Shift, bool bVelocity = false) override;
 
+	bool OnWater();
+
 	virtual void	Rotate(float pitch, float yaw, float roll) override;
 
+	// jump
+	void Jump();
+	void Falling();
+	void OnGround();
 public:
 	// 캐릭터 컴포넌트들
 	Camera									*m_MyCamera;
@@ -101,8 +107,8 @@ private:
 	int m_IndexPosY;
 	int m_IndexPosZ;
 
-	// 캐릭터 주변 18칸
-	int shiftArr[54] = {
+	// 캐릭터 주변 27칸
+	int shiftArr[81] = {
 		 1,  1, -1,  0,  1, -1,  -1,  1, -1,
 		 1,  1,  0,  0,  1,  0,  -1,  1,  0,
 		 1,  1,  1,  0,  1,  1,  -1,  1,  1,
@@ -110,6 +116,25 @@ private:
 		 1,  0, -1,  0,  0, -1,  -1,  0, -1,
 		 1,  0,  0,  0,  0,  0,  -1,  0,  0,
 		 1,  0,  1,  0,  0,  1,  -1,  0,  1,
+
+		 1, -1, -1,  0, -1, -1,  -1, -1, -1,
+		 1, -1,  0,  0, -1,  0,  -1, -1,  0,
+		 1, -1,  1,  0, -1,  1,  -1, -1,  1,
 	};
+
+	int shiftArrY[54] = {
+		 1,  0, -1,  0,  0, -1,  -1,  0, -1,
+		 1,  0,  0,  0,  0,  0,  -1,  0,  0,
+		 1,  0,  1,  0,  0,  1,  -1,  0,  1,
+
+		 1, -1, -1,  0, -1, -1,  -1, -1, -1,
+		 1, -1,  0,  0, -1,  0,  -1, -1,  0,
+		 1, -1,  1,  0, -1,  1,  -1, -1,  1,
+	};
+
+	// 점프 관련
+	int m_JumpCount = 1;
+	bool m_isGround = true;
+	DirectX::XMFLOAT3 m_JumpForce{0.f, 0.f, 0.f};
 };
 

@@ -128,6 +128,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		propTypeSet.insert(OBJECT_MESH_STR_BULLET_01);
 		propTypeSet.insert(OBJECT_MESH_STR_BULLET_02);
 
+		int waterCount = 0;
 		for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k)
 		{
 			int floor;
@@ -214,6 +215,13 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_04);
 								preInfo.colWithChar = false;
 								preInfo.isCulling = false;
+								XMINT2 t{i, j};
+								AppContext->m_WaterMap[waterCount++] = t;
+								if (i < MAP_DEPTH_BLOCK_NUM / 2)
+								{
+									XMINT2 rt{ ri, rj };
+									AppContext->m_WaterMap[waterCount++] = rt;
+								}
 							}
 							else
 							{
@@ -286,7 +294,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.rotation.y = 90.f;
 						preInfo.meshName = OBJECT_MESH_STR_CUBE_BRIDGE;
 						propTypeSet.insert(OBJECT_MESH_STR_CUBE_BRIDGE);
-						preInfo.colWithChar = false;
+						preInfo.colWithChar = true;
 						shiftY = -STD_CUBE_SIZE * 0.85;
 						preInfo.isCulling = true;
 						break;
