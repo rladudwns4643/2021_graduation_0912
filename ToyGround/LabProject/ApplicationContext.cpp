@@ -217,7 +217,16 @@ void ApplicationContext::CreateBullet()
 	}
 }
 
-void ApplicationContext::DisplayBullet(int instID, float posX, float posY, float posZ, int bulletNum)
+void ApplicationContext::UpdateBullet()
+{
+	for (int i = 0; i < m_AtiveBulletCnt; ++i)
+	{
+		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + m_AtiveBullet[i]));
+		obj->Update();
+	}
+}
+
+void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 StartPos, XMFLOAT3 Speed, int bulletNum)
 {
 	if (bulletNum == 1)
 	{
@@ -228,7 +237,8 @@ void ApplicationContext::DisplayBullet(int instID, float posX, float posY, float
 		obj->m_IsVisibleOnePassCheck = true;
 		obj->InitializeTransform();
 		obj->Scale(1, 1, 1);
-		obj->SetPosition(posX, posY, posZ);
+		obj->Speed = Speed;
+		obj->SetPosition(StartPos);
 	}
 	else
 	{
@@ -239,11 +249,12 @@ void ApplicationContext::DisplayBullet(int instID, float posX, float posY, float
 		obj->m_IsVisibleOnePassCheck = true;
 		obj->InitializeTransform();
 		obj->Scale(1, 1, 1);
-		obj->SetPosition(posX, posY, posZ);
+		obj->Speed = Speed;
+		obj->SetPosition(StartPos);
 	}
 }
 
-void ApplicationContext::HiddenBullet(int instID, bool isVisible, int bulletNum)
+void ApplicationContext::HiddenBullet(int instID, int bulletNum, bool isVisible)
 {
 	if (bulletNum == 1)
 	{
@@ -468,4 +479,14 @@ void ApplicationContext::SetPickingUI2D(std::string ui2dLayer, std::string ui2dN
 {
 	UserInterface* ui = FindObject<UserInterface>(ui2dLayer, ui2dName);
 	if (!ui) return;
+}
+
+void ApplicationContext::BulletReset()
+{
+	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	{
+		m_AtiveBulletCheck[i] = false;
+		m_AtiveBullet[i] = 0;
+	}
+	m_AtiveBulletCnt = 0;
 }

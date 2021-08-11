@@ -219,3 +219,10 @@ void GameObject::Scale(float x, float y, float z)
 	m_World._22 *= y;
 	m_World._33 *= z;
 }
+
+void GameObject::Update()
+{
+	XMFLOAT3 pos = GetPosition();
+	pos = MathHelper::Add(pos, Speed);
+	SetPosition(pos);
+}

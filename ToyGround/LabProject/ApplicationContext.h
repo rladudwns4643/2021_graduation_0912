@@ -70,8 +70,9 @@ public:
 	void HiddenGem(int instID, bool isVisible = false);
 
 	void CreateBullet();
-	void DisplayBullet(int instID, float posX, float posY, float posZ, int bulletNum = 1);
-	void HiddenBullet(int instID, bool isVisible = false, int bulletNum = 1);
+	void UpdateBullet();
+	void DisplayBullet(int instID, XMFLOAT3 StartPos, XMFLOAT3 Speed, int bulletNum = 1);
+	void HiddenBullet(int instID, int bulletNum = 1, bool isVisible = false);
 
 	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
 	void HiddenProps(std::string mapName);
@@ -86,6 +87,8 @@ public:
 	void SetDisplayUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible);
 	void SetPickingUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible);
 
+	void BulletReset();
+
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;
 	std::vector<GameObject*> m_RItemsVec;
@@ -93,6 +96,11 @@ public:
 
 	int m_MapArray[MAP_HEIGHT_BLOCK_NUM][MAP_DEPTH_BLOCK_NUM][MAP_WIDTH_BLOCK_NUM];
 	XMINT2 m_WaterMap[MAP_WATER_NUM];
+
+	// Bullet ฐüทร
+	bool m_AtiveBulletCheck[MAX_BULLET_COUNT] = { false };
+	int m_AtiveBullet[MAX_BULLET_COUNT];
+	int m_AtiveBulletCnt = 0;
 
 	int m_LastTypeId;
 };

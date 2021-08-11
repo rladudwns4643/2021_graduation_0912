@@ -69,6 +69,8 @@ public:
 	void Jump();
 	void Falling();
 	void OnGround();
+
+	void Attack();
 public:
 	// 캐릭터 컴포넌트들
 	Camera									*m_MyCamera;

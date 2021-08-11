@@ -60,6 +60,8 @@ public:
 
 	virtual void Scale(float x, float y, float z);
 
+	void Update();
+
 public:
 	// 기타 특성값
 	bool m_IsCulling = false;
@@ -103,5 +105,8 @@ public:
 	// 애니메이션 정보
 	SkinnedModelInstance* m_SkinnedModelInst = NULL;
 	UINT m_SkinnedCBIndex = -1;
+
+	// 스피드
+	XMFLOAT3 Speed;
 };
 

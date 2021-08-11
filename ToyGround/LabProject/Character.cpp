@@ -613,7 +613,7 @@ void Character::Falling()
 			}
 		}
 	}
-	cout << "x: " << m_IndexPosX << ", y: " << m_IndexPosY << ", z: " << m_IndexPosZ << endl;
+	// cout << "x: " << m_IndexPosX << ", y: " << m_IndexPosY << ", z: " << m_IndexPosZ << endl;
 	if (m_JumpForce.y != yGap)
 		OnGround();
 	pos.y = tyPos;
@@ -632,6 +632,34 @@ void Character::OnGround()
 	m_JumpCount = 1;
 	m_isGround = true;
 	m_JumpForce.y = 0;
+}
+
+void Character::Attack()
+{
+	int bIndex = 0;
+	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	{
+		if (AppContext->m_AtiveBulletCheck[i] == false)
+		{
+			bIndex = i;
+			AppContext->m_AtiveBullet[AppContext->m_AtiveBulletCnt++] = bIndex;
+			AppContext->m_AtiveBulletCheck[i] = true;
+			break;
+		}
+	}
+
+	XMFLOAT3 bStartPos = GetPosition();
+	bStartPos.y += 90.f;
+
+	//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
+
+	XMFLOAT3 bSpeed{ 0.f, 0.f, 0.f };
+	bSpeed = MathHelper::Add(bSpeed, m_Look, 34.7f);
+
+	//cout << "Speed x: " << bSpeed.x << ", y: " << bSpeed.y << ", z: " << bSpeed.z << endl;
+	cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
+
+	AppContext->DisplayBullet(bIndex, bStartPos, bSpeed, 1);
 }
 
 bool Character::OnWater()

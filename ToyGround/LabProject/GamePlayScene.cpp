@@ -185,6 +185,7 @@ void GameplayScene::Initialize()
 
 	// √—æÀ ª˝º∫
 	AppContext->CreateBullet();
+	AppContext->BulletReset();
 }
 
 void GameplayScene::OnResize()
@@ -267,9 +268,10 @@ bool GameplayScene::Enter()
 	// √—æÀ √ ±‚»≠
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 	{
-		AppContext->HiddenBullet(i, false, 1);
-		AppContext->HiddenBullet(i, false, 2);
+		AppContext->HiddenBullet(i, 1, false);
+		AppContext->HiddenBullet(i, 2, false);
 	}
+	AppContext->BulletReset();
 
 	return false;
 }
@@ -333,6 +335,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
 
 	// Bullet
+	AppContext->UpdateBullet();
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_01], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_02], AppContext->m_RItemsVec);
 
