@@ -21,7 +21,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_START: {
+#ifdef LOG_ON
 		cout << "EVENT_GAME_START(cnt down start)" << endl;
+#endif LOG_ON
 		va_list ap;
 		int arg_bt_id;
 		XMFLOAT4 arg_sl;
@@ -65,7 +67,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		}
 		//todo Scene Change /*& show result*/
 		SceneManager::GetApp()->ChangeScene(SceneType::eLobby);
+#ifdef LOG_ON
 		cout << "WINNER: " << arg_winner << endl;
+#endif LOG_ON
 		break;
 	}
 	case EVENT_GAME_TIMER: {
@@ -74,7 +78,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		va_start(ap, argsCount);
 		t = va_arg(ap, int);
 		va_end(ap);
+#ifdef LOG_ON
 		cout << "left Time: " << t << endl;
+#endif LOG_ON
 		break;
 	}
 	case EVENT_GAME_ADD_COIN: {
@@ -88,7 +94,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		
 		AppContext->DisplayGem(arg_coin_id, arg_pos.x, arg_pos.y, arg_pos.z);
 
+#ifdef LOG_ON
 		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
+#endif LOG_ON
 		break;
 	}
 	case EVENT_GAME_UPDATE_COIN: {
@@ -101,7 +109,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_coin_cnt = va_arg(ap, int);
 		arg_delete_coin_id = va_arg(ap, int);
 		va_end(ap);
-		cout << "update: " << arg_delete_coin_id << endl;
+#ifdef LOG_ON
+		cout << "delete Coin: " << arg_delete_coin_id << endl;
+#endif LOG_ON
 		AppContext->HiddenGem(arg_delete_coin_id, false);
 		break;
 	}
@@ -113,7 +123,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
-		//cout << "change anim id: " << arg_id << "anim: " << arg_anim_type << endl;
+		cout << "change anim id: " << arg_id << "anim: " << arg_anim_type << endl;
 		m_Users[arg_id]->SetAnimationKeyState(static_cast<AnimationController::PlayerState>(arg_anim_type));
 		break;
 	}
@@ -226,6 +236,8 @@ bool GameplayScene::Enter()
 	m_Users[1]->m_IsVisibleOnePassCheck = true;
 	m_Users[1]->m_MapName = m_MapName;
 #endif
+	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
+	m_Users[m_PlayerID]->SetController();
 	///---
 	// Player type, id 등등 세팅
 	for (auto& u : m_Users) {
@@ -233,8 +245,6 @@ bool GameplayScene::Enter()
 			AppContext->DisplayCharacter(m_MapName, u.second);
 		}
 	}
-	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
-	m_Users[m_PlayerID]->SetController();
 
 	// UI 세팅
 	AppContext->DisplayUI2D(OBJECT_TYPE_AIM, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(-60.f, -80.f), XMFLOAT2(39, 39), TextAlignType::Center);

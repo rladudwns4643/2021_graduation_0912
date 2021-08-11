@@ -1,33 +1,11 @@
 #pragma once
 #include "pch.h"
-#include "Global.h"
 #include "User.h"
-
-extern std::atomic<int> new_user_id;
-
-struct EXOVER {
-	WSAOVERLAPPED over;
-	WSABUF wsabuf[1];
-	char io_buf[MAX_BUF_SIZE];
-	bool is_recv;
-};
-
-struct CLIENT {
-	SOCKET m_s;
-	EXOVER m_recv_over;
-	int id;
-	bool isActive = false;
-
-	char io_buf[MAX_PACKET_SIZE];
-	int m_prev_packet_data;
-	int m_curr_packet_size;
-
-	User* user_info = NULL;
-};
+#include "extern.h"
 
 class LobbyServer {
 public:
-	LobbyServer(short lobby_id);
+	LobbyServer();
 	~LobbyServer();
 
 	void ClientAccept(int id);

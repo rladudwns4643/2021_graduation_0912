@@ -5,11 +5,9 @@
 
 #define LOG_ON
 
-LobbyServer::LobbyServer(short lobby_id)
+LobbyServer::LobbyServer()
 {
-	lobbyID = lobby_id;
-
-	WSAStartup(MAKEWORD(2, 2), &WSAData);
+	auto ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
 	listenSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 
 	memset(&serverAddr, 0, sizeof(SOCKADDR_IN));
@@ -72,6 +70,8 @@ void LobbyServer::BattleServerAccept() {
 
 	userList[0] = new_btServer;
 
+	SR::g_battleSocket = socket_battle;
+
 	CreateIoCompletionPort(reinterpret_cast<HANDLE>(socket_battle), iocp, 0, 0);
 	memset(&userList[0]->m_recv_over.over, 0, sizeof(WSAOVERLAPPED));
 	flags = 0;
@@ -80,8 +80,6 @@ void LobbyServer::BattleServerAccept() {
 		int err = WSAGetLastError();
 		if (err != WSA_IO_PENDING) error_display("WSARecv Error: ", err);
 	};
-
-	//SendLBCheckPacket();
 
 #ifdef LOG_ON
 	std::cout << "BattleServer Connect\n";
@@ -237,18 +235,19 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		memcpy(&p, packet, sizeof(p));
 		if (id != 0) {
 			userList[id]->user_info->SetPlayerMatch(true);
-			if (id == 2) {
-				SendRequestRoomPacket();
-			}
+				//todo matching
+			SR::g_match_list.insert(
+				pair<ID, MatchInfo>(id, MatchInfo(userList[id]->user_info->GetPlayerMMR(),
+					chrono::high_resolution_clock::now())));
 		}
 		break;
 	}
 	case BL_ROOMREADY: {
 		bl_packet_room_ready p;
 		memcpy(&p, packet, sizeof(p));
-		cout << "SEND READY ROOM: " << p.room_no << endl;
-		SendFindRoomPacket(1, p.room_no);
-		SendFindRoomPacket(2, p.room_no);
+		cout << "SEND READY ROOM: " << p.room_no << "id_1: " << p.id_1 << "id_2: " << p.id_2 << endl;
+		SendFindRoomPacket(p.id_1, p.room_no);
+		SendFindRoomPacket(p.id_2, p.room_no);
 		break;
 	}
 	default: {
