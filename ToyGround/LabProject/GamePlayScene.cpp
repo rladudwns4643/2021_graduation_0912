@@ -39,6 +39,8 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		}
 		m_Users[arg_bt_id]->m_MapName = m_MapName;
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
+		m_Users[arg_bt_id]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
+		m_Users[arg_bt_id]->SetController();
 		//m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
 
 		break;
@@ -233,8 +235,6 @@ bool GameplayScene::Enter()
 			AppContext->DisplayCharacter(m_MapName, u.second);
 		}
 	}
-	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
-	m_Users[m_PlayerID]->SetController();
 
 	// UI ¼¼ÆÃ
 	AppContext->DisplayUI2D(OBJECT_TYPE_AIM, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(-60.f, -80.f), XMFLOAT2(39, 39), TextAlignType::Center);
