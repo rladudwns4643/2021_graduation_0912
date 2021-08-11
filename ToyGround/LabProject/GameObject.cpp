@@ -67,7 +67,7 @@ void GameObject::SetPosition(float posX, float posY, float posZ)
 
 void GameObject::SetPosition(DirectX::XMFLOAT3 xmPos)
 {
-	SetPosition(xmPos.x, xmPos.y, xmPos.z);\
+	SetPosition(xmPos.x, xmPos.y, xmPos.z);
 }
 
 void GameObject::SetIndexPos(float posX, float posY, float posZ)

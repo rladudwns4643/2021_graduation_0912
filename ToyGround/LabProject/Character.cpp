@@ -333,9 +333,9 @@ void Character::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)
 	if (checkFB != 0 && checkRL != 0)
 		tfDistance = tfDistance / sqrt(2);
 	
-	//// 물 위 인지 체크
-	//if (OnWater())
-	//	tfDistance *= 0.75;
+	// 물 위 인지 체크
+	if (OnWater())
+		tfDistance *= 0.5;
 
 	m_tSpeed = tfDistance;
 	//cout << "Speed: " << m_tSpeed << endl;
@@ -515,6 +515,7 @@ void Character::Falling()
 	// y축 충돌검사
 	float yGap = m_JumpForce.y;
 	float tyPos = pos.y;
+	float jumpColl = 0.f;
 	SetIndexPos(pos);
 	Map* originMap = AppContext->m_Maps[m_MapName];
 	for (auto& p : originMap->mapInfoVector)
@@ -568,12 +569,57 @@ void Character::Falling()
 					}
 				}
 			}
+			if (shiftArrY[i + 1] == -1)
+			{
+				aY += 2;
+				if (p.typeID == AppContext->m_MapArray[aY][aZ][aX] && p.colWithChar)
+				{
+					GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
+
+					XMFLOAT3 objPos = obj->GetPosition();
+					XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
+						objPos.y + obj->m_Bounds.Center.y,
+						objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
+					XMFLOAT3 playerMin(pos.x + m_Bounds.Center.x - (m_Bounds.Extents.x / 2),
+						pos.y + m_Bounds.Center.y,
+						pos.z + m_Bounds.Center.z - (m_Bounds.Extents.z / 2));
+					XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
+						objPos.y + obj->m_Bounds.Center.y + obj->m_Bounds.Extents.y,
+						objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
+					XMFLOAT3 playerMax(pos.x + m_Bounds.Center.x + (m_Bounds.Extents.x / 2),
+						pos.y + m_Bounds.Center.y + m_Bounds.Extents.y,
+						pos.z + m_Bounds.Center.z + (m_Bounds.Extents.z / 2));
+
+					if (objMin.x < playerMax.x && objMax.x > playerMin.x &&
+						objMin.y < playerMax.y && objMax.y > playerMin.y &&
+						objMin.z < playerMax.z && objMax.z > playerMin.z)
+					{
+						XMFLOAT3 overlapMaxVertex{ min(objMax.x, playerMax.x), min(objMax.y, playerMax.y), min(objMax.z, playerMax.z) };
+						XMFLOAT3 overlapMinVertex{ max(objMin.x, playerMin.x), max(objMin.y, playerMin.y), max(objMin.z, playerMin.z) };
+						XMFLOAT3 overlapDepth{
+						   overlapMaxVertex.x - overlapMinVertex.x,
+						   overlapMaxVertex.y - overlapMinVertex.y,
+						   overlapMaxVertex.z - overlapMinVertex.z
+						};
+						if (jumpColl < overlapDepth.y)
+						{
+							jumpColl = overlapDepth.y;
+						}
+					}
+				}
+			}
 		}
 	}
 	if (m_JumpForce.y != yGap)
 		OnGround();
-
 	pos.y = tyPos;
+
+	if (jumpColl > 0.f)
+	{
+		pos.y -= jumpColl;
+		m_JumpForce.y = 0;
+	}
+
 	SetPosition(pos.x, pos.y, pos.z);
 }
 
@@ -586,7 +632,10 @@ void Character::OnGround()
 
 bool Character::OnWater()
 {
-	SetIndexPos(GetPosition());
+	XMFLOAT3 pos = GetPosition();
+	if (pos.y > 0)
+		return false;
+	SetIndexPos(pos);
 	for (int i = 0; i < MAP_WATER_NUM; ++i)
 	{
 		if (AppContext->m_WaterMap[i].y == m_IndexPosX

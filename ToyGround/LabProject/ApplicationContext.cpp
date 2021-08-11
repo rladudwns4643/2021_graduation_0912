@@ -299,9 +299,11 @@ void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float s
 		obj->m_IsVisibleOnePassCheck = true;
 		if (isScale) obj->Scale(scaleValue, scaleValue, scaleValue);
 		if(obj->GetMeshName() == OBJECT_MESH_STR_WALL_21)
-			obj->Scale(1.0f, 5.5, 21.f);
+			obj->Scale(1.0f, 5.5f, 21.f);
 		else if (obj->GetMeshName() == OBJECT_MESH_STR_WALL_33)
-			obj->Scale(1.0f, 5.5, 33.f);
+			obj->Scale(1.0f, 5.5f, 33.f);
+		else if (obj->GetMeshName() == OBJECT_MESH_STR_FLOOR)
+			obj->Scale(2.1f, 1.0f, 3.3f);
 		obj->Rotate(itemInfo.rotation.x, itemInfo.rotation.y, itemInfo.rotation.z);
 		obj->SetPosition(itemInfo.position);
 	}

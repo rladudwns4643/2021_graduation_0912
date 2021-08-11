@@ -35,8 +35,8 @@ void TOY_GROUND::Startup(void)
 
 	// Create Scene
 	SceneManager::GetApp()->InitializeScenes();
-	SceneManager::GetApp()->EnterScene(SceneType::eLobby);
-//	SceneManager::GetApp()->EnterScene(SceneType::eGamePlay);
+//	SceneManager::GetApp()->EnterScene(SceneType::eLobby);
+	SceneManager::GetApp()->EnterScene(SceneType::eGamePlay);
 
 	// Build GpuResources
 	GraphicsContext::GetApp()->passCount = 2;

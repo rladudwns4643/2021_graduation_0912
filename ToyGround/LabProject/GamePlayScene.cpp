@@ -207,7 +207,6 @@ bool GameplayScene::Enter()
 	// Props Setting
 	m_MapName = MAP_STR_GAME_MAP;
 	AppContext->DisplayProps(m_MapName);
-//	AppContext->DisplayProps(m_MapName, true, 0.5f);
 
 #ifdef DEBUG_SERVER
 	int cnt = Service::GetApp()->GetBattleClientsCount();

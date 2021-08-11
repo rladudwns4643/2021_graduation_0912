@@ -58,6 +58,20 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		//	map->mapInfoVector.emplace_back(preInfo);
 		//}
 
+		// Create Floor
+		propTypeSet.insert(OBJECT_MESH_STR_FLOOR);
+		preInfo.meshName = OBJECT_MESH_STR_FLOOR;
+		preInfo.rotation.x = 0.0f;
+		preInfo.rotation.y = 0.0f;
+		preInfo.rotation.z = 0.0f;
+		preInfo.position.x = 0.0f;
+		preInfo.position.y = 0.0f;
+		preInfo.position.z = 0.0f;
+		preInfo.textureName = TEXTURE_STR_Floor_Texture;
+		preInfo.typeID = ++typeIDCount;
+		preInfo.isCulling = false;
+		map->mapInfoVector.emplace_back(preInfo);
+
 		// create Wall
 		propTypeSet.insert(OBJECT_MESH_STR_WALL_21);
 		preInfo.meshName = OBJECT_MESH_STR_WALL_21;
@@ -142,11 +156,26 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 					int input;
 					fileIn >> input;
 					//cout << input << " ";
-					if (k == 0)
-						continue;
+
 					rk = k;
 					ri = MAP_DEPTH_BLOCK_NUM - i - 1;
 					rj = MAP_WIDTH_BLOCK_NUM - j - 1;
+
+					// ¹° Ã¼Å©
+					if (k == 0 )
+					{
+						if (input == 4)
+						{
+							XMINT2 t{ i, j };
+							AppContext->m_WaterMap[waterCount++] = t;
+							if (i < MAP_DEPTH_BLOCK_NUM / 2)
+							{
+								XMINT2 rt{ ri, rj };
+								AppContext->m_WaterMap[waterCount++] = rt;
+							}
+						}
+						continue;
+					}
 					shiftX = 0.f;
 					shiftY = 0.f;
 					shiftZ = 0.f;
@@ -161,14 +190,6 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						switch (input)
 						{
 						case 1:
-							if (k == 0)
-							{
-								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_01;
-								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_01);
-								preInfo.colWithChar = false;
-								preInfo.isCulling = false;
-							}
-							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_01;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_01);
@@ -177,14 +198,6 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							}
 							break;
 						case 2:
-							if (k == 0)
-							{
-								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_02;
-								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_02);
-								preInfo.colWithChar = false;
-								preInfo.isCulling = false;
-							}
-							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_02;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_02);
@@ -193,14 +206,6 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							}
 							break;
 						case 3:
-							if (k == 0)
-							{
-								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_03;
-								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_03);
-								preInfo.colWithChar = false;
-								preInfo.isCulling = false;
-							}
-							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_03;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_03);
@@ -209,21 +214,6 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							}
 							break;
 						case 4:
-							if (k == 0)
-							{
-								preInfo.meshName = OBJECT_MESH_STR_CUBE_PLAT_04;
-								propTypeSet.insert(OBJECT_MESH_STR_CUBE_PLAT_04);
-								preInfo.colWithChar = false;
-								preInfo.isCulling = false;
-								XMINT2 t{i, j};
-								AppContext->m_WaterMap[waterCount++] = t;
-								if (i < MAP_DEPTH_BLOCK_NUM / 2)
-								{
-									XMINT2 rt{ ri, rj };
-									AppContext->m_WaterMap[waterCount++] = rt;
-								}
-							}
-							else
 							{
 								preInfo.meshName = OBJECT_MESH_STR_CUBE_04;
 								propTypeSet.insert(OBJECT_MESH_STR_CUBE_04);
@@ -458,6 +448,12 @@ void AssertsReference::CreateBB()
 	{
 		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
+		bb->Extents = XMFLOAT3(2100.f, 3300.f, 100.f);
+		m_PropBoundingBox[OBJECT_MESH_STR_FLOOR] = std::move(bb);
+	}
+	{
+		auto bb = make_unique<BoundingBox>();
+		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
 		bb->Extents = XMFLOAT3(2100.f, 550.f, 100.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_WALL_21] = std::move(bb);
 	}
@@ -634,6 +630,14 @@ void AssertsReference::BuildMaterials()
 	Polygon_Plane_Texture_03->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
 	Polygon_Plane_Texture_03->Roughness = 0.717734;
 
+	auto Floor_Texture = std::make_unique<Material>();
+	Floor_Texture->MatCBIndex = TEXTURE_INDEX_Floor_Texture;
+	Floor_Texture->DiffuseSrvHeapIndex = TEXTURE_INDEX_Floor_Texture;
+	Floor_Texture->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	Floor_Texture->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
+	Floor_Texture->Roughness = 0.717734;
+
+	//---------------------------------------------------------------------------------------------
 	auto TITLE_BACKGROUND = std::make_unique<Material>();
 	TITLE_BACKGROUND->MatCBIndex = TEXTURE_INDEX_UI_TITLE_BACKGROUND;
 	TITLE_BACKGROUND->DiffuseSrvHeapIndex = TEXTURE_INDEX_UI_TITLE_BACKGROUND;
@@ -767,6 +771,7 @@ void AssertsReference::BuildMaterials()
 	m_Materials[TEXTURE_STR_PolygonMinis_Texture_01_A] = std::move(PolygonMinis_Texture_01_A);
 	m_Materials[TEXTURE_STR_Polygon_Plane_Texture_02] = std::move(Polygon_Plane_Texture_02);
 	m_Materials[TEXTURE_STR_Polygon_Plane_Texture_03] = std::move(Polygon_Plane_Texture_03);
+	m_Materials[TEXTURE_STR_Floor_Texture] = std::move(Floor_Texture);
 
 	m_Materials[TEXTURE_STR_UI_TITLE_BACKGROUND] = std::move(TITLE_BACKGROUND);
 	m_Materials[TEXTURE_STR_UI_TITLE_LOGO_TOYGROUND] = std::move(TITLE_LOGO_TOYGROUND);
