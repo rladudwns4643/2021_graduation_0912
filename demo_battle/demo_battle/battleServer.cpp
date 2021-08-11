@@ -64,37 +64,6 @@ void BattleServer::ConncetLobbyServer() {
 #endif
 }
 
-//unused
-void BattleServer::AcceptLobbyServer() {
-	SocketAddress LobbyServerAddr;
-	TCPSocketPtr clientSocket;
-	DWORD flags = 0;
-
-	clientSocket = m_listen->Accept(LobbyServerAddr);
-
-	CLIENT* LobbyServer = new CLIENT;
-	LobbyServer->user_id = LOBBY_SERVER_KEY; //0: lobby_server
-	LobbyServer->m_s = clientSocket;
-
-	LobbyServer->m_recv_over.wsabuf[0].len = MAX_BUFFER;
-	LobbyServer->m_recv_over.wsabuf[0].buf = LobbyServer->m_recv_over.net_buf;
-
-	LobbyServer->m_recv_over.ev_type = EVENT_TYPE::EV_RECV;
-	LobbyServer->isConnected = true;
-	LobbyServer->curr_packet_size = 0;
-	LobbyServer->prev_packet_data = 0;
-
-	SR::g_clients[LOBBY_SERVER_KEY] = LobbyServer;
-
-	CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket->GetSocket()), SR::g_iocp, LOBBY_SERVER_KEY, 0);
-	memset(&SR::g_clients[LOBBY_SERVER_KEY]->m_recv_over, 0, sizeof(WSAOVERLAPPED));
-	clientSocket->WSAReceive(SR::g_clients[LOBBY_SERVER_KEY]->m_recv_over.wsabuf, 1, NULL, &flags, &SR::g_clients[LOBBY_SERVER_KEY]->m_recv_over.over);
-
-#ifdef LOG_ON
-	std::cout << "LOBBY SERVER CONNECTED\n";
-#endif
-}
-
 void BattleServer::Run() {
 	m_ThreadHandler = new ThreadHandler;
 
@@ -173,7 +142,6 @@ void BattleServer::SendPacket(int id, void* buff) {
 	cout << "[main]: Send: " << (int)p[1] << " id: " << id << endl;
 //#endif //LOG_ON
 	EX_OVER* send_over = new EX_OVER;
-	//memset(send_over, 0, sizeof(EX_OVER));
 	ZeroMemory(send_over, sizeof(EX_OVER));
 	send_over->ev_type = EVENT_TYPE::EV_SEND;
 	memcpy(send_over->net_buf, p, packet_size);
@@ -181,13 +149,6 @@ void BattleServer::SendPacket(int id, void* buff) {
 	send_over->wsabuf[0].buf = send_over->net_buf;
 
 	SR::g_clients[id]->m_s->WSASend(send_over->wsabuf, 1, 0, 0, &send_over->over);
-}
-
-void BattleServer::SendCheckConnect() {
-	bl_pakcet_check_connect p;
-	p.size = sizeof(p);
-	p.type = BL_CHECK;
-	SendPacket(LOBBY_SERVER_KEY, &p);
 }
 
 void BattleServer::SendBattleLoginOKPacket(int id) {
@@ -211,17 +172,17 @@ void BattleServer::SendBattleLoginFailPacket(int id) {
 	SendPacket(id, &p);
 }
 
-void BattleServer::SendAutoRoomReadyPacket(int id, int room_no) {
+void BattleServer::SendAutoRoomReadyPacket(int id_1, int id_2, int room_no) {
 #ifdef LOG_ON
 	cout << "SendAutoRoomReadyPacket: " << id << " room: "<< room_no << endl;
 #endif
 	bl_packet_room_ready p;
 	p.size = sizeof(p);
 	p.type = BL_ROOMREADY;
-	p.id = id;
+	p.id_1 = id_1;
+	p.id_2 = id_2;
 	p.room_no = room_no;
-	p.is_host = true;
-	SendPacket(id, &p);
+	SendPacket(LOBBY_SERVER_KEY, &p);
 }
 
 void BattleServer::SendRoomJoinSuccess(int id, bool isRoomMnr) {

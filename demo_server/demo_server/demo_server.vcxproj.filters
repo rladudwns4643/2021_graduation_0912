@@ -13,45 +13,81 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Code">
+      <UniqueIdentifier>{c322e0bd-17b6-44d7-801a-3f51877134bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Database">
+      <UniqueIdentifier>{0c2adc17-3521-4e9e-9ffc-47c0ea06ef81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Singleton">
+      <UniqueIdentifier>{eb0b7f5e-6abf-4f73-96bf-40583fbd8c9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\User">
+      <UniqueIdentifier>{71526a2d-41bf-497c-aa2c-8dd46b83dbdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread">
+      <UniqueIdentifier>{841af265-5caa-4ec6-bdb3-9630e04a5755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread\TimerThread">
+      <UniqueIdentifier>{51d2e5bd-15be-4300-a266-d4e5a7f6ccf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread\ThreadInterface">
+      <UniqueIdentifier>{24ff7a7a-09ae-41b8-8a2b-9c8af7b44710}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Thread\LobbyThread">
+      <UniqueIdentifier>{48398516-388b-4a06-a713-58dd84e1a534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\extern">
+      <UniqueIdentifier>{429c9e5c-345c-47b0-9958-b0790b308586}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="LobbyServer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="User.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Database.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Code\Database</Filter>
     </ClCompile>
     <ClCompile Include="Singleton.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Code\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>Code\User</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerThread.cpp">
+      <Filter>Code\Thread\TimerThread</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyServer.cpp">
+      <Filter>Code\Thread\LobbyThread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Global.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="User.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DataBase.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="protocol.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="DataBase.h">
+      <Filter>Code\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Code\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>Code\User</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerThread.h">
+      <Filter>Code\Thread\TimerThread</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadInterface.h">
+      <Filter>Code\Thread\ThreadInterface</Filter>
+    </ClInclude>
     <ClInclude Include="LobbyServer.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Code\Thread\LobbyThread</Filter>
+    </ClInclude>
+    <ClInclude Include="extern.h">
+      <Filter>Code\extern</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
