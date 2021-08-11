@@ -214,7 +214,7 @@ void NetCore::ProcessData(char* buf, size_t io_byte) {
 	return;
 }
 
-#define DEB
+//#define DEB
 void NetCore::ProcessPacket(char* packet_buf) {
 #ifdef LOG_ON
 	cout << "[NETCORE] procpacket: " << (int)packet_buf[1] << " LobbyID: " << m_client.lobby_id << " BattleID: " << m_client.battle_id << endl;
@@ -422,9 +422,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_COIN, 3, p->id, p->coin_cnt, p->delete_coin_id);
 	}
 	case BC_PLAYER_POS: {
-#ifdef DEB
+//#ifdef DEB
 		cout << "BC_PLAYER_POS\n";
-#endif
+//#endif
 		bc_packet_player_pos* p = reinterpret_cast<bc_packet_player_pos*>(packet_buf);
 
 		XMFLOAT3 arg_pos;
@@ -436,9 +436,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_PLAYER_ROT: {
-#ifdef DEB
+//#ifdef DEB
 		cout << "BC_PLAYER_ROT\n";
-#endif
+//#endif
 		bc_packet_player_rot* p = reinterpret_cast<bc_packet_player_rot*>(packet_buf);
 
 		XMFLOAT3 arg_look;
@@ -492,10 +492,10 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_ANIM: { //id가 어떤 anim인지
-#ifdef DEB
-		cout << "BC_ANIM\n";
-#endif
 		bc_packet_anim_type* p = reinterpret_cast<bc_packet_anim_type*>(packet_buf);
+//#ifdef DEB
+		cout << "BC_ANIM: " << p->id << p->anim_type << endl;
+//#endif
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_ANIM, 2, p->id, p->anim_type);
 		break;
 	}

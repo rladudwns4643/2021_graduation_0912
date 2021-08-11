@@ -185,7 +185,9 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 			}
 			ATOMIC::g_room_no_lock.unlock();
 		}
+#ifdef LOG_ON
 		cout << "make room: " << roomNo << "id_1: " << id_1 << "id_2: " << id_2 << endl;
+#endif LOG_ON
 		Room* new_room = new Room(roomNo);
 		SR::g_rooms[roomNo] = new_room;
 		++ATOMIC::g_RoomNum;
