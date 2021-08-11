@@ -143,16 +143,19 @@
     <ClCompile Include="LobbyServer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Singleton.cpp" />
+    <ClCompile Include="TimerThread.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataBase.h" />
-    <ClInclude Include="Global.h" />
+    <ClInclude Include="extern.h" />
     <ClInclude Include="LobbyServer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="ThreadInterface.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="TimerThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

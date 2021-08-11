@@ -171,7 +171,10 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 #endif //LOG_ON
 	switch (inputPacket[1]) {
 	case LB_REQUEST_ROOM: {
-		int roomNo;
+		lb_packet_request_room* p = reinterpret_cast<lb_packet_request_room*>(inputPacket);
+		int id_1{ p->id_1 };
+		int id_2{ p->id_2 };
+		int roomNo{};
 		for (int i = 0; i < MAX_ROOM; ++i) { //선형 순회로 빈 방 찾기, 이거 최악의 경우에 안들어갈 수 있음 탐색 개편 필요
 			ATOMIC::g_room_no_lock.lock();
 			if (SR::g_room_no[i] == -1) {
@@ -182,13 +185,11 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 			}
 			ATOMIC::g_room_no_lock.unlock();
 		}
-#ifdef LOG_ON
-		cout << "make room: " << roomNo << endl;
-#endif 
+		cout << "make room: " << roomNo << "id_1: " << id_1 << "id_2: " << id_2 << endl;
 		Room* new_room = new Room(roomNo);
 		SR::g_rooms[roomNo] = new_room;
 		++ATOMIC::g_RoomNum;
-		BattleServer::GetInstance()->SendAutoRoomReadyPacket(id, roomNo);
+		BattleServer::GetInstance()->SendAutoRoomReadyPacket(id_1, id_2, roomNo);
 		break;
 	}
 	case CB_LOGIN: {

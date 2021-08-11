@@ -1,6 +1,5 @@
 #pragma once
 #include "pch.h"
-#include "Global.h"
 
 constexpr int UNSETMMR = -1;
 constexpr int UNSETID = -1;

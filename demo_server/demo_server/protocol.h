@@ -482,26 +482,23 @@ struct lb_packet_check_connect {
 struct lb_packet_request_room {
 	BYTE size;
 	BYTE type;
+
+	short id_1;
+	short id_2;
 };
 #pragma pack (pop)
 //------------------------------------------------------------------
 
 //-------------------------------B->L-------------------------------
 #define BL_ROOMREADY			54
-#define BL_CHECK				55
 #pragma pack (push, 1)
 struct bl_packet_room_ready {
 	BYTE size;
 	BYTE type;
 
-	short id;
+	short id_1;
+	short id_2;
 	int room_no;
-	bool is_host;
-};
-
-struct bl_pakcet_check_connect {
-	BYTE size;
-	BYTE type;
 };
 //------------------------------------------------------------------
 #pragma pack (pop)
