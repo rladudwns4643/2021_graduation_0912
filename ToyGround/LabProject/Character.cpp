@@ -516,7 +516,8 @@ void Character::Falling()
 	float yGap = m_JumpForce.y;
 	float tyPos = pos.y;
 	float jumpColl = 0.f;
-	SetIndexPos(pos);
+	SetIndexPos(prePos);
+	//SetIndexPos(pos);
 	Map* originMap = AppContext->m_Maps[m_MapName];
 	for (auto& p : originMap->mapInfoVector)
 	{
@@ -569,9 +570,11 @@ void Character::Falling()
 					}
 				}
 			}
-			if (shiftArrY[i + 1] == -1)
+			if (shiftArrY[i + 1] == 0)
 			{
-				aY += 2;
+				aY += 1;
+				if (aY <= 0 || aY >= MAP_HEIGHT_BLOCK_NUM)
+					continue;
 				if (p.typeID == AppContext->m_MapArray[aY][aZ][aX] && p.colWithChar)
 				{
 					GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
@@ -610,6 +613,7 @@ void Character::Falling()
 			}
 		}
 	}
+	cout << "x: " << m_IndexPosX << ", y: " << m_IndexPosY << ", z: " << m_IndexPosZ << endl;
 	if (m_JumpForce.y != yGap)
 		OnGround();
 	pos.y = tyPos;

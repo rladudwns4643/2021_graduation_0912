@@ -448,7 +448,7 @@ void AssertsReference::CreateBB()
 	{
 		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(2100.f, 3300.f, 100.f);
+		bb->Extents = XMFLOAT3(2100.f, 0.f, 3300.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_FLOOR] = std::move(bb);
 	}
 	{
