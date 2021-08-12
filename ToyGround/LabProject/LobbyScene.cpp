@@ -104,8 +104,9 @@ bool LobbyScene::Enter()
 	cout << "============= Lobby Scene ==============" << endl;
 
 	Core::g_InputSwitch = true;
-	m_ID = L"";
-	m_Password = L"";
+	m_ID.clear();
+	m_Password.clear();
+	m_ChatType = 0;
 	ID_Input_Ativate = false;
 	PW_Input_Ativate = false;
 
