@@ -52,12 +52,11 @@ public:
 	void Update2DPosition(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
 
 	void UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool IsCharacter = false);
-	void UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems); // 사용안함
+	void UpdateBulletInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems);
 
 	void UpdateMaterialBuffer(std::unordered_map<std::string, std::unique_ptr<Material>>& materials);
 	void UpdateMainPassCB(Camera& camera, Light* light);
-	void UpdateUIPassCB(float hpRate);
-
+	
 	UITextInfo GetUIPosAndSize(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, std::string uiName);
 
 	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);

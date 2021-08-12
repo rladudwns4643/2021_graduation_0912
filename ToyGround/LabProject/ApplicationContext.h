@@ -72,7 +72,7 @@ public:
 	void CreateBullet();
 	void UpdateBullet();
 	void DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 look, int firedPlayerID, int bulletNum = 1);
-	void HiddenBullet(int instID, int bulletNum = 1, bool isVisible = false);
+	void HiddenBullet(int instID, int bulletNum = 1);
 
 	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
 	void HiddenProps(std::string mapName);

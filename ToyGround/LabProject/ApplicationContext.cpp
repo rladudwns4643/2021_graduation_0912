@@ -201,6 +201,9 @@ void ApplicationContext::CreateBullet()
 		Bullet->m_IsVisible = false;
 		Bullet->m_IsVisibleOnePassCheck = false;
 		Bullet->m_IsCulling = true;
+		Bullet->InitializeTransform();
+		Bullet->Scale(1, 1, 1);
+		cout << "C - Bullet: " << OBJECT_START_INDEX_BULLET_01 + i << endl;
 	}
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 	{
@@ -214,15 +217,31 @@ void ApplicationContext::CreateBullet()
 		Bullet->m_IsVisible = false;
 		Bullet->m_IsVisibleOnePassCheck = false;
 		Bullet->m_IsCulling = true;
+		Bullet->InitializeTransform();
+		Bullet->Scale(1, 1, 1);
 	}
 }
 
 void ApplicationContext::UpdateBullet()
 {
+	int hiddenBulletIndex[MAX_BULLET_COUNT];
+	int hiddenBulletCount = 0;
 	for (int i = 0; i < m_AtiveBulletCnt; ++i)
 	{
 		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + m_AtiveBullet[i]));
+		if (obj->m_IsVisible == false || !obj) continue;
 		obj->Update();
+
+		XMFLOAT3 pos = obj->GetPosition();
+		if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
+			pos.x <= -((MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE) ||
+			pos.z >= (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
+			pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE) ||
+			pos.y <= 0) hiddenBulletIndex[hiddenBulletCount++] = m_AtiveBullet[i];
+	}
+	for (int i = 0; i < hiddenBulletCount; ++i)
+	{
+		HiddenBullet(hiddenBulletIndex[i], 1);
 	}
 }
 
@@ -231,32 +250,30 @@ void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 l
 	if (bulletNum == 1)
 	{
 		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + instID));
-		if (!obj) return;
+		if (!obj || obj->m_IsVisible) return;
 
 		XMFLOAT3 bSpeed{ 0.f, 0.f, 0.f };
-		bSpeed = MathHelper::Add(bSpeed, look, 34.7f);
+		bSpeed = MathHelper::Add(bSpeed, look, 75.0f);
 
 		obj->m_IsVisible = true;
 		obj->m_IsVisibleOnePassCheck = true;
-		obj->InitializeTransform();
-		obj->Scale(1, 1, 1);
 		obj->m_Speed = bSpeed;
 		obj->SetMatrixByLook(look.x, look.y, look.z);
 		obj->SetPosition(startPos);
 		obj->m_FiredPlayerID = firedPlayerID;
+
+		cout << "D - Bullet: " << instID << endl;
 	}
 	else
 	{
 		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_02, std::to_string(OBJECT_START_INDEX_BULLET_02 + instID));
-		if (!obj) return;
+		if (!obj || obj->m_IsVisible) return;
 
 		XMFLOAT3 bSpeed{ 0.f, 0.f, 0.f };
 		bSpeed = MathHelper::Add(bSpeed, look, 34.7f);
 
 		obj->m_IsVisible = true;
 		obj->m_IsVisibleOnePassCheck = true;
-		obj->InitializeTransform();
-		obj->Scale(1, 1, 1);
 		obj->m_Speed = bSpeed;
 		obj->SetMatrixByLook(look.x, look.y, look.z);
 		obj->SetPosition(startPos);
@@ -264,25 +281,36 @@ void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 l
 	}
 }
 
-void ApplicationContext::HiddenBullet(int instID, int bulletNum, bool isVisible)
+void ApplicationContext::HiddenBullet(int instID, int bulletNum)
 {
 	if (bulletNum == 1)
 	{
+		cout << "H - Bullet: " << instID << endl;
+		
 		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + instID));
 		if (!obj) {
 			cout << "HiddenBullet: cant find obj" << endl;
 			return;
 		}
+		if (obj->m_IsVisible == false)
+			return;
+		obj->m_Speed = XMFLOAT3(0.f, 0.f, 0.f);
+		obj->SetPosition(XMFLOAT3(0.f, -100.f, 0.f));
 
-		ZeroMemory(&obj->m_World, sizeof(obj->m_World));
-		ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
-		obj->m_IsVisible = isVisible;
-		obj->m_IsVisibleOnePassCheck = isVisible;
+		obj->m_IsVisible = false;
+		obj->m_IsVisibleOnePassCheck = false;
 
-		if (isVisible)
+		m_AtiveBulletCheck[instID] = false;
+		bool check = false;
+		for (int j = 0; j < m_AtiveBulletCnt; ++j)
 		{
-			GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[OBJECT_MESH_STR_BULLET_01], m_RItemsVec);
+			if (check)
+				m_AtiveBullet[j - 1] = m_AtiveBullet[j];
+			if (m_AtiveBullet[j] == instID)
+				check = true;
 		}
+		m_AtiveBulletCnt--;
+
 	}
 	else
 	{
@@ -292,15 +320,8 @@ void ApplicationContext::HiddenBullet(int instID, int bulletNum, bool isVisible)
 			return;
 		}
 
-		ZeroMemory(&obj->m_World, sizeof(obj->m_World));
-		ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
-		obj->m_IsVisible = isVisible;
-		obj->m_IsVisibleOnePassCheck = isVisible;
-
-		if (isVisible)
-		{
-			GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[OBJECT_MESH_STR_BULLET_02], m_RItemsVec);
-		}
+		obj->m_IsVisible = false;
+		obj->m_IsVisibleOnePassCheck = false;
 	}
 }
 
