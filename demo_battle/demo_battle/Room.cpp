@@ -387,7 +387,6 @@ void Room::CheckGameState() {
 	if (m_leftTime <= MAX_LEFT_TIME - COUNTDOWN_TIME) {
 		if (!m_isRoundStarted) {
 			m_isRoundStarted = true;
-			//cout << "---RoundStart---\n";
 			RoundStart();
 		}
 	}
@@ -711,7 +710,6 @@ void Room::ProcMsg(message msg) {
 		for (auto& pl : m_players) {
 			if (pl->GetID() == msg.id) {
 				if (pl->GetReady() == false) {
-					cout << "RDY: " << msg.id << endl;
 					pl->SetReady(true);
 					PushReadyMsg(msg.id, pl->GetReady());
 				}
@@ -720,7 +718,6 @@ void Room::ProcMsg(message msg) {
 		if (m_players[0]->GetReady() == true && m_players[1]->GetReady() == true) {
 			ClearCopyMsg();
 			if (!m_isGameStarted) {
-				cout << "Game START" << endl;
 				GameStart();
 				SendLeftTimePacket();
 			}

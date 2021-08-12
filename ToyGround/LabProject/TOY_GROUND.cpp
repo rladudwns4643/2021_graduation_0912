@@ -134,7 +134,7 @@ void TOY_GROUND::BuildAsserts()
 
 	for (int i = 0; i < loadMeshCount; ++i)
 	{
-		cout << AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector[i] << endl;
+		//cout << AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector[i] << endl;
 		AssertsReference::GetApp()->BuildModel(g_Device.Get(), g_CommandList.Get(), AppContext->m_Maps[MAP_STR_GAME_MAP]->propTypeVector[i]);
 	}
 	

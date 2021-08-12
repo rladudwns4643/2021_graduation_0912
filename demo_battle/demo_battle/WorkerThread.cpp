@@ -56,7 +56,9 @@ void WorkerThread::ProcThread() {
 					msg = ProcPacket(key, p);
 					if (msg.type != NO_MSG) {
 						int room_id = SR::g_clients[key]->room_id;
+#ifdef LOG_ON
 						cout << "Push MSG [room:" << room_id << " msg:" << (int)msg.type << " id: " << msg.id << "]\n";
+#endif LOG_ON
 						SR::g_rooms[room_id]->PushMsg(msg);
 					}
 
@@ -136,7 +138,6 @@ void WorkerThread::ProcThread() {
 			break;
 		}
 		case EVENT_TYPE::EV_RESET_ROOM: {
-			std::cout << "EV_RESET_ROOM" << std::endl;
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->Reset();
 			delete ex_over;

@@ -101,9 +101,8 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 {
 	switch (packet[1]) {
 	case LC_LOGIN_OK: {
-		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet);
+		cl_packet_dummy_login* p = reinterpret_cast<cl_packet_dummy_login*>(packet);
 		int my_id = dummy_count++;
-		dummy[my_id].id = p->id;
 		dummy[my_id].loginok = true;
 		SendRequestUserInfo(id);
 		break;
@@ -112,29 +111,23 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 	case LC_USERINFO: {
 		lc_packet_userinfo* p = reinterpret_cast<lc_packet_userinfo*>(packet);
 		dummy[id].mmr = p->mmr;
-		dummy[id].name = p->id_str;
-		//원래는 버튼으로 오토매칭
-		SendAutoMatchPacket(id);
+		memcpy(dummy[id].id_str, p->id_str, sizeof(char) * MAX_ID_LEN);
+		ConnectBattleServer(id);
+		SendBattleLoginPacket(id);
 		break;
 	}
 	case BC_BATTLE_LOGIN_OK: {
 		bc_packet_battle_login_ok* p = reinterpret_cast<bc_packet_battle_login_ok*>(packet);
 		dummy[id].battle_id = p->id;
 		dummy[id].battle_connect = true;
-		dummy[id].room_num = 1;
-
-		SendJoinPacket(id, dummy[id].room_num);
+		SendFindRoomPacket(id);
 		break;
 	}
 	case LC_FIND_ROOM: {
-		//scene change
-#ifdef LOG_ON
-		cout << "MATCHSTART" << endl;
-#endif
 		lc_packet_find_room* p = reinterpret_cast<lc_packet_find_room*>(packet);
 		dummy[id].room_num = p->roomNum;
 		dummy[id].is_host = p->isHost;
-		ConnectBattleServer(id);
+		SendJoinPacket(id, dummy[id].room_num);
 		break;
 	}
 	case BC_PLAYER_ROT: break;
@@ -149,22 +142,22 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		break;
 	}
 	case BC_JOIN_FAIL: cout << "join fail\n"; break;
-	case BC_ROOM_ENTERED: cout << "room entered\n"; break;
+	case BC_ROOM_ENTERED: {
+		cout << "room entered\n"; break;
+		bc_packet_room_entered* p = reinterpret_cast<bc_packet_room_entered*>(packet);
+		std::unique_ptr<CLIENT> client = std::make_unique<CLIENT>(p->id);
+		memcpy(client->id_str, p->name, sizeof(char) * MAX_ID_LEN);
+		client->mmr = p->mmr;
+		client->is_host = p->isManager;
+		client->battle_id = p->player_no;
+		battle_dummy[p->id] = std::move(client);
+		break;
+	}
 	case BC_NEW_ROOM_HOST: cout << "new room host\n"; break;
-	case BC_LEFT_TIME: {
-		cout << "left time\n"; 
-		SendKeyDownW(id);
-		break;
-	}
-	case BC_READY: {
-		SendGameStartPacket(id);
-		break;
-	}
+	case BC_LEFT_TIME: break;
+	case BC_READY:	break;
 	case BC_ROOM_START: cout << "start\n"; break;
-	case BC_ROOM_START_AVAILABLE: {
-		//SendGameStartPacket(id);
-		break;
-	}
+	case BC_ROOM_START_AVAILABLE: break;
 	case BC_UPDATED_USER_INFO: {
 		bc_packet_updated_user_info* p = reinterpret_cast<bc_packet_updated_user_info*>(packet);
 		SendUpdateUserInfo(id, p->mmr);
@@ -274,7 +267,7 @@ void Dummy::SendLoginPacket(int id)
 	p.type = CL_DUMMY_LOGIN;
 	std::string id_str{ "Dummy" };
 	id_str += std::to_string(id);
-	memcpy(p.id, id_str.c_str(), sizeof(char) * MAX_ID_LEN);
+	memcpy(p.name, id_str.c_str(), sizeof(char) * MAX_ID_LEN);
 	SendPacket(id, &p, ST_LOBBY);
 }
 
@@ -308,8 +301,8 @@ void Dummy::SendUpdateUserInfo(int id, int mmr) {
 	SendPacket(id, &p, ST_LOBBY);
 }
 
-void Dummy::SendAutoMatchPacket(int id) {
-	cout << "Send AutoMath\n";
+void Dummy::SendFindRoomPacket(int id) {
+	cout << "Send FindRoomPacket\n";
 	cl_packet_find_room p;
 	p.size = sizeof(p);
 	p.type = CL_FIND_ROOM;

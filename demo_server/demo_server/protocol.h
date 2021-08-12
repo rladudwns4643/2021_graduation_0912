@@ -137,7 +137,7 @@ struct cl_packet_dummy_login {
 	BYTE size;
 	BYTE type;
 
-	char id[MAX_ID_LEN];
+	char name[MAX_ID_LEN];
 };
 struct cl_packet_find_room {
 	BYTE size;

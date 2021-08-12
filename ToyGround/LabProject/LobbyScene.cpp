@@ -56,7 +56,6 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		va_end(ap);
 		cout << "ENTER ROOM id: "<< arg_id << endl; //µé¾î¿Âid
-		//NetCore::GetApp()->SendReadyPacket();
 		break;
 	}
 	case EVENT_ROOM_READY: {

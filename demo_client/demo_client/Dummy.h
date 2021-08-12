@@ -38,7 +38,7 @@ struct CLIENT {
 
 	ConnectSocket connectSocket[ST_COUNT];
 
-	std::string name;
+	char id_str[MAX_ID_LEN];
 	int mmr = -1;
 };
 
@@ -58,7 +58,7 @@ public:
 	void SendLoginPacket(int id);
 	void SendRequestUserInfo(int id);
 	void SendUpdateUserInfo(int id, int mmr);
-	void SendAutoMatchPacket(int id);
+	void SendFindRoomPacket(int id);
 
 	void SendBattleLoginPacket(int id);
 	void SendJoinPacket(int id, int room_no);
@@ -75,6 +75,7 @@ public:
 private:
 	HANDLE iocp;
 
+	std::map<int, std::unique_ptr<CLIENT>> battle_dummy;
 	std::array<CLIENT, MAX_DUMMY> dummy;
 	std::atomic_int dummy_count = 0;
 	std::atomic_int num_connections;

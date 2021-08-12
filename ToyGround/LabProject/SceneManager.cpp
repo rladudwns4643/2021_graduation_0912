@@ -38,7 +38,6 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		break;
 	}
 		//battle
-	case EVENT_BATTLE_LOGIN_OK: break;
 	case EVENT_ROOM_ENTER: {
 		int arg_id;
 		va_list ap;
