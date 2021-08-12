@@ -18,7 +18,7 @@ struct SocketInfo {
 };
 
 struct CLIENT {
-	string lobby_id{ -1 };
+	int lobby_id{ -1 };
 	int battle_id{ -1 };
 	bool is_battle_login{ false };
 	//lobby, battle
@@ -61,7 +61,6 @@ public:
 	void SendBattleRoomJoinPacket();
 	void SendBattleRoomLeavePacket();
 	void SendReadyPacket();
-	void SendGameStartPacket();
 
 	//void SendMovePacket(char key);
 	void SendAnimPacket(int anim_type);

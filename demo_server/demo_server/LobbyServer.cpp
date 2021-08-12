@@ -294,9 +294,8 @@ void LobbyServer::SendUserInfoPacket(int id) {
 	p.size = sizeof(p);
 	p.type = LC_USERINFO;
 	
-	memcpy(p.id_str, "kkk", 10);//db¿¡¼­ ºÒ·¯¿È
-	p.mmr = MMRDEFAULT + id; //db¿¡¼­ ºÒ·¯¿È
-	
+	memcpy(p.id_str, userList[id]->user_info->GetPlayerID().c_str(), MAX_ID_LEN);//db¿¡¼­ ºÒ·¯¿È
+	p.mmr = userList[id]->user_info->GetPlayerMMR(); //db¿¡¼­ ºÒ·¯¿È
 	SendPacket(id, &p);
 }
 

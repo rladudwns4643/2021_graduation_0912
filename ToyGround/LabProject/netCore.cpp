@@ -256,6 +256,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		cout << "LC_USERINFO\n";
 #endif
 		lc_packet_userinfo* p = reinterpret_cast<lc_packet_userinfo*>(packet_buf);
+		memcpy(m_client.id_str, p->id_str,sizeof(char) *  MAX_ID_LEN);
 		m_client.mmr = p->mmr;
 		Service::GetApp()->AddEvent(EVENT_LOBBY_UPDATE_CLIENT_USERINFO, 1, m_client.mmr);
 		break;
@@ -265,8 +266,10 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		cout << "LC_FIND_ROOM\n";
 #endif
 		lc_packet_find_room* p = reinterpret_cast<lc_packet_find_room*>(packet_buf);
-		m_room_no = p->roomNum;
-		m_ishost = p->isHost;
+		m_battle_clients[m_client.battle_id]->m_room_num = p->roomNum;
+		m_battle_clients[m_client.battle_id]->m_host = p->isHost;
+		cout<< "[FIND ROOM] isHOST: " << m_battle_clients[m_client.battle_id]->m_host <<
+			" roomNo: " << m_battle_clients[m_client.battle_id]->m_room_num << endl;
 
 		Service::GetApp()->AddEvent(EVENT_ROOM_FIND_ROOM);
 		break;
@@ -292,15 +295,10 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		m_client.is_battle_login = true;
 
 		std::unique_ptr<BattleClient> battle_client = std::make_unique<BattleClient>(m_client.battle_id);
-		memcpy(battle_client->name, m_client.lobby_id.c_str(), MAX_ID_LEN);
+		memcpy(battle_client->name, m_client.id_str, sizeof(char) * MAX_ID_LEN);
 		battle_client->mmr = m_client.mmr;
 		m_battle_clients[m_client.battle_id] = std::move(battle_client);
-		m_battle_clients[m_client.battle_id]->m_host = m_ishost;
-		m_battle_clients[m_client.battle_id]->m_room_num = m_room_no;
-		cout << "MAKE client: " << m_client.battle_id <<
-			" isHOST: " << m_battle_clients[m_client.battle_id]->m_host <<
-			" roomNo: " << m_battle_clients[m_client.battle_id]->m_room_num << endl;
-
+		cout << "MAKE client: " << m_client.battle_id << endl;
 
 		Service::GetApp()->AddEvent(EVENT_BATTLE_LOGIN_OK);
 		break;
@@ -549,7 +547,7 @@ void NetCore::errorDisplay(const char* msg)
 //sendPacket
 
 void NetCore::SendLobbyLoginPacket(const std::string& id, const std::string& pw) {
-	m_client.lobby_id = id;
+	memcpy(m_client.id_str, id.c_str(), sizeof(char) * MAX_ID_LEN);
 
 	//todo: 나중에 login으로 바꿔야함
 	cl_packet_login p;
@@ -604,7 +602,7 @@ bool NetCore::SendBattleLoginPacket() {
 	cb_packet_login p;
 	p.size = sizeof(p);
 	p.type = CB_LOGIN;
-	memcpy(&p.name, m_client.lobby_id.c_str(), sizeof(char) * MAX_ID_LEN);
+	memcpy(&p.name, m_client.id_str, sizeof(char) * MAX_ID_LEN);
 	p.mmr = m_client.mmr;
 	if (!SendPacket(&p, SV_BATTLE)) return false;
 	return true;
@@ -633,13 +631,6 @@ void NetCore::SendReadyPacket() {
 	cb_packet_ready p;
 	p.size = sizeof(p);
 	p.type = CB_READY;
-	SendPacket(&p, SV_BATTLE);
-}
-
-void NetCore::SendGameStartPacket() {
-	cb_packet_start p;
-	p.size = sizeof(p);
-	p.type = CB_START;
 	SendPacket(&p, SV_BATTLE);
 }
 

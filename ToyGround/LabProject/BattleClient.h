@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 
 class BattleClient {
 	friend class NetCore;
@@ -7,7 +8,7 @@ class BattleClient {
 
 	int m_battleID;
 
-	char name[10];
+	char name[MAX_ID_LEN];
 	int mmr{ -1 };
 
 public:

@@ -726,14 +726,6 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_START: {
-		ClearCopyMsg();
-		if (!m_isGameStarted) {
-			GameStart();
-			SendLeftTimePacket();
-		}
-		break;
-	}
 	case CB_POSITION_VECTOR: {
 		for (auto& pl : m_players) {
 			int t_id{ msg.id };

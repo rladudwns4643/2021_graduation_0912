@@ -394,7 +394,6 @@ struct bc_packet_updated_user_info {
 #define CB_JOIN					41
 #define CB_ROOM_LEAVE			42
 #define CB_READY				43
-#define CB_START				44
 
 #define CB_GET_COIN				45
 #define CB_BULLET				46

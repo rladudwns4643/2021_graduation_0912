@@ -62,6 +62,16 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		//NetCore::GetApp()->SendReadyPacket();
 		break;
 	}
+	case EVENT_ROOM_READY: {
+		int id;
+		bool ready;
+		va_list ap;
+		va_start(ap, argsCount);
+		id = va_arg(ap, int);
+		ready = va_arg(ap, bool);
+		va_end(ap);
+		cout << " READY ID: " << id << endl;
+	}
 	case EVENT_ROOM_LEAVE: {
 		//누군가 룸에서 나감 나간놈 id
 		int arg_id;

@@ -238,3 +238,5 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 #define KEY_FIND "Find"
 #define KEY_WIN "Win"
 #define KEY_LOSE "Lose"
+
+#define MAX_ID_LEN 10

@@ -208,7 +208,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		int roomNo;
 		memcpy(&roomNo, &inputPacket[2]/*inputPacket + 2*/, sizeof(int));
 
-		//if (!SR::g_rooms[roomNo]) break;
+		if (!SR::g_rooms[roomNo]) break;
 
 		if (SR::g_rooms.find(roomNo) == SR::g_rooms.end()) {
 			BattleServer::GetInstance()->SendRoomJoinFail(id, ROOM_FAIL_CODE_ROOM_NOT_FOUND);
@@ -278,10 +278,6 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		msg.vec.x = p->look.x;
 		msg.vec.y = p->look.y;
 		msg.vec.z = p->look.z;
-		break;
-	}
-	case CB_START: {
-		msg.type = CB_START;
 		break;
 	}
 	case CB_READY: {
