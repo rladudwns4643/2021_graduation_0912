@@ -214,7 +214,7 @@ void NetCore::ProcessData(char* buf, size_t io_byte) {
 	return;
 }
 
-//#define DEB
+#define DEB
 void NetCore::ProcessPacket(char* packet_buf) {
 #ifdef LOG_ON
 	cout << "[NETCORE] procpacket: " << (int)packet_buf[1] << " LobbyID: " << m_client.lobby_id << " BattleID: " << m_client.battle_id << endl;
@@ -613,8 +613,8 @@ void NetCore::SendBattleRoomJoinPacket() {
 	cb_packet_join p;
 	p.size = sizeof(p);
 	p.type = CB_JOIN;
-	p.room_no = m_room_no;
-	p.is_roomMnr = m_ishost;
+	p.room_no = m_battle_clients[m_client.battle_id]->m_room_num;
+	p.is_roomMnr = m_battle_clients[m_client.battle_id]->m_host;
 	SendPacket(&p, SV_BATTLE);
 }
 

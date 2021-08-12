@@ -53,7 +53,7 @@ void CreatePlayerSlot(int maxslot) {
 }
 
 int main() {
-
+	cout << "BATTLE" << endl;
 	std::wcout.imbue(std::locale("korean"));
 
 	CreatePlayerSlot(MAX_CLIENT);

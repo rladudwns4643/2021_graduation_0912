@@ -45,9 +45,6 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		cout << "LOGIN FAIL" << endl;
 		break;
 	}
-	case EVENT_ROOM_FIND_ROOM: {
-		break;
-	}
 	case EVENT_ROOM_JOIN_OK: {
 		break;
 	}

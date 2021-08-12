@@ -325,8 +325,9 @@ void BattleServer::SendShootPacket(int id, int bullet_id, PTC_VECTOR look) {
 }
 
 void BattleServer::SendGameOverPacket(int id, int winner_id) {
-
+#ifdef LOG_ON
 	cout << "SendGameOverPacket: " << id << " winner: " << winner_id << endl;
+#endif LOG_ON
 
 	bc_packet_game_over p;
 	p.size = sizeof(p);

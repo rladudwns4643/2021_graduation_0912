@@ -103,6 +103,7 @@ void LobbyController::MouseCallback()
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "New Id Button Click" << endl;
+			cout << "RR" << endl;
 			NetCore::GetApp()->SendReadyPacket();
 		}
 		// Login Button

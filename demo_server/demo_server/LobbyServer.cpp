@@ -230,7 +230,7 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		break;
 	}
 	case CL_FIND_ROOM: { //22
-		cout << "GET CL_AUTOMATCH" << endl;
+		cout << "GET CL_FIND_ROOM" << endl;
 		cl_packet_find_room p;
 		memcpy(&p, packet, sizeof(p));
 		if (id != 0) {

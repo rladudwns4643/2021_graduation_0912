@@ -16,7 +16,7 @@ namespace ATOMIC {
 }
 
 int main() {
-
+	cout << "LOBBY" << endl;
 	wcout.imbue(std::locale("korean"));
 	DataBase* g_database = DataBase::GetInstance();
 

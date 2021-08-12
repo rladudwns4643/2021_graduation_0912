@@ -56,7 +56,7 @@ void WorkerThread::ProcThread() {
 					msg = ProcPacket(key, p);
 					if (msg.type != NO_MSG) {
 						int room_id = SR::g_clients[key]->room_id;
-						//cout << "Push MSG [room:" << room_id << " msg:" << (int)msg.type << " id: " << msg.id << "]\n";
+						cout << "Push MSG [room:" << room_id << " msg:" << (int)msg.type << " id: " << msg.id << "]\n";
 						SR::g_rooms[room_id]->PushMsg(msg);
 					}
 
@@ -191,6 +191,8 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		Room* new_room = new Room(roomNo);
 		SR::g_rooms[roomNo] = new_room;
 		++ATOMIC::g_RoomNum;
+		SR::g_clients[id_1]->room_id = roomNo;
+		SR::g_clients[id_2]->room_id = roomNo;
 		BattleServer::GetInstance()->SendAutoRoomReadyPacket(id_1, id_2, roomNo);
 		break;
 	}

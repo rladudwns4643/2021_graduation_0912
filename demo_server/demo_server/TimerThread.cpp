@@ -48,6 +48,7 @@ bool TimerThread::MatchingUser()
 	return false;
 }
 void TimerThread::SendRequestRoomPacket(int id_1, int id_2) {
+	cout << "SEND REQUEST ROOM PACKET\n";
 	lb_packet_request_room p;
 	p.size = sizeof(p);
 	p.type = LB_REQUEST_ROOM;
@@ -66,8 +67,6 @@ void TimerThread::SendPacket(void* buf) {
 	memcpy(sendover->io_buf, p, p[0]);
 	sendover->wsabuf[0].buf = sendover->io_buf;
 	sendover->wsabuf[0].len = p[0];
-
-	cout << "Send ID: 0 Packet: " << (int)p[1] << endl;
 
 	DWORD flags = 0;
 	int retval = WSASend(SR::g_battleSocket, sendover->wsabuf, 1, NULL, flags, &sendover->over, NULL);
