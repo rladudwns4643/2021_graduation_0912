@@ -223,6 +223,6 @@ void GameObject::Scale(float x, float y, float z)
 void GameObject::Update()
 {
 	XMFLOAT3 pos = GetPosition();
-	pos = MathHelper::Add(pos, Speed);
+	pos = MathHelper::Add(pos, m_Speed);
 	SetPosition(pos);
 }

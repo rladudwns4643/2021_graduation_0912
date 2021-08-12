@@ -107,6 +107,7 @@ public:
 	UINT m_SkinnedCBIndex = -1;
 
 	// ½ºÇÇµå
-	XMFLOAT3 Speed;
+	XMFLOAT3 m_Speed;
+	int m_FiredPlayerID;
 };
 

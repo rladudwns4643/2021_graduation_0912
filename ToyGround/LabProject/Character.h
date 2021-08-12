@@ -135,8 +135,11 @@ private:
 	};
 
 	// 점프 관련
-	int m_JumpCount = 1;
+	int m_jumpCount = 1;
 	bool m_isGround = true;
-	DirectX::XMFLOAT3 m_JumpForce{0.f, 0.f, 0.f};
+	DirectX::XMFLOAT3 m_jumpForce{0.f, 0.f, 0.f};
+
+	// 공격 관련
+	XMFLOAT3 m_attackDirection;
 };
 

@@ -226,31 +226,41 @@ void ApplicationContext::UpdateBullet()
 	}
 }
 
-void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 StartPos, XMFLOAT3 Speed, int bulletNum)
+void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 look, int firedPlayerID, int bulletNum)
 {
 	if (bulletNum == 1)
 	{
 		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + instID));
 		if (!obj) return;
 
+		XMFLOAT3 bSpeed{ 0.f, 0.f, 0.f };
+		bSpeed = MathHelper::Add(bSpeed, look, 34.7f);
+
 		obj->m_IsVisible = true;
 		obj->m_IsVisibleOnePassCheck = true;
 		obj->InitializeTransform();
 		obj->Scale(1, 1, 1);
-		obj->Speed = Speed;
-		obj->SetPosition(StartPos);
+		obj->m_Speed = bSpeed;
+		obj->SetMatrixByLook(look.x, look.y, look.z);
+		obj->SetPosition(startPos);
+		obj->m_FiredPlayerID = firedPlayerID;
 	}
 	else
 	{
 		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_02, std::to_string(OBJECT_START_INDEX_BULLET_02 + instID));
 		if (!obj) return;
 
+		XMFLOAT3 bSpeed{ 0.f, 0.f, 0.f };
+		bSpeed = MathHelper::Add(bSpeed, look, 34.7f);
+
 		obj->m_IsVisible = true;
 		obj->m_IsVisibleOnePassCheck = true;
 		obj->InitializeTransform();
 		obj->Scale(1, 1, 1);
-		obj->Speed = Speed;
-		obj->SetPosition(StartPos);
+		obj->m_Speed = bSpeed;
+		obj->SetMatrixByLook(look.x, look.y, look.z);
+		obj->SetPosition(startPos);
+		obj->m_FiredPlayerID = firedPlayerID;
 	}
 }
 

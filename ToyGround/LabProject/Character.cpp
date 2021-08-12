@@ -19,11 +19,11 @@ Character::Character(std::string type, std::string id) :
 	m_Up = { 0,1,0 };
 	m_Look = { 0,0,1 };
 
-	m_JumpCount = 1;
+	m_jumpCount = 1;
 	m_isGround = true;
-	m_JumpForce.x = 0.f;
-	m_JumpForce.y = 0.f;
-	m_JumpForce.z = 0.f;
+	m_jumpForce.x = 0.f;
+	m_jumpForce.y = 0.f;
+	m_jumpForce.z = 0.f;
 
 	SetIndexPos(m_Position);
 }
@@ -288,6 +288,8 @@ void Character::SetLookToCameraLook()
 
 	XMFLOAT3 dir;
 	DirectX::XMStoreFloat3(&dir, direction);
+	m_attackDirection = dir;
+
 	dir.y = 0.f;
 	direction = DirectX::XMVector3Normalize(XMLoadFloat3(&dir));
 
@@ -491,19 +493,19 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 
 void Character::Jump()
 {
-	if (m_JumpCount < 1 || !m_isGround)
+	if (m_jumpCount < 1 || !m_isGround)
 		return;
 	
-	m_JumpCount = 0;
+	m_jumpCount = 0;
 	m_isGround = false;
-	m_JumpForce.y = 55.f;
+	m_jumpForce.y = 55.f;
 }
 
 void Character::Falling()
 {
-	m_JumpForce.y -= GRAVITY;
+	m_jumpForce.y -= GRAVITY;
 	XMFLOAT3 prePos = GetPosition();
-	XMFLOAT3 pos = MathHelper::Add(prePos, m_JumpForce);
+	XMFLOAT3 pos = MathHelper::Add(prePos, m_jumpForce);
 
 	// 바닥
 	if (pos.y < 0.0f)
@@ -513,7 +515,7 @@ void Character::Falling()
 	}
 
 	// y축 충돌검사
-	float yGap = m_JumpForce.y;
+	float yGap = m_jumpForce.y;
 	float tyPos = pos.y;
 	float jumpColl = 0.f;
 	SetIndexPos(prePos);
@@ -614,14 +616,14 @@ void Character::Falling()
 		}
 	}
 	// cout << "x: " << m_IndexPosX << ", y: " << m_IndexPosY << ", z: " << m_IndexPosZ << endl;
-	if (m_JumpForce.y != yGap)
+	if (m_jumpForce.y != yGap)
 		OnGround();
 	pos.y = tyPos;
 
 	if (jumpColl > 0.f)
 	{
 		pos.y -= jumpColl;
-		m_JumpForce.y = 0;
+		m_jumpForce.y = 0;
 	}
 
 	SetPosition(pos.x, pos.y, pos.z);
@@ -629,9 +631,9 @@ void Character::Falling()
 
 void Character::OnGround()
 {
-	m_JumpCount = 1;
+	m_jumpCount = 1;
 	m_isGround = true;
-	m_JumpForce.y = 0;
+	m_jumpForce.y = 0;
 }
 
 void Character::Attack()
@@ -652,14 +654,9 @@ void Character::Attack()
 	bStartPos.y += 90.f;
 
 	//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
+	//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
 
-	XMFLOAT3 bSpeed{ 0.f, 0.f, 0.f };
-	bSpeed = MathHelper::Add(bSpeed, m_Look, 34.7f);
-
-	//cout << "Speed x: " << bSpeed.x << ", y: " << bSpeed.y << ", z: " << bSpeed.z << endl;
-	cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
-
-	AppContext->DisplayBullet(bIndex, bStartPos, bSpeed, 1);
+	AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 1);
 }
 
 bool Character::OnWater()
