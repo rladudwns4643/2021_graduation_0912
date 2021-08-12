@@ -335,12 +335,13 @@ bool Room::IsRoomStarted() {
 	return m_isRoundStarted;
 }
 
-void Room::SendAddCoinPacket() {
+void Room::CreateAddCoinEvent() {
 	if (this == nullptr) return;
-	if (IsGameStarted()) {
-		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EVENT_TYPE::EV_ADD_COIN };
-		BattleServer::GetInstance()->AddTimer(ev);
-	}
+	if (!IsGameStarted()) return;
+	
+	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EVENT_TYPE::EV_ADD_COIN };
+	BattleServer::GetInstance()->AddTimer(ev);
+	
 	PTC_VECTOR coin_pos{ static_cast<float>(rand() % 300 - 150) , 0, static_cast<float>(rand() % 300 - 150) };
 	m_coins.emplace_back(m_coin_cur);
 	for (int i = 0; i < MAX_PLAYER; ++i) {
@@ -350,6 +351,22 @@ void Room::SendAddCoinPacket() {
 		}
 	}
 	m_coin_cur++;
+}
+
+void Room::CreateReloadBulletEvent()
+{
+	if (this == nullptr) return;
+	if (!IsGameStarted()) return;
+	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(RELOAD_BULLET_TIME), EVENT_TYPE::EV_RELOAD_BULLET };
+	BattleServer::GetInstance()->AddTimer(ev);
+
+	for (int i = 0; i < MAX_PLAYER; ++i) {
+		int id = m_players[i]->GetID();
+		if (id != -1) {
+			BattleServer::GetInstance()->SendReloadBulletPacket(id);
+		}
+	}
+
 }
 
 void Room::SendLeftTimePacket() {
@@ -776,7 +793,7 @@ void Room::ProcMsg(message msg) {
 				else if (i + 1 == MAX_BULLET_COUNT) {
 #ifdef LOG_ON
 					cout << "bullet max\n";
-#endif //LOG_ON
+#endif LOG_ON
 				}
 			}
 		}

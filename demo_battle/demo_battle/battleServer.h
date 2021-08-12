@@ -38,6 +38,7 @@ public:
 	void SendRoundStartPacket(int id);
 	void SendPlayerLook(int to, int from, PTC_VECTOR look);
 	void SendAddCoinPacket(int id, PTC_VECTOR coin_pos, int coin_id);
+	void SendReloadBulletPacket(int id);
 	void SendLeftTimePacket(int id, char left_time);
 	void SendShootPacket(int id, int bullet_id, PTC_VECTOR look);
 	void SendGameOverPacket(int id, int winner_id);

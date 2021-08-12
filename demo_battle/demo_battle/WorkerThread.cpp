@@ -115,7 +115,7 @@ void WorkerThread::ProcThread() {
 		}
 		case EVENT_TYPE::EV_ADD_COIN: {
 			int room_id = *(int*)ex_over->net_buf;
-			SR::g_rooms[room_id]->SendAddCoinPacket();
+			SR::g_rooms[room_id]->CreateAddCoinEvent();
 			break;
 		}
 		case EVENT_TYPE::EV_MOVE_ENABLE: {

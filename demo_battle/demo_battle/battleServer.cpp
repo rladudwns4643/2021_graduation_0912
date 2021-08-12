@@ -289,6 +289,17 @@ void BattleServer::SendAddCoinPacket(int id, PTC_VECTOR coin_pos, int coin_id) {
 	SendPacket(id, &p);
 }
 
+void BattleServer::SendReloadBulletPacket(int id)
+{
+#ifdef LOG_ON
+	cout << "SendReloadBulletPacket: " << id << endl;
+#endif
+	bc_packet_reload_bullet p;
+	p.size = sizeof(p);
+	p.type = BC_RELOAD_BULLET;
+	SendPacket(id, &p);
+}
+
 void BattleServer::SendLeftTimePacket(int id, char left_time) {
 #ifdef LOG_ON
 	cout << "SendLeftTimePacket: " << id << " lefttime: " << left_time << endl;

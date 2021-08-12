@@ -44,7 +44,8 @@ public:
 	bool IsRoomEnterable() { return m_isEnterable; }
 	bool IsRoomStarted();
 
-	void SendAddCoinPacket();
+	void CreateAddCoinEvent();
+	void CreateReloadBulletEvent();
 	void SendLeftTimePacket();
 
 	void CheckGameState();

@@ -55,6 +55,7 @@
 //------------------------------------------------------------------
 #define MAX_ROOM_COUNT 5
 #define ADD_COIN_TIME 15 //second
+#define RELOAD_BULLET_TIME 2 //second
 //------------------------------------------------------------------
 
 
@@ -178,6 +179,7 @@ struct cl_packet_cancel_automatch {
 #define BC_ROUND_START			27
 
 #define BC_ADD_COIN				28
+#define BC_RELOAD_BULLET		129
 #define BC_UPDATE_COIN			29
 #define BC_PLAYER_POS			30
 #define BC_PLAYER_ROT			31
@@ -291,6 +293,10 @@ struct bc_packet_add_coin {
 
 	PTC_VECTOR pos;
 	int coin_id;
+};
+struct bc_packet_reload_bullet {
+	BYTE size;
+	BYTE type;
 };
 struct bc_packet_update_coin {
 	BYTE size;

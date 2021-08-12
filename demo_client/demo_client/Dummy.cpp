@@ -13,7 +13,7 @@ Dummy::Dummy()
 	}
 	num_connections = 0;
 	WSADATA wsadata;
-	WSAStartup(MAKEWORD(2, 2), &wsadata);
+	auto ret = WSAStartup(MAKEWORD(2, 2), &wsadata);
 
 	iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, NULL, 0);
 }
@@ -113,8 +113,6 @@ void Dummy::ProcessPacket(int id, unsigned char packet[])
 		lc_packet_userinfo* p = reinterpret_cast<lc_packet_userinfo*>(packet);
 		dummy[id].mmr = p->mmr;
 		dummy[id].name = p->id_str;
-
-		cout << dummy[id].mmr << " "<<dummy[id].name << endl;
 		//원래는 버튼으로 오토매칭
 		SendAutoMatchPacket(id);
 		break;
