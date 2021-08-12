@@ -106,8 +106,9 @@ public:
 	SkinnedModelInstance* m_SkinnedModelInst = NULL;
 	UINT m_SkinnedCBIndex = -1;
 
-	// ½ºÇÇµå
+	// ÃÑ¾Ë
 	XMFLOAT3 m_Speed;
 	int m_FiredPlayerID;
+	XMFLOAT3 m_EndPos;
 };
 

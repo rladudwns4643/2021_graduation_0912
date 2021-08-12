@@ -28,7 +28,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 
 	//-------------------------
 	string path = "Maps\\" + mapName + ".txt";
-	cout << path << endl;
+	//cout << path << endl;
 	std::ifstream fileIn(path);
 
 	if (fileIn)

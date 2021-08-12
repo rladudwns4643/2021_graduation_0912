@@ -194,7 +194,7 @@ void ApplicationContext::CreateBullet()
 		GameObject* Bullet = CreateObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + i));
 		Bullet->SetMesh(OBJECT_MESH_STR_BULLET_01, OBJECT_MESH_STR_BULLET_01);
 		Bullet->SetBBMesh(OBJECT_MESH_STR_BULLET_01);
-		Bullet->m_MaterialIndex = TEXTURE_INDEX_Polygon_Plane_Texture_03;
+		Bullet->m_MaterialIndex = TEXTURE_INDEX_Polygon_Plane_Texture_02;
 		Bullet->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_BULLET_01]->Center;
 		Bullet->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_BULLET_01]->Extents;
 		Bullet->m_IsAABB = true;
@@ -203,14 +203,14 @@ void ApplicationContext::CreateBullet()
 		Bullet->m_IsCulling = true;
 		Bullet->InitializeTransform();
 		Bullet->Scale(1, 1, 1);
-		cout << "C - Bullet: " << OBJECT_START_INDEX_BULLET_01 + i << endl;
+		//cout << "C - Bullet: " << OBJECT_START_INDEX_BULLET_01 + i << endl;
 	}
-	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	for (int i = 0; i < MAX_SKILL_BULLET_COUNT; ++i)
 	{
 		GameObject* Bullet = CreateObject<GameObject>(OBJECT_MESH_STR_BULLET_02, std::to_string(OBJECT_START_INDEX_BULLET_02 + i));
 		Bullet->SetMesh(OBJECT_MESH_STR_BULLET_02, OBJECT_MESH_STR_BULLET_02);
 		Bullet->SetBBMesh(OBJECT_MESH_STR_BULLET_02);
-		Bullet->m_MaterialIndex = TEXTURE_INDEX_Polygon_Plane_Texture_02;
+		Bullet->m_MaterialIndex = TEXTURE_INDEX_Polygon_Plane_Texture_03;
 		Bullet->m_Bounds.Center = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_BULLET_02]->Center;
 		Bullet->m_Bounds.Extents = AssertsReference::GetApp()->m_PropBoundingBox[OBJECT_MESH_STR_BULLET_02]->Extents;
 		Bullet->m_IsAABB = true;
@@ -237,11 +237,84 @@ void ApplicationContext::UpdateBullet()
 			pos.x <= -((MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE) ||
 			pos.z >= (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
 			pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE) ||
-			pos.y <= 0) hiddenBulletIndex[hiddenBulletCount++] = m_AtiveBullet[i];
+			pos.y <= 0) {
+			hiddenBulletIndex[hiddenBulletCount++] = m_AtiveBullet[i];
+			continue;
+		}
+
+		XMFLOAT3 look = obj->GetLook();
+		bool endCheckX = false;
+		bool endCheckY = false;
+		bool endCheckZ = false;
+		XMFLOAT3 endPos = obj->m_EndPos;
+		if (look.x >= 0 && pos.x >= endPos.x)
+			endCheckX = true;
+		if (look.x < 0 && pos.x <= endPos.x)
+			endCheckX = true;
+		if (look.y >= 0 && pos.y >= endPos.y)
+			endCheckY = true;
+		if (look.y < 0 && pos.y <= endPos.y)
+			endCheckY = true;
+		if (look.z >= 0 && pos.z >= endPos.z)
+			endCheckZ = true;
+		if (look.z < 0 && pos.z <= endPos.z)
+			endCheckZ = true;
+		if (endCheckX && endCheckY && endCheckZ)
+		{
+			hiddenBulletIndex[hiddenBulletCount++] = m_AtiveBullet[i];
+			continue;
+		}			
 	}
 	for (int i = 0; i < hiddenBulletCount; ++i)
 	{
 		HiddenBullet(hiddenBulletIndex[i], 1);
+	}
+
+	int hiddenSkillBulletIndex[MAX_SKILL_BULLET_COUNT];
+	int hiddenSkillBulletCount = 0;
+	for (int i = 0; i < m_AtiveSkillBulletCnt; ++i)
+	{
+		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_02, std::to_string(OBJECT_START_INDEX_BULLET_02 + m_AtiveSkillBullet[i]));
+		if (obj->m_IsVisible == false || !obj) continue;
+		obj->Update();
+
+		XMFLOAT3 pos = obj->GetPosition();
+		if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
+			pos.x <= -((MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE) ||
+			pos.z >= (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
+			pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE) ||
+			pos.y <= 0)
+		{
+			hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
+			continue;
+		}
+
+		XMFLOAT3 look = obj->GetLook();
+		bool endCheckX = false;
+		bool endCheckY = false;
+		bool endCheckZ = false;
+		XMFLOAT3 endPos = obj->m_EndPos;
+		if (look.x >= 0 && pos.x >= endPos.x)
+			endCheckX = true;
+		if (look.x < 0 && pos.x <= endPos.x)
+			endCheckX = true;
+		if (look.y >= 0 && pos.y >= endPos.y)
+			endCheckY = true;
+		if (look.y < 0 && pos.y <= endPos.y)
+			endCheckY = true;
+		if (look.z >= 0 && pos.z >= endPos.z)
+			endCheckZ = true;
+		if (look.z < 0 && pos.z <= endPos.z)
+			endCheckZ = true;
+		if (endCheckX && endCheckY && endCheckZ)
+		{
+			hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
+			continue;
+		}
+	}
+	for (int i = 0; i < hiddenSkillBulletCount; ++i)
+	{
+		HiddenBullet(hiddenSkillBulletIndex[i], 2);
 	}
 }
 
@@ -253,16 +326,27 @@ void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 l
 		if (!obj || obj->m_IsVisible) return;
 
 		XMFLOAT3 bSpeed{ 0.f, 0.f, 0.f };
-		bSpeed = MathHelper::Add(bSpeed, look, 75.0f);
+		bSpeed = MathHelper::Add(bSpeed, look, BULLET_SPEED);
+		float t = 15;
+		XMFLOAT3 temp{startPos};
+		temp.x += (bSpeed.x * t);
+		temp.y += (bSpeed.y * t);
+		temp.z += (bSpeed.z * t);
+		XMFLOAT3 endPos{ temp };
+
+		//cout << "speed: " << bSpeed.x << ", " << bSpeed.y << ", " << bSpeed.z << endl;
+		//cout << "StartPos: " << startPos.x << ", " << startPos.y << ", " << startPos.z << endl;
+		//cout << "EndPos: " << endPos.x << ", " << endPos.y << ", " << endPos.z << endl;
 
 		obj->m_IsVisible = true;
 		obj->m_IsVisibleOnePassCheck = true;
 		obj->m_Speed = bSpeed;
 		obj->SetMatrixByLook(look.x, look.y, look.z);
 		obj->SetPosition(startPos);
+		obj->m_EndPos = endPos;
 		obj->m_FiredPlayerID = firedPlayerID;
 
-		cout << "D - Bullet: " << instID << endl;
+		//cout << "D - Bullet: " << instID << endl;
 	}
 	else
 	{
@@ -270,13 +354,24 @@ void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 l
 		if (!obj || obj->m_IsVisible) return;
 
 		XMFLOAT3 bSpeed{ 0.f, 0.f, 0.f };
-		bSpeed = MathHelper::Add(bSpeed, look, 34.7f);
+		bSpeed = MathHelper::Add(bSpeed, look, BULLET_SPEED);
+		float t = 14;
+		XMFLOAT3 temp{ startPos };
+		temp.x += (bSpeed.x * t);
+		temp.y += (bSpeed.y * t);
+		temp.z += (bSpeed.z * t);
+		XMFLOAT3 endPos{ temp };
+
+		//cout << "speed: " << bSpeed.x << ", " << bSpeed.y << ", " << bSpeed.z << endl;
+		//cout << "StartPos: " << startPos.x << ", " << startPos.y << ", " << startPos.z << endl;
+		//cout << "EndPos: " << endPos.x << ", " << endPos.y << ", " << endPos.z << endl;
 
 		obj->m_IsVisible = true;
 		obj->m_IsVisibleOnePassCheck = true;
 		obj->m_Speed = bSpeed;
 		obj->SetMatrixByLook(look.x, look.y, look.z);
 		obj->SetPosition(startPos);
+		obj->m_EndPos = endPos;
 		obj->m_FiredPlayerID = firedPlayerID;
 	}
 }
@@ -285,7 +380,7 @@ void ApplicationContext::HiddenBullet(int instID, int bulletNum)
 {
 	if (bulletNum == 1)
 	{
-		cout << "H - Bullet: " << instID << endl;
+		//cout << "H - Bullet: " << instID << endl;
 		
 		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + instID));
 		if (!obj) {
@@ -299,8 +394,8 @@ void ApplicationContext::HiddenBullet(int instID, int bulletNum)
 
 		obj->m_IsVisible = false;
 		obj->m_IsVisibleOnePassCheck = false;
-
 		m_AtiveBulletCheck[instID] = false;
+
 		bool check = false;
 		for (int j = 0; j < m_AtiveBulletCnt; ++j)
 		{
@@ -310,7 +405,6 @@ void ApplicationContext::HiddenBullet(int instID, int bulletNum)
 				check = true;
 		}
 		m_AtiveBulletCnt--;
-
 	}
 	else
 	{
@@ -319,9 +413,24 @@ void ApplicationContext::HiddenBullet(int instID, int bulletNum)
 			cout << "HiddenBullet: cant find obj" << endl;
 			return;
 		}
+		if (obj->m_IsVisible == false)
+			return;
+		obj->m_Speed = XMFLOAT3(0.f, 0.f, 0.f);
+		obj->SetPosition(XMFLOAT3(0.f, -100.f, 0.f));
 
 		obj->m_IsVisible = false;
 		obj->m_IsVisibleOnePassCheck = false;
+		m_AtiveSkillBulletCheck[instID] = false;
+
+		bool check = false;
+		for (int j = 0; j < m_AtiveSkillBulletCnt; ++j)
+		{
+			if (check)
+				m_AtiveSkillBullet[j - 1] = m_AtiveSkillBullet[j];
+			if (m_AtiveSkillBullet[j] == instID)
+				check = true;
+		}
+		m_AtiveSkillBulletCnt--;
 	}
 }
 
@@ -520,4 +629,11 @@ void ApplicationContext::BulletReset()
 		m_AtiveBullet[i] = 0;
 	}
 	m_AtiveBulletCnt = 0;
+
+	for (int i = 0; i < MAX_SKILL_BULLET_COUNT; ++i)
+	{
+		m_AtiveSkillBulletCheck[i] = false;
+		m_AtiveSkillBullet[i] = 0;
+	}
+	m_AtiveSkillBulletCnt = 0;
 }

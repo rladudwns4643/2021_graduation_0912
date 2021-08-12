@@ -25,6 +25,9 @@ Character::Character(std::string type, std::string id) :
 	m_jumpForce.y = 0.f;
 	m_jumpForce.z = 0.f;
 
+	m_isSkillOn = false;
+	m_skillGauge = 0;
+
 	SetIndexPos(m_Position);
 }
 
@@ -638,25 +641,67 @@ void Character::OnGround()
 
 void Character::Attack()
 {
-	int bIndex = 0;
-	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+	if(m_isSkillOn == true)
 	{
-		if (AppContext->m_AtiveBulletCheck[i] == false)
+		int bIndex = 0;
+		for (int i = 0; i < MAX_SKILL_BULLET_COUNT; ++i)
 		{
-			bIndex = i;
-			AppContext->m_AtiveBullet[AppContext->m_AtiveBulletCnt++] = bIndex;
-			AppContext->m_AtiveBulletCheck[i] = true;
-			break;
+			if (AppContext->m_AtiveSkillBulletCheck[i] == false)
+			{
+				bIndex = i;
+				AppContext->m_AtiveSkillBullet[AppContext->m_AtiveSkillBulletCnt++] = bIndex;
+				AppContext->m_AtiveSkillBulletCheck[i] = true;
+				break;
+			}
 		}
+
+		XMFLOAT3 bStartPos = GetPosition();
+		bStartPos.y += 90.f;
+
+		//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
+		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
+
+		AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 2);
 	}
+	else
+	{
+		int bIndex = 0;
+		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+		{
+			if (AppContext->m_AtiveBulletCheck[i] == false)
+			{
+				bIndex = i;
+				AppContext->m_AtiveBullet[AppContext->m_AtiveBulletCnt++] = bIndex;
+				AppContext->m_AtiveBulletCheck[i] = true;
+				break;
+			}
+		}
 
-	XMFLOAT3 bStartPos = GetPosition();
-	bStartPos.y += 90.f;
+		XMFLOAT3 bStartPos = GetPosition();
+		bStartPos.y += 90.f;
 
-	//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
-	//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
+		//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
+		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
 
-	AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 1);
+		AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 1);
+	}
+}
+
+void Character::OnOffSkillMode()
+{
+	cout << "SkillGauge: " << m_skillGauge << endl;
+	if (m_isSkillOn == true)
+	{
+		cout << "SkillOff" << endl;
+		m_isSkillOn = false;
+		return;
+	}
+	if (m_skillGauge >= MAX_SKILLGAUGE)
+	{
+		cout << "SkillOn" << endl;
+		m_isSkillOn = true;
+	}
 }
 
 bool Character::OnWater()

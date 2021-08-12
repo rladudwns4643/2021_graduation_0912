@@ -22,6 +22,11 @@
 
 // 플레이어 스피드
 #define PLAYER_SPEED (16.f * ScaleConverter)
+#define BULLET_SPEED 75.f
+#define SKILL_BULLET_SPEED 90.f 
+
+#define MAX_SKILLGAUGE 120
+#define ONE_HIT_CHARGE_SKILLGAUGE 10
 
 // 맵 큐브 개수
 #define MAP_WIDTH_BLOCK_NUM 21
@@ -48,6 +53,7 @@
 // 보석 개수
 #define MAX_GEM_COUNT 32
 #define MAX_BULLET_COUNT 40
+#define MAX_SKILL_BULLET_COUNT 40
 #define OBJECT_START_INDEX_GEM 2000
 #define OBJECT_START_INDEX_BULLET_01 3000
 #define OBJECT_START_INDEX_BULLET_02 4000

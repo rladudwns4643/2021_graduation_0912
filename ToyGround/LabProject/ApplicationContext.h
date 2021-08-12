@@ -102,6 +102,10 @@ public:
 	int m_AtiveBullet[MAX_BULLET_COUNT];
 	int m_AtiveBulletCnt = 0;
 
+	bool m_AtiveSkillBulletCheck[MAX_SKILL_BULLET_COUNT] = { false };
+	int m_AtiveSkillBullet[MAX_SKILL_BULLET_COUNT];
+	int m_AtiveSkillBulletCnt = 0;
+
 	int m_LastTypeId;
 };
 

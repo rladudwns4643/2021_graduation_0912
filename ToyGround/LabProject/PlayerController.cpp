@@ -153,6 +153,9 @@ void PlayerController::OnKeyPressed()
 				CommandCenter::GetApp()->m_StartJumpAnim = true;
 				m_Owner->Jump();
 			}
+			if (InputHandler::IsKeyUp('Q')) {
+				m_Owner->OnOffSkillMode();
+			}
 		}
 #elif DEBUG_SERVER
 		if (InputHandler::IsKeyDown('W'))
@@ -176,6 +179,9 @@ void PlayerController::OnKeyPressed()
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
 			m_Owner->Jump();
+		}
+		if (InputHandler::IsKeyUp('Q')) {
+			m_Owner->OnOffSkillMode();
 		}
 #endif
 		break;
