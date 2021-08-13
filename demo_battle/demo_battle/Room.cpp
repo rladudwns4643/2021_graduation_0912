@@ -42,7 +42,7 @@ void Room::Initialize(int room_no) {
 
 	for (auto& p : m_players) p = new Toy();
 
-	int bulletUniqueID{ OBJECT_START_INDEX_BULLET };
+	int bulletUniqueID{ OBJECT_START_INDEX_BULLET_01 };
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i) m_bullets[i].SetuniqueID(bulletUniqueID++);
 
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(30ms), EVENT_TYPE::EV_UPDATE };
@@ -762,7 +762,7 @@ void Room::ProcMsg(message msg) {
 				if (t_coin >= WIN_COIN_CNT) {
 					GameOver(pl->GetID());
 				}
-				//m_coins.erase(m_coins.begin() + t_delete_coin_id);
+				m_coins.erase(m_coins.begin() + t_delete_coin_id);
 				PushUpdateCoinMsg(t_id, t_coin, t_delete_coin_id);
 			}
 		}
@@ -775,9 +775,11 @@ void Room::ProcMsg(message msg) {
 			for (int i = 0; i < MAX_BULLET_COUNT; ++i) {
 				if (!m_bullets[i].isBulletActive()) {
 					bullet_id = i;
+					//todo~
+					//서버에서 물리처리 삭제
 					XMFLOAT3 look{ pl->GetCurObject()->GetLook() };
 					m_bullets[i].Shoot(pl->GetCurObject()->GetPosition(), look, msg.vec, 1.f);
-
+					//~
 					static_cast<Toy*>(pl)->SetIsShoot(true);
 					break;
 				}

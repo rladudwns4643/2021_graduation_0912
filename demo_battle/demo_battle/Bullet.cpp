@@ -50,7 +50,7 @@ void Bullet::Shoot(const XMFLOAT3& pos, const XMFLOAT3& look, XMFLOAT3& dir, flo
 	XMFLOAT3 force = SMathHelper::Normalize(dir);
 
 	XMStoreFloat3(&force, XMLoadFloat3(&force) * m_forceAmountXZ);
-	AddForce(force, eTime, true); // 
+	AddForce(force, eTime, true);
 }
 
 unsigned short Bullet::GetDamage() const {

@@ -47,14 +47,6 @@
 // 조명 이름
 #define LIGHT_NAME_DIRECTIONAL "Directional" 
 
-// 보석 개수
-#define MAX_GEM_COUNT 32
-#define MAX_BULLET_COUNT 40
-#define MAX_SKILL_BULLET_COUNT 40
-#define OBJECT_START_INDEX_GEM 2000
-#define OBJECT_START_INDEX_BULLET_01 3000
-#define OBJECT_START_INDEX_BULLET_02 4000
-
 // 텍스쳐 인덱스
 #define TEXTURE_INDEX_SkyBox						0
 #define TEXTURE_INDEX_Cartoon_CubeWorld_Texture		1
