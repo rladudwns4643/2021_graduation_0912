@@ -13,6 +13,7 @@
 #include "define.h"
 #include "global.h"
 #include "d3dUtil.h"
+#include "../../demo_server/demo_server/protocol.h"
 
 // 클라 서버 작업분리
 #define DEBUG_CLIENT 0x00FF1

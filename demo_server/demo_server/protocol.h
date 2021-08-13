@@ -32,8 +32,14 @@
 #define OBJECT_TYPE_TOY				1
 #define OBJECT_TYPE_BULLET			2
 
-//#define OBJECT_START_INDEX_BULLET	1000
-//#define MAX_BULLET_COUNT			20
+// 보석 개수
+#define MAX_GEM_COUNT 32
+#define MAX_SKILL_BULLET_COUNT 40
+#define OBJECT_START_INDEX_GEM 2000
+#define OBJECT_START_INDEX_BULLET_01 3000
+#define MAX_BULLET_COUNT 40
+#define OBJECT_START_INDEX_BULLET_02 4000
+#define MAX_BULLET_COUNT 40
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
