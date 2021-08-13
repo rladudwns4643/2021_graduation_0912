@@ -112,7 +112,6 @@ public:
 	void GenerateFrustum();
 	bool IsInFrustum(const XMMATRIX& invWorld, const BoundingBox& otherBounds);
 
-
 private:
 	BoundingFrustum m_Frustum;
 	Character* m_Owner = nullptr;

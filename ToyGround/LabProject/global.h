@@ -10,6 +10,7 @@ namespace MapTool
 		int typeID; // ∞Ì¿ØID
 		std::string textureName;
 		bool colWithChar;
+		bool canBroken;
 		bool isCulling;
 	};
 

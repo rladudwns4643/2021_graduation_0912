@@ -70,8 +70,9 @@ public:
 	void HiddenGem(int instID, bool isVisible = false);
 
 	void CreateBullet();
-	void DisplayBullet(int instID, float posX, float posY, float posZ, int bulletNum = 1);
-	void HiddenBullet(int instID, bool isVisible = false, int bulletNum = 1);
+	void UpdateBullet();
+	void DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 look, int firedPlayerID, int bulletNum = 1);
+	void HiddenBullet(int instID, int bulletNum = 1);
 
 	void DisplayProps(std::string mapName, bool isScale = false, float scaleValue = 1.f);
 	void HiddenProps(std::string mapName);
@@ -86,6 +87,8 @@ public:
 	void SetDisplayUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible);
 	void SetPickingUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible);
 
+	void BulletReset();
+
 public:
 	std::map<std::string, ObjectInfo*> m_RItemsMap;
 	std::vector<GameObject*> m_RItemsVec;
@@ -95,5 +98,28 @@ public:
 	XMINT2 m_WaterMap[MAP_WATER_NUM];
 
 	int m_LastTypeId;
+
+	// Bullet ฐüทร
+	bool m_AtiveBulletCheck[MAX_BULLET_COUNT] = { false };
+	int m_AtiveBullet[MAX_BULLET_COUNT];
+	int m_AtiveBulletCnt = 0;
+
+	bool m_AtiveSkillBulletCheck[MAX_SKILL_BULLET_COUNT] = { false };
+	int m_AtiveSkillBullet[MAX_SKILL_BULLET_COUNT];
+	int m_AtiveSkillBulletCnt = 0;
+
+	int shiftArr[81] = {
+		 1,  1, -1,  0,  1, -1,  -1,  1, -1,
+		 1,  1,  0,  0,  1,  0,  -1,  1,  0,
+		 1,  1,  1,  0,  1,  1,  -1,  1,  1,
+
+		 1,  0, -1,  0,  0, -1,  -1,  0, -1,
+		 1,  0,  0,  0,  0,  0,  -1,  0,  0,
+		 1,  0,  1,  0,  0,  1,  -1,  0,  1,
+
+		 1, -1, -1,  0, -1, -1,  -1, -1, -1,
+		 1, -1,  0,  0, -1,  0,  -1, -1,  0,
+		 1, -1,  1,  0, -1,  1,  -1, -1,  1,
+	};
 };
 

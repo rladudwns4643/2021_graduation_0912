@@ -101,17 +101,22 @@ void PlayerController::MouseCallback()
 		SetCursorPos(ptMouse.x, ptMouse.y);
 		InputHandler::g_MoveMouseCallback = false;
 	}
-	if (InputHandler::g_LeftMouseCallback)
+	if (InputHandler::g_LeftMouseClick)
 	{
-		m_Owner->SetLookToCameraLook();
-		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
-		CommandCenter::GetApp()->m_StartAttackAnim = true;
+		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
+		{
+			m_Owner->SetLookToCameraLook();
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
+			CommandCenter::GetApp()->m_StartAttackAnim = true;
+			m_Owner->Attack();
+		}
 	}
 	m_Owner->m_IsAiming = false;
 	if (InputHandler::g_RightMouseCallback)
 	{
 		m_Owner->m_IsAiming = true;
 	}
+	InputHandler::ResetClickState();
 }
 
 void PlayerController::OnKeyPressed()
@@ -148,6 +153,9 @@ void PlayerController::OnKeyPressed()
 				CommandCenter::GetApp()->m_StartJumpAnim = true;
 				m_Owner->Jump();
 			}
+			if (InputHandler::IsKeyUp('Q')) {
+				m_Owner->OnOffSkillMode();
+			}
 		}
 #elif DEBUG_SERVER
 		if (InputHandler::IsKeyDown('W'))
@@ -171,6 +179,9 @@ void PlayerController::OnKeyPressed()
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
 			m_Owner->Jump();
+		}
+		if (InputHandler::IsKeyUp('Q')) {
+			m_Owner->OnOffSkillMode();
 		}
 #endif
 		break;

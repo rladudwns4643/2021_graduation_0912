@@ -19,11 +19,14 @@ Character::Character(std::string type, std::string id) :
 	m_Up = { 0,1,0 };
 	m_Look = { 0,0,1 };
 
-	m_JumpCount = 1;
+	m_jumpCount = 1;
 	m_isGround = true;
-	m_JumpForce.x = 0.f;
-	m_JumpForce.y = 0.f;
-	m_JumpForce.z = 0.f;
+	m_jumpForce.x = 0.f;
+	m_jumpForce.y = 0.f;
+	m_jumpForce.z = 0.f;
+
+	m_isSkillOn = false;
+	m_skillGauge = 0;
 
 	SetIndexPos(m_Position);
 }
@@ -288,6 +291,8 @@ void Character::SetLookToCameraLook()
 
 	XMFLOAT3 dir;
 	DirectX::XMStoreFloat3(&dir, direction);
+	m_attackDirection = dir;
+
 	dir.y = 0.f;
 	direction = DirectX::XMVector3Normalize(XMLoadFloat3(&dir));
 
@@ -491,19 +496,19 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 
 void Character::Jump()
 {
-	if (m_JumpCount < 1 || !m_isGround)
+	if (m_jumpCount < 1 || !m_isGround)
 		return;
 	
-	m_JumpCount = 0;
+	m_jumpCount = 0;
 	m_isGround = false;
-	m_JumpForce.y = 55.f;
+	m_jumpForce.y = 55.f;
 }
 
 void Character::Falling()
 {
-	m_JumpForce.y -= GRAVITY;
+	m_jumpForce.y -= GRAVITY;
 	XMFLOAT3 prePos = GetPosition();
-	XMFLOAT3 pos = MathHelper::Add(prePos, m_JumpForce);
+	XMFLOAT3 pos = MathHelper::Add(prePos, m_jumpForce);
 
 	// 바닥
 	if (pos.y < 0.0f)
@@ -513,7 +518,7 @@ void Character::Falling()
 	}
 
 	// y축 충돌검사
-	float yGap = m_JumpForce.y;
+	float yGap = m_jumpForce.y;
 	float tyPos = pos.y;
 	float jumpColl = 0.f;
 	SetIndexPos(prePos);
@@ -613,15 +618,15 @@ void Character::Falling()
 			}
 		}
 	}
-	cout << "x: " << m_IndexPosX << ", y: " << m_IndexPosY << ", z: " << m_IndexPosZ << endl;
-	if (m_JumpForce.y != yGap)
+	// cout << "x: " << m_IndexPosX << ", y: " << m_IndexPosY << ", z: " << m_IndexPosZ << endl;
+	if (m_jumpForce.y != yGap)
 		OnGround();
 	pos.y = tyPos;
 
 	if (jumpColl > 0.f)
 	{
 		pos.y -= jumpColl;
-		m_JumpForce.y = 0;
+		m_jumpForce.y = 0;
 	}
 
 	SetPosition(pos.x, pos.y, pos.z);
@@ -629,9 +634,74 @@ void Character::Falling()
 
 void Character::OnGround()
 {
-	m_JumpCount = 1;
+	m_jumpCount = 1;
 	m_isGround = true;
-	m_JumpForce.y = 0;
+	m_jumpForce.y = 0;
+}
+
+void Character::Attack()
+{
+	m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+	if(m_isSkillOn == true)
+	{
+		int bIndex = 0;
+		for (int i = 0; i < MAX_SKILL_BULLET_COUNT; ++i)
+		{
+			if (AppContext->m_AtiveSkillBulletCheck[i] == false)
+			{
+				bIndex = i;
+				AppContext->m_AtiveSkillBullet[AppContext->m_AtiveSkillBulletCnt++] = bIndex;
+				AppContext->m_AtiveSkillBulletCheck[i] = true;
+				break;
+			}
+		}
+
+		XMFLOAT3 bStartPos = GetPosition();
+		bStartPos.y += 90.f;
+
+		//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
+		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
+
+		AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 2);
+	}
+	else
+	{
+		int bIndex = 0;
+		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+		{
+			if (AppContext->m_AtiveBulletCheck[i] == false)
+			{
+				bIndex = i;
+				AppContext->m_AtiveBullet[AppContext->m_AtiveBulletCnt++] = bIndex;
+				AppContext->m_AtiveBulletCheck[i] = true;
+				break;
+			}
+		}
+
+		XMFLOAT3 bStartPos = GetPosition();
+		bStartPos.y += 90.f;
+
+		//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
+		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
+
+		AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 1);
+	}
+}
+
+void Character::OnOffSkillMode()
+{
+	cout << "SkillGauge: " << m_skillGauge << endl;
+	if (m_isSkillOn == true)
+	{
+		cout << "SkillOff" << endl;
+		m_isSkillOn = false;
+		return;
+	}
+	//if (m_skillGauge >= MAX_SKILLGAUGE)
+	{
+		cout << "SkillOn" << endl;
+		m_isSkillOn = true;
+	}
 }
 
 bool Character::OnWater()

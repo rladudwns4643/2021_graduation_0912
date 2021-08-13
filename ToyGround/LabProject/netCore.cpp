@@ -89,7 +89,7 @@ bool NetCore::SendPacket(void* buf, eSERVER sv) {
 	if (retval == SOCKET_ERROR) {
 		int error_no = WSAGetLastError();
 		if (error_no != WSA_IO_PENDING) {
-			errorDisplay("Send error");
+			//errorDisplay("Send error");
 		}
 		return false;
 	}

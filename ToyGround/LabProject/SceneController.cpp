@@ -80,7 +80,7 @@ void LobbyController::MouseCallback()
 			memset(Core::g_TempChatBuf, 0, sizeof(WCHAR));
 
 			Core::g_Chating = 2;
-			m_MyScene->m_ID = L"";
+			m_MyScene->m_ID.clear();
 			m_MyScene->m_ChatType = 1;
 		}
 		// PW Input
@@ -94,7 +94,7 @@ void LobbyController::MouseCallback()
 			memset(Core::g_TempChatBuf, 0, sizeof(WCHAR));
 
 			Core::g_Chating = 2;
-			m_MyScene->m_Password = L"";
+			m_MyScene->m_Password.clear();
 			m_MyScene->m_ChatType = 2;
 		}
 
@@ -135,7 +135,7 @@ void LobbyController::MouseCallback()
 	{
 		LONG mousePosX = InputHandler::g_LastMousePos.x;
 		LONG mousePosY = InputHandler::g_LastMousePos.y;
-		cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+//		cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
 		
 		XMFLOAT2 ScaleConvert = m_MyScene->m_ScaleConvert;
 
@@ -153,7 +153,7 @@ void LobbyController::MouseCallback()
 			memset(Core::g_TempChatBuf, 0, sizeof(WCHAR));
 
 			Core::g_Chating = 2;
-			m_MyScene->m_ID = L"";
+			m_MyScene->m_ID.clear();
 			m_MyScene->m_ChatType = 1;
 		}
 		// PW Input
@@ -167,7 +167,7 @@ void LobbyController::MouseCallback()
 			memset(Core::g_TempChatBuf, 0, sizeof(WCHAR));
 
 			Core::g_Chating = 2;
-			m_MyScene->m_Password = L"";
+			m_MyScene->m_Password.clear();
 			m_MyScene->m_ChatType = 2;
 		}
 

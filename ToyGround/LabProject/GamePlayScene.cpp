@@ -185,6 +185,7 @@ void GameplayScene::Initialize()
 
 	// √—æÀ ª˝º∫
 	AppContext->CreateBullet();
+	AppContext->BulletReset();
 }
 
 void GameplayScene::OnResize()
@@ -267,9 +268,10 @@ bool GameplayScene::Enter()
 	// √—æÀ √ ±‚»≠
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 	{
-		AppContext->HiddenBullet(i, false, 1);
-		AppContext->HiddenBullet(i, false, 2);
+		AppContext->HiddenBullet(i, 1);
+		AppContext->HiddenBullet(i, 2);
 	}
+	AppContext->BulletReset();
 
 	return false;
 }
@@ -294,9 +296,10 @@ void GameplayScene::Exit()
 
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 	{
-		AppContext->HiddenBullet(i, false, 1);
-		AppContext->HiddenBullet(i, false, 2);
+		AppContext->HiddenBullet(i, 1);
+		AppContext->HiddenBullet(i, 2);
 	}
+	AppContext->BulletReset();
 
 	cout << "===========================================" << endl << endl;
 }
@@ -333,8 +336,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
 
 	// Bullet
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_01], AppContext->m_RItemsVec);
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_02], AppContext->m_RItemsVec);
+	AppContext->UpdateBullet();
+	GraphicsContext::GetApp()->UpdateBulletInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_01], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateBulletInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_BULLET_02], AppContext->m_RItemsVec);
 
 	// UI
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
@@ -410,7 +414,7 @@ void GameplayScene::Render()
 	// UI
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
-	if(!AimCheck)
+	if (!AimCheck)
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec);
 }
 

@@ -32,8 +32,8 @@
 #define OBJECT_TYPE_TOY				1
 #define OBJECT_TYPE_BULLET			2
 
-#define OBJECT_START_INDEX_BULLET	1000
-#define MAX_BULLET_COUNT			20
+//#define OBJECT_START_INDEX_BULLET	1000
+//#define MAX_BULLET_COUNT			20
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------

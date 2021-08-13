@@ -64,6 +64,40 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 		}
 	}
 }
+void GraphicsContext::UpdateBulletInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
+{
+	if (!objInfo) return;
+
+	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
+
+	int InstanceCount = 0;
+	for (auto& i : info)
+	{
+		DirectX::XMFLOAT4X4 tWorld = rItems[i.second]->m_World;
+		if (rItems[i.second]->m_IsVisible == false)
+		{
+			tWorld._41 = 0.f;
+			tWorld._42 = - 400.f;
+			tWorld._43 = 0.f;
+		}
+		XMMATRIX world = XMLoadFloat4x4(&tWorld);
+		XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
+		XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
+#ifdef FRUSTUM_CULLMODE
+		if (rItems[i.second]->m_IsCulling)
+		{
+			if (!TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+		}
+#endif
+		ShaderResource::InstanceData data;
+		DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
+		DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
+		data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
+
+		// Write the instance data to structured buffer for the visible objects.
+		m_InstanceBuffers[objInfo->m_Type]->CopyData(InstanceCount++, data);
+	}
+}
 
 void GraphicsContext::Update2DPosition(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
 {
@@ -156,32 +190,6 @@ void GraphicsContext::Update2DPosition(ObjectInfo* objInfo, std::vector<GameObje
 			break;
 		default:
 			break;
-		}
-	}
-}
-
-void GraphicsContext::UpdateInstanceDatas(std::vector<ObjectInfo*>& objInfos, std::vector<GameObject*>& rItems)
-{
-
-	for (auto& objInfo : objInfos)
-	{
-		const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
-
-		int visibleInstanceCount = 0;
-
-		for (auto& i : info)
-		{
-			XMMATRIX world = XMLoadFloat4x4(&rItems[i.second]->m_World);
-			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
-			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
-
-			ShaderResource::InstanceData data;
-			XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
-			XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
-			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
-
-			// Write the instance data to structured buffer for the visible objects.
-			m_InstanceBuffers[objInfo->m_Type]->CopyData(visibleInstanceCount++, data);
 		}
 	}
 }

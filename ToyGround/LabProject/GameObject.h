@@ -60,6 +60,10 @@ public:
 
 	virtual void Scale(float x, float y, float z);
 
+	BoundingBox GetBoundingBox() { return m_Bounds; }
+
+	void Update();
+
 public:
 	// 기타 특성값
 	bool m_IsCulling = false;
@@ -103,5 +107,10 @@ public:
 	// 애니메이션 정보
 	SkinnedModelInstance* m_SkinnedModelInst = NULL;
 	UINT m_SkinnedCBIndex = -1;
+
+	// 총알
+	XMFLOAT3 m_Speed;
+	int m_FiredPlayerID;
+	XMFLOAT3 m_EndPos;
 };
 
