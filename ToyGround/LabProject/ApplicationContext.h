@@ -97,6 +97,8 @@ public:
 	int m_MapArray[MAP_HEIGHT_BLOCK_NUM][MAP_DEPTH_BLOCK_NUM][MAP_WIDTH_BLOCK_NUM];
 	XMINT2 m_WaterMap[MAP_WATER_NUM];
 
+	int m_LastTypeId;
+
 	// Bullet ฐüทร
 	bool m_AtiveBulletCheck[MAX_BULLET_COUNT] = { false };
 	int m_AtiveBullet[MAX_BULLET_COUNT];
@@ -106,6 +108,18 @@ public:
 	int m_AtiveSkillBullet[MAX_SKILL_BULLET_COUNT];
 	int m_AtiveSkillBulletCnt = 0;
 
-	int m_LastTypeId;
+	int shiftArr[81] = {
+		 1,  1, -1,  0,  1, -1,  -1,  1, -1,
+		 1,  1,  0,  0,  1,  0,  -1,  1,  0,
+		 1,  1,  1,  0,  1,  1,  -1,  1,  1,
+
+		 1,  0, -1,  0,  0, -1,  -1,  0, -1,
+		 1,  0,  0,  0,  0,  0,  -1,  0,  0,
+		 1,  0,  1,  0,  0,  1,  -1,  0,  1,
+
+		 1, -1, -1,  0, -1, -1,  -1, -1, -1,
+		 1, -1,  0,  0, -1,  0,  -1, -1,  0,
+		 1, -1,  1,  0, -1,  1,  -1, -1,  1,
+	};
 };
 

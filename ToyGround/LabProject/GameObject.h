@@ -60,6 +60,8 @@ public:
 
 	virtual void Scale(float x, float y, float z);
 
+	BoundingBox GetBoundingBox() { return m_Bounds; }
+
 	void Update();
 
 public:

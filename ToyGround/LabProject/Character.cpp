@@ -697,7 +697,7 @@ void Character::OnOffSkillMode()
 		m_isSkillOn = false;
 		return;
 	}
-	if (m_skillGauge >= MAX_SKILLGAUGE)
+	//if (m_skillGauge >= MAX_SKILLGAUGE)
 	{
 		cout << "SkillOn" << endl;
 		m_isSkillOn = true;

@@ -228,11 +228,11 @@ void ApplicationContext::UpdateBullet()
 	int hiddenBulletCount = 0;
 	for (int i = 0; i < m_AtiveBulletCnt; ++i)
 	{
-		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + m_AtiveBullet[i]));
-		if (obj->m_IsVisible == false || !obj) continue;
-		obj->Update();
+		GameObject* bullet = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + m_AtiveBullet[i]));
+		if (bullet->m_IsVisible == false || !bullet) continue;
+		bullet->Update();
 
-		XMFLOAT3 pos = obj->GetPosition();
+		XMFLOAT3 pos = bullet->GetPosition();
 		if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
 			pos.x <= -((MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE) ||
 			pos.z >= (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
@@ -242,11 +242,11 @@ void ApplicationContext::UpdateBullet()
 			continue;
 		}
 
-		XMFLOAT3 look = obj->GetLook();
+		XMFLOAT3 look = bullet->GetLook();
 		bool endCheckX = false;
 		bool endCheckY = false;
 		bool endCheckZ = false;
-		XMFLOAT3 endPos = obj->m_EndPos;
+		XMFLOAT3 endPos = bullet->m_EndPos;
 		if (look.x >= 0 && pos.x >= endPos.x)
 			endCheckX = true;
 		if (look.x < 0 && pos.x <= endPos.x)
@@ -263,7 +263,59 @@ void ApplicationContext::UpdateBullet()
 		{
 			hiddenBulletIndex[hiddenBulletCount++] = m_AtiveBullet[i];
 			continue;
-		}			
+		}
+
+		int indexPosX = (int)((pos.x + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_WIDTH_BLOCK_NUM / 2));
+		int indexPosY = (int)(pos.y / STD_CUBE_SIZE) + 1;
+		int indexPosZ = (int)((pos.z + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_DEPTH_BLOCK_NUM / 2));
+		bool checkColl = false;
+		Map* originMap = AppContext->m_Maps[MAP_STR_GAME_MAP];
+		BoundingBox bound = bullet->GetBoundingBox();
+		for (auto& p : originMap->mapInfoVector)
+		{
+			bool bulletCollObj = false;
+			for (int j = 0; j < 81; j += 3)
+			{
+				int aX = indexPosX + shiftArr[j];
+				int aY = indexPosY + shiftArr[j + 1];
+				int aZ = indexPosZ + shiftArr[j + 2];
+
+				if (aX < 0 || aX >= MAP_WIDTH_BLOCK_NUM
+					|| aY <= 0 || aY >= MAP_HEIGHT_BLOCK_NUM
+					|| aZ < 0 || aZ >= MAP_DEPTH_BLOCK_NUM)
+					continue;
+
+				if (p.typeID == AppContext->m_MapArray[aY][aZ][aX] && p.colWithChar)
+				{
+					GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
+
+					XMFLOAT3 objPos = obj->GetPosition();
+					XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
+						objPos.y + obj->m_Bounds.Center.y,
+						objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
+					XMFLOAT3 bulletMin(pos.x + bound.Center.x - (bound.Extents.x / 2),
+						pos.y + bound.Center.y,
+						pos.z + bound.Center.z - (bound.Extents.z / 2));
+					XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
+						objPos.y + obj->m_Bounds.Center.y + obj->m_Bounds.Extents.y,
+						objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
+					XMFLOAT3 bulletMax(pos.x + bound.Center.x + (bound.Extents.x / 2),
+						pos.y + bound.Center.y + bound.Extents.y,
+						pos.z + bound.Center.z + (bound.Extents.z / 2));
+
+					if (objMin.x <= bulletMax.x && objMax.x >= bulletMin.x &&
+						objMin.y <= bulletMax.y && objMax.y >= bulletMin.y &&
+						objMin.z <= bulletMax.z && objMax.z >= bulletMin.z)
+					{
+						hiddenBulletIndex[hiddenBulletCount++] = m_AtiveBullet[i];
+						bulletCollObj = true;
+						break;
+					}
+				}
+			}
+			if (bulletCollObj)
+				break;
+		}
 	}
 	for (int i = 0; i < hiddenBulletCount; ++i)
 	{
@@ -274,11 +326,11 @@ void ApplicationContext::UpdateBullet()
 	int hiddenSkillBulletCount = 0;
 	for (int i = 0; i < m_AtiveSkillBulletCnt; ++i)
 	{
-		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_02, std::to_string(OBJECT_START_INDEX_BULLET_02 + m_AtiveSkillBullet[i]));
-		if (obj->m_IsVisible == false || !obj) continue;
-		obj->Update();
+		GameObject* bullet = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_02, std::to_string(OBJECT_START_INDEX_BULLET_02 + m_AtiveSkillBullet[i]));
+		if (bullet->m_IsVisible == false || !bullet) continue;
+		bullet->Update();
 
-		XMFLOAT3 pos = obj->GetPosition();
+		XMFLOAT3 pos = bullet->GetPosition();
 		if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
 			pos.x <= -((MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE) ||
 			pos.z >= (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
@@ -289,11 +341,11 @@ void ApplicationContext::UpdateBullet()
 			continue;
 		}
 
-		XMFLOAT3 look = obj->GetLook();
+		XMFLOAT3 look = bullet->GetLook();
 		bool endCheckX = false;
 		bool endCheckY = false;
 		bool endCheckZ = false;
-		XMFLOAT3 endPos = obj->m_EndPos;
+		XMFLOAT3 endPos = bullet->m_EndPos;
 		if (look.x >= 0 && pos.x >= endPos.x)
 			endCheckX = true;
 		if (look.x < 0 && pos.x <= endPos.x)
@@ -310,6 +362,65 @@ void ApplicationContext::UpdateBullet()
 		{
 			hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
 			continue;
+		}
+
+		int indexPosX = (int)((pos.x + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_WIDTH_BLOCK_NUM / 2));
+		int indexPosY = (int)(pos.y / STD_CUBE_SIZE) + 1;
+		int indexPosZ = (int)((pos.z + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_DEPTH_BLOCK_NUM / 2));
+		bool checkColl = false;
+		Map* originMap = AppContext->m_Maps[MAP_STR_GAME_MAP];
+		BoundingBox bound = bullet->GetBoundingBox();
+		for (auto& p : originMap->mapInfoVector)
+		{
+			bool bulletCollObj = false;
+			for (int j = 0; j < 81; j += 3)
+			{
+				int aX = indexPosX + shiftArr[j];
+				int aY = indexPosY + shiftArr[j + 1];
+				int aZ = indexPosZ + shiftArr[j + 2];
+
+				if (aX < 0 || aX >= MAP_WIDTH_BLOCK_NUM
+					|| aY <= 0 || aY >= MAP_HEIGHT_BLOCK_NUM
+					|| aZ < 0 || aZ >= MAP_DEPTH_BLOCK_NUM)
+					continue;
+
+				if (p.typeID == AppContext->m_MapArray[aY][aZ][aX])
+				{
+					GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
+
+					XMFLOAT3 objPos = obj->GetPosition();
+					XMFLOAT3 objMin(objPos.x + obj->m_Bounds.Center.x - (obj->m_Bounds.Extents.x / 2),
+						objPos.y + obj->m_Bounds.Center.y,
+						objPos.z + obj->m_Bounds.Center.z - (obj->m_Bounds.Extents.z / 2));
+					XMFLOAT3 bulletMin(pos.x + bound.Center.x - (bound.Extents.x / 2),
+						pos.y + bound.Center.y,
+						pos.z + bound.Center.z - (bound.Extents.z / 2));
+					XMFLOAT3 objMax(objPos.x + obj->m_Bounds.Center.x + (obj->m_Bounds.Extents.x / 2),
+						objPos.y + obj->m_Bounds.Center.y + obj->m_Bounds.Extents.y,
+						objPos.z + obj->m_Bounds.Center.z + (obj->m_Bounds.Extents.z / 2));
+					XMFLOAT3 bulletMax(pos.x + bound.Center.x + (bound.Extents.x / 2),
+						pos.y + bound.Center.y + bound.Extents.y,
+						pos.z + bound.Center.z + (bound.Extents.z / 2));
+
+					if (objMin.x <= bulletMax.x && objMax.x >= bulletMin.x &&
+						objMin.y <= bulletMax.y && objMax.y >= bulletMin.y &&
+						objMin.z <= bulletMax.z && objMax.z >= bulletMin.z)
+					{
+						if (p.canBroken)
+						{
+							ZeroMemory(&obj->m_World, sizeof(obj->m_World));
+							ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
+							obj->m_IsVisible = false;
+							obj->m_IsVisibleOnePassCheck = false;
+						}
+						hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
+						bulletCollObj = true;
+						break;
+					}
+				}
+			}
+			if (bulletCollObj)
+				break;
 		}
 	}
 	for (int i = 0; i < hiddenSkillBulletCount; ++i)
