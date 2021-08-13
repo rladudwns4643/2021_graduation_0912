@@ -38,6 +38,8 @@ public:
 	void Initialize();
 	void Destory();
 
+	int GetBattleID();
+
 public:
 	void ProcessData(char* buf, size_t io_byte);
 	void ProcessPacket(char* packet_buf);

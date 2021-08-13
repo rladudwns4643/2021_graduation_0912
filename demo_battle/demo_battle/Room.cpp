@@ -729,7 +729,7 @@ void Room::ProcMsg(message msg) {
 			if (t_id == pl->GetID()) {
 				pl->SetPosition(XMFLOAT3{ t_v.x, t_v.y, t_v.z });
 				pl->SetAnimType(t_anim);
-				PushPlayerPositionMsg(t_id, pl->GetID(), &t_v);
+				//PushPlayerPositionMsg(t_id, pl->GetID(), &t_v);
 			}
 			else {
 				PushPlayerPositionMsg(pl->GetID(), t_id, &t_v);

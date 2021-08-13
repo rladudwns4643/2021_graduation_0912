@@ -691,7 +691,9 @@ void Character::Falling()
 	}
 
 	SetPosition(pos.x, pos.y, pos.z);
-	//Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
+	if (m_PlayerID == NetCore::GetApp()->GetBattleID()) {
+		Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
+	}
 }
 
 void Character::OnGround()

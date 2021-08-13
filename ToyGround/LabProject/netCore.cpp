@@ -27,6 +27,11 @@ void NetCore::Destory() {
 	WSACleanup();
 }
 
+int NetCore::GetBattleID()
+{
+	return m_client.battle_id;
+}
+
 int NetCore::Receive(SOCKET sock, char* buf, int len, int flags) {
 	int receivedByte{};
 	char* ptr = buf;
