@@ -25,9 +25,6 @@
 #define BULLET_SPEED 75.f
 #define SKILL_BULLET_SPEED 90.f 
 
-#define MAX_SKILLGAUGE 120
-#define ONE_HIT_CHARGE_SKILLGAUGE 10
-
 // 맵 큐브 개수
 #define MAP_WIDTH_BLOCK_NUM 21
 #define MAP_DEPTH_BLOCK_NUM 33
@@ -238,3 +235,10 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 #define KEY_LOSE "Lose"
 
 #define MAX_ID_LEN 10
+
+// 플레이어 상태
+#define MAX_HP 4000
+#define MAX_ATTACKGAUGE 300
+#define MAX_SKILLGAUGE 120
+#define ONE_HIT_CHARGE_SKILLGAUGE 10
+#define MAXGAUGE_SIZE_X 245

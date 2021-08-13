@@ -30,6 +30,7 @@ public:
 	// 업데이트 + 컴포넌트 업데이트
 	void Update(const float deltaT);
 	void WeaponUpdate();
+	void UpdateStateUI();
 
 public:
 
@@ -82,8 +83,8 @@ public:
 	int m_PlayerID = 0;
 
 public:
+	int m_hp = MAX_HP;
 	bool			m_IsThirdCamera = true;
-	float			m_HP = 1.f;		// 유저 HP%
 
 private:
 	// 캐릭터전용 메쉬정보
@@ -141,8 +142,12 @@ private:
 	DirectX::XMFLOAT3 m_jumpForce{0.f, 0.f, 0.f};
 
 	// 공격 관련
+	int m_attackGauge = MAX_ATTACKGAUGE;
 	XMFLOAT3 m_attackDirection;
 	bool m_isSkillOn = false;
 	int m_skillGauge = 0;
+	int m_tempHp;
+	int m_tempAttackGauge;
+	int m_tempSkillGauge;
 };
 

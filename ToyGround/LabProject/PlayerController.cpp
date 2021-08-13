@@ -105,10 +105,13 @@ void PlayerController::MouseCallback()
 	{
 		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
 		{
-			m_Owner->SetLookToCameraLook();
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
-			CommandCenter::GetApp()->m_StartAttackAnim = true;
-			m_Owner->Attack();
+			if (m_Owner->m_attackGauge >= 100 || m_Owner->m_isSkillOn)
+			{
+				m_Owner->SetLookToCameraLook();
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
+				CommandCenter::GetApp()->m_StartAttackAnim = true;
+				m_Owner->Attack();
+			}
 		}
 	}
 	m_Owner->m_IsAiming = false;

@@ -82,6 +82,8 @@ public:
 	void HiddenCharacter(Character* user);
 	void HiddenCharacter(std::string userName);
 
+	void UpdateStateUI2D(std::string ui2dLayer, std::string ui2dName, int nowGauge);
+
 	void DisplayUI2D(std::string ui2dLayer, std::string ui2dName, XMFLOAT2 pos, XMFLOAT2 size, TextAlignType textAlignType = TextAlignType::NONE, int zLayer = -1, bool isText = false);
 	void HiddenUI2D(std::string ui2dLayer, std::string ui2dName);
 	void SetDisplayUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible);
