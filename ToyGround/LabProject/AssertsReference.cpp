@@ -490,12 +490,6 @@ void AssertsReference::CreateBB()
 	}
 	{
 		auto bb = make_unique<BoundingBox>();
-		bb->Center = XMFLOAT3(0.f, STD_CUBE_SIZE, 0.f);
-		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, 0.15, STD_CUBE_SIZE);
-		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_PLAT_04] = std::move(bb);
-	}
-	{
-		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, STD_CUBE_SIZE * 0.85, 0.f);
 		bb->Extents = XMFLOAT3(STD_CUBE_SIZE, STD_CUBE_SIZE * 0.15, STD_CUBE_SIZE);
 		m_PropBoundingBox[OBJECT_MESH_STR_CUBE_BRIDGE] = std::move(bb);

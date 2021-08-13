@@ -27,6 +27,12 @@ Character::Character(std::string type, std::string id) :
 
 	m_isSkillOn = false;
 	m_skillGauge = 0;
+	m_attackGauge = MAX_ATTACKGAUGE;
+	m_hp = MAX_HP;
+
+	m_tempHp = m_hp;
+	m_tempAttackGauge = m_attackGauge;
+	m_tempSkillGauge = m_skillGauge;
 
 	SetIndexPos(m_Position);
 }
@@ -60,6 +66,8 @@ bool Character::ReleaseTransform()
 
 void Character::Update(const float deltaT)
 {
+	UpdateStateUI();
+
 	if (m_PlayerController)
 		m_PlayerController->Update(deltaT);
 
@@ -92,6 +100,57 @@ void Character::WeaponUpdate()
 	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._42,
 	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._43);
 	//}
+}
+
+void Character::UpdateStateUI()
+{
+	if (m_attackGauge < MAX_ATTACKGAUGE)
+	{
+		m_attackGauge += 3;
+		if (m_attackGauge >= MAX_ATTACKGAUGE)
+			m_attackGauge = MAX_ATTACKGAUGE;
+	}
+
+	if (m_tempHp < m_hp)
+	{
+		m_tempHp += 20;
+		if (m_tempHp >= m_hp)
+			m_tempHp = m_hp;
+		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_HEALTH, m_tempHp);
+	}
+	else if (m_tempHp > m_hp)
+	{
+		m_tempHp -= 20;
+		if (m_tempHp <= m_hp)
+			m_tempHp = m_hp;
+		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_HEALTH, m_tempHp);
+	}
+
+	if (m_tempAttackGauge < m_attackGauge)
+	{
+		m_tempAttackGauge += 5;
+		if (m_tempAttackGauge >= m_attackGauge)
+			m_tempAttackGauge = m_attackGauge;
+		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, m_tempAttackGauge);
+	}
+	else if (m_tempAttackGauge > m_attackGauge)
+	{
+		m_tempAttackGauge = m_attackGauge;
+		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, m_tempAttackGauge);
+	}
+
+	if (m_tempSkillGauge < m_skillGauge)
+	{
+		m_tempSkillGauge += 2;
+		if (m_tempSkillGauge > m_skillGauge)
+			m_tempSkillGauge = m_skillGauge;
+		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, m_tempSkillGauge);
+	}
+	else if (m_tempSkillGauge > m_skillGauge)
+	{
+		m_tempSkillGauge = m_skillGauge;
+		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, m_tempSkillGauge);
+	}
 }
 
 void Character::SetMapName(std::string mapName)
@@ -641,9 +700,9 @@ void Character::OnGround()
 
 void Character::Attack()
 {
-	m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
 	if(m_isSkillOn == true)
 	{
+		m_skillGauge = 0;
 		int bIndex = 0;
 		for (int i = 0; i < MAX_SKILL_BULLET_COUNT; ++i)
 		{
@@ -666,6 +725,11 @@ void Character::Attack()
 	}
 	else
 	{
+		if(m_skillGauge <MAX_SKILLGAUGE)	
+			m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+		m_attackGauge -= 100;
+		cout << "Skill: " << m_skillGauge << endl;
+		cout << "Attack: " << m_attackGauge << endl;
 		int bIndex = 0;
 		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 		{
@@ -690,14 +754,14 @@ void Character::Attack()
 
 void Character::OnOffSkillMode()
 {
-	cout << "SkillGauge: " << m_skillGauge << endl;
+	//cout << "SkillGauge: " << m_skillGauge << endl;
 	if (m_isSkillOn == true)
 	{
 		cout << "SkillOff" << endl;
 		m_isSkillOn = false;
 		return;
 	}
-	//if (m_skillGauge >= MAX_SKILLGAUGE)
+	if (m_skillGauge >= MAX_SKILLGAUGE)
 	{
 		cout << "SkillOn" << endl;
 		m_isSkillOn = true;

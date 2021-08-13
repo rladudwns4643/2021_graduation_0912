@@ -9,8 +9,8 @@
 #include "Button.h"
 #include "ImageView.h"
 
-#define WIDTH_NORMALIZE_LT(x) (x + (1980.f / 2.f))
-#define HEIGHT_NORMALIZE_LT(y) (-y + (1080.f / 2.f))
+#define WIDTH_NORMALIZE_LT(x) (x + (1280.f / 2.f))
+#define HEIGHT_NORMALIZE_LT(y) (-y + (720.f / 2.f))
 
 
 std::string ApplicationContext::FindMapName(int mapCode) const
@@ -127,7 +127,6 @@ void ApplicationContext::CreateUI2D(std::string ui2dLayer, std::string ui2dName,
 	if (uiDisabledTextureIdx != -1)
 		item->SetDisabledTexture(uiDisabledTextureIdx);
 }
-
 
 void ApplicationContext::CreateWeapon(std::string weaponName, std::string subWeaponName, std::string partName)
 {
@@ -412,6 +411,7 @@ void ApplicationContext::UpdateBullet()
 							ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 							obj->m_IsVisible = false;
 							obj->m_IsVisibleOnePassCheck = false;
+							AppContext->m_MapArray[aY][aZ][aX] = -1;
 						}
 						hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
 						bulletCollObj = true;
@@ -617,7 +617,7 @@ void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, 
 
 			user->m_IsVisible = isVisible;
 			user->m_IsVisibleOnePassCheck = isVisible;
-			user->m_HP = 1.f;
+			user->m_hp = MAX_HP;
 			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
 			user->SetPosition(p.position);
 		}
@@ -665,6 +665,54 @@ void ApplicationContext::HiddenCharacter(std::string userName)
 	user->m_IsVisibleOnePassCheck = false;
 }
 
+void ApplicationContext::UpdateStateUI2D(std::string ui2dLayer, std::string ui2dName, int nowGauge)
+{
+	string ts = "GamePlay";
+	UserInterface* ui = FindObject<UserInterface>(ui2dLayer + ts, ui2dName);
+	if (!ui) return;
+
+	float sizeX, sizeY;
+	XMFLOAT2 pos;
+	float posXGap;
+
+	if (ui2dName == OBJECT_NAME_GAMEPLAY_HEALTH)
+	{
+		float sx = (float)(MAXGAUGE_SIZE_X * nowGauge) / MAX_HP;
+		sizeX = sx * 15.f;
+		sizeY = 45.f * 15.f;
+		pos = XMFLOAT2(-730.f, -360.f);
+		posXGap = pos.x - ((float)MAXGAUGE_SIZE_X / 2 * 1.5f) + (sx / 2 * 1.5f);
+	}
+	else if (ui2dName == OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE)
+	{
+		float sx = (float)(MAXGAUGE_SIZE_X * nowGauge) / MAX_ATTACKGAUGE;
+		sizeX = sx * 15.f;
+		sizeY = 45.f * 15.f;
+		pos = XMFLOAT2(-730.f, -430.f);
+		posXGap = pos.x - ((float)MAXGAUGE_SIZE_X / 2 * 1.5f) + (sx / 2 * 1.5f);
+	}
+	else if (ui2dName == OBJECT_NAME_GAMEPLAY_SKILL_GAUGE)
+	{
+		float sx = (float)(MAXGAUGE_SIZE_X * nowGauge) / MAX_SKILLGAUGE;
+		sizeX = sx * 15.f;
+		sizeY = 35.f * 15.f;
+		pos = XMFLOAT2(-730.f, -495.f);
+		posXGap = pos.x - ((float)MAXGAUGE_SIZE_X / 2 * 1.5f) + (sx / 2 * 1.5f);
+	}
+	else
+	{
+		return;
+	}
+
+	ui->m_PositionRatio = { ((posXGap - (sizeX / 20.f))), -(pos.y + (sizeY / 20.f)) };
+	ui->m_SizeRatio = { sizeX / sizeY, sizeY / 1080.f };
+
+	ui->SetPosition(pos.x, pos.y, 1.f);
+
+	ui->m_UIPos = XMFLOAT2(pos.x, pos.y);
+	ui->m_UISize = XMFLOAT2(sizeX * 0.1f, sizeY * 0.1f);
+}
+
 void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName, XMFLOAT2 pos, XMFLOAT2 size, TextAlignType textAlignType, int zLayer, bool isText)
 {
 	UserInterface* ui = FindObject<UserInterface>(ui2dLayer, ui2dName);
@@ -683,7 +731,7 @@ void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName
 	{
 	case TextAlignType::LT:
 		ui->SetTextAlignType(TextAlignType::LT);
-		ui->m_PositionRatio = { WIDTH_NORMALIZE_LT((pos.x - (sizeX / 20.f))), HEIGHT_NORMALIZE_LT(pos.y + (sizeY / 20.f)) };
+		ui->m_PositionRatio = { WIDTH_NORMALIZE_LT((pos.x - (sizeX / 2.f))), HEIGHT_NORMALIZE_LT(pos.y + (sizeY / 2.f)) };
 		ui->m_SizeRatio = { sizeX / sizeY, sizeY };
 
 		break;
