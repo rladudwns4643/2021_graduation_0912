@@ -246,6 +246,8 @@ void Character::SetPosition(float posX, float posY, float posZ)
 	XMFLOAT3 shift = { posX - prePos.x, posY - prePos.y, posZ - prePos.z };
 
 	if (m_MyCamera) m_MyCamera->Move(shift);
+
+	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
 }
 
 void Character::SetPosition(DirectX::XMFLOAT3 xmPos)
@@ -490,7 +492,6 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 	SetPosition(pos.x, pos.y, pos.z);
 #elif DEBUG_SERVER
 	SetPosition(pos.x, pos.y, pos.z);
-	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
 #endif
 }
 
