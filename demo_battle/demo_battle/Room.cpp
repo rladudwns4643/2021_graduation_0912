@@ -852,21 +852,19 @@ void Room::ProcMsg(message msg) {
 
 int Room::GetEmptyBullet()
 {
-	auto it = find(m_bullets.begin(), m_bullets.end(), false);
-	if (it != m_bullets.end()) {
-		m_bullets[*it] = true;
-		m_q_bullet.push(*it);
-		return *it;
+	for (int i = 0; i < MAX_BULLET; ++i) {
+		if (m_bullets[i] == false) {
+			m_bullets[i] = true;
+			m_q_bullet.push(i);
+			return i;
+		}
 	}
-	else {
-		return 9999;
-	}
+	return 999;
 }
 
 void Room::SetEmptyBullet()
 {
 	int pop = m_q_bullet.front();
 	m_q_bullet.pop();
-
 	m_bullets[pop] = false;
 }
