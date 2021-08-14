@@ -252,11 +252,10 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_POP_ANIM, argsCount, arg_id, arg_anim_type);
 		break;
 	}
-	case EVENT_GAME_REQUEST_BULLET: {
-
+	case EVENT_GAME_CALLBACK_BULLET: {
 		int arg_shootter;
 		short arg_bullet_type;
-		int arg_bullet_idx;
+		short arg_bullet_idx;
 		XMFLOAT3 arg_cam_look;
 		XMFLOAT3 arg_bullet_pos;
 
@@ -269,10 +268,10 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		arg_bullet_pos = va_arg(ap, XMFLOAT3);
 		va_end(ap);
 
-		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_REQUEST_BULLET, argsCount, arg_shootter, arg_bullet_type, arg_bullet_idx, arg_cam_look, arg_bullet_pos);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_BULLET, argsCount, arg_shootter, arg_bullet_type, arg_bullet_idx, arg_cam_look, arg_bullet_pos);
 		break;
 	}
-	case EVENT_GAME_CALLBACK_BULLET: {
+	case EVENT_GAME_REQUEST_BULLET: {
 		XMFLOAT3 arg_dir;
 		short arg_bullet_type;
 		va_list ap;

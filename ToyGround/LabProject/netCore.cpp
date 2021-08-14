@@ -455,9 +455,16 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		cout << "BC_SHOOT_BULLET\n";
 //#endif
 		bc_packet_callback_bullet* p = reinterpret_cast<bc_packet_callback_bullet*>(packet_buf);
-		
+
+		int arg_shootter;
+		short arg_bullet_type;
+		short arg_bullet_idx;
 		XMFLOAT3 arg_cam_look;
 		XMFLOAT3 arg_bullet_pos;
+
+		arg_shootter = p->shootter_id;
+		arg_bullet_type = p->bullet_type;
+		arg_bullet_idx = p->bullet_idx;
 		arg_cam_look.x = p->cam_look.x;
 		arg_cam_look.y = p->cam_look.y;
 		arg_cam_look.z = p->cam_look.z;
@@ -466,7 +473,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		arg_bullet_pos.y = p->bullet_pos.y;
 		arg_bullet_pos.z = p->bullet_pos.z;
 
-		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 5, p->shootter_id, p->bullet_type, p->bullet_idx, arg_cam_look, arg_bullet_pos);
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_BULLET, 5, arg_shootter, arg_bullet_type, arg_bullet_idx, arg_cam_look, arg_bullet_pos);
 		break;
 	}
 	case BC_REMOVE_BULLET: {

@@ -788,11 +788,11 @@ void Character::OnGround()
 void Character::Attack()
 {
 	if (m_isSkillOn == true) {
-		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_BULLET, 2, m_attackDirection, 2);
+		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 2, m_attackDirection, 2);
 		m_isSkillOn = false;
 	}
 	else {
-		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_BULLET, 2, m_attackDirection, 1);
+		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 2, m_attackDirection, 1);
 	}
 
 	//if(m_isSkillOn == true)
@@ -809,13 +809,10 @@ void Character::Attack()
 	//			break;
 	//		}
 	//	}
-
 	//	XMFLOAT3 bStartPos = GetPosition();
 	//	bStartPos.y += 90.f;
-
 	//	//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
 	//	//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
-
 	//	AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 2);
 	//	m_isSkillOn = false;
 	//}
@@ -835,13 +832,10 @@ void Character::Attack()
 	//			break;
 	//		}
 	//	}
-
 	//	XMFLOAT3 bStartPos = GetPosition();
 	//	bStartPos.y += 90.f;
-
 	//	//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
 	//	//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
-
 	//	AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 1);
 	//}
 }
