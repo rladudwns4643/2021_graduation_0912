@@ -44,7 +44,6 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		}
 		m_Users[arg_bt_id]->m_MapName = m_MapName;
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
-		//m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
 		if (Service::GetApp()->GetMyBattleID() == 1) {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[1]);
 			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[2]);
