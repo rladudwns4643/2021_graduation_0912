@@ -127,7 +127,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
 		cout << "change anim id: " << arg_id << "anim: " << arg_anim_type << endl;
-		CommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[arg_id]);
+		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[arg_id]);
 		break;
 	}
 	case EVENT_GAME_CALLBACK_MOVE: {
