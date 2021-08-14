@@ -232,22 +232,22 @@ void PlayerController::OnKeyReleased()
 		if (InputHandler::IsKeyUp('W'))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Forward));
-			Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_POP_ANIM, 1, static_cast<int>(MoveState::Jump));
+			Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_POP_ANIM, 1, static_cast<int>(MoveState::Forward));
 		}
 		if (InputHandler::IsKeyUp('S'))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::Backward));
-			Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_POP_ANIM, 1, static_cast<int>(MoveState::Jump));
+			Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_POP_ANIM, 1, static_cast<int>(MoveState::Backward));
 		}
 		if (InputHandler::IsKeyUp('A'))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::LeftStrafe));
-			Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_POP_ANIM, 1, static_cast<int>(MoveState::Jump));
+			Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_POP_ANIM, 1, static_cast<int>(MoveState::LeftStrafe));
 		}
 		if (InputHandler::IsKeyUp('D'))
 		{
 			CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
-			Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_POP_ANIM, 1, static_cast<int>(MoveState::Jump));
+			Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_POP_ANIM, 1, static_cast<int>(MoveState::RightStrafe));
 	}
 		if (InputHandler::IsKeyUp(VK_SPACE)) {}
 

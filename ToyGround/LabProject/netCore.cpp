@@ -492,12 +492,20 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_GAME_DIE, 1, p->id);
 		break;
 	}
-	case BC_ANIM: { //id가 어떤 anim인지
+	case BC_ANIM_PUSH: {
 		bc_packet_anim_type* p = reinterpret_cast<bc_packet_anim_type*>(packet_buf);
-//#ifdef DEB
-		cout << "BC_ANIM: " << p->id << p->anim_type << endl;
-//#endif
-		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_ANIM, 2, p->id, p->anim_type);
+		//#ifdef DEB
+		cout << "BC_ANIM_PUSH: " << p->id << p->anim_type << endl;
+		//#endif
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_PUSH_ANIM, 2, p->id, p->anim_type);
+		break;
+	}
+	case BC_ANIM_POP: {
+		bc_packet_anim_type* p = reinterpret_cast<bc_packet_anim_type*>(packet_buf);
+		//#ifdef DEB
+		cout << "BC_ANIM_POP: " << p->id << p->anim_type << endl;
+		//#endif
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_POP_ANIM, 2, p->id, p->anim_type);
 		break;
 	}
 	case BC_LEFT_TIME: {

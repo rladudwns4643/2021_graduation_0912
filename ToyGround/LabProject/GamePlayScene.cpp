@@ -118,7 +118,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		AppContext->HiddenGem(arg_delete_coin_id, false);
 		break;
 	}
-	case EVENT_GAME_CALLBACK_ANIM: {
+	case EVENT_GAME_CALLBACK_PUSH_ANIM: {
 		int arg_id;
 		int arg_anim_type;
 		va_list ap;
@@ -126,8 +126,26 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
-		cout << "change anim id: " << arg_id << "anim: " << arg_anim_type << endl;
+		cout << "EVENT_GAME_CALLBACK_PUSH_ANIM: " << arg_id << "type: " << arg_anim_type << endl;
 		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[arg_id]);
+		if (arg_anim_type == static_cast<int>(MoveState::Jump)) {
+			EnemyCommandCenter::GetApp()->m_StartJumpAnim = true;
+		}
+		if (arg_anim_type == static_cast<int>(MoveState::Attack)) {
+			EnemyCommandCenter::GetApp()->m_StartAttackAnim = true;
+		}
+		break;
+	}
+	case EVENT_GAME_CALLBACK_POP_ANIM: {
+		int arg_id;
+		int arg_anim_type;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_anim_type = va_arg(ap, int);
+		va_end(ap);
+		cout << "EVENT_GAME_CALLBACK_POP_ANIM: " << arg_id << "type: " << arg_anim_type << endl;
+		EnemyCommandCenter::GetApp()->PopCommand(arg_anim_type);
 		break;
 	}
 	case EVENT_GAME_CALLBACK_MOVE: {
