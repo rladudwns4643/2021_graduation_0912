@@ -87,6 +87,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		va_start(ap, argsCount);
 		t = va_arg(ap, int);
 		va_end(ap);
+		// 여기서 시간 받으면 됨 2분부터 초단위로 줄음
 #ifdef LOG_ON
 		cout << "left Time: " << t << endl;
 #endif LOG_ON

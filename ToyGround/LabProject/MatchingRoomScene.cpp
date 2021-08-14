@@ -8,6 +8,9 @@
 #include "AssertsReference.h"
 #include "UserInterface.h"
 
+#include "MoveCommand.h"
+#include "CommandCenter.h"
+#include "EnemyCommandCenter.h"
 #include "Character.h"
 #include "GameObject.h"
 
@@ -41,7 +44,13 @@ bool MatchingRoomScene::Enter()
 {
 	cout << "=============== MatchingRoom Scene ===============" << endl;
 
+	TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL]->Direction = { 0.643f, -0.663f, -0.383f };
+	TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL]->Strength = { 0.75f, 0.75f, 0.75f };
+
 	InputHandler::g_CursorSwitch = true;
+
+	m_isReady1 = false;
+	m_isReady2 = false;
 
 	m_Toys[0] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
 	m_Toys[0]->m_IsVisible = true;
@@ -50,7 +59,7 @@ bool MatchingRoomScene::Enter()
 	m_Toys[0]->SetAnimationKeyState(AnimationController::PlayerState::STATE_T_POSE);
 	m_Toys[0]->SetAnimationPlayerState(AnimationController::PlayerState::STATE_T_POSE);
 	m_Toys[0]->SetMatrixByLook(0, 0, 1);
-	m_Toys[0]->SetPosition(230.f, -100.f, 100.f);
+	m_Toys[0]->SetPosition(215.f, -100.f, 100.f);
 	m_Toys[0]->m_PlayerID = 100;
 
 	m_Toys[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
@@ -60,7 +69,7 @@ bool MatchingRoomScene::Enter()
 	m_Toys[1]->SetAnimationKeyState(AnimationController::PlayerState::STATE_T_POSE);
 	m_Toys[1]->SetAnimationPlayerState(AnimationController::PlayerState::STATE_T_POSE);
 	m_Toys[1]->SetMatrixByLook(0, 0, 1);
-	m_Toys[1]->SetPosition(-230.f, -100.f, 100.f);
+	m_Toys[1]->SetPosition(-215.f, -100.f, 100.f);
 	m_Toys[1]->m_PlayerID = 100;
 
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eMatchingRoom);
@@ -70,7 +79,7 @@ bool MatchingRoomScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_NAME_MATCHINGROOM_BACKGROUND, OBJECT_NAME_MATCHINGROOM_BACKGROUND, XMFLOAT2(0.f, 0.f), XMFLOAT2(1280, 720), TextAlignType::Center);
 
 	// Logo
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_MATCHINGROOM_LOGO_TOYGROUND, XMFLOAT2(0.f, 400.f), XMFLOAT2(414.f, 162.f), TextAlignType::Center, -1, true);
+	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_MATCHINGROOM_LOGO_TOYGROUND, XMFLOAT2(-10.f, 400.f), XMFLOAT2(414.f, 162.f), TextAlignType::Center, -1, true);
 
 	// Button
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_MATCHINGROOM_READY1_BUTTON_R, XMFLOAT2(-525.f, -430.f), XMFLOAT2(300.f, 90.f), TextAlignType::Center);

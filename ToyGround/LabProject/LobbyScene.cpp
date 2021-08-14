@@ -122,6 +122,7 @@ bool LobbyScene::Enter()
 	LoadingBarPosX = -253;
 	LoadingBarDirection = 1;
 	LoadingBarSpeed = 0;
+	LoadingTest = 0;
 
 	InputHandler::g_CursorSwitch = true;
 
@@ -180,13 +181,17 @@ void LobbyScene::Update(const float& fDeltaTime)
 			LoadingBarPosX = 40.f;
 			LoadingBarDirection = -1;
 			LoadingBarSpeed = 0;
+			LoadingTest++;
 		}
 		else if (LoadingBarPosX < -253.f)
 		{
 			LoadingBarPosX = -253.f;
 			LoadingBarDirection = 1;
 			LoadingBarSpeed = 0;
+			LoadingTest++;
 		}
+		if(LoadingTest > 5)
+			SceneManager::GetApp()->ChangeScene(SceneType::eMatchingRoom);
 		//cout << LoadingBarPosX << endl;
 		AppContext->UpdateLoadingBarUI2D(XMFLOAT2(LoadingBarPosX, -411.f));
 

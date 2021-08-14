@@ -154,11 +154,13 @@ void TOY_GROUND::BuildAsserts()
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Running");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Jump");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Attack");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "T_Pose");
 	AssertsReference::GetApp()->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), CHARACTER_GUNMAN);
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Idle");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Running");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Jump");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Attack");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "T_Pose");
 
 	// Build BoundingBox
 	AssertsReference::GetApp()->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get());
