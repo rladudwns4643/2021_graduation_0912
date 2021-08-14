@@ -51,12 +51,5 @@ public:
 	bool PW_Input_Ativate = false;
 
 	XMFLOAT2 m_ScaleConvert{ 1.f, 1.f };
-
-	bool m_isMatching = false;
-
-	float LoadingBarPosX = -253;
-	int LoadingBarDirection = 1;
-	float LoadingBarSpeed = 0;
-	float LoadingBarAccel = 0.2;
 };
 
