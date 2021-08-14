@@ -70,7 +70,7 @@ public:
 	void SendGetCoinPacket(int coin_id);
 	void SendPositionPacket(XMFLOAT3 pos, int anim_type);
 	void SendLookVectorPacket(XMFLOAT3& look);
-	void SendBulletPacket(XMFLOAT3& dir);
+	void SendBulletPacket(XMFLOAT3& dir, short bullet_type);
 
 	void SendUpdateUserInfo(int mmr);
 

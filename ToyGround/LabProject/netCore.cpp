@@ -450,18 +450,23 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_MOUSE, 2, p->id, arg_look);
 		break;
 	}
-	case BC_SHOOT_BULLET: {
+	case BC_CALLBACK_BULLET: {
 #ifdef DEB
 		cout << "BC_SHOOT_BULLET\n";
 #endif
-		bc_packet_shoot_bullet* p = reinterpret_cast<bc_packet_shoot_bullet*>(packet_buf);
+		bc_packet_callback_bullet* p = reinterpret_cast<bc_packet_callback_bullet*>(packet_buf);
 		
-		XMFLOAT3 arg_pos;
-		arg_pos.x = p->pos.x;
-		arg_pos.y = p->pos.y;
-		arg_pos.z = p->pos.z;
+		XMFLOAT3 arg_cam_look;
+		XMFLOAT3 arg_bullet_pos;
+		arg_cam_look.x = p->cam_look.x;
+		arg_cam_look.y = p->cam_look.y;
+		arg_cam_look.z = p->cam_look.z;
 
-		Service::GetApp()->AddEvent(EVENT_GAME_SHOOT_BULLET, 2, p->bullet_id, arg_pos);
+		arg_bullet_pos.x = p->bullet_pos.x;
+		arg_bullet_pos.y = p->bullet_pos.y;
+		arg_bullet_pos.z = p->bullet_pos.z;
+
+		Service::GetApp()->AddEvent(EVENT_GAME_SHOOT_BULLET, 5, p->shootter_id, p->bullet_type, p->bullet_idx, arg_cam_look, arg_bullet_pos);
 		break;
 	}
 	case BC_REMOVE_BULLET: {
@@ -689,13 +694,15 @@ void NetCore::SendLookVectorPacket(XMFLOAT3& look) {
 	SendPacket(&p, SV_BATTLE);
 }
 
-void NetCore::SendBulletPacket(XMFLOAT3& dir) {
-	cb_packet_bullet p;
+void NetCore::SendBulletPacket(XMFLOAT3& dir, short bullet_type) {
+	cb_packet_request_bullet p;
 	p.size = sizeof(p);
-	p.type = CB_BULLET;
-	p.dir.x = dir.x;
-	p.dir.y = dir.y;
-	p.dir.z = dir.z;
+	p.type = CB_REQUEST_BULLET;
+	p.id = m_client.battle_id;
+	p.cam_look.x = dir.x;
+	p.cam_look.y = dir.y;
+	p.cam_look.z = dir.z;
+	p.bullet_type = bullet_type;
 	SendPacket(&p, SV_BATTLE);
 }
 
