@@ -217,7 +217,7 @@ void NetCore::ProcessData(char* buf, size_t io_byte) {
 	return;
 }
 
-#define DEB
+//#define DEB
 void NetCore::ProcessPacket(char* packet_buf) {
 #ifdef LOG_ON
 	cout << "[NETCORE] procpacket: " << (int)packet_buf[1] << " LobbyID: " << m_client.lobby_id << " BattleID: " << m_client.battle_id << endl;
@@ -638,6 +638,7 @@ void NetCore::SendReadyPacket() {
 }
 
 void NetCore::SendPositionPacket(XMFLOAT3 pos, int anim_type) {
+	cout << "SEND POSITION\n";
 	cb_packet_position p;
 	p.size = sizeof(p);
 	p.type = CB_POSITION_VECTOR;

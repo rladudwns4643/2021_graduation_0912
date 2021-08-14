@@ -299,6 +299,14 @@ void Character::SetPosition(float posX, float posY, float posZ)
 	}
 
 	XMFLOAT3 prePos = { m_World._41, m_World._42, m_World._43 };
+	
+	if (m_PlayerID == NetCore::GetApp()->GetBattleID()) {
+		Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, prePos, static_cast<int>(m_AnimationController->m_PlayerState));
+		//if (MathHelper::Distance(m_packetPosition, GetPosition()) > 25.f) {
+		//	m_packetPosition = GetPosition();
+		//	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, m_packetPosition, static_cast<int>(m_AnimationController->m_PlayerState));
+		//}
+	}
 
 	m_World._41 = posX;
 	m_World._42 = posY;
@@ -308,12 +316,6 @@ void Character::SetPosition(float posX, float posY, float posZ)
 
 	if (m_MyCamera) m_MyCamera->Move(shift);
 
-	if (m_PlayerID == NetCore::GetApp()->GetBattleID()) {
-		if (MathHelper::Distance(m_packetPosition, GetPosition()) > 1.f) {
-			m_packetPosition = GetPosition();
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, m_packetPosition, static_cast<int>(m_AnimationController->m_PlayerState));
-		}
-	}
 }
 
 void Character::SetPosition(DirectX::XMFLOAT3 xmPos)
@@ -698,9 +700,6 @@ void Character::Falling()
 	}
 
 	SetPosition(pos.x, pos.y, pos.z);
-	if (m_PlayerID == NetCore::GetApp()->GetBattleID()) {
-		Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
-	}
 }
 
 void Character::OnGround()
