@@ -32,7 +32,7 @@ void AnimationController::Update(const float deltaT)
 {
 	SetState(deltaT);
 	float speed = deltaT;
-	if (m_PlayerState == PlayerState::STATE_ATTACK)
+	if (m_PlayerState == PlayerState::STATE_ATTACK || m_PlayerState == PlayerState::STATE_JUMP)
 		speed *= 2;
 
 	for (auto& p : m_MapAnimData)
