@@ -127,11 +127,16 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
 		cout << "change anim id: " << arg_id << "anim: " << arg_anim_type << endl;
+<<<<<<< Updated upstream
 		for (int i = 1; i < 3; ++i) {
 			if (m_Users[i]->m_PlayerID == arg_id) {
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[i]);
 			}
 		}
+=======
+		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[arg_id]);
+		EnemyCommandCenter::GetApp()->m_StartJumpAnim = true;
+>>>>>>> Stashed changes
 		break;
 	}
 	case EVENT_GAME_CALLBACK_MOVE: {

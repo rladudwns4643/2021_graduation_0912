@@ -16,7 +16,7 @@ public:
 		// Command »ý¼º
 		ICommand* iCmd = new TCommand(owner);
 		iCmd->SetState(cEvent);
-
+		Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, static_cast<int>(cEvent));
 		m_FSM.push_back(iCmd);
 	}
 	void PopCommand(int cEvent)

@@ -368,9 +368,12 @@ void Character::SetAnimationPlayerState(AnimationController::PlayerState playerS
 
 void Character::SetAnimationKeyState(AnimationController::PlayerState keyState)
 {
+<<<<<<< Updated upstream
 	if (m_AnimationController->m_PlayerState != m_AnimationController->m_KeyState) {
 		Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, static_cast<int>(keyState));
 	}
+=======
+>>>>>>> Stashed changes
 	m_AnimationController->m_KeyState = keyState;
 }
 
