@@ -775,7 +775,7 @@ void Room::ProcMsg(message msg) {
 		}
 		PTC_VECTOR t_pos{};
 		t_pos.x = pos.x;
-		t_pos.y = pos.y;
+		t_pos.y = pos.y + 90.f;
 		t_pos.z = pos.z;
 		int bullet_idx = GetEmptyBullet();
 

@@ -141,6 +141,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		va_end(ap);
 
 		//todo: »Æ¿Œ
+		cout << "arg_bullet_idx: " << arg_bullet_idx << " arg_shootter: " << arg_shootter << endl;
 		AppContext->DisplayBullet(arg_bullet_idx, arg_bullet_pos, arg_cam_look, arg_shootter, arg_bullet_type);
 		break;
 	}

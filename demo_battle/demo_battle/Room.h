@@ -84,6 +84,8 @@ public:		//send msg
 	void MakeMove(int id);
 	void MakeStop(int id);
 
+	int GetEmptyBullet();
+	void SetEmptyBullet();
 
 private:	//recv msg
 	void CopyRecvMsgs();		//m_msg¿¡ msg push
@@ -109,8 +111,6 @@ private:
 
 	std::array<bool, MAX_BULLET> m_bullets;
 	std::queue<int> m_q_bullet;
-	int GetEmptyBullet();
-	void SetEmptyBullet();
 
 	std::array<bool, MAX_COIN> m_coins;
 	int m_coin_cur{ 0 };

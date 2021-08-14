@@ -451,9 +451,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_CALLBACK_BULLET: {
-#ifdef DEB
+//#ifdef DEB
 		cout << "BC_SHOOT_BULLET\n";
-#endif
+//#endif
 		bc_packet_callback_bullet* p = reinterpret_cast<bc_packet_callback_bullet*>(packet_buf);
 		
 		XMFLOAT3 arg_cam_look;
@@ -466,7 +466,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		arg_bullet_pos.y = p->bullet_pos.y;
 		arg_bullet_pos.z = p->bullet_pos.z;
 
-		Service::GetApp()->AddEvent(EVENT_GAME_SHOOT_BULLET, 5, p->shootter_id, p->bullet_type, p->bullet_idx, arg_cam_look, arg_bullet_pos);
+		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 5, p->shootter_id, p->bullet_type, p->bullet_idx, arg_cam_look, arg_bullet_pos);
 		break;
 	}
 	case BC_REMOVE_BULLET: {
@@ -661,7 +661,6 @@ void NetCore::SendReadyPacket() {
 }
 
 void NetCore::SendPositionPacket(XMFLOAT3 pos, int anim_type) {
-	cout << "SEND POSITION\n";
 	cb_packet_position p;
 	p.size = sizeof(p);
 	p.type = CB_POSITION_VECTOR;

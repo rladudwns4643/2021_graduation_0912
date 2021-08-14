@@ -320,11 +320,6 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		msg.vec.x = p->coin_id;
 		break;
 	}
-	case CB_TEST_TIME_PLUS:
-	case CB_TEST_TIME_MINUS: {
-		msg.type = inputPacket[1];
-		break;
-	}
 	default: {
 #ifdef LOG_ON
 		std::cout << "Invalid Packet Type Error!\n";
