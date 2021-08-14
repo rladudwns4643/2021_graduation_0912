@@ -74,6 +74,9 @@ void LobbyController::Update(const float deltaT)
 
 void LobbyController::HandleInput(const float deltaT)
 {
+	if (InputHandler::IsKeyUp(VK_F8)) {
+		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+	}
 #ifdef DEBUG_SERVER
 
 #endif

@@ -9,7 +9,10 @@ namespace Graphics
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 }
-
+namespace InputHandler
+{
+	extern bool g_CursorSwitch;
+}
 class Character;
 
 class MatchingRoomScene : public Scene

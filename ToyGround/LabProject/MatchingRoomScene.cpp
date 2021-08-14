@@ -25,7 +25,7 @@ void MatchingRoomScene::Initialize()
 	AppContext->CreateUI2D(OBJECT_NAME_MATCHINGROOM_BACKGROUND, OBJECT_NAME_MATCHINGROOM_BACKGROUND, TEXTURE_INDEX_UI_MATCHINGROOM_BACKGROUND);
 
 	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_MATCHINGROOM_LOGO_TOYGROUND, TEXTURE_INDEX_UI_MATCHINGROOM_LOGO_TOYGROUND);
-	
+
 	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_MATCHINGROOM_READY1_BUTTON_R, TEXTURE_INDEX_UI_MATCHINGROOM_READY1_RELEASED, TEXTURE_INDEX_UI_MATCHINGROOM_READY1_RELEASED);
 	AppContext->CreateUI2D(OBJECT_TYPE_READY1_PRESSED, OBJECT_NAME_MATCHINGROOM_READY1_BUTTON_P, TEXTURE_INDEX_UI_MATCHINGROOM_READY1_PRESSED, TEXTURE_INDEX_UI_MATCHINGROOM_READY1_PRESSED);
 	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_MATCHINGROOM_READY2_BUTTON_R, TEXTURE_INDEX_UI_MATCHINGROOM_READY2_RELEASED, TEXTURE_INDEX_UI_MATCHINGROOM_READY2_RELEASED);
@@ -40,6 +40,8 @@ void MatchingRoomScene::OnResize()
 bool MatchingRoomScene::Enter()
 {
 	cout << "=============== MatchingRoom Scene ===============" << endl;
+
+	InputHandler::g_CursorSwitch = true;
 
 	m_Toys[0] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
 	m_Toys[0]->m_IsVisible = true;
@@ -144,7 +146,7 @@ void MatchingRoomScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_NAME_MATCHINGROOM_BACKGROUND], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
-	
+
 	if (m_isReady1)
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_READY1_PRESSED], AppContext->m_RItemsVec);
 	if (m_isReady2)
