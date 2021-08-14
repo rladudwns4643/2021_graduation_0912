@@ -183,9 +183,10 @@ void Room::AnimationUpdate(float elapsedMilliSec)
 			m_players[i]->Update(elapsedMilliSec);
 			//anim
 			int anim_type{ m_players[i]->GetAnimType() };
+			int t_id = abs(id - 1);
 			if (anim_type != m_players[i]->GetPrevAnimType()) {
-				PushAnimMsg(id, anim_type);
-				m_players[i]->SetPrevAnimType(anim_type);
+				//PushAnimMsg(t_id, id, anim_type);
+				//m_players[i]->SetPrevAnimType(anim_type);
 			}
 		}
 	}
@@ -626,21 +627,14 @@ void Room::PushNewRoomMnrMsg(int id) {
 	}
 }
 
-void Room::PushAnimMsg(int id, int animType) {
+void Room::PushAnimMsg(int to, int from, int animType) {
 	bc_packet_anim_type p;
 	p.size = sizeof(p);
 	p.type = BC_ANIM;
-	p.id = id;
+	p.id = from;
 	p.anim_type = animType;
 
-	int tid{};
-	for (const auto& pl : m_players) {
-		tid = pl->GetID();
-		if (tid != -1 && tid != id) {
-			//cout << "anim: from: " << id << "to: " << tid << "anim_type: " << animType << endl;
-			PushSendMsg(tid, &p);
-		}
-	}
+	PushSendMsg(to, &p);
 }
 
 void Room::PushUpdateCoinMsg(int update_id, int update_cnt, int delete_coin_id) {
@@ -728,11 +722,12 @@ void Room::ProcMsg(message msg) {
 			t_v.z = msg.vec.z;
 			if (t_id == pl->GetID()) {
 				pl->SetPosition(XMFLOAT3{ t_v.x, t_v.y, t_v.z });
-				pl->SetAnimType(t_anim);
+				//pl->SetAnimType(t_anim);
 				//PushPlayerPositionMsg(t_id, pl->GetID(), &t_v);
 			}
 			else {
 				PushPlayerPositionMsg(pl->GetID(), t_id, &t_v);
+				//PushAnimMsg(pl->GetID(), t_id, pl->GetAnimType());
 			}
 		}
 		break;
@@ -740,7 +735,9 @@ void Room::ProcMsg(message msg) {
 	case CB_MAKE_ANIM: {
 		int t_id = msg.id;
 		int t_anim = msg.anim_type;
-		//PushAnimMsg(t_id, t_anim);
+		int a_id = 1;
+		if (t_id == 1) a_id = 2;
+		PushAnimMsg(a_id, t_id, t_anim);
 		break;
 	}
 	case CB_GET_COIN: {

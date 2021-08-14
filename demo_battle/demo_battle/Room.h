@@ -76,7 +76,7 @@ public:		//send msg
 
 	void PushNewRoomMnrMsg(int id);
 
-	void PushAnimMsg(int id, int animType);
+	void PushAnimMsg(int to, int from, int animType);
 #pragma endregion
 	
 	//set user move type
