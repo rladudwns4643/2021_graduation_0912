@@ -576,7 +576,7 @@ void GameCore::InitMainWindow()
 
 	g_hMainWnd = CreateWindow(
 		g_AppName, g_AppName,
-		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, g_hAppInst, 0);
+		WS_OVERLAPPED | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, g_hAppInst, 0);
 #endif // FULLSCREEN_MODE
 
 	if (!g_hMainWnd)
