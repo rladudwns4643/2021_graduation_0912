@@ -112,17 +112,19 @@ void GraphicsRenderer::LoadTextures()
 		"Polygon_Plane_Texture_02",
 		"Polygon_Plane_Texture_03",
 		"Floor_Texture",
-		"UI_TITLE_BACKGROUND",
-		"UI_TITLE_LOGO_TOYGROUND",
-		"UI_TITLE_PLAY_BUTTON_RELEASED",
-		"UI_TITLE_PLAY_BUTTON_PRESSED",
-		"UI_TITLE_EXIT_BUTTON_RELEASED",
-		"UI_TITLE_EXIT_BUTTON_PRESSED",
+		"UI_MATCHINGROOM_BACKGROUND",
+		"UI_MATCHINGROOM_LOGO_TOYGROUND",
+		"UI_MATCHINGROOM_READY1_BUTTON_RELEASED",
+		"UI_MATCHINGROOM_READY1_BUTTON_PRESSED",
+		"UI_MATCHINGROOM_READY2_BUTTON_RELEASED",
+		"UI_MATCHINGROOM_READY2_BUTTON_PRESSED",
 		"UI_LOBBY_BACKGROUND",
 		"UI_LOBBY_LOGO_TOYGROUND",
 		"UI_LOBBY_LOGINUI",
 		"UI_LOBBY_ID_INPUTATIVATE",
 		"UI_LOBBY_PW_INPUTATIVATE",
+		"UI_LOBBY_LOADINGUI",
+		"UI_LOBBY_LOADING_BAR",
 		"UI_GAMEPLAY_AIM",
 		"UI_GAMEPLAY_PLAYER1_SCORE",
 		"UI_GAMEPLAY_PLAYER2_SCORE",
@@ -130,6 +132,9 @@ void GraphicsRenderer::LoadTextures()
 		"UI_GAMEPLAY_HEALTH",
 		"UI_GAMEPLAY_ATTACK_GAUGE",
 		"UI_GAMEPLAY_SKILL_GAUGE",
+		"UI_GAMEPLAY_STATE_FRONT",
+		"UI_GAMEPLAY_STATE_BACK",
+		"UI_GAMEPLAY_WINNERBOARD",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -140,17 +145,19 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/Polygon_Plane_Texture_02.dds",
 		L"./Textures/Polygon_Plane_Texture_03.dds",
 		L"./Textures/Floor_Texture.dds",
-		L"./Textures/Title/BackGround.dds",
-		L"./Textures/Title/Logo_ToyGround.dds",
-		L"./Textures/Title/Play_Button_R.dds",
-		L"./Textures/Title/Play_Button_P.dds",
-		L"./Textures/Title/Exit_Button_R.dds",
-		L"./Textures/Title/Exit_Button_P.dds",
+		L"./Textures/MatchingRoom/BackGround.dds",
+		L"./Textures/MatchingRoom/Logo_ToyGround.dds",
+		L"./Textures/MatchingRoom/Ready1_Button_R.dds",
+		L"./Textures/MatchingRoom/Ready1_Button_P.dds",
+		L"./Textures/MatchingRoom/Ready2_Button_R.dds",
+		L"./Textures/MatchingRoom/Ready2_Button_P.dds",
 		L"./Textures/Lobby/Lobby_BackGround.dds",
 		L"./Textures/Lobby/Lobby_Logo_ToyGround.dds",
 		L"./Textures/Lobby/Lobby_LoginUI.dds",
 		L"./Textures/Lobby/Lobby_ID_InputAtivate.dds",
 		L"./Textures/Lobby/Lobby_PW_InputAtivate.dds",
+		L"./Textures/Lobby/Lobby_LoginUI_Loading.dds",
+		L"./Textures/Lobby/Lobby_LoadingBar.dds",
 		L"./Textures/GamePlay/Aim.dds",
 		L"./Textures/GamePlay/Player1Score.dds",
 		L"./Textures/GamePlay/Player2Score.dds",
@@ -158,6 +165,9 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/GamePlay/Health.dds",
 		L"./Textures/GamePlay/AttackGauge.dds",
 		L"./Textures/GamePlay/SkillGauge.dds",
+		L"./Textures/GamePlay/GamePlay_StateUI_Front.dds",
+		L"./Textures/GamePlay/GamePlay_StateUI_Back.dds",
+		L"./Textures/GamePlay/GamePlay_WinnerBoard.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -200,17 +210,19 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_Polygon_Plane_Texture_02]->Resource,
 		m_Textures[TEXTURE_STR_Polygon_Plane_Texture_03]->Resource,
 		m_Textures[TEXTURE_STR_Floor_Texture]->Resource,
-		m_Textures[TEXTURE_STR_UI_TITLE_BACKGROUND]->Resource,
-		m_Textures[TEXTURE_STR_UI_TITLE_LOGO_TOYGROUND]->Resource,
-		m_Textures[TEXTURE_STR_UI_TITLE_PLAY_BUTTON_RELEASED]->Resource,
-		m_Textures[TEXTURE_STR_UI_TITLE_PLAY_BUTTON_PRESSED]->Resource,
-		m_Textures[TEXTURE_STR_UI_TITLE_EXIT_BUTTON_RELEASED]->Resource,
-		m_Textures[TEXTURE_STR_UI_TITLE_EXIT_BUTTON_PRESSED]->Resource,
+		m_Textures[TEXTURE_STR_UI_MATCHINGROOM_BACKGROUND]->Resource,
+		m_Textures[TEXTURE_STR_UI_MATCHINGROOM_LOGO_TOYGROUND]->Resource,
+		m_Textures[TEXTURE_STR_UI_MATCHINGROOM_READY1_BUTTON_RELEASED]->Resource,
+		m_Textures[TEXTURE_STR_UI_MATCHINGROOM_READY1_BUTTON_PRESSED]->Resource,
+		m_Textures[TEXTURE_STR_UI_MATCHINGROOM_READY2_BUTTON_RELEASED]->Resource,
+		m_Textures[TEXTURE_STR_UI_MATCHINGROOM_READY2_BUTTON_PRESSED]->Resource,
 		m_Textures[TEXTURE_STR_UI_LOBBY_BACKGROUND]->Resource,
 		m_Textures[TEXTURE_STR_UI_LOBBY_LOGO_TOYGROUND]->Resource,
 		m_Textures[TEXTURE_STR_UI_LOBBY_LOGINUI]->Resource,
 		m_Textures[TEXTURE_STR_UI_LOBBY_ID_INPUTATIVATE]->Resource,
 		m_Textures[TEXTURE_STR_UI_LOBBY_PW_INPUTATIVATE]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_LOADINGUI]->Resource,
+		m_Textures[TEXTURE_STR_UI_LOBBY_LOADING_BAR]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_AIM]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_PLAYER1_SCORE]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_PLAYER2_SCORE]->Resource,
@@ -218,6 +230,9 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_HEALTH]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_ATTACK_GAUGE]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_SKILL_GAUGE]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_STATE_FRONT]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_STATE_BACK]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD]->Resource,
 	};
 
 	auto SkyBox = m_Textures["SkyBox"]->Resource;
@@ -350,7 +365,7 @@ void GraphicsRenderer::BuildRootSignatures()
 
 	// Texture - 앞의 숫자가 테스쳐 개수
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 24, 2, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 29, 2, 0);
 
 	// Shadow
 	CD3DX12_DESCRIPTOR_RANGE texTable2;

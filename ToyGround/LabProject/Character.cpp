@@ -734,14 +734,13 @@ void Character::Attack()
 		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
 
 		AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 2);
+		m_isSkillOn = false;
 	}
 	else
 	{
 		if(m_skillGauge <MAX_SKILLGAUGE)	
 			m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
 		m_attackGauge -= 100;
-		cout << "Skill: " << m_skillGauge << endl;
-		cout << "Attack: " << m_attackGauge << endl;
 		int bIndex = 0;
 		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 		{

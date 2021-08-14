@@ -2,14 +2,14 @@
 #include "Controller.h"
 
 class LobbyScene;
-class TitleScene;
+class MatchingRoomScene;
 class GameplayScene;
 
-class TitleController final : public Controller
+class MatchingRoomController final : public Controller
 {
 public:
-	explicit TitleController(TitleScene* myScene);
-	virtual ~TitleController() = default;
+	explicit MatchingRoomController(MatchingRoomScene* myScene);
+	virtual ~MatchingRoomController() = default;
 
 public:
 	virtual void Update(const float deltaT) override;
@@ -19,7 +19,7 @@ private:
 	virtual void MouseCallback() override;
 
 private:
-	TitleScene* m_MyScene;
+	MatchingRoomScene* m_MyScene;
 	std::string m_PickedUIName;
 	std::string m_PickedUIObjectName;
 };
