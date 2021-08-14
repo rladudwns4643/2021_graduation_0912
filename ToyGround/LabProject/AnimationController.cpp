@@ -18,6 +18,7 @@ AnimationController::AnimationController(Character* owner, SkinnedModelInstance*
 	m_MapAnimData[KEY_RIGHT_STRAFE] = std::make_unique<AnimData>("Right_Strafe", 0.f);
 	m_MapAnimData[KEY_ATTACK] = std::make_unique<AnimData>("Attack", 0.f);
 	m_MapAnimData[KEY_JUMP] = std::make_unique<AnimData>("Jump", 0.f);
+	m_MapAnimData[KEY_T_POSE] = std::make_unique<AnimData>("T_POSE", 0.f);
 
 	m_MaxBlendFrames = 10.f;
 }
