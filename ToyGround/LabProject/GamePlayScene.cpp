@@ -7,6 +7,8 @@
 #include "ApplicationContext.h"
 #include "InputHandler.h"
 #include "Service.h"
+#include "CommandCenter.h"
+#include "MoveCommand.h"
 
 #include "GameObject.h"
 #include "Character.h"
@@ -124,7 +126,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
 		cout << "change anim id: " << arg_id << "anim: " << arg_anim_type << endl;
-		m_Users[arg_id]->SetAnimationKeyState(static_cast<AnimationController::PlayerState>(arg_anim_type));
+		CommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[arg_id]);
 		break;
 	}
 	case EVENT_GAME_CALLBACK_MOVE: {
