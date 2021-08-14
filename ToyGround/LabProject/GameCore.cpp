@@ -207,7 +207,7 @@ bool GameCore::UpdateCore(IGameApp& game)
 			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
 		// Clear the back buffer and depth buffer.
-		g_CommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Black, 0, nullptr);
+		g_CommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::CornflowerBlue, 0, nullptr);
 		g_CommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 		g_CommandList->OMSetRenderTargets(1, &CurrentBackBufferView(), true, &DepthStencilView());

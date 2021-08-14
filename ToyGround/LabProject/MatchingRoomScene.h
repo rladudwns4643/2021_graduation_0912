@@ -7,12 +7,10 @@
 namespace Graphics
 {
 	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_UIPSO;
+	extern Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedPSO;
 }
 
-enum MBType
-{
-	BLANK, OK, DENY
-};
+class Character;
 
 class MatchingRoomScene : public Scene
 {
@@ -30,11 +28,11 @@ public:
 	virtual void Render() override;
 	virtual void RenderText() override;
 
-public:
+	bool m_isReady1 = false;
+	bool m_isReady2 = false;
 
-	bool m_IsMB = false;
-	wstring m_MBMainMessage;
-	wstring m_MBSubMessage;
-	MBType m_MBType = MBType::BLANK;
+	XMFLOAT2 m_ScaleConvert{ 1.f, 1.f };
+
+	std::map<int, Character*> m_Toys;
 };
 

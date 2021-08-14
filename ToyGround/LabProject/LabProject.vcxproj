@@ -164,6 +164,7 @@
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="EnemyCommandCenter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="GameObject.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="EnemyCommandCenter.cpp" />
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GamePlayScene.cpp" />

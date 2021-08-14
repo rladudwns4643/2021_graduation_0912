@@ -27,10 +27,38 @@ void MatchingRoomController::Update(const float deltaT)
 
 void MatchingRoomController::HandleInput(const float deltaT)
 {
+	if (InputHandler::IsKeyUp(VK_F8)) {
+		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+	}
 }
 
 void MatchingRoomController::MouseCallback()
 {
+	if (InputHandler::g_LeftMouseClick)
+	{
+		LONG mousePosX = InputHandler::g_LastMousePos.x;
+		LONG mousePosY = InputHandler::g_LastMousePos.y;
+		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+
+		XMFLOAT2 ScaleConvert = m_MyScene->m_ScaleConvert;
+
+		// Ready1(Left)
+		if (140 * ScaleConvert.x <= mousePosX && mousePosX <= 440 * ScaleConvert.x
+			&& 600 * ScaleConvert.y <= mousePosY && mousePosY <= 690 * ScaleConvert.y
+			&& m_MyScene->m_isReady1 == false)
+		{
+			m_MyScene->m_isReady1 = true;
+		}
+
+		// Ready2(Right)
+		if (840 * ScaleConvert.x <= mousePosX && mousePosX <= 1140 * ScaleConvert.x
+			&& 600 * ScaleConvert.y <= mousePosY && mousePosY <= 690 * ScaleConvert.y
+			&& m_MyScene->m_isReady2 == false)
+		{
+			m_MyScene->m_isReady2 = true;
+		}
+	}
+	InputHandler::ResetClickState();
 }
 
 //++++++++++++++++++LOBBY SCENE+++++++++++++++++++++++++++++++++++++++
@@ -215,6 +243,9 @@ void GameplayController::HandleInput(const float deltaT)
 	}
 	if (InputHandler::IsKeyUp(VK_F4)) {
 		SceneManager::GetApp()->ChangeScene(SceneType::eLobby);
+	}
+	if (InputHandler::IsKeyUp(VK_F3)) {
+		SceneManager::GetApp()->ChangeScene(SceneType::eMatchingRoom);
 	}
 
 #ifdef DEBUG_SERVER

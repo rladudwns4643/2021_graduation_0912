@@ -7,6 +7,9 @@
 #include "ApplicationContext.h"
 #include "InputHandler.h"
 #include "Service.h"
+#include "MoveCommand.h"
+#include "CommandCenter.h"
+#include "EnemyCommandCenter.h"
 
 #include "GameObject.h"
 #include "Character.h"
@@ -265,6 +268,7 @@ bool GameplayScene::Enter()
 
 	// 카메라 세팅
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eGamePlay);
+	TOY_GROUND::GetApp()->m_Camera->Update();
 
 	// 보석 초기화
 	for (int i = 0; i < MAX_GEM_COUNT; ++i)
@@ -279,6 +283,8 @@ bool GameplayScene::Enter()
 		AppContext->HiddenBullet(i, 2);
 	}
 	AppContext->BulletReset();
+
+	EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[1]);
 
 	return false;
 }
@@ -435,17 +441,6 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_STATE_FRONT], AppContext->m_RItemsVec);
 
-}
-
-void GameplayScene::ChangeFreeCamera()
-{
-	if (TOY_GROUND::GetApp()->m_Camera->GetCameraType() == CameraType::eFree) return;
-
-	XMFLOAT3 look = m_Users[m_PlayerID]->GetLook();
-	XMFLOAT3 up = m_Users[m_PlayerID]->GetUp();
-	XMFLOAT3 right = m_Users[m_PlayerID]->GetRight();
-
-	TOY_GROUND::GetApp()->m_Camera->SetCamera(look, up, right);
 }
 
 void GameplayScene::RenderText()

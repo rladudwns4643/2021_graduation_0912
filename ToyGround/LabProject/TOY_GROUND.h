@@ -19,6 +19,7 @@ class SceneManager;
 class ApplicationContext;
 class AssertsReference;
 class CommandCenter;
+class EnemyCommandCenter;
 
 class TOY_GROUND : public IGameApp, public TemplateSingleton<TOY_GROUND>
 {
@@ -47,5 +48,6 @@ private:
 	ApplicationContext				*m_pAppContext = NULL;
 	AssertsReference				*m_pAssetsRef = NULL;
 	CommandCenter					*m_CommandCenter = NULL;
+	EnemyCommandCenter				*m_EnemyCommandCenter = NULL;
 };
 

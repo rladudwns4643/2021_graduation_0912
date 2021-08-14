@@ -40,9 +40,6 @@ public:
 	virtual void RenderText() override;
 	virtual void WriteShadow() override;
 
-private:
-	void ChangeFreeCamera();
-
 public:
 	bool m_PauseScene = true;
 
@@ -59,5 +56,6 @@ private:
 
 private:
 	bool m_IsGameOver = false;
+
 };
 

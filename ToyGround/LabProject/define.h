@@ -129,6 +129,8 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 #define OBJECT_TYPE_WINNERBOARD					"UI_WINNERBOARD"
 #define OBJECT_TYPE_LOADINGUI					"UI_LOBBY_LOADINGUI"
 #define OBJECT_TYPE_LOADING_BAR					"UI_LOADING_BAR"
+#define OBJECT_TYPE_READY1_PRESSED				"UI_READY1_PRESSED"
+#define OBJECT_TYPE_READY2_PRESSED				"UI_READY2_PRESSED"
 
 #define OBJECT_NAME_MATCHINGROOM_BACKGROUND			"BACKGROUND"
 #define OBJECT_NAME_MATCHINGROOM_LOGO_TOYGROUND		"LOGO_TOYGROUND"
@@ -222,7 +224,7 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 
 // enum class
 enum class SceneType { eLobby = 0, eMatchingRoom = 1, eGamePlay = 2, eCount = 3};
-enum class CameraType { eThird = 0, eFree = 1, eFront = 2 };
+enum class CameraType { eThird = 0, eFree = 1, eFix = 2 };
 enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, RB };
 
 // 맵 디파인값이 연속적이여야함
@@ -251,6 +253,7 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 
 #define KEY_ATTACK "Attack"
 #define KEY_JUMP "Jump"
+#define KEY_T_POSE "T_POSE"
 
 #define MAX_ID_LEN 10
 

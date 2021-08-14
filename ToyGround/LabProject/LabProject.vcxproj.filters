@@ -257,6 +257,9 @@
     <ClInclude Include="MatchingRoomScene.h">
       <Filter>Scene\MatchingRoom</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyCommandCenter.h">
+      <Filter>Command</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LabProject.rc">
@@ -412,6 +415,9 @@
     </ClCompile>
     <ClCompile Include="MatchingRoomScene.cpp">
       <Filter>Scene\MatchingRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCommandCenter.cpp">
+      <Filter>Command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

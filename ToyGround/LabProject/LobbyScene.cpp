@@ -118,6 +118,7 @@ bool LobbyScene::Enter()
 	ID_Input_Ativate = false;
 	PW_Input_Ativate = false;
 
+	m_isMatching = false;
 	LoadingBarPosX = -253;
 	LoadingBarDirection = 1;
 	LoadingBarSpeed = 0;

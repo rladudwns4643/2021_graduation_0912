@@ -4,6 +4,7 @@
 #include "ApplicationContext.h"
 #include "AssertsReference.h"
 #include "CommandContext.h"
+#include "EnemyCommandCenter.h"
 #include "CommandCenter.h"
 #include "netCore.h"
 #include "Service.h"
@@ -66,6 +67,12 @@ bool Character::ReleaseTransform()
 
 void Character::Update(const float deltaT)
 {
+	if (m_PlayerID == 100)
+	{
+		m_AnimationController->Update(deltaT);
+		return;
+	}
+
 #ifdef DEBUG_CLIENT
 	UpdateStateUI();
 
@@ -261,19 +268,72 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 			degree = -degree;
 		
 		bool isChange = false;
-		
-		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
+
+#ifdef DEBUG_CLIENT
+		if (m_PlayerID == 0)
 		{
-			if (fabs(degree) > 1.f)
+			if (CommandCenter::GetApp()->m_StartAttackAnim == false)
 			{
-				Rotate(0.f, XMConvertToRadians(degree), 0.f);
-				isChange = true;
+				if (fabs(degree) > 1.f)
+				{
+					Rotate(0.f, XMConvertToRadians(degree), 0.f);
+					isChange = true;
+				}
+				Move(DIR_FORWARD, fDistance, true);
+				degree = 0.f;
 			}
-			Move(DIR_FORWARD, fDistance, true);
-			degree = 0.f;
+			else
+				Move(dwDirection, fDistance, true);
 		}
 		else
-			Move(dwDirection, fDistance, true);
+		{
+			if (EnemyCommandCenter::GetApp()->m_StartAttackAnim == false)
+			{
+				if (fabs(degree) > 1.f)
+				{
+					Rotate(0.f, XMConvertToRadians(degree), 0.f);
+					isChange = true;
+				}
+				Move(DIR_FORWARD, fDistance, true);
+				degree = 0.f;
+			}
+			else
+				Move(dwDirection, fDistance, true);
+		}
+
+
+#elif DEBUG_SERVER
+		if (m_PlayerID == NetCore::GetApp()->GetBattleID() == m_PlayerID)
+		{
+			if (CommandCenter::GetApp()->m_StartAttackAnim == false)
+			{
+				if (fabs(degree) > 1.f)
+				{
+					Rotate(0.f, XMConvertToRadians(degree), 0.f);
+					isChange = true;
+				}
+				Move(DIR_FORWARD, fDistance, true);
+				degree = 0.f;
+			}
+			else
+				Move(dwDirection, fDistance, true);
+	}
+		else
+		{
+			if (EnemyCommandCenter::GetApp()->m_StartAttackAnim == false)
+			{
+				if (fabs(degree) > 1.f)
+				{
+					Rotate(0.f, XMConvertToRadians(degree), 0.f);
+					isChange = true;
+				}
+				Move(DIR_FORWARD, fDistance, true);
+				degree = 0.f;
+			}
+			else
+				Move(dwDirection, fDistance, true);
+		}
+#endif
 		return isChange;
 	}
 	return false;

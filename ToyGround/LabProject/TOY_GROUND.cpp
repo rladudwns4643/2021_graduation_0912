@@ -7,6 +7,7 @@
 #include "ApplicationContext.h"
 #include "AssertsReference.h"
 #include "CommandCenter.h"
+#include "EnemyCommandCenter.h"
 
 using namespace Core;
 
@@ -25,6 +26,7 @@ void TOY_GROUND::Startup(void)
 	m_pAppContext = ApplicationContext::GetApp();
 	m_pAssetsRef = AssertsReference::GetApp();
 	m_CommandCenter = CommandCenter::GetApp();
+	m_EnemyCommandCenter = EnemyCommandCenter::GetApp();
 
 	// LoadFont
 	GraphicsContext::GetApp()->LoadFont(L"Showcard Gothic", 20);
@@ -36,6 +38,7 @@ void TOY_GROUND::Startup(void)
 	// Create Scene
 	SceneManager::GetApp()->InitializeScenes();
 	SceneManager::GetApp()->EnterScene(SceneType::eLobby);
+//	SceneManager::GetApp()->EnterScene(SceneType::eMatchingRoom);
 //	SceneManager::GetApp()->EnterScene(SceneType::eGamePlay);
 
 	// Build GpuResources
@@ -85,6 +88,7 @@ void TOY_GROUND::Update(float deltaT)
 
 	/*CommandCenter*/
 	CommandCenter::GetApp()->Order(deltaT);
+	EnemyCommandCenter::GetApp()->Order(deltaT);
 
 	// SceneManage
 	if (m_pSceneManager)

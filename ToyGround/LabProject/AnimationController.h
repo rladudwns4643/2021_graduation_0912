@@ -77,9 +77,8 @@ public:
 		STATE_JUMP_TO_RIGHT_STRAFE,
 		STATE_JUMP_TO_ATTACK,
 
-		STATE_FIND,
-		STATE_WIN,
-		STATE_LOSE,
+		STATE_T_POSE,
+		STATE_T_POSE_TO_IDLE,
 	};
 
 	PlayerState m_PlayerState;

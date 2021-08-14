@@ -303,6 +303,15 @@ void AnimationController::SetState(const float deltaT)
 			break;
 		}
 		break;
+	case STATE_T_POSE:
+		switch (m_KeyState)
+		{
+		case STATE_IDLE:
+			m_PlayerState = STATE_JUMP_TO_IDLE;
+			m_MapAnimData[KEY_IDLE]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+		}
 
 		/************************ Blending ****************************/
 			// IDLE
@@ -312,6 +321,7 @@ void AnimationController::SetState(const float deltaT)
 	case STATE_RIGHT_STRAFE_TO_IDLE:
 	case STATE_ATTACK_TO_IDLE:
 	case STATE_JUMP_TO_IDLE:
+	case STATE_T_POSE_TO_IDLE:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_IDLE;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -424,6 +434,10 @@ void AnimationController::UpdateBoneTransforms()
 	case STATE_JUMP:
 		strState = KEY_JUMP;
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(m_MapAnimData[KEY_JUMP]->m_Name, m_MapAnimData[KEY_JUMP]->m_Time);
+		break;
+	case STATE_T_POSE:
+		strState = KEY_T_POSE;
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(m_MapAnimData[KEY_T_POSE]->m_Name, m_MapAnimData[KEY_T_POSE]->m_Time);
 		break;
 
 		/************************ Blending ****************************/
@@ -684,6 +698,12 @@ void AnimationController::UpdateBoneTransforms()
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData[KEY_JUMP]->m_Name, m_MapAnimData[KEY_JUMP]->m_Time,
 			m_MapAnimData[KEY_ATTACK]->m_Name, m_MapAnimData[KEY_ATTACK]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames));
+		break;
+	case STATE_T_POSE_TO_IDLE:
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData[KEY_T_POSE]->m_Name, m_MapAnimData[KEY_T_POSE]->m_Time,
+			m_MapAnimData[KEY_IDLE]->m_Name, m_MapAnimData[KEY_IDLE]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames));
 		break;
 	}
