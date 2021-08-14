@@ -109,6 +109,7 @@ void PlayerController::MouseCallback()
 			{
 				m_Owner->SetLookToCameraLook();
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
+				Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_PUSH_ANIM, 1, static_cast<int>(MoveState::Attack));
 				CommandCenter::GetApp()->m_StartAttackAnim = true;
 				m_Owner->Attack();
 			}

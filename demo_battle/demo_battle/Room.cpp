@@ -633,7 +633,9 @@ void Room::PushAnimPushMsg(int to, int from, int animType) {
 	p.type = BC_ANIM_PUSH;
 	p.id = from;
 	p.anim_type = animType;
-
+#ifdef LOG_ON
+	cout << "push ANIM: " << from << " -> " << to << " type: " << animType << endl;
+#endif LOG_ON
 	PushSendMsg(to, &p);
 }
 
@@ -643,6 +645,9 @@ void Room::PushAnimPopMsg(int to, int from, int animType) {
 	p.type = BC_ANIM_POP;
 	p.id = from;
 	p.anim_type = animType;
+#ifdef LOG_ON
+	cout << "pop ANIM: " << from << " -> " << to << " type: " << animType << endl;
+#endif LOG_ON
 
 	PushSendMsg(to, &p);
 }
