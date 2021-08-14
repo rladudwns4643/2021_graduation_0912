@@ -281,7 +281,7 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		arg_bullet_type = va_arg(ap, short);
 		va_end(ap);
 
-		NetCore::GetApp()->SendBulletPacket(arg_dir, arg_bullet_type)
+		NetCore::GetApp()->SendBulletPacket(arg_dir, arg_bullet_type);
 	}
 	case EVENT_GAME_REMOVE_BULLET: {
 		int arg_bullet_id;

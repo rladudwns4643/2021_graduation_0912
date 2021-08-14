@@ -782,6 +782,8 @@ void Room::ProcMsg(message msg) {
 		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(MAKE_BULLET_EMPTY), EVENT_TYPE::EV_MAKE_EMPTY_BULLET };
 		BattleServer::GetInstance()->AddTimer(ev);
 
+		cout << "GET REQUEST BULLET" << endl;
+
 		PushShootBulletMsg(t_id, t_bullet_type, bullet_idx, t_v, t_pos);
 		break;
 	}

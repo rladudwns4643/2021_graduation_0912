@@ -124,7 +124,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		AppContext->HiddenGem(arg_delete_coin_id, false);
 		break;
 	}
-	case EVENT_GAME_SHOOT_BULLET: {
+	case EVENT_GAME_REQUEST_BULLET: {
 		int arg_shootter;
 		short arg_bullet_type;
 		int arg_bullet_idx;
