@@ -439,7 +439,7 @@ void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 l
 		XMFLOAT3 bSpeed{ 0.f, 0.f, 0.f };
 		bSpeed = MathHelper::Add(bSpeed, look, BULLET_SPEED);
 		float t = 15;
-		XMFLOAT3 temp{startPos};
+		XMFLOAT3 temp{ startPos };
 		temp.x += (bSpeed.x * t);
 		temp.y += (bSpeed.y * t);
 		temp.z += (bSpeed.z * t);
@@ -492,7 +492,7 @@ void ApplicationContext::HiddenBullet(int instID, int bulletNum)
 	if (bulletNum == 1)
 	{
 		//cout << "H - Bullet: " << instID << endl;
-		
+
 		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + instID));
 		if (!obj) {
 			cout << "HiddenBullet: cant find obj" << endl;
@@ -560,7 +560,7 @@ void ApplicationContext::DisplayProps(std::string mapName, bool isScale, float s
 		obj->m_IsVisible = true;
 		obj->m_IsVisibleOnePassCheck = true;
 		if (isScale) obj->Scale(scaleValue, scaleValue, scaleValue);
-		if(obj->GetMeshName() == OBJECT_MESH_STR_WALL_21)
+		if (obj->GetMeshName() == OBJECT_MESH_STR_WALL_21)
 			obj->Scale(1.0f, 5.5f, 21.f);
 		else if (obj->GetMeshName() == OBJECT_MESH_STR_WALL_33)
 			obj->Scale(1.0f, 5.5f, 33.f);
@@ -632,8 +632,8 @@ void ApplicationContext::DisplayCharacter(std::string mapName, std::string userN
 
 	std::vector<MapTool::PlayerInfo> playerInfoVec = m_Maps[mapName]->playerInfoVector;
 
-	for (auto& p : playerInfoVec){
-		if(userName == p.playerName)
+	for (auto& p : playerInfoVec) {
+		if (userName == p.playerName)
 		{
 			user->InitializeTransform();
 			user->SetAnimationKeyState(AnimationController::PlayerState::STATE_IDLE);
@@ -705,6 +705,24 @@ void ApplicationContext::UpdateStateUI2D(std::string ui2dLayer, std::string ui2d
 	}
 
 	ui->m_PositionRatio = { ((posXGap - (sizeX / 20.f))), -(pos.y + (sizeY / 20.f)) };
+	ui->m_SizeRatio = { sizeX / sizeY, sizeY / 1080.f };
+
+	ui->SetPosition(pos.x, pos.y, 1.f);
+
+	ui->m_UIPos = XMFLOAT2(pos.x, pos.y);
+	ui->m_UISize = XMFLOAT2(sizeX * 0.1f, sizeY * 0.1f);
+}
+
+void ApplicationContext::UpdateLoadingBarUI2D(XMFLOAT2 nowPos)
+{
+	UserInterface* ui = FindObject<UserInterface>(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR);
+	if (!ui) return;
+
+	float sizeX = 88.f * 15.f;
+	float sizeY = 62.f * 15.f;
+	XMFLOAT2 pos = nowPos;
+
+	ui->m_PositionRatio = { ((pos.x - (sizeX / 20.f))), -(pos.y + (sizeY / 20.f)) };
 	ui->m_SizeRatio = { sizeX / sizeY, sizeY / 1080.f };
 
 	ui->SetPosition(pos.x, pos.y, 1.f);
