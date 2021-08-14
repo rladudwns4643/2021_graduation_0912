@@ -97,6 +97,8 @@ void LobbyScene::Initialize()
 	AppContext->CreateUI2D(ui2dName, OBJECT_NAME_LOBBY_LOGINUI, TEXTURE_INDEX_UI_LOBBY_LOGINUI, TEXTURE_INDEX_UI_LOBBY_LOGINUI);
 	AppContext->CreateUI2D(OBJECT_TYPE_ID_INPUTATIVATE, OBJECT_NAME_LOBBY_ID_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_ID_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_ID_INPUTATIVATE);
 	AppContext->CreateUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_PW_INPUTATIVATE, TEXTURE_INDEX_UI_LOBBY_PW_INPUTATIVATE);
+	AppContext->CreateUI2D(OBJECT_TYPE_LOADINGUI, OBJECT_NAME_LOBBY_LOADINGUI, TEXTURE_INDEX_UI_LOBBY_LOADINGUI, TEXTURE_INDEX_UI_LOBBY_LOADINGUI);
+	AppContext->CreateUI2D(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR, TEXTURE_INDEX_UI_LOBBY_LOADING_BAR, TEXTURE_INDEX_UI_LOBBY_LOADING_BAR);
 }
 
 void LobbyScene::OnResize()
@@ -116,17 +118,23 @@ bool LobbyScene::Enter()
 	ID_Input_Ativate = false;
 	PW_Input_Ativate = false;
 
+	LoadingBarPosX = -253;
+	LoadingBarDirection = 1;
+	LoadingBarSpeed = 0;
+
 	InputHandler::g_CursorSwitch = true;
 
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eLobby);
 
 	AppContext->DisplayUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND, XMFLOAT2(0.f, 0.f), XMFLOAT2(1280, 720), TextAlignType::Center);
 
-	// Button
+	// UI
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGO_TOYGORUND,  XMFLOAT2(0.f, 200.f), XMFLOAT2(920.f, 360.f), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGINUI , XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_ID_INPUTATIVATE, OBJECT_NAME_LOBBY_ID_INPUTATIVATE, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center, -1, true);
 	AppContext->DisplayUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center, -1, true);
+	AppContext->DisplayUI2D(OBJECT_TYPE_LOADINGUI, OBJECT_NAME_LOBBY_LOADINGUI, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR, XMFLOAT2(-253.f, -411.f), XMFLOAT2(88.f, 62.f), TextAlignType::Center);
 
 	return false;
 }
@@ -140,6 +148,8 @@ void LobbyScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_LOBBY_LOGINUI);
 	AppContext->HiddenUI2D(OBJECT_TYPE_ID_INPUTATIVATE, OBJECT_NAME_LOBBY_ID_INPUTATIVATE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE);
+	AppContext->HiddenUI2D(OBJECT_TYPE_LOADINGUI, OBJECT_NAME_LOBBY_LOADINGUI);
+	AppContext->HiddenUI2D(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR);
 }
 
 void LobbyScene::Update(const float& fDeltaTime)
@@ -157,6 +167,32 @@ void LobbyScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_PW_INPUTATIVATE], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_PW_INPUTATIVATE], AppContext->m_RItemsVec);
 
+	if (m_isMatching)
+	{
+		GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_LOADINGUI], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_LOADINGUI], AppContext->m_RItemsVec);
+		
+		LoadingBarSpeed += LoadingBarDirection * LoadingBarAccel;
+		LoadingBarPosX += LoadingBarSpeed;
+		if (LoadingBarPosX > 40.f)
+		{
+			LoadingBarPosX = 40.f;
+			LoadingBarDirection = -1;
+			LoadingBarSpeed = 0;
+		}
+		else if (LoadingBarPosX < -253.f)
+		{
+			LoadingBarPosX = -253.f;
+			LoadingBarDirection = 1;
+			LoadingBarSpeed = 0;
+		}
+		//cout << LoadingBarPosX << endl;
+		AppContext->UpdateLoadingBarUI2D(XMFLOAT2(LoadingBarPosX, -411.f));
+		
+		GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_LOADING_BAR], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_LOADING_BAR], AppContext->m_RItemsVec);
+	}
+
 	/*Materials*/
 	GraphicsContext::GetApp()->UpdateMaterialBuffer(AssertsReference::GetApp()->m_Materials);
 }
@@ -169,6 +205,12 @@ void LobbyScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_NAME_LOBBY_BACKGROUND], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
+
+	if (m_isMatching)
+	{
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_LOADINGUI], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_LOADING_BAR], AppContext->m_RItemsVec);
+	}
 
 	// 입력창 활성화
 	if(ID_Input_Ativate)

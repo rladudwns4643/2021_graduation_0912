@@ -58,7 +58,7 @@ void LobbyController::HandleInput(const float deltaT)
 void LobbyController::MouseCallback()
 {
 #ifdef DEBUG_SERVER
-	if (InputHandler::g_LeftMouseClick)
+	if (InputHandler::g_LeftMouseClick && m_MyScene->m_isMatching == false)
 	{
 		LONG mousePosX = InputHandler::g_LastMousePos.x;
 		LONG mousePosY = InputHandler::g_LastMousePos.y;
@@ -130,7 +130,7 @@ void LobbyController::MouseCallback()
 #endif
 
 #ifdef DEBUG_CLIENT
-	if (InputHandler::g_LeftMouseClick)
+	if (InputHandler::g_LeftMouseClick && m_MyScene->m_isMatching == false)
 	{
 		LONG mousePosX = InputHandler::g_LastMousePos.x;
 		LONG mousePosY = InputHandler::g_LastMousePos.y;
@@ -184,11 +184,12 @@ void LobbyController::MouseCallback()
 			Core::g_Chating = 0;
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 		}
-		// EXit Button
+		// Start Button
 		if (530 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
-			//cout << "Exit Button Click" << endl;
+			m_MyScene->m_isMatching = true;
+			//cout << "Start Button Click" << endl;
 		}
 	}
 #endif

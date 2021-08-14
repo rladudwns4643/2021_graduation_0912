@@ -713,6 +713,24 @@ void ApplicationContext::UpdateStateUI2D(std::string ui2dLayer, std::string ui2d
 	ui->m_UISize = XMFLOAT2(sizeX * 0.1f, sizeY * 0.1f);
 }
 
+void ApplicationContext::UpdateLoadingBarUI2D(XMFLOAT2 nowPos)
+{
+	UserInterface* ui = FindObject<UserInterface>(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR);
+	if (!ui) return;
+
+	float sizeX = 88.f * 15.f;
+	float sizeY = 62.f * 15.f;
+	XMFLOAT2 pos = nowPos;
+
+	ui->m_PositionRatio = { ((pos.x - (sizeX / 20.f))), -(pos.y + (sizeY / 20.f)) };
+	ui->m_SizeRatio = { sizeX / sizeY, sizeY / 1080.f };
+
+	ui->SetPosition(pos.x, pos.y, 1.f);
+
+	ui->m_UIPos = XMFLOAT2(pos.x, pos.y);
+	ui->m_UISize = XMFLOAT2(sizeX * 0.1f, sizeY * 0.1f);
+}
+
 void ApplicationContext::DisplayUI2D(std::string ui2dLayer, std::string ui2dName, XMFLOAT2 pos, XMFLOAT2 size, TextAlignType textAlignType, int zLayer, bool isText)
 {
 	UserInterface* ui = FindObject<UserInterface>(ui2dLayer, ui2dName);
