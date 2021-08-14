@@ -98,6 +98,8 @@ private:
 	// 캐릭터전용 재질 인덱스
 	UINT m_CharacterMaterialIndex;
 
+	DirectX::XMFLOAT3 m_packetPosition;
+
 	// 이동행렬
 	DirectX::XMFLOAT3 m_Position;
 	DirectX::XMFLOAT3 m_Right;

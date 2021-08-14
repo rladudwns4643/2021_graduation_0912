@@ -15,6 +15,7 @@ public:
 
 public:
 #pragma region Sender
+	void SendDummyLoginOKPacket(int id);
 	void SendLoginOKPacket(int id);
 	void SendLoginFailPacket(int id);
 	void SendSignUpOkPacket(int id, int mmr);

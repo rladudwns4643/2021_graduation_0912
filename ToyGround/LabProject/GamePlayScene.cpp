@@ -16,7 +16,7 @@
 void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	switch (sEvent) {
 	case EVENT_ROOM_START: {
-		cout << "씬 변경lobby -> Game, 서버에서 게임 정보 받아옴" << endl;
+		//cout << "씬 변경lobby -> Game, 서버에서 게임 정보 받아옴" << endl;
 		SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 		break;
 	}

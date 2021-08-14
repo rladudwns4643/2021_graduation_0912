@@ -148,3 +148,15 @@ XMFLOAT4X4 MathHelper::LookAtLH(XMFLOAT3& xmf3EyePosition, XMFLOAT3& xmf3LookAtP
 	XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixLookAtLH(XMLoadFloat3(&xmf3EyePosition), XMLoadFloat3(&xmf3LookAtPosition), XMLoadFloat3(&xmf3UpDirection)));
 	return(xmmtx4x4Result);
 }
+
+float MathHelper::Distance(const XMFLOAT3 xmf3Vector1, const XMFLOAT3 xmf3Vector2)
+{
+	XMVECTOR v1 = XMLoadFloat3(&xmf3Vector1);
+	XMVECTOR v2 = XMLoadFloat3(&xmf3Vector2);
+	XMVECTOR sub = XMVectorSubtract(v1, v2);
+	XMVECTOR length = XMVector3Length(sub);
+
+	float distance = 0.f;
+	XMStoreFloat(&distance, length);
+	return distance;
+}

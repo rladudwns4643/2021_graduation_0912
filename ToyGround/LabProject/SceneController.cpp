@@ -62,7 +62,7 @@ void LobbyController::MouseCallback()
 	{
 		LONG mousePosX = InputHandler::g_LastMousePos.x;
 		LONG mousePosY = InputHandler::g_LastMousePos.y;
-		cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
+		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
 
 		XMFLOAT2 ScaleConvert = m_MyScene->m_ScaleConvert;
 
@@ -103,7 +103,6 @@ void LobbyController::MouseCallback()
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "New Id Button Click" << endl;
-			cout << "RR" << endl;
 			NetCore::GetApp()->SendReadyPacket();
 		}
 		// Login Button

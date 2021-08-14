@@ -189,7 +189,6 @@ void PlayerController::OnKeyPressed()
 #endif
 		break;
 	}
-	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, m_Owner->GetPosition(), static_cast<int>(m_Owner->m_AnimationController->m_PlayerState));
 }
 
 void PlayerController::OnKeyReleased()
@@ -246,5 +245,4 @@ void PlayerController::OnKeyReleased()
 #endif
 		break;
 	}
-	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, m_Owner->GetPosition(), static_cast<int>(m_Owner->m_AnimationController->m_PlayerState));
 }
