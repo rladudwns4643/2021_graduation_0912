@@ -1,8 +1,8 @@
 #pragma once
 #include "Scene.h"
 
-#define CLIENT_EVENT_TITLE_UI_PRESSED 0xFFFF10
-#define CLIENT_EVENT_TITLE_UI_INPUT_PRESSED 0xFFFF11
+#define CLIENT_EVENT_MATCHINGROOM_UI_PRESSED 0xFFFF10
+#define CLIENT_EVENT_MATCHINGROOM_UI_INPUT_PRESSED 0xFFFF11
 
 namespace Graphics
 {
@@ -14,9 +14,9 @@ enum MBType
 	BLANK, OK, DENY
 };
 
-class TitleScene : public Scene
+class MatchingRoomScene : public Scene
 {
-	friend class TitleController;
+	friend class MatchingRoomController;
 
 public:
 	virtual void Initialize() override;

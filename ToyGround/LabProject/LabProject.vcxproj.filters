@@ -80,14 +80,14 @@
     <Filter Include="Header\Utill">
       <UniqueIdentifier>{d1e8dd0d-bc1e-47ed-974e-a509277624cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Title">
-      <UniqueIdentifier>{51b3ea27-5758-43dd-b191-e5e791f0c99e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\Shadow">
       <UniqueIdentifier>{22c3ca09-107a-4a02-8d55-036097b96aa4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource\Blur">
       <UniqueIdentifier>{b762dac1-9fbd-4c76-ab31-009bb2f1b103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\MatchingRoom">
+      <UniqueIdentifier>{51b3ea27-5758-43dd-b191-e5e791f0c99e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +233,6 @@
       <Filter>Header\Headers</Filter>
     </ClInclude>
     <ClInclude Include="GeometryGenerator.h" />
-    <ClInclude Include="TitleScene.h">
-      <Filter>Scene\Title</Filter>
-    </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>GameObject\UI</Filter>
     </ClInclude>
@@ -256,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="BlurFilter.h">
       <Filter>Resource\Blur</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchingRoomScene.h">
+      <Filter>Scene\MatchingRoom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -389,9 +389,6 @@
     <ClCompile Include="MathHelper.cpp">
       <Filter>Header\Utill</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
-      <Filter>Scene\Title</Filter>
-    </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>GameObject\UI</Filter>
     </ClCompile>
@@ -412,6 +409,9 @@
     </ClCompile>
     <ClCompile Include="BlurFilter.cpp">
       <Filter>Resource\Blur</Filter>
+    </ClCompile>
+    <ClCompile Include="MatchingRoomScene.cpp">
+      <Filter>Scene\MatchingRoom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -305,7 +305,6 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 				if (!TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
 			}
 #endif
-
 			Core::g_CommandList->IASetVertexBuffers(0, 1, &ri->m_Geo->VertexBufferView());
 			Core::g_CommandList->IASetIndexBuffer(&ri->m_Geo->IndexBufferView());
 			Core::g_CommandList->IASetPrimitiveTopology(ri->m_PrimitiveType);

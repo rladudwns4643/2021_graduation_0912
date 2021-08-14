@@ -4,7 +4,7 @@
 #include "Service.h"
 
 #include "LobbyScene.h"
-#include "TitleScene.h"
+#include "MatchingRoomScene.h"
 #include "GameplayScene.h"
 
 void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
@@ -192,7 +192,7 @@ SceneManager::~SceneManager()
 void SceneManager::InitializeScenes()
 {
 	CreateScene<LobbyScene>(SceneType::eLobby, "Lobby");
-	CreateScene<TitleScene>(SceneType::eTitle, "Title");
+	CreateScene<MatchingRoomScene>(SceneType::eMatchingRoom, "MatchingRoom");
 	CreateScene<GameplayScene>(SceneType::eGamePlay, "GamePlay");
 }
 

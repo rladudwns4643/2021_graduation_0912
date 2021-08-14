@@ -7,29 +7,29 @@
 
 #include "TOY_GROUND.h"
 #include "LobbyScene.h"
-#include "TitleScene.h"
+#include "MatchingRoomScene.h"
 #include "GameplayScene.h"
 
 //юс╫ц
 #include "Service.h"
 
-//+++++++++++++++++++++++++++ TITLE SCENE +++++++++++++++++++++++++++++++++++++++
-TitleController::TitleController(TitleScene* myScene) :
+//+++++++++++++++++++++++++++ MATCHINGROOM SCENE +++++++++++++++++++++++++++++++++++++++
+MatchingRoomController::MatchingRoomController(MatchingRoomScene* myScene) :
 	m_MyScene(myScene)
 {
 }
 
-void TitleController::Update(const float deltaT)
+void MatchingRoomController::Update(const float deltaT)
 {
 	MouseCallback();
 	HandleInput(deltaT);
 }
 
-void TitleController::HandleInput(const float deltaT)
+void MatchingRoomController::HandleInput(const float deltaT)
 {
 }
 
-void TitleController::MouseCallback()
+void MatchingRoomController::MouseCallback()
 {
 }
 

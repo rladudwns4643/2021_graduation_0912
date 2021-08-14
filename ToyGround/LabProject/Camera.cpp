@@ -150,7 +150,7 @@ void Camera::CameraInitialize(SceneType sceneType)
 {
 	switch (sceneType)
 	{
-	case SceneType::eTitle:
+	case SceneType::eMatchingRoom:
 	case SceneType::eLobby:
 		// Set FovY
 		SetLens(0.35f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
