@@ -189,6 +189,7 @@ void PlayerController::OnKeyPressed()
 #endif
 		break;
 	}
+	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, m_Owner->GetPosition(), static_cast<int>(m_Owner->m_AnimationController->m_PlayerState));
 }
 
 void PlayerController::OnKeyReleased()
@@ -222,7 +223,7 @@ void PlayerController::OnKeyReleased()
 				CommandCenter::GetApp()->PopCommand(static_cast<int>(MoveState::RightStrafe));
 			}
 			if (InputHandler::IsKeyUp(VK_SPACE)) {}
-		}
+	}
 #elif DEBUG_SERVER
 		if (InputHandler::IsKeyUp('W'))
 		{
@@ -245,4 +246,5 @@ void PlayerController::OnKeyReleased()
 #endif
 		break;
 	}
+	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, m_Owner->GetPosition(), static_cast<int>(m_Owner->m_AnimationController->m_PlayerState));
 }

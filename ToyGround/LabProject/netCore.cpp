@@ -15,18 +15,21 @@ void NetCore::Initialize() {
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
 		errorDisplay("[ERROR] wsa Init");
 	}
-	m_swap_room_list.reserve(MAX_ROOM_COUNT);
 	in_packet_size = 0;
 	saved_packet_size = 0;
 }
 
 void NetCore::Destory() {
-	m_swap_room_list.clear();
 	m_battle_clients.clear();
 	for (int i = 0; i < SV_COUNT; ++i) {
 		closesocket(m_client.socket[i].socket);
 	}
 	WSACleanup();
+}
+
+int NetCore::GetBattleID()
+{
+	return m_client.battle_id;
 }
 
 int NetCore::Receive(SOCKET sock, char* buf, int len, int flags) {
@@ -645,13 +648,6 @@ void NetCore::SendPositionPacket(XMFLOAT3 pos, int anim_type) {
 	p.anim_type = anim_type;
 	SendPacket(&p, SV_BATTLE);
 }
-
-//void NetCore::SendMovePacket(char key) {
-//	cb_packet_move_key_status p;
-//	p.size = sizeof(p);
-//	p.type = key;
-//	SendPacket(&p, SV_BATTLE);
-//}
 
 void NetCore::SendGetCoinPacket(int coin_id) {
 	cb_packet_get_coin p;

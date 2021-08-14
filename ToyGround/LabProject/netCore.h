@@ -38,6 +38,8 @@ public:
 	void Initialize();
 	void Destory();
 
+	int GetBattleID();
+
 public:
 	void ProcessData(char* buf, size_t io_byte);
 	void ProcessPacket(char* packet_buf);
@@ -75,7 +77,6 @@ public:
 
 private:
 	std::vector<PTC_ROOM> m_recved_room_list{};
-	std::vector<PTC_ROOM> m_swap_room_list{};
 	int m_map_info;
 	int m_winner;
 

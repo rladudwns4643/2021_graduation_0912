@@ -47,9 +47,6 @@ void Room::Initialize(int room_no) {
 
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(30ms), EVENT_TYPE::EV_UPDATE };
 	BattleServer::GetInstance()->AddTimer(ev);
-
-	EVENT ev_add_coin{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(20), EVENT_TYPE::EV_ADD_COIN };
-	BattleServer::GetInstance()->AddTimer(ev_add_coin);
 }
 
 void Room::Reset() {
@@ -295,12 +292,7 @@ void Room::LeaveRoom(int id) {
 		}
 	}
 
-	//isGameStarted is true
 	--m_curPlayerNum;
-	if (m_isGameStarted) {
-		//?
-	}
-
 	m_players[leaverIdx]->Initialize();
 
 	for (const auto& p : m_players) {
@@ -343,7 +335,7 @@ void Room::CreateAddCoinEvent() {
 	BattleServer::GetInstance()->AddTimer(ev);
 	
 	PTC_VECTOR coin_pos{ static_cast<float>(rand() % 300 - 150) , 0, static_cast<float>(rand() % 300 - 150) };
-	m_coins.emplace_back(m_coin_cur);
+	m_coins[m_coin_cur] = true;
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		int id = m_players[i]->GetID();
 		if (id != -1) {
@@ -427,8 +419,7 @@ void Room::RoundStart() {
 		const int& id = m_players[i]->GetID();
 		if (id != -1) {
 			BattleServer::GetInstance()->SendRoundStartPacket(id);
-			//EVENT ev_coin{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(2), EV_ADD_COIN };
-			//BattleServer::GetInstance()->AddTimer(ev_coin);
+			CreateAddCoinEvent();
 		}
 	}
 }
@@ -437,6 +428,8 @@ void Room::GameOver(int winner) {
 	cout << winner << " winner!\n";
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EVENT_TYPE::EV_RESET_ROOM };
 	BattleServer::GetInstance()->AddTimer(ev);
+	m_isGameStarted = false;
+	m_isEnterable = true;
 	for (const auto& pl : m_players) {
 		BattleServer::GetInstance()->SendGameOverPacket(pl->GetID(), winner);
 	}
@@ -736,7 +729,7 @@ void Room::ProcMsg(message msg) {
 			if (t_id == pl->GetID()) {
 				pl->SetPosition(XMFLOAT3{ t_v.x, t_v.y, t_v.z });
 				pl->SetAnimType(t_anim);
-				PushPlayerPositionMsg(t_id, pl->GetID(), &t_v);
+				//PushPlayerPositionMsg(t_id, pl->GetID(), &t_v);
 			}
 			else {
 				PushPlayerPositionMsg(pl->GetID(), t_id, &t_v);
@@ -751,6 +744,7 @@ void Room::ProcMsg(message msg) {
 		break;
 	}
 	case CB_GET_COIN: {
+		if (!IsGameStarted()) break;
 		int t_id{ msg.id };
 		int t_coin{};
 		int t_delete_coin_id{ (int)msg.vec.x };
@@ -762,7 +756,7 @@ void Room::ProcMsg(message msg) {
 				if (t_coin >= WIN_COIN_CNT) {
 					GameOver(pl->GetID());
 				}
-				m_coins.erase(m_coins.begin() + t_delete_coin_id);
+				m_coins[t_delete_coin_id] = false;
 				PushUpdateCoinMsg(t_id, t_coin, t_delete_coin_id);
 			}
 		}

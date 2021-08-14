@@ -108,8 +108,8 @@ private:
 
 	std::array<Bullet, MAX_BULLET> m_bullets;
 
-	std::vector<int> m_coins;
-	int m_coin_cur;
+	std::array<bool, MAX_COIN> m_coins;
+	int m_coin_cur{ 0 };
 #pragma endregion
 
 #pragma region msg Queue

@@ -293,7 +293,9 @@ void Character::SetPosition(float posX, float posY, float posZ)
 	if (m_MyCamera)
 	{
 		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap[OBJECT_MESH_STR_ATTACK_BOX]->GetInstanceKeyMap();
-		for (auto& i : info) AppContext->m_RItemsVec[i.second]->SetPosition(posX, posY + 90.f, posZ);
+		for (auto& i : info) {
+			AppContext->m_RItemsVec[i.second]->SetPosition(posX, posY + 90.f, posZ);
+		}
 	}
 
 	XMFLOAT3 prePos = { m_World._41, m_World._42, m_World._43 };
@@ -549,7 +551,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 	SetPosition(pos.x, pos.y, pos.z);
 #elif DEBUG_SERVER
 	SetPosition(pos.x, pos.y, pos.z);
-	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
+	//Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
 #endif
 }
 
@@ -689,6 +691,9 @@ void Character::Falling()
 	}
 
 	SetPosition(pos.x, pos.y, pos.z);
+	if (m_PlayerID == NetCore::GetApp()->GetBattleID()) {
+		Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, GetPosition(), static_cast<int>(m_AnimationController->m_PlayerState));
+	}
 }
 
 void Character::OnGround()

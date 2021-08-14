@@ -21,11 +21,6 @@
 // BYTE : unsigned char : 0 ~ 255
 
 //------------------------------------------------------------------
-//#define PACKET_TYPE_NON_BUFFERED	0
-//#define PACKET_TYPE_BUFFERED		1
-//------------------------------------------------------------------
-
-//------------------------------------------------------------------
 #define START_MMR		1000
 //------------------------------------------------------------------
 //OBJECT TYPE
@@ -34,12 +29,11 @@
 
 // 보석 개수
 #define MAX_GEM_COUNT 32
+#define MAX_BULLET_COUNT 40
 #define MAX_SKILL_BULLET_COUNT 40
 #define OBJECT_START_INDEX_GEM 2000
 #define OBJECT_START_INDEX_BULLET_01 3000
-#define MAX_BULLET_COUNT 40
 #define OBJECT_START_INDEX_BULLET_02 4000
-#define MAX_BULLET_COUNT 40
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
@@ -59,7 +53,7 @@
 //------------------------------------------------------------------
 
 //------------------------------------------------------------------
-#define MAX_ROOM_COUNT 5
+//#define MAX_ROOM_COUNT 5
 #define ADD_COIN_TIME 15 //second
 #define RELOAD_BULLET_TIME 2 //second
 //------------------------------------------------------------------
