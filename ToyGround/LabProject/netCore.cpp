@@ -452,7 +452,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	}
 	case BC_CALLBACK_BULLET: {
 //#ifdef DEB
-		cout << "BC_SHOOT_BULLET\n";
+		cout << "BC_CALLBACK_BULLET\n";
 //#endif
 		bc_packet_callback_bullet* p = reinterpret_cast<bc_packet_callback_bullet*>(packet_buf);
 

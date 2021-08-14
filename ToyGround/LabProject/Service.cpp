@@ -97,7 +97,6 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 	case EVENT_ROOM_FIND_ROOM: {
 		//방찾으면 바로 join 보내기
 		NetCore::GetApp()->SendBattleRoomJoinPacket();
-		//SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_ROOM_FIND_ROOM);
 		break;
 	}
 	case EVENT_ROOM_JOIN_OK: {

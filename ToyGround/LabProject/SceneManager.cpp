@@ -24,10 +24,22 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 
 	switch (sEvent) { //break 바로 들어가는건 argsCount가 0이라 위에서 처리함
 		//lobby
-	case EVENT_LOBBY_LOGIN_OK: break;
-	case EVENT_LOBBY_LOGIN_FAIL: break;
-	case EVENT_LOBBY_SIGNUP_OK: break;
-	case EVENT_LOBBY_SIGNUP_FAIL: break;
+	case EVENT_LOBBY_LOGIN_OK: {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
+		break;
+	}
+	case EVENT_LOBBY_LOGIN_FAIL: {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
+		break;
+	}
+	case EVENT_LOBBY_SIGNUP_OK: {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
+		break;
+	}
+	case EVENT_LOBBY_SIGNUP_FAIL: {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
+		break;
+	}
 	case EVENT_LOBBY_UPDATE_CLIENT_USERINFO: {
 		va_list ap;
 		int mmr;
@@ -38,6 +50,14 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		break;
 	}
 		//battle
+	case EVENT_BATTLE_LOGIN_OK: {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
+		break;
+	}
+	case EVENT_ROOM_JOIN_OK: {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
+		break;
+	}
 	case EVENT_ROOM_ENTER: {
 		int arg_id;
 		va_list ap;
@@ -90,7 +110,15 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_bt_id, arg_sl);
 		break;
 	}
+	case EVENT_ROOM_START: {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
+		break;
+	}
 	//ingame
+	case EVENT_GAME_ROUND_START: {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
+		break;
+	}
 	case EVENT_GAME_TIMER: {
 		int t;
 		va_list ap;
@@ -122,6 +150,55 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		va_end(ap);
 
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id, arg_anim_type);
+		break;
+	}
+	case EVENT_GAME_CALLBACK_BULLET: {
+		int arg_shootter;
+		short arg_bullet_type;
+		short arg_bullet_idx;
+		XMFLOAT3 arg_cam_look;
+		XMFLOAT3 arg_bullet_pos;
+
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_shootter = va_arg(ap, int);
+		arg_bullet_type = va_arg(ap, short);
+		arg_bullet_idx = va_arg(ap, short);
+		arg_cam_look = va_arg(ap, XMFLOAT3);
+		arg_bullet_pos = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_shootter, arg_bullet_type, arg_bullet_idx, arg_cam_look, arg_bullet_pos);
+		break;
+	}
+	case EVENT_GAME_REMOVE_BULLET: {
+		int arg_bullet_id;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_bullet_id = va_arg(ap, int);
+		va_end(ap);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_bullet_id);
+		break;
+	}
+	case EVENT_GAME_HIT: {
+		int arg_id;
+		float arg_hp;
+
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_hp = va_arg(ap, float);
+		va_end(ap);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id, arg_hp);
+		break;
+	}
+	case EVENT_GAME_DIE: {
+		int arg_id;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		va_end(ap);
+
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id);
 		break;
 	}
 	case EVENT_GAME_ADD_COIN: {

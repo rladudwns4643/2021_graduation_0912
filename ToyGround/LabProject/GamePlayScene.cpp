@@ -125,8 +125,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_CALLBACK_BULLET: {
-
-		cout << "EVENT_GAME_REQUEST_BULLET" << endl;
+		cout << "EVENT_GAME_CALLBACK_BULLET" << endl;
 		int arg_shootter;
 		short arg_bullet_type;
 		short arg_bullet_idx;
