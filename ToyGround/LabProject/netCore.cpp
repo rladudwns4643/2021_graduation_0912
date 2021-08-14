@@ -591,10 +591,20 @@ void NetCore::SendRequestUserInfoPacket() {
 	SendPacket(&p, SV_LOBBY);
 }
 
-void NetCore::SendAnimPacket(int anim_type) {
-	cb_packet_anim p;
+void NetCore::SendRequestPushAnimPacket(int anim_type) {
+	cb_packet_push_anim p;
 	p.size = sizeof(p);
-	p.type = CB_MAKE_ANIM;
+	p.type = CB_PUSH_ANIM;
+	p.id = m_client.battle_id;
+	p.anim_type = anim_type;
+
+	SendPacket(&p, SV_BATTLE);
+}
+
+void NetCore::SendRequestPopAnimPacket(int anim_type) {
+	cb_packet_push_anim p;
+	p.size = sizeof(p);
+	p.type = CB_POP_ANIM;
 	p.id = m_client.battle_id;
 	p.anim_type = anim_type;
 

@@ -208,14 +208,24 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		NetCore::GetApp()->SendLookVectorPacket(arg_look);
 		break;
 	}
-	case EVENT_GAME_MAKE_ANIM: {
+	case EVENT_GAME_REQUEST_PUSH_ANIM: {
 		int arg_anim_type;
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
-		cout << "MAKE_ANIM" << endl;
-		NetCore::GetApp()->SendAnimPacket(arg_anim_type);
+		cout << "REQUEST_PUSH_ANIM" << endl;
+		NetCore::GetApp()->SendRequestPushAnimPacket(arg_anim_type);
+		break;
+	}	
+	case EVENT_GAME_REQUEST_POP_ANIM: {
+		int arg_anim_type;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_anim_type = va_arg(ap, int);
+		va_end(ap);
+		cout << "REQUEST_POP_ANIM" << endl;
+		NetCore::GetApp()->SendRequestPopAnimPacket(arg_anim_type);
 		break;
 	}
 	case EVENT_GAME_CALLBACK_ANIM: {

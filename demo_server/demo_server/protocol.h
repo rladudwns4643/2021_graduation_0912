@@ -185,7 +185,8 @@ struct cl_packet_cancel_automatch {
 #define BC_PLAYER_ROT			31
 #define BC_OBJECT_POS			32
 #define BC_OBJECT_ROT			33
-#define BC_ANIM					34
+#define BC_ANIM_PUSH			34
+#define BC_ANIM_POP				134
 
 #define BC_SHOOT_BULLET			35
 #define BC_REMOVE_BULLET		36
@@ -399,7 +400,8 @@ struct bc_packet_updated_user_info {
 #define CB_BULLET				46
 #define CB_POSITION_VECTOR		47
 #define CB_LOOK_VECTOR			48
-#define CB_MAKE_ANIM			49
+#define CB_PUSH_ANIM			49
+#define CB_POP_ANIM				149
 #define CB_TEST_TIME_PLUS		50
 #define CB_TEST_TIME_MINUS		51
 
@@ -445,7 +447,14 @@ struct cb_packet_get_coin{
 	int id;
 	int coin_id;
 };
-struct cb_packet_anim {
+struct cb_packet_push_anim {
+	BYTE size;
+	BYTE type;
+
+	int id;
+	int anim_type;
+};
+struct cb_packet_pop_anim {
 	BYTE size;
 	BYTE type;
 

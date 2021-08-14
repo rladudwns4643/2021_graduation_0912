@@ -16,7 +16,6 @@ public:
 		// Command »ý¼º
 		ICommand* iCmd = new TCommand(owner);
 		iCmd->SetState(cEvent);
-
 		m_FSM.push_back(iCmd);
 	}
 	void PopCommand(int cEvent)
