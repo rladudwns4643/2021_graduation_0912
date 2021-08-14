@@ -45,7 +45,8 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		m_Users[arg_bt_id]->m_MapName = m_MapName;
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
 		//m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
-
+		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[1]);
+		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[2]);
 		break;
 	}
 	case EVENT_GAME_ROUND_START: {
@@ -233,7 +234,7 @@ bool GameplayScene::Enter()
 	TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL]->Strength = { 0.75f, 0.75f, 0.75f };
 	// Player Setting
 #ifdef DEBUG_CLIENT
-	m_PlayerID = 0;
+	m_PlayerID = 1;
 	m_PauseScene = false;
 #elif DEBUG_SERVER
 	m_PlayerID = Service::GetApp()->GetMyBattleID();
@@ -253,13 +254,16 @@ bool GameplayScene::Enter()
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
 	m_Users[m_PlayerID]->m_IsVisible = true;
 	m_Users[m_PlayerID]->m_IsVisibleOnePassCheck = true;
-	m_Users[m_PlayerID]->m_PlayerID = 0;
+	m_Users[m_PlayerID]->m_PlayerID = 1;
 	m_Users[m_PlayerID]->m_MapName = m_MapName;
-	m_Users[1] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN); 
-	m_Users[1]->m_PlayerID = 1;
-	m_Users[1]->m_IsVisible = true;
-	m_Users[1]->m_IsVisibleOnePassCheck = true;
-	m_Users[1]->m_MapName = m_MapName;
+	m_Users[2] = AppContext->FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN); 
+	m_Users[2]->m_PlayerID = 2;
+	m_Users[2]->m_IsVisible = true;
+	m_Users[2]->m_IsVisibleOnePassCheck = true;
+	m_Users[2]->m_MapName = m_MapName;
+
+	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[m_PlayerID]);
+	EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[2]);
 #endif
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
@@ -301,8 +305,6 @@ bool GameplayScene::Enter()
 		AppContext->HiddenBullet(i, 2);
 	}
 	AppContext->BulletReset();
-
-	EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[1]);
 
 	return false;
 }

@@ -14,7 +14,7 @@
 
 PlayerController::PlayerController(Character* player) : m_Owner(player)
 {
-	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Owner);
+	//CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Owner);
 }
 
 void PlayerController::Update(const float deltaT)

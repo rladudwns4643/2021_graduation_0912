@@ -270,7 +270,7 @@ bool Character::Move(DWORD dwDirection, float fDistance)
 		bool isChange = false;
 
 #ifdef DEBUG_CLIENT
-		if (m_PlayerID == 0)
+		if (m_PlayerID == 1)
 		{
 			if (CommandCenter::GetApp()->m_StartAttackAnim == false)
 			{
