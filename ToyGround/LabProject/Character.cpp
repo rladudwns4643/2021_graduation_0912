@@ -307,6 +307,13 @@ void Character::SetPosition(float posX, float posY, float posZ)
 	XMFLOAT3 shift = { posX - prePos.x, posY - prePos.y, posZ - prePos.z };
 
 	if (m_MyCamera) m_MyCamera->Move(shift);
+
+	if (m_PlayerID == NetCore::GetApp()->GetBattleID()) {
+		if (MathHelper::Distance(m_packetPosition, GetPosition()) > 1.f) {
+			m_packetPosition = GetPosition();
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOVE, 2, m_packetPosition, static_cast<int>(m_AnimationController->m_PlayerState));
+		}
+	}
 }
 
 void Character::SetPosition(DirectX::XMFLOAT3 xmPos)

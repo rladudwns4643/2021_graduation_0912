@@ -257,6 +257,10 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 	}
 }
 
+void LobbyServer::SendDummyLoginOKPacket(int id)
+{
+}
+
 void LobbyServer::SendLoginOKPacket(int id) {
 	lc_packet_login_ok p;
 	p.size = sizeof(p);

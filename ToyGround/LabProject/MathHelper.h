@@ -122,4 +122,5 @@ public:
 	static XMFLOAT3 CrossProduct(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2, bool bNormalize = true);
 	static float Length(XMFLOAT3& xmf3Vector);
 	static XMFLOAT4X4 LookAtLH(XMFLOAT3& xmf3EyePosition, XMFLOAT3& xmf3LookAtPosition, XMFLOAT3& xmf3UpDirection);
+	static float Distance(const XMFLOAT3 xmf3Vector1, const XMFLOAT3 xmf3Vector2);
 };
