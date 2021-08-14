@@ -369,6 +369,7 @@ void Character::SetAnimationPlayerState(AnimationController::PlayerState playerS
 void Character::SetAnimationKeyState(AnimationController::PlayerState keyState)
 {
 	m_AnimationController->m_KeyState = keyState;
+	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, static_cast<int>(keyState));
 }
 
 void Character::SetLookToCameraLook()

@@ -180,9 +180,9 @@ void PlayerController::OnKeyPressed()
 		if (InputHandler::IsKeyDown(VK_SPACE))
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Jump), m_Owner);
+			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, static_cast<int>(MoveState::Jump));
 			CommandCenter::GetApp()->m_StartJumpAnim = true;
 			m_Owner->Jump();
-			Service::GetApp()->AddEvent(EVENT_GAME_MAKE_ANIM, 1, static_cast<int>(MoveState::Jump));
 		}
 		if (InputHandler::IsKeyUp('Q')) {
 			m_Owner->OnOffSkillMode();
