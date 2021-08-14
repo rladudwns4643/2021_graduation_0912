@@ -54,13 +54,19 @@ void TimerThread::ProcThread() {
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
+			case EVENT_TYPE::EV_MAKE_EMPTY_BULLET:{
+				ex_over->ev_type = EVENT_TYPE::EV_MAKE_EMPTY_BULLET;
+				*(int*)ex_over->net_buf = proc_ev.target;
+				break;
+			}
 			case EVENT_TYPE::EV_MAKE_MOVE_DISABLE: {
 				ex_over->ev_type = EVENT_TYPE::EV_MAKE_MOVE_DISABLE;
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
-			case EVENT_TYPE::EV_UPDATE_DB: { //아직없음
-				//ex_over->ev_type = EV_UPDATE_DB;
+			case EVENT_TYPE::EV_UPDATE_DB: {
+				ex_over->ev_type = EVENT_TYPE::EV_UPDATE_DB;
+				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
 			case EVENT_TYPE::EV_RESET_ROOM: {

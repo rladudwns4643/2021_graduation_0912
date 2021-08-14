@@ -255,15 +255,23 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_SHOOT_BULLET: {
-		int arg_bullet_id;
-		XMFLOAT3 arg_start_pos;
+
+		int arg_shootter;
+		short arg_bullet_type;
+		int arg_bullet_idx;
+		XMFLOAT3 arg_cam_look;
+		XMFLOAT3 arg_bullet_pos;
+
 		va_list ap;
 		va_start(ap, argsCount);
-		arg_bullet_id = va_arg(ap, int);
-		arg_start_pos = va_arg(ap, XMFLOAT3);
+		arg_shootter = va_arg(ap, int);
+		arg_bullet_type = va_arg(ap, short);
+		arg_bullet_idx = va_arg(ap, short);
+		arg_cam_look = va_arg(ap, XMFLOAT3);
+		arg_bullet_pos = va_arg(ap, XMFLOAT3);
 		va_end(ap);
 
-		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_SHOOT_BULLET, argsCount, arg_bullet_id, arg_start_pos);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_SHOOT_BULLET, argsCount, arg_shootter, arg_bullet_type, arg_bullet_idx, arg_cam_look, arg_bullet_pos);
 		break;
 	}
 	case EVENT_GAME_REMOVE_BULLET: {

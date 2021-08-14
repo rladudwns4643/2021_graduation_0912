@@ -124,6 +124,26 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		AppContext->HiddenGem(arg_delete_coin_id, false);
 		break;
 	}
+	case EVENT_GAME_SHOOT_BULLET: {
+		int arg_shootter;
+		short arg_bullet_type;
+		int arg_bullet_idx;
+		XMFLOAT3 arg_cam_look;
+		XMFLOAT3 arg_bullet_pos;
+
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_shootter = va_arg(ap, int);
+		arg_bullet_type = va_arg(ap, short);
+		arg_bullet_idx = va_arg(ap, short);
+		arg_cam_look = va_arg(ap, XMFLOAT3);
+		arg_bullet_pos = va_arg(ap, XMFLOAT3);
+		va_end(ap);
+
+		//todo: È®ÀÎ
+		AppContext->DisplayBullet(arg_bullet_idx, arg_bullet_pos, arg_cam_look, arg_shootter, arg_bullet_type);
+		break;
+	}
 	case EVENT_GAME_CALLBACK_PUSH_ANIM: {
 		int arg_id;
 		int arg_anim_type;

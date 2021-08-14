@@ -120,6 +120,11 @@ void WorkerThread::ProcThread() {
 			SR::g_rooms[room_id]->CreateAddCoinEvent();
 			break;
 		}
+		case EVENT_TYPE::EV_MAKE_EMPTY_BULLET: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->SetEmptyBullet();
+			break;
+		}
 		case EVENT_TYPE::EV_MOVE_ENABLE: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->MakeMove(key);
@@ -243,6 +248,17 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		if (SR::g_rooms[roomNo]->IsEmpty()) {
 			EraseRoom(roomNo);
 		}
+		break;
+	}
+	case CB_REQUEST_BULLET: {
+		cb_packet_request_bullet* p = reinterpret_cast<cb_packet_request_bullet*>(inputPacket);
+		if (p == nullptr) msg.type = NO_MSG;
+		msg.id = p->id;
+		msg.type = CB_REQUEST_BULLET;
+		msg.vec.x = p->cam_look.x;
+		msg.vec.y = p->cam_look.y;
+		msg.vec.z = p->cam_look.z;
+		msg.anim_type = p->bullet_type;
 		break;
 	}
 	case CB_PUSH_ANIM: {

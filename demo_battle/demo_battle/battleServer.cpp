@@ -311,19 +311,6 @@ void BattleServer::SendLeftTimePacket(int id, char left_time) {
 	SendPacket(id, &p);
 }
 
-void BattleServer::SendShootPacket(int id, int bullet_id, PTC_VECTOR look) {
-#ifdef LOG_ON
-	cout << "SendShootPacket: " << id <<
-		"bulletid: " << bullet_id << endl;
-#endif
-	bc_packet_shoot_bullet p;
-	p.size = sizeof(p);
-	p.type = BC_SHOOT_BULLET;
-	p.bullet_id = bullet_id;
-	p.pos = look;
-	SendPacket(id, &p);
-}
-
 void BattleServer::SendGameOverPacket(int id, int winner_id) {
 #ifdef LOG_ON
 	cout << "SendGameOverPacket: " << id << " winner: " << winner_id << endl;
