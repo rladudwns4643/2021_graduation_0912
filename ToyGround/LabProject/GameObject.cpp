@@ -117,6 +117,16 @@ void GameObject::SetMatrixByLook(float x, float y, float z)
 	m_World._33 = z;
 }
 
+void GameObject::SetWorldMatrix(DirectX::XMFLOAT4X4 world)
+{
+	m_World = world;
+}
+
+DirectX::XMFLOAT4X4 GameObject::GetWorldMatrix()
+{
+	return m_World;
+}
+
 XMFLOAT3 GameObject::GetPosition() const
 {
 	return XMFLOAT3(m_World._41, m_World._42, m_World._43);

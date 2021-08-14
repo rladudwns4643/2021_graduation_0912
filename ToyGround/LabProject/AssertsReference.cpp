@@ -43,20 +43,22 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 		float shiftX, shiftY, shiftZ;
 
 		// Create Weapon
-		//propTypeSet.insert(OBJECT_MESH_STR_REVOLVER);
-		//for (int i = 0; i < 4; ++i)
-		//{
-		//	preInfo.meshName = OBJECT_MESH_STR_REVOLVER;
-		//	preInfo.rotation.x = 0.0f;
-		//	preInfo.rotation.y = 0.0f;
-		//	preInfo.rotation.z = 0.0f;
-		//	preInfo.position.x = 0.0f;
-		//	preInfo.position.y = 0.0f;
-		//	preInfo.position.z = 0.0f;
-		//	preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
-		//	preInfo.typeID = ++typeIDCount;
-		//	map->mapInfoVector.emplace_back(preInfo);
-		//}
+		propTypeSet.insert(OBJECT_MESH_STR_REVOLVER);
+		for (int i = 0; i < 4; ++i)
+		{
+			preInfo.meshName = OBJECT_MESH_STR_REVOLVER;
+			preInfo.rotation.x = 0.0f;
+			preInfo.rotation.y = 0.0f;
+			preInfo.rotation.z = 0.0f;
+			preInfo.position.x = i * 100.f;
+			preInfo.position.y = 200.0f;
+			preInfo.position.z = 0.0f;
+			preInfo.textureName = TEXTURE_STR_Cartoon_CubeWorld_Texture;
+			preInfo.typeID = ++typeIDCount;
+			preInfo.isCulling = false;
+			preInfo.canBroken = false;
+			map->mapInfoVector.emplace_back(preInfo);
+		}
 
 		// Create Floor
 		propTypeSet.insert(OBJECT_MESH_STR_FLOOR);

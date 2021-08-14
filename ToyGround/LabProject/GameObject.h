@@ -42,6 +42,9 @@ public:
 	virtual void SetLook(const DirectX::XMFLOAT3& Look);
 	virtual void SetMatrixByLook(float x, float y, float z);
 
+	void SetWorldMatrix(DirectX::XMFLOAT4X4 world);
+	DirectX::XMFLOAT4X4 GetWorldMatrix();
+
 	XMFLOAT3 GetPosition() const;
 	XMFLOAT3 GetLook() const;
 	XMFLOAT3 GetUp() const;

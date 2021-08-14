@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CommandContext.h"
+#include "ApplicationContext.h"
 #include "GraphicsRenderer.h"
 #include "GameObject.h"
 #include "ObjectInfo.h"
@@ -274,7 +275,7 @@ UITextInfo GraphicsContext::GetUIPosAndSize(ObjectInfo* objInfo, const std::vect
 	return UITextInfo{};
 }
 
-void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance)
+void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance, int playerNum)
 {
 	//skinmodelInstance->UpdateSkinnedAnimation(0);
 
@@ -283,6 +284,31 @@ void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance
 		std::begin(skinmodelInstance->FinalTransforms),
 		std::end(skinmodelInstance->FinalTransforms),
 		&skinnedConstants.BoneTransforms[0]);
+
+	if (playerNum == 1)
+	{
+		//cout << test << " - " ;
+		//cout << "x: " << skinmodelInstance->FinalTransforms[test]._31 << " , ";
+		//cout << "y: " << skinmodelInstance->FinalTransforms[test]._32 << " , ";
+		//cout << "z: " << skinmodelInstance->FinalTransforms[test]._33 << endl;
+		//GameObject* leftWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(1));
+		////leftWeapon->SetWorldMatrix(skinmodelInstance->FinalTransforms[test]);
+		//leftWeapon->SetPosition(
+		//	skinmodelInstance->FinalTransforms[test]._41,
+		//	skinmodelInstance->FinalTransforms[test]._42,
+		//	skinmodelInstance->FinalTransforms[test]._43);
+		//test++;
+		//test %= 39;
+		//GameObject* rightWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(2));
+		//rightWeapon->SetWorldMatrix(skinmodelInstance->FinalTransforms[2]);
+	}
+	//else
+	//{
+	//	GameObject* leftWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(3));
+	//	leftWeapon->SetWorldMatrix(skinmodelInstance->FinalTransforms[9]);
+	//	GameObject* rightWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(4));
+	//	rightWeapon->SetWorldMatrix(skinmodelInstance->FinalTransforms[19]);
+	//}
 
 	m_SkinnedCBs[skinnedCBIndex]->CopyData(0, skinnedConstants);
 }

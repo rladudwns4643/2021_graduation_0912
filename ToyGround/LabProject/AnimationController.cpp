@@ -18,9 +18,6 @@ AnimationController::AnimationController(Character* owner, SkinnedModelInstance*
 	m_MapAnimData[KEY_RIGHT_STRAFE] = std::make_unique<AnimData>("Right_Strafe", 0.f);
 	m_MapAnimData[KEY_ATTACK] = std::make_unique<AnimData>("Attack", 0.f);
 	m_MapAnimData[KEY_JUMP] = std::make_unique<AnimData>("Jump", 0.f);
-	m_MapAnimData[KEY_FIND] = std::make_unique<AnimData>("Find", 0.f);
-	m_MapAnimData[KEY_WIN] = std::make_unique<AnimData>("Win", 0.f);
-	m_MapAnimData[KEY_LOSE] = std::make_unique<AnimData>("Lose", 0.f);
 
 	m_MaxBlendFrames = 10.f;
 }
@@ -427,18 +424,6 @@ void AnimationController::UpdateBoneTransforms()
 	case STATE_JUMP:
 		strState = KEY_JUMP;
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(m_MapAnimData[KEY_JUMP]->m_Name, m_MapAnimData[KEY_JUMP]->m_Time);
-		break;
-	case STATE_FIND:
-		strState = KEY_FIND;
-		m_CopySkinnedModelInst->ChangeSkinnedAnimation(m_MapAnimData[KEY_FIND]->m_Name, m_MapAnimData[KEY_FIND]->m_Time);
-		break;
-	case STATE_WIN:
-		strState = KEY_WIN;
-		m_CopySkinnedModelInst->ChangeSkinnedAnimation(m_MapAnimData[KEY_WIN]->m_Name, m_MapAnimData[KEY_WIN]->m_Time);
-		break;
-	case STATE_LOSE:
-		strState = KEY_LOSE;
-		m_CopySkinnedModelInst->ChangeSkinnedAnimation(m_MapAnimData[KEY_LOSE]->m_Name, m_MapAnimData[KEY_LOSE]->m_Time);
 		break;
 
 		/************************ Blending ****************************/

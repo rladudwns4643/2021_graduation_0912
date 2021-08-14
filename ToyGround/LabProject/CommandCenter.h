@@ -73,7 +73,7 @@ public:
 	float m_AttackDeltaT = 0;
 
 	bool	m_StartJumpAnim = false;
-	float	m_JumpAnimTime = 40.f;
+	float	m_JumpAnimTime = 20.f;
 	float	m_JumpDeltaT = 0;
 };
 

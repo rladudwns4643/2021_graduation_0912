@@ -149,5 +149,7 @@ private:
 	int m_tempHp;
 	int m_tempAttackGauge;
 	int m_tempSkillGauge;
+
+	int test = 0;
 };
 

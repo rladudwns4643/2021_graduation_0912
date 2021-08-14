@@ -59,7 +59,7 @@ public:
 	
 	UITextInfo GetUIPosAndSize(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, std::string uiName);
 
-	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance);
+	void UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance* skinmodelInstance, int playNum = 1);
 
 	void UpdateShadowPassCB();
 	void UpdateShadowTransform(Light* light, DirectX::BoundingSphere sceneBounds);
@@ -127,5 +127,4 @@ private:
 
 	float mLightRotationAngle = 0.0f;
 	XMFLOAT3 mRotatedLightDirections;
-
 };

@@ -250,10 +250,6 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 #define KEY_ATTACK "Attack"
 #define KEY_JUMP "Jump"
 
-#define KEY_FIND "Find"
-#define KEY_WIN "Win"
-#define KEY_LOSE "Lose"
-
 #define MAX_ID_LEN 10
 
 // 플레이어 상태

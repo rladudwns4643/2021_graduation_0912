@@ -66,14 +66,27 @@ bool Character::ReleaseTransform()
 
 void Character::Update(const float deltaT)
 {
+#ifdef DEBUG_CLIENT
 	UpdateStateUI();
-
-	if (m_PlayerController)
-		m_PlayerController->Update(deltaT);
 
 	m_AnimationController->Update(deltaT);
 
+	if (m_PlayerController)
+		m_PlayerController->Update(deltaT);
+		
 	Falling();
+
+#elif DEBUG_SERVER
+	m_AnimationController->Update(deltaT);
+
+	if (NetCore::GetApp()->GetBattleID() == m_PlayerID)
+	{
+		UpdateStateUI();
+		if (m_PlayerController)
+			m_PlayerController->Update(deltaT);
+		Falling();
+	}
+#endif
 
 	//cout << m_PlayerID << ": " << m_AnimationController->m_KeyState << endl;
 //	WeaponUpdate();
@@ -81,25 +94,29 @@ void Character::Update(const float deltaT)
 
 void Character::WeaponUpdate()
 {
-	if (m_PlayerID == 0)
-	{
-		const std::map<std::string, UINT>& info = AppContext->m_RItemsMap[OBJECT_MESH_STR_REVOLVER]->GetInstanceKeyMap();
-		for (auto& i : info)
-		{
-			AppContext->m_RItemsVec[i.second]->SetPosition(GetPosition());
-		}
-	}
-	//else
-	//{
-	//	GameObject* leftWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(3));
-	//	leftWeapon->SetPosition(m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._41,
-	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._42,
-	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[9]._43);
-	//	GameObject* RightWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(4));
-	//	RightWeapon->SetPosition(m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._41,
-	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._42,
-	//		m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._43);
-	//}
+	//f (m_PlayerID == 0)
+	//
+	//	GameObject* leftWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(1));
+	//	XMFLOAT3 fprePos = GetPosition();
+	//	XMFLOAT3 fPos = MathHelper::TransformCoord(fprePos, m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[test]);
+	//	//
+	//	//XMMATRIX xmPreWorld = XMLoadFloat4x4(&m_World);
+	//	//XMMATRIX xmFinalTransform = XMLoadFloat4x4(&m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[test]);
+	//	//XMMATRIX xmWorld = XMMatrixMultiply(xmFinalTransform, xmPreWorld);
+	//	//
+	//	DirectX::XM
+	//	cout << test << endl;
+	//	test++;
+	//	test %= 39;
+	//	//XMFLOAT4X4 wmfWorld;
+	//	//XMStoreFloat4x4(&wmfWorld, XMMatrixTranspose(xmWorld));
+	//	leftWeapon->SetPosition(fPos);
+	//
+
+	//GameObject* RightWeapon = AppContext->FindObject<GameObject>(OBJECT_MESH_STR_REVOLVER, std::to_string(2));
+	//RightWeapon->SetPosition(m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._41,
+	//	m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._42,
+	//	m_AnimationController->m_CopySkinnedModelInst->FinalTransforms[19]._43);
 }
 
 void Character::UpdateStateUI()
