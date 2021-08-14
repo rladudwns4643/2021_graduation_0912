@@ -374,7 +374,14 @@ struct bc_packet_die {
 
 	int id;
 };
-struct bc_packet_anim_type {
+struct bc_packet_push_anim_type {
+	BYTE size;
+	BYTE type;
+
+	int id;
+	int anim_type;
+};
+struct bc_packet_pop_anim_type {
 	BYTE size;
 	BYTE type;
 

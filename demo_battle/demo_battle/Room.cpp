@@ -628,7 +628,7 @@ void Room::PushNewRoomMnrMsg(int id) {
 }
 
 void Room::PushAnimPushMsg(int to, int from, int animType) {
-	bc_packet_anim_type p;
+	bc_packet_push_anim_type p;
 	p.size = sizeof(p);
 	p.type = BC_ANIM_PUSH;
 	p.id = from;
@@ -638,7 +638,7 @@ void Room::PushAnimPushMsg(int to, int from, int animType) {
 }
 
 void Room::PushAnimPopMsg(int to, int from, int animType) {
-	bc_packet_anim_type p;
+	bc_packet_pop_anim_type p;
 	p.size = sizeof(p);
 	p.type = BC_ANIM_POP;
 	p.id = from;

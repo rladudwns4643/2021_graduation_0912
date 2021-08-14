@@ -493,7 +493,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_ANIM_PUSH: {
-		bc_packet_anim_type* p = reinterpret_cast<bc_packet_anim_type*>(packet_buf);
+		bc_packet_push_anim_type* p = reinterpret_cast<bc_packet_push_anim_type*>(packet_buf);
 		//#ifdef DEB
 		cout << "BC_ANIM_PUSH: " << p->id << p->anim_type << endl;
 		//#endif
@@ -501,7 +501,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_ANIM_POP: {
-		bc_packet_anim_type* p = reinterpret_cast<bc_packet_anim_type*>(packet_buf);
+		bc_packet_pop_anim_type* p = reinterpret_cast<bc_packet_pop_anim_type*>(packet_buf);
 		//#ifdef DEB
 		cout << "BC_ANIM_POP: " << p->id << p->anim_type << endl;
 		//#endif
