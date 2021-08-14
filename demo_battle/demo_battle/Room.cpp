@@ -634,6 +634,8 @@ void Room::PushAnimMsg(int to, int from, int animType) {
 	p.id = from;
 	p.anim_type = animType;
 
+	cout << "SEND ANIM: from: " << from << " to: " << to << endl;
+
 	PushSendMsg(to, &p);
 }
 

@@ -227,7 +227,7 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
 
-		//cout << "CALLBACK_ANIM" << endl;
+		cout << "CALLBACK_ANIM" << endl;
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_ANIM, argsCount, arg_id, arg_anim_type);
 		break;
 	}

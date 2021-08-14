@@ -46,6 +46,8 @@ void AnimationController::Update(const float deltaT)
 		m_Owner->m_IsMoving = false;
 	else
 		m_Owner->m_IsMoving = true;
+
+	cout << "MYID: " << m_Owner->m_PlayerID << "MY ANIM: " << m_PlayerState << endl;
 }
 
 void AnimationController::SetState(const float deltaT)

@@ -43,6 +43,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		}
 		m_Users[arg_bt_id]->m_MapName = m_MapName;
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
+
 		//m_Users[arg_bt_id]->m_SpawnLoaction = arg_sl;
 
 		break;
@@ -126,7 +127,11 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
 		cout << "change anim id: " << arg_id << "anim: " << arg_anim_type << endl;
-		CommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[arg_id]);
+		for (int i = 1; i < 3; ++i) {
+			if (m_Users[i]->m_PlayerID == arg_id) {
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[i]);
+			}
+		}
 		break;
 	}
 	case EVENT_GAME_CALLBACK_MOVE: {
