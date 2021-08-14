@@ -100,7 +100,19 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, t);
 		break;
 	}
-	case EVENT_GAME_CALLBACK_ANIM: {
+	case EVENT_GAME_CALLBACK_PUSH_ANIM: {
+		int arg_id;
+		int arg_anim_type;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		arg_anim_type = va_arg(ap, int);
+		va_end(ap);
+
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id, arg_anim_type);
+		break;
+	}
+	case EVENT_GAME_CALLBACK_POP_ANIM: {
 		int arg_id;
 		int arg_anim_type;
 		va_list ap;

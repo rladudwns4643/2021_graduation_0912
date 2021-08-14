@@ -179,21 +179,22 @@ struct cl_packet_cancel_automatch {
 #define BC_ROUND_START			27
 
 #define BC_ADD_COIN				28
-#define BC_RELOAD_BULLET		129
-#define BC_UPDATE_COIN			29
-#define BC_PLAYER_POS			30
-#define BC_PLAYER_ROT			31
-#define BC_OBJECT_POS			32
-#define BC_OBJECT_ROT			33
-#define BC_ANIM					34
+#define BC_RELOAD_BULLET		29
+#define BC_UPDATE_COIN			30
+#define BC_PLAYER_POS			31
+#define BC_PLAYER_ROT			32
+#define BC_OBJECT_POS			33
+#define BC_OBJECT_ROT			34
+#define BC_ANIM_PUSH			35
+#define BC_ANIM_POP				36
 
-#define BC_SHOOT_BULLET			35
-#define BC_REMOVE_BULLET		36
+#define BC_SHOOT_BULLET			37
+#define BC_REMOVE_BULLET		38
 
-#define BC_HIT					37
-#define BC_DIE					38
+#define BC_HIT					39
+#define BC_DIE					40
 
-#define BC_UPDATED_USER_INFO	39
+#define BC_UPDATED_USER_INFO	41
 
 #pragma pack(push, 1)
 struct PTC_START_INFO {
@@ -373,7 +374,14 @@ struct bc_packet_die {
 
 	int id;
 };
-struct bc_packet_anim_type {
+struct bc_packet_push_anim_type {
+	BYTE size;
+	BYTE type;
+
+	int id;
+	int anim_type;
+};
+struct bc_packet_pop_anim_type {
 	BYTE size;
 	BYTE type;
 
@@ -390,18 +398,19 @@ struct bc_packet_updated_user_info {
 //------------------------------------------------------------------
 
 //-------------------------------C->B-------------------------------
-#define CB_LOGIN				40
-#define CB_JOIN					41
-#define CB_ROOM_LEAVE			42
-#define CB_READY				43
+#define CB_LOGIN				42
+#define CB_JOIN					43
+#define CB_ROOM_LEAVE			44
+#define CB_READY				45
 
-#define CB_GET_COIN				45
-#define CB_BULLET				46
-#define CB_POSITION_VECTOR		47
-#define CB_LOOK_VECTOR			48
-#define CB_MAKE_ANIM			49
-#define CB_TEST_TIME_PLUS		50
-#define CB_TEST_TIME_MINUS		51
+#define CB_GET_COIN				46
+#define CB_BULLET				47
+#define CB_POSITION_VECTOR		48
+#define CB_LOOK_VECTOR			49
+#define CB_PUSH_ANIM			50
+#define CB_POP_ANIM				51
+#define CB_TEST_TIME_PLUS		52
+#define CB_TEST_TIME_MINUS		53
 
 #pragma pack(push, 1)
 struct cb_packet_login {
@@ -445,7 +454,14 @@ struct cb_packet_get_coin{
 	int id;
 	int coin_id;
 };
-struct cb_packet_anim {
+struct cb_packet_push_anim {
+	BYTE size;
+	BYTE type;
+
+	int id;
+	int anim_type;
+};
+struct cb_packet_pop_anim {
 	BYTE size;
 	BYTE type;
 
@@ -477,8 +493,8 @@ struct cb_test_packet_time_mimus {
 //------------------------------------------------------------------
 
 //-------------------------------L->B------------------------------- 
-#define LB_REQUEST_ROOM			52
-#define LB_CHECK				53
+#define LB_REQUEST_ROOM			54
+#define LB_CHECK				55
 #pragma pack (push, 1)
 struct lb_packet_check_connect {
 	BYTE size;
@@ -495,7 +511,7 @@ struct lb_packet_request_room {
 //------------------------------------------------------------------
 
 //-------------------------------B->L-------------------------------
-#define BL_ROOMREADY			54
+#define BL_ROOMREADY			56
 #pragma pack (push, 1)
 struct bl_packet_room_ready {
 	BYTE size;

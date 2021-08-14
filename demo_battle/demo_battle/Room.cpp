@@ -627,10 +627,20 @@ void Room::PushNewRoomMnrMsg(int id) {
 	}
 }
 
-void Room::PushAnimMsg(int to, int from, int animType) {
-	bc_packet_anim_type p;
+void Room::PushAnimPushMsg(int to, int from, int animType) {
+	bc_packet_push_anim_type p;
 	p.size = sizeof(p);
-	p.type = BC_ANIM;
+	p.type = BC_ANIM_PUSH;
+	p.id = from;
+	p.anim_type = animType;
+
+	PushSendMsg(to, &p);
+}
+
+void Room::PushAnimPopMsg(int to, int from, int animType) {
+	bc_packet_pop_anim_type p;
+	p.size = sizeof(p);
+	p.type = BC_ANIM_POP;
 	p.id = from;
 	p.anim_type = animType;
 
@@ -732,12 +742,20 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_MAKE_ANIM: {
+	case CB_PUSH_ANIM: {
 		int t_id = msg.id;
 		int t_anim = msg.anim_type;
 		int a_id = 1;
 		if (t_id == 1) a_id = 2;
-		PushAnimMsg(a_id, t_id, t_anim);
+		PushAnimPushMsg(a_id, t_id, t_anim);
+		break;
+	}
+	case CB_POP_ANIM: {
+		int t_id = msg.id;
+		int t_anim = msg.anim_type;
+		int a_id = 1;
+		if (t_id == 1) a_id = 2;
+		PushAnimPopMsg(a_id, t_id, t_anim);
 		break;
 	}
 	case CB_GET_COIN: {

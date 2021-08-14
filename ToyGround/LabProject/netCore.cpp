@@ -492,12 +492,20 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_GAME_DIE, 1, p->id);
 		break;
 	}
-	case BC_ANIM: { //id가 어떤 anim인지
-		bc_packet_anim_type* p = reinterpret_cast<bc_packet_anim_type*>(packet_buf);
-//#ifdef DEB
-		cout << "BC_ANIM: " << p->id << p->anim_type << endl;
-//#endif
-		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_ANIM, 2, p->id, p->anim_type);
+	case BC_ANIM_PUSH: {
+		bc_packet_push_anim_type* p = reinterpret_cast<bc_packet_push_anim_type*>(packet_buf);
+		//#ifdef DEB
+		cout << "BC_ANIM_PUSH: " << p->id << p->anim_type << endl;
+		//#endif
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_PUSH_ANIM, 2, p->id, p->anim_type);
+		break;
+	}
+	case BC_ANIM_POP: {
+		bc_packet_pop_anim_type* p = reinterpret_cast<bc_packet_pop_anim_type*>(packet_buf);
+		//#ifdef DEB
+		cout << "BC_ANIM_POP: " << p->id << p->anim_type << endl;
+		//#endif
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_POP_ANIM, 2, p->id, p->anim_type);
 		break;
 	}
 	case BC_LEFT_TIME: {
@@ -591,10 +599,20 @@ void NetCore::SendRequestUserInfoPacket() {
 	SendPacket(&p, SV_LOBBY);
 }
 
-void NetCore::SendAnimPacket(int anim_type) {
-	cb_packet_anim p;
+void NetCore::SendRequestPushAnimPacket(int anim_type) {
+	cb_packet_push_anim p;
 	p.size = sizeof(p);
-	p.type = CB_MAKE_ANIM;
+	p.type = CB_PUSH_ANIM;
+	p.id = m_client.battle_id;
+	p.anim_type = anim_type;
+
+	SendPacket(&p, SV_BATTLE);
+}
+
+void NetCore::SendRequestPopAnimPacket(int anim_type) {
+	cb_packet_push_anim p;
+	p.size = sizeof(p);
+	p.type = CB_POP_ANIM;
 	p.id = m_client.battle_id;
 	p.anim_type = anim_type;
 

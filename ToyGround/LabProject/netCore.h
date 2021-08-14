@@ -65,7 +65,8 @@ public:
 	void SendReadyPacket();
 
 	//void SendMovePacket(char key);
-	void SendAnimPacket(int anim_type);
+	void SendRequestPushAnimPacket(int anim_type);
+	void SendRequestPopAnimPacket(int anim_type);
 	void SendGetCoinPacket(int coin_id);
 	void SendPositionPacket(XMFLOAT3 pos, int anim_type);
 	void SendLookVectorPacket(XMFLOAT3& look);

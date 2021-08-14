@@ -245,13 +245,23 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		}
 		break;
 	}
-	case CB_MAKE_ANIM: {
-		cb_packet_anim* p = reinterpret_cast<cb_packet_anim*>(inputPacket);
+	case CB_PUSH_ANIM: {
+		cb_packet_push_anim* p = reinterpret_cast<cb_packet_push_anim*>(inputPacket);
 		if (p == nullptr) {
 			msg.type = NO_MSG;
 		}
 		msg.id = p->id;
-		msg.type = CB_MAKE_ANIM;
+		msg.type = CB_PUSH_ANIM;
+		msg.anim_type = p->anim_type;
+		break;
+	}
+	case CB_POP_ANIM: {
+		cb_packet_pop_anim* p = reinterpret_cast<cb_packet_pop_anim*>(inputPacket);
+		if (p == nullptr) {
+			msg.type = NO_MSG;
+		}
+		msg.id = p->id;
+		msg.type = CB_POP_ANIM;
 		msg.anim_type = p->anim_type;
 		break;
 	}
