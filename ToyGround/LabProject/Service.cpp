@@ -392,7 +392,6 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_RESPAWN: {
-		cout << "SERVICE RESPAWN" << endl;
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_RESPAWN);
 		break;
 	}
