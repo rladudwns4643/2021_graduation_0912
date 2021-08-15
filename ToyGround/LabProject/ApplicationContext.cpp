@@ -583,6 +583,7 @@ void ApplicationContext::UpdateBullet()
 							obj->m_IsVisibleOnePassCheck = false;
 							AppContext->m_MapArray[aY][aZ][aX] = -1;
 						}
+						DisplayParticle(PARTICLE_NAME_SMOKE, PARTICLE_NAME_SMOKE, objPos, true);
 						hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
 						bulletCollObj = true;
 						break;

@@ -27,7 +27,6 @@ void Particle::Update(const float deltaT)
 		}
 		else {
 			if (m_Owner) SetPosition(m_Owner->GetPosition());
-			// else ดย static particle
 		}
 	}
 }
