@@ -263,3 +263,6 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 #define MAX_SKILLGAUGE 120
 #define ONE_HIT_CHARGE_SKILLGAUGE 10
 #define MAXGAUGE_SIZE_X 245
+
+// ÆÄÆ¼Å¬
+#define PARTICLE_NAME_SMOKE "particle_smoke"

@@ -23,6 +23,22 @@ public:
 	void BuildSkinnedModelAnimation(std::string meshName, const std::string clipName);
 	void BuildSkinnedModelSubMesh(std::string meshName, const std::string submeshName);
 
+	void BuildBasicParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList,
+		std::string particleName, int particleCount,
+		DirectX::XMFLOAT2 particlePosX, DirectX::XMFLOAT2 particlePosY, DirectX::XMFLOAT2 particlePosZ,
+		DirectX::XMFLOAT2 particleSize,
+		DirectX::XMFLOAT2 particleVelX, DirectX::XMFLOAT2 particleVelY, DirectX::XMFLOAT2 particleVelZ,
+		DirectX::XMFLOAT2 particleStartTime, DirectX::XMFLOAT2 particleLifeTime,
+		DirectX::XMFLOAT2 particlePeriod, DirectX::XMFLOAT2 particleAmplifier);
+
+	void BuildCircleParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList,
+		std::string particleName, int particleCount,
+		DirectX::XMFLOAT3 particlePos, DirectX::XMFLOAT2 particleSize,
+		DirectX::XMFLOAT2 particleVelX, DirectX::XMFLOAT2 particleVelY, DirectX::XMFLOAT2 particleVelZ,
+		DirectX::XMFLOAT2 particleStartTime, DirectX::XMFLOAT2 particleLifeTime,
+		DirectX::XMFLOAT2 particlePeriod, DirectX::XMFLOAT2 particleAmplifier,
+		float radius);
+
 private:
 	bool LoadMeshFile(
 		std::vector<Vertex>& outVertexVector,
@@ -38,6 +54,7 @@ private:
 	bool LoadSkeletonFile(SkinnedData& outSkinnedData, std::string path);
 	bool LoadAnimationFile(SkinnedData& outSkinnedData, std::string& path, const std::string clipName);
 
+	void AllocateParticleBuffer(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, std::vector<ParticleVertex>& particleVertices, std::vector< uint16_t>& indices);
 
 public:
 	std::unordered_map<std::string, std::unique_ptr<GeometryMesh>>	m_GeometryMesh;

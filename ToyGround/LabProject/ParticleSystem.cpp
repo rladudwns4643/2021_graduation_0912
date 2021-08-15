@@ -6,7 +6,6 @@
 
 void ParticleSystem::Update(const float deltaT)
 {
-	// Particle Update
 	for (auto& p : m_Particles)
 	{
 		p->Update(deltaT);

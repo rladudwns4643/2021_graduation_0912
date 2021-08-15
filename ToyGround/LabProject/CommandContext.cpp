@@ -10,6 +10,7 @@
 #include "BoundingBoxMesh.h"
 #include "SkinnedModelInstance.h"
 #include "UserInterface.h"
+#include "Particle.h"
 #include "TOY_GROUND.h"
 
 void GraphicsContext::Initialize()
@@ -32,7 +33,7 @@ void GraphicsContext::BuildInstanceBuffer(ObjectInfo* objInfo)
 {
 	m_InstanceBuffers[objInfo->m_Type] = std::make_unique<UploadBuffer<ShaderResource::InstanceData>>(Core::g_Device.Get(), objInfo->m_InstanceCount, false);
 }
-void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool IsCharacter)
+void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems, bool isCharacter, bool isParticle)
 {
 	if (!objInfo) return;
 
@@ -44,7 +45,7 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 		if (rItems[i.second]->m_IsVisible)
 		{
 			DirectX::XMFLOAT4X4 tWorld = rItems[i.second]->m_World;
-			if(IsCharacter)
+			if(isCharacter)
 				tWorld._42 -= 10.f;
 			XMMATRIX world = XMLoadFloat4x4(&tWorld);
 			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
@@ -59,8 +60,18 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 			DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
 			DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
 			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
+			if (isParticle)
+			{
+				Particle* parti = static_cast<Particle*>(rItems[i.second]);
+				data.particleTime = parti->GetParticleTotalTime();
+				data.particleIsLoop = parti->GetIsLoop();
+			}
+			else
+			{
+				data.particleTime = 0.f;
+				data.particleIsLoop = false;
+			}
 
-			// Write the instance data to structured buffer for the visible objects.
 			m_InstanceBuffers[objInfo->m_Type]->CopyData(InstanceCount++, data);
 		}
 	}

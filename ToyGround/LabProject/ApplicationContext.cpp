@@ -8,6 +8,7 @@
 #include "UserInterface.h"
 #include "Button.h"
 #include "ImageView.h"
+#include "Particle.h"
 
 #define WIDTH_NORMALIZE_LT(x) (x + (1280.f / 2.f))
 #define HEIGHT_NORMALIZE_LT(y) (-y + (720.f / 2.f))
@@ -935,6 +936,51 @@ void ApplicationContext::SetPickingUI2D(std::string ui2dLayer, std::string ui2dN
 {
 	UserInterface* ui = FindObject<UserInterface>(ui2dLayer, ui2dName);
 	if (!ui) return;
+}
+
+void ApplicationContext::CreateParticle(std::string particleName, std::string instID, std::string matName, bool isLoop, DirectX::XMFLOAT3 offset, float particlePlaySpeed)
+{
+	Particle* particle = CreateObject<Particle>(particleName, instID);
+	particle->SetMesh(particleName, particleName);
+	particle->m_MaterialIndex = AssertsReference::GetApp()->m_Materials[matName]->DiffuseSrvHeapIndex;
+	particle->m_IsVisible = false;
+	particle->m_IsVisibleOnePassCheck = false;
+	particle->SetIsLoop(isLoop);
+	particle->SetParticleOffset(offset);
+	particle->SetParticlePlaySpeed(particlePlaySpeed);
+}
+
+void ApplicationContext::DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos, bool isVisible, bool isCapture)
+{
+	Particle* ptc = FindObject<Particle>(particleName, instID);
+	if (!ptc) return;
+
+	ptc->m_IsVisible = isVisible;
+	ptc->m_IsVisibleOnePassCheck = isVisible;
+	ptc->InitializeTransform();
+
+	if (isCapture)
+	{
+		ptc->CapturePosition();
+	}
+	else
+		ptc->SetPosition(pos);
+	ptc->PlayParticle();
+}
+
+void ApplicationContext::HiddenParticle(std::string particleName, std::string instID)
+{
+	Particle* ptc = FindObject<Particle>(particleName, instID);
+	if (!ptc) return;
+
+	ZeroMemory(&ptc->m_World, sizeof(ptc->m_World));
+	ZeroMemory(&ptc->m_TexTransform, sizeof(ptc->m_TexTransform));
+	ptc->StopParticle();
+
+	GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[particleName], m_RItemsVec);
+
+	ptc->m_IsVisible = false;
+	ptc->m_IsVisibleOnePassCheck = false;
 }
 
 void ApplicationContext::BulletReset()

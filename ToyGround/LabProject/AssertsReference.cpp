@@ -1370,6 +1370,75 @@ void AssertsReference::BuildSkinnedModelSubMesh(std::string meshName, const std:
 	}
 }
 
+void AssertsReference::BuildBasicParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT2 particlePosX, DirectX::XMFLOAT2 particlePosY, DirectX::XMFLOAT2 particlePosZ, DirectX::XMFLOAT2 particleSize, DirectX::XMFLOAT2 particleVelX, DirectX::XMFLOAT2 particleVelY, DirectX::XMFLOAT2 particleVelZ, DirectX::XMFLOAT2 particleStartTime, DirectX::XMFLOAT2 particleLifeTime, DirectX::XMFLOAT2 particlePeriod, DirectX::XMFLOAT2 particleAmplifier)
+{
+	// 입력받아야 할 자료들
+	// world, particle name
+	// particle Param: pos, size,,,, 
+	// build particle verticies
+	std::vector<ParticleVertex> particleVertices;
+	particleVertices.resize(particleCount);
+
+	for (int i = 0; i < particleCount; ++i)
+	{
+		particleVertices[i].pos = XMFLOAT3(MathHelper::RandF(particlePosX.x, particlePosX.y), MathHelper::RandF(particlePosY.x, particlePosY.y), MathHelper::RandF(particlePosZ.x, particlePosZ.y));;
+		particleVertices[i].size = particleSize;
+		particleVertices[i].velocity = XMFLOAT3(MathHelper::RandF(particleVelX.x, particleVelX.y), MathHelper::RandF(particleVelY.x, particleVelY.y), MathHelper::RandF(particleVelZ.x, particleVelZ.y));
+		particleVertices[i].startTime = MathHelper::RandF(particleStartTime.x, particleStartTime.y);
+		particleVertices[i].lifeTime = MathHelper::RandF(particleLifeTime.x, particleLifeTime.y);
+		particleVertices[i].period = MathHelper::RandF(particlePeriod.x, particlePeriod.y);
+		particleVertices[i].amplifier = MathHelper::RandF(particleAmplifier.x, particleAmplifier.y);
+	}
+
+	// build paritcle indicies
+	std::vector<std::uint16_t> indices;
+	indices.resize(particleCount);
+
+	for (int i = 0; i < particleCount; ++i)
+	{
+		indices[i] = i;
+	}
+
+	AllocateParticleBuffer(pDevice, pCommandList, particleName, particleVertices, indices);
+}
+
+void AssertsReference::BuildCircleParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT3 particlePos, DirectX::XMFLOAT2 particleSize, DirectX::XMFLOAT2 particleVelX, DirectX::XMFLOAT2 particleVelY, DirectX::XMFLOAT2 particleVelZ, DirectX::XMFLOAT2 particleStartTime, DirectX::XMFLOAT2 particleLifeTime, DirectX::XMFLOAT2 particlePeriod, DirectX::XMFLOAT2 particleAmplifier, float radius)
+{
+	// 입력받아야 할 자료들
+	// world, particle name
+	// particle Param: pos, size,,,, 
+	// build particle verticies
+	std::vector<ParticleVertex> particleVertices;
+	particleVertices.resize(particleCount);
+
+	for (int i = 0; i < particleCount; ++i)
+	{
+		float randomRadius = MathHelper::RandF(0, 1);
+		XMFLOAT3 initParametricPos = XMFLOAT3(radius * sin(randomRadius * 2.0 * XM_PI), 0, radius * cos(randomRadius * 2.0 * XM_PI));
+		XMFLOAT3 newPos = MathHelper::Add(particlePos, initParametricPos);
+
+		particleVertices[i].pos = newPos;
+		particleVertices[i].size = particleSize;
+		particleVertices[i].velocity = XMFLOAT3(MathHelper::RandF(particleVelX.x, particleVelX.y), MathHelper::RandF(particleVelY.x, particleVelY.y), MathHelper::RandF(particleVelZ.x, particleVelZ.y));
+		particleVertices[i].startTime = MathHelper::RandF(particleStartTime.x, particleStartTime.y);
+		particleVertices[i].lifeTime = MathHelper::RandF(particleLifeTime.x, particleLifeTime.y);
+		particleVertices[i].period = MathHelper::RandF(particlePeriod.x, particlePeriod.y);
+		particleVertices[i].amplifier = MathHelper::RandF(particleAmplifier.x, particleAmplifier.y);
+	}
+
+	///////////// 파티클 메시제작 동일
+	// build paritcle indicies
+	std::vector<std::uint16_t> indices;
+	indices.resize(particleCount);
+
+	for (int i = 0; i < particleCount; ++i)
+	{
+		indices[i] = i;
+	}
+
+	AllocateParticleBuffer(pDevice, pCommandList, particleName, particleVertices, indices);
+}
+
 bool AssertsReference::LoadMeshFile(std::vector<Vertex>& outVertexVector, std::vector<uint32_t>& outIndexVector, std::vector<Material>* outMaterial, std::string path)
 {
 	path += ".mesh";
@@ -1625,4 +1694,44 @@ bool AssertsReference::LoadAnimationFile(SkinnedData& outSkinnedData, std::strin
 	}
 
 	return false;
+}
+
+void AssertsReference::AllocateParticleBuffer(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, std::vector<ParticleVertex>& particleVertices, std::vector< uint16_t>& indices)
+{
+	const UINT vbByteSize = (UINT)particleVertices.size() * sizeof(ParticleVertex);
+	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+	auto geo = std::make_unique<GeometryMesh>();
+	geo->Name = particleName;
+
+	// 파티클 메시(정점, 인덱스 버퍼) 리소스 할당
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
+	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), particleVertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
+	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	geo->VertexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+		pCommandList, particleVertices.data(), vbByteSize, geo->VertexBufferUploader);
+
+	geo->IndexBufferGPU = d3dUtil::CreateDefaultBuffer(pDevice,
+		pCommandList, indices.data(), ibByteSize, geo->IndexBufferUploader);
+
+	geo->VertexByteStride = sizeof(ParticleVertex);
+	geo->VertexBufferByteSize = vbByteSize;
+	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
+	geo->IndexBufferByteSize = ibByteSize;
+
+	SubmeshGeometry submesh;
+	submesh.IndexCount = (UINT)indices.size();
+	submesh.StartIndexLocation = 0;
+	submesh.BaseVertexLocation = 0;
+
+	geo->DrawArgs[particleName] = submesh;
+
+	m_GeometryMesh[particleName] = std::move(geo);
+
+	// 멤버변수 메모리 해제
+	particleVertices.clear();
+	indices.clear();
 }

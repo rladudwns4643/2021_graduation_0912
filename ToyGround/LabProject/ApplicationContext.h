@@ -90,6 +90,10 @@ public:
 	void HiddenUI2D(std::string ui2dLayer, std::string ui2dName);
 	void SetDisplayUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible);
 	void SetPickingUI2D(std::string ui2dLayer, std::string ui2dName, bool isVisible);
+	
+	void CreateParticle(std::string particleName, std::string instID, std::string matName, bool isLoop, DirectX::XMFLOAT3 offset, float particlePlaySpeed = 1.f);
+	void DisplayParticle(std::string particleName, std::string instID, DirectX::XMFLOAT3 pos, bool isVisible = false, bool isCapture = false);
+	void HiddenParticle(std::string particleName, std::string instID);
 
 	void BulletReset();
 

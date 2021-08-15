@@ -21,6 +21,7 @@ class AssertsReference;
 class CommandCenter;
 class EnemyCommandCenter;
 class SoundManager;
+class ParticleSystem;
 
 class TOY_GROUND : public IGameApp, public TemplateSingleton<TOY_GROUND>
 {
@@ -37,6 +38,7 @@ public:
 private:
 	void BuildAsserts();
 	void BuildCharacters();
+	void BuildParticles();
 
 public:
 	Camera* m_Camera = NULL;
@@ -51,5 +53,6 @@ private:
 	CommandCenter					*m_CommandCenter = NULL;
 	EnemyCommandCenter				*m_EnemyCommandCenter = NULL;
 	SoundManager					*m_SoundManager = NULL;
+	ParticleSystem					*m_ParticleSystem = NULL;
 };
 

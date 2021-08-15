@@ -108,6 +108,17 @@ struct SkinnedVertex : Vertex
 	uint16_t MaterialIndex;
 };
 
+struct ParticleVertex
+{
+	XMFLOAT3 pos; // 월드행렬 위치에서 얼만큼 이동됬는지의 오프셋 pos 좌표
+	XMFLOAT2 size;
+	XMFLOAT3 velocity;
+	float startTime;
+	float lifeTime;
+	float period;
+	float amplifier;
+};
+
 #define MaxLights 16
 struct Light
 {
@@ -157,6 +168,8 @@ namespace ShaderResource
 		DirectX::XMFLOAT4X4 World = MathHelper::Identity4x4();
 		DirectX::XMFLOAT4X4 TexTransform = MathHelper::Identity4x4();
 		UINT MaterialIndex;
+		float particleTime;
+		int particleIsLoop;
 		UINT InstancePad0;
 	};
 

@@ -21,6 +21,7 @@ namespace Graphics
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_SkinnedShadowOpaquePSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_HorzBlurPSO;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_VertBlurPSO;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> g_ParticlePSO;
 }
 
 using namespace Core;
@@ -320,6 +321,10 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 	m_Shaders["horzBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "HorzBlurCS", "cs_5_0");
 	m_Shaders["vertBlurCS"] = d3dUtil::CompileShader(L"Shaders\\Blur.hlsl", nullptr, "VertBlurCS", "cs_5_0");
 
+	m_Shaders["particleVS"] = d3dUtil::CompileShader(L"Shaders\\Particle.hlsl", nullptr, "VS", "vs_5_1");
+	m_Shaders["particleGS"] = d3dUtil::CompileShader(L"Shaders\\Particle.hlsl", nullptr, "GS", "gs_5_1");
+	m_Shaders["particlePS"] = d3dUtil::CompileShader(L"Shaders\\Particle.hlsl", nullptr, "PS", "ps_5_1");
+
 	m_BBox_InputLayout =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0  },
@@ -344,6 +349,17 @@ void GraphicsRenderer::BuildShaderAndInputLayout()
 		{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 44, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "WEIGHTS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 56, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "BONEINDICES", 0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 68, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
+	m_Billboard_InputLayout =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "SIZE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "STARTTIME", 0, DXGI_FORMAT_R32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "LIFETIME", 0, DXGI_FORMAT_R32_FLOAT, 0, 36, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "PERIOD", 0, DXGI_FORMAT_R32_FLOAT, 0, 40, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "AMPLIFIER", 0, DXGI_FORMAT_R32_FLOAT, 0, 44, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 	};
 
 	m_UI_InputLayout =
@@ -422,20 +438,16 @@ void GraphicsRenderer::BuildPostProcessRootSignature()
 	CD3DX12_DESCRIPTOR_RANGE uavTable;
 	uavTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
 
-	// Root parameter can be a table, root descriptor or root constants.
 	CD3DX12_ROOT_PARAMETER slotRootParameter[3];
 
-	// Perfomance TIP: Order from most frequent to least frequent.
 	slotRootParameter[0].InitAsConstants(12, 0);
 	slotRootParameter[1].InitAsDescriptorTable(1, &srvTable);
 	slotRootParameter[2].InitAsDescriptorTable(1, &uavTable);
 
-	// A root signature is an array of root parameters.
 	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(3, slotRootParameter,
 		0, nullptr,
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-	// create a root signature with a single slot which points to a descriptor range consisting of a single constant buffer
 	ComPtr<ID3DBlob> serializedRootSig = nullptr;
 	ComPtr<ID3DBlob> errorBlob = nullptr;
 	HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
@@ -669,6 +681,32 @@ void GraphicsRenderer::BuildPipelineStateObjects()
 	};
 	vertBlurPSO.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	ThrowIfFailed(Core::g_Device->CreateComputePipelineState(&vertBlurPSO, IID_PPV_ARGS(&g_VertBlurPSO)));
+
+	//
+	// PSO for billboards sprites
+	//
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC billboardsPsoDesc = opaquePsoDesc;
+	billboardsPsoDesc.BlendState = blendDesc;
+	billboardsPsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["particleVS"]->GetBufferPointer()),
+		m_Shaders["particleVS"]->GetBufferSize()
+	};
+	billboardsPsoDesc.GS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["particleGS"]->GetBufferPointer()),
+		m_Shaders["particleGS"]->GetBufferSize()
+	};
+	billboardsPsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(m_Shaders["particlePS"]->GetBufferPointer()),
+		m_Shaders["particlePS"]->GetBufferSize()
+	};
+	billboardsPsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+	billboardsPsoDesc.InputLayout = { m_Billboard_InputLayout.data(), (UINT)m_Billboard_InputLayout.size() };
+	billboardsPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+
+	ThrowIfFailed(Core::g_Device->CreateGraphicsPipelineState(&billboardsPsoDesc, IID_PPV_ARGS(&g_ParticlePSO)));
 }
 
 std::array<const CD3DX12_STATIC_SAMPLER_DESC, 7> GraphicsRenderer::GetStaticSamplers()

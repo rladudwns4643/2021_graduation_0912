@@ -9,6 +9,7 @@
 #include "CommandCenter.h"
 #include "EnemyCommandCenter.h"
 #include "SoundManager.h"
+#include "ParticleSystem.h"
 
 using namespace Core;
 
@@ -29,6 +30,7 @@ void TOY_GROUND::Startup(void)
 	m_CommandCenter = CommandCenter::GetApp();
 	m_EnemyCommandCenter = EnemyCommandCenter::GetApp();
 	m_SoundManager = SoundManager::GetApp();
+	m_ParticleSystem = ParticleSystem::GetApp();
 
 	// LoadFont
 	GraphicsContext::GetApp()->LoadFont(L"Showcard Gothic", 20);
@@ -39,6 +41,7 @@ void TOY_GROUND::Startup(void)
 	// Build Asserts
 	BuildAsserts();
 	BuildCharacters();
+	BuildParticles();
 
 	// Create Scene
 	SceneManager::GetApp()->InitializeScenes();
@@ -98,7 +101,12 @@ void TOY_GROUND::Update(float deltaT)
 	// SoundManager
 	SoundManager::GetApp()->UpdateSoundManager();
 
-	// SceneManage
+
+	// ParticleSystem
+	//if (m_ParticleSystem)
+	//	ParticleSystem::GetApp()->Update(deltaT);
+
+	// SceneManager
 	if (m_pSceneManager)
 		SceneManager::GetApp()->UpdateScene(deltaT);
 
@@ -173,6 +181,17 @@ void TOY_GROUND::BuildAsserts()
 	// Build BoundingBox
 	AssertsReference::GetApp()->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get());
 
+	// Build Particle
+	//AssertsReference::GetApp()->BuildBasicParticle(g_Device.Get(), g_CommandList.Get(),
+	//	PARTICLE_NAME_SMOKE, 400,
+	//	DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0),
+	//	DirectX::XMFLOAT2(50, 40),
+	//	DirectX::XMFLOAT2(-45, 45), DirectX::XMFLOAT2(-45, 45), DirectX::XMFLOAT2(-45, 45),
+	//	DirectX::XMFLOAT2(0.f, 1.f),
+	//	DirectX::XMFLOAT2(5.f, 5.f),
+	//	DirectX::XMFLOAT2(1.f, 2.f),
+	//	DirectX::XMFLOAT2(1.f, 1.f));
+
 	// Build Materials
 	AssertsReference::GetApp()->BuildMaterials();
 }
@@ -181,4 +200,14 @@ void TOY_GROUND::BuildCharacters()
 {
 	AppContext->CreateCharacter(CHARACTER_COWBOY, CHARACTER_COWBOY, TEXTURE_STR_PolygonMinis_Texture_01_A, BoneIndex::Cowboy);
 	AppContext->CreateCharacter(CHARACTER_GUNMAN, CHARACTER_GUNMAN, TEXTURE_STR_PolygonMinis_Texture_01_A, BoneIndex::GunMan);
+}
+
+void TOY_GROUND::BuildParticles()
+{
+	//// 캐릭터 적용 파티클
+	//AppContext->CreateParticle(PARTICLE_NAME_SMOKE, CHARACTER_COWBOY, TEXTURE_STR_T_Smoke_Tiled_D, false, XMFLOAT3(0, 50, 0), 3.f);
+	//ParticleSystem::GetApp()->SetCharacterParticle(CHARACTER_COWBOY, CHARACTER_COWBOY, PARTICLE_NAME_SMOKE, CHARACTER_COWBOY);
+	//
+	//// 기본 파티클
+	//AppContext->CreateParticle(PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER, PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER, TEXTURE_STR_P_CHERRY_BLOSSOM, true, XMFLOAT3(0, 250, 0), 0.5f);
 }

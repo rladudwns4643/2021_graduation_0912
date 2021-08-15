@@ -23,6 +23,8 @@ struct InstanceData
 	float4x4 World;
 	float4x4 TexTransform;
 	uint     MaterialIndex;
+	float	 particleTime;
+	int		 particleIsLoop;
 	uint     InstPad0;
 };
 
@@ -152,3 +154,9 @@ float CalcShadowFactor(float4 shadowPosH)
 
 	return percentLit / 9.0f;
 }
+
+//---------------------------------------------------------------------------------------
+// PCF for Particles
+//---------------------------------------------------------------------------------------
+static float3 s_Gravity = float3(0, -1, 0);
+static float s_PI = 3.141592;

@@ -5,6 +5,7 @@
 
 class Camera;
 class CharacterParts;
+class Particle;
 class Character : public GameObject
 {
 	friend class PlayerController;
@@ -33,6 +34,10 @@ public:
 	void UpdateStateUI();
 
 public:
+	// 파티클 관련
+	void TransformParticle(bool isCapture = false);
+	void ControlBlurEffect(bool onoff);
+	void SetParticle(std::string particleName, std::string instID);
 
 public:
 	void SetMapName(std::string mapName);
@@ -80,6 +85,7 @@ public:
 	std::unique_ptr<PlayerController>		m_PlayerController;
 	std::unique_ptr<AnimationController>	m_AnimationController;
 	std::map<std::string, CharacterParts*>	m_Parts;
+	std::map<std::string, Particle*>		m_Particles;
 
 	int m_PlayerID = 0;
 
@@ -153,6 +159,9 @@ private:
 	int m_tempAttackGauge;
 	int m_tempSkillGauge;
 
-	int test = 0;
+	// Blur Control Param - 자기자신만 소유하고있다.
+	bool		m_CharacterSwitchBlur = false;
+	float		m_BlurTotalTime = 0.f;
+	float		m_BlurLifeTime = 0.5f;
 };
 
