@@ -74,14 +74,15 @@ void Character::Update(const float deltaT)
 	}
 
 #ifdef DEBUG_CLIENT
-	UpdateStateUI();
-
 	m_AnimationController->Update(deltaT);
 
-	if (m_PlayerController)
-		m_PlayerController->Update(deltaT);
-		
-	Falling();
+	if (m_PlayerID == 1)
+	{
+		UpdateStateUI();
+		if (m_PlayerController)
+			m_PlayerController->Update(deltaT);
+		Falling();
+	}
 
 #elif DEBUG_SERVER
 	m_AnimationController->Update(deltaT);
@@ -130,21 +131,21 @@ void Character::UpdateStateUI()
 {
 	if (m_attackGauge < MAX_ATTACKGAUGE)
 	{
-		m_attackGauge += 3;
+		m_attackGauge += 1;
 		if (m_attackGauge >= MAX_ATTACKGAUGE)
 			m_attackGauge = MAX_ATTACKGAUGE;
 	}
 
 	if (m_tempHp < m_hp)
 	{
-		m_tempHp += 20;
+		m_tempHp += 30;
 		if (m_tempHp >= m_hp)
 			m_tempHp = m_hp;
 		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_HEALTH, m_tempHp);
 	}
 	else if (m_tempHp > m_hp)
 	{
-		m_tempHp -= 20;
+		m_tempHp -= 30;
 		if (m_tempHp <= m_hp)
 			m_tempHp = m_hp;
 		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_HEALTH, m_tempHp);
@@ -152,7 +153,7 @@ void Character::UpdateStateUI()
 
 	if (m_tempAttackGauge < m_attackGauge)
 	{
-		m_tempAttackGauge += 5;
+		m_tempAttackGauge += 1;
 		if (m_tempAttackGauge >= m_attackGauge)
 			m_tempAttackGauge = m_attackGauge;
 		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, m_tempAttackGauge);
@@ -165,7 +166,7 @@ void Character::UpdateStateUI()
 
 	if (m_tempSkillGauge < m_skillGauge)
 	{
-		m_tempSkillGauge += 2;
+		m_tempSkillGauge += 4;
 		if (m_tempSkillGauge > m_skillGauge)
 			m_tempSkillGauge = m_skillGauge;
 		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, m_tempSkillGauge);
@@ -820,9 +821,7 @@ void Character::Attack()
 	}
 	else
 	{
-		if(m_skillGauge <MAX_SKILLGAUGE)	
-			m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
-		m_attackGauge -= 100;
+		m_attackGauge -= ONE_SHOT_GAUGE;
 		int bIndex = 0;
 		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 		{

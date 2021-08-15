@@ -105,7 +105,7 @@ void PlayerController::MouseCallback()
 	{
 		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
 		{
-			if (m_Owner->m_attackGauge >= 100 || m_Owner->m_isSkillOn)
+			if (m_Owner->m_attackGauge >= ONE_SHOT_GAUGE || m_Owner->m_isSkillOn)
 			{
 				m_Owner->SetLookToCameraLook();
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Attack), m_Owner);
