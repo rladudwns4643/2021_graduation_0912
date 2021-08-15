@@ -177,7 +177,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_RESPAWN: {
-		cout << "RESPAWN" << endl;
+		cout << "EVENT_GAME_RESPAWN" << endl;
 		for (auto& a : m_Users) {
 			a.second->Respawn();
 		}

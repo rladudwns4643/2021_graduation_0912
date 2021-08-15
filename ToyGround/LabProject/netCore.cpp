@@ -462,6 +462,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_RESPAWN: {
+//#ifdef DEB
+		cout << "BC_RESPAWN\n";
+//#endif
 		bc_packet_respawn* p = reinterpret_cast<bc_packet_respawn*>(packet_buf);
 
 		Service::GetApp()->AddEvent(EVENT_GAME_RESPAWN);

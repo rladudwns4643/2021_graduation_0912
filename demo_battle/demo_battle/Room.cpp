@@ -344,6 +344,7 @@ void Room::AddCoinByDie(int die_id) {
 	if (this == nullptr) return;
 	if (!IsGameStarted()) return;
 
+	cout << "DIE COIN" << endl;
 	PTC_VECTOR coin_pos{ 
 		static_cast<float>(m_players[die_id]->GetPosition().x + rand() % 400 - 200),
 		0, 
@@ -905,10 +906,15 @@ void Room::ProcMsg(message msg) {
 		cout << "REQ DIE" << endl;
 		int t_id{ msg.id };
 
-		for (int i = m_players[t_id]->GetCoin(); i > 0; --i) {
-			AddCoinByDie(t_id);
+		for (auto& pl : m_players) {
+			if (pl->GetID() == t_id) {
+				for (int i = pl->GetCoin(); i > 0; --i) {
+					AddCoinByDie(t_id);
+				}
+				pl->SetCoin(0);
+				break;
+			}
 		}
-		m_players[t_id]->SetCoin(0);
 		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(RESPAWN_TIME), EVENT_TYPE::EV_RESPAWN };
 		BattleServer::GetInstance()->AddTimer(ev);
 		PushDieMsg(t_id);
@@ -978,6 +984,7 @@ void Room::SetEmptyBullet()
 }
 
 void Room::Respawn() {
+	cout << "Respawn" << endl;
 	//리스폰 패킷 전달
 	PushRespawnMsg();
 }

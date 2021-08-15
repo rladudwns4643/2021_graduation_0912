@@ -217,6 +217,7 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_RESPAWN: {
+		cout << "SCENEMNG RESPAWN" << endl;
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
 		break;
 	}
