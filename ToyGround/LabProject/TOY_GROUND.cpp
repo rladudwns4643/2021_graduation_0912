@@ -103,8 +103,8 @@ void TOY_GROUND::Update(float deltaT)
 
 
 	// ParticleSystem
-	//if (m_ParticleSystem)
-	//	ParticleSystem::GetApp()->Update(deltaT);
+	if (m_ParticleSystem)
+		ParticleSystem::GetApp()->Update(deltaT);
 
 	// SceneManager
 	if (m_pSceneManager)
@@ -182,15 +182,26 @@ void TOY_GROUND::BuildAsserts()
 	AssertsReference::GetApp()->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get());
 
 	// Build Particle
-	//AssertsReference::GetApp()->BuildBasicParticle(g_Device.Get(), g_CommandList.Get(),
-	//	PARTICLE_NAME_SMOKE, 400,
-	//	DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0),
-	//	DirectX::XMFLOAT2(50, 40),
-	//	DirectX::XMFLOAT2(-45, 45), DirectX::XMFLOAT2(-45, 45), DirectX::XMFLOAT2(-45, 45),
-	//	DirectX::XMFLOAT2(0.f, 1.f),
-	//	DirectX::XMFLOAT2(5.f, 5.f),
-	//	DirectX::XMFLOAT2(1.f, 2.f),
-	//	DirectX::XMFLOAT2(1.f, 1.f));
+	AssertsReference::GetApp()->BuildBasicParticle(g_Device.Get(), g_CommandList.Get(),
+		PARTICLE_NAME_SMOKE, 400,
+		DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0),
+		DirectX::XMFLOAT2(50, 40),
+		DirectX::XMFLOAT2(-45, 45), DirectX::XMFLOAT2(-45, 45), DirectX::XMFLOAT2(-45, 45),
+		DirectX::XMFLOAT2(0.f, 1.f),
+		DirectX::XMFLOAT2(5.f, 5.f),
+		DirectX::XMFLOAT2(1.f, 2.f),
+		DirectX::XMFLOAT2(1.f, 1.f));
+
+	AssertsReference::GetApp()->BuildCircleParticle(g_Device.Get(), g_CommandList.Get(),
+		PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER, 70,
+		DirectX::XMFLOAT3(0, 0, 0),
+		DirectX::XMFLOAT2(15, 15),
+		DirectX::XMFLOAT2(-5, 5), DirectX::XMFLOAT2(-65, -70), DirectX::XMFLOAT2(-5, 5),
+		DirectX::XMFLOAT2(0.f, 6.f),
+		DirectX::XMFLOAT2(5.5f, 7.5f),
+		DirectX::XMFLOAT2(1.f, 2.f),
+		DirectX::XMFLOAT2(18.f, 20.f),
+		50.f);
 
 	// Build Materials
 	AssertsReference::GetApp()->BuildMaterials();
@@ -204,10 +215,11 @@ void TOY_GROUND::BuildCharacters()
 
 void TOY_GROUND::BuildParticles()
 {
-	//// 캐릭터 적용 파티클
-	//AppContext->CreateParticle(PARTICLE_NAME_SMOKE, CHARACTER_COWBOY, TEXTURE_STR_T_Smoke_Tiled_D, false, XMFLOAT3(0, 50, 0), 3.f);
-	//ParticleSystem::GetApp()->SetCharacterParticle(CHARACTER_COWBOY, CHARACTER_COWBOY, PARTICLE_NAME_SMOKE, CHARACTER_COWBOY);
-	//
-	//// 기본 파티클
-	//AppContext->CreateParticle(PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER, PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER, TEXTURE_STR_P_CHERRY_BLOSSOM, true, XMFLOAT3(0, 250, 0), 0.5f);
+	// 캐릭터 적용 파티클
+	AppContext->CreateParticle(PARTICLE_NAME_SMOKE, CHARACTER_COWBOY, TEXTURE_STR_T_Smoke_Tiled_D, false, XMFLOAT3(0, 50, 0), 3.f);
+	ParticleSystem::GetApp()->SetCharacterParticle(CHARACTER_COWBOY, CHARACTER_COWBOY, PARTICLE_NAME_SMOKE, CHARACTER_COWBOY);
+	
+	// 기본 파티클
+	AppContext->CreateParticle(PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER, PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER, TEXTURE_STR_P_CHERRY_BLOSSOM, true, XMFLOAT3(0, 250, 0), 0.5f);
+	ParticleSystem::GetApp()->SetParticle(PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER, PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER);
 }

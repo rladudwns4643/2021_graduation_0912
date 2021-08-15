@@ -10,6 +10,7 @@
 #include "MoveCommand.h"
 #include "CommandCenter.h"
 #include "EnemyCommandCenter.h"
+#include "ParticleSystem.h"
 
 #include "GameObject.h"
 #include "Character.h"
@@ -356,6 +357,9 @@ void GameplayScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK);
 //	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD);
 
+	// ÆÄÆ¼Å¬
+	AppContext->HiddenParticle(PARTICLE_NAME_SMOKE, CHARACTER_COWBOY);
+
 	for (int i = 0; i < MAX_GEM_COUNT; ++i)
 	{
 		AppContext->HiddenGem(i, true);
@@ -418,6 +422,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_STATE_BACK], AppContext->m_RItemsVec);
 //	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
 //	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
+
+	// Particle
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[PARTICLE_NAME_SMOKE], AppContext->m_RItemsVec, false, true);
 
 	// Shadow
 	GraphicsContext::GetApp()->UpdateShadowTransform(TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
@@ -483,6 +490,10 @@ void GameplayScene::Render()
 	// SkyBox
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_SkyPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap["gameplaySky"], AppContext->m_RItemsVec);
+
+	// Particle
+	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[PARTICLE_NAME_SMOKE], AppContext->m_RItemsVec);
 
 	// UI
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());

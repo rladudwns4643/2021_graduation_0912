@@ -822,6 +822,24 @@ void AssertsReference::BuildMaterials()
 	GAMEPLAY_WINNERBOARD->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	GAMEPLAY_WINNERBOARD->Roughness = 0.9;
 
+	// ------------------------------------------------------------------------------------
+
+	auto T_Smoke_Tiled_D = std::make_unique<Material>();
+	T_Smoke_Tiled_D->MatCBIndex = TEXTURE_INDEX_T_Smoke_Tiled_D;
+	T_Smoke_Tiled_D->DiffuseSrvHeapIndex = TEXTURE_INDEX_T_Smoke_Tiled_D;
+	T_Smoke_Tiled_D->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	T_Smoke_Tiled_D->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	T_Smoke_Tiled_D->Roughness = 0.9;
+
+	auto CHERRY_BLOSSOM = std::make_unique<Material>();
+	CHERRY_BLOSSOM->MatCBIndex = TEXTURE_INDEX_P_CHERRY_BLOSSOM;
+	CHERRY_BLOSSOM->DiffuseSrvHeapIndex = TEXTURE_INDEX_P_CHERRY_BLOSSOM;
+	CHERRY_BLOSSOM->DiffuseAlbedo = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	CHERRY_BLOSSOM->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
+	CHERRY_BLOSSOM->Roughness = 0.9;
+
+	// ------------------------------------------------------------------------------------
+
 	m_Materials["SkyBox"] = std::move(sky);
 	m_Materials[TEXTURE_STR_Cartoon_CubeWorld_Texture] = std::move(Cartoon_CubeWorld_Texture);
 	m_Materials[TEXTURE_STR_PolygonMinis_Texture_01_A] = std::move(PolygonMinis_Texture_01_A);
@@ -854,6 +872,9 @@ void AssertsReference::BuildMaterials()
 	m_Materials[TEXTURE_STR_UI_GAMEPLAY_STATE_FRONT] = std::move(GAMEPLAY_STATE_FRONT);
 	m_Materials[TEXTURE_STR_UI_GAMEPLAY_STATE_BACK] = std::move(GAMEPLAY_STATE_BACK);
 	m_Materials[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD] = std::move(GAMEPLAY_WINNERBOARD);
+
+	m_Materials[TEXTURE_STR_T_Smoke_Tiled_D] = std::move(T_Smoke_Tiled_D);
+	m_Materials[TEXTURE_STR_P_CHERRY_BLOSSOM] = std::move(CHERRY_BLOSSOM);
 }
 
 void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)
@@ -1163,7 +1184,6 @@ void AssertsReference::BuildBoundingBoxMeshes(ID3D12Device* pDevice, ID3D12Graph
 
 void AssertsReference::BuildModel(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string meshName)
 {
-	// meshName으로 같은 메쉬가 있는지 체크
 	if (m_GeometryMesh.count(meshName)) {
 		cout << "이미 해당메쉬는 로드되었습니다." << endl;
 	}
@@ -1372,10 +1392,6 @@ void AssertsReference::BuildSkinnedModelSubMesh(std::string meshName, const std:
 
 void AssertsReference::BuildBasicParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT2 particlePosX, DirectX::XMFLOAT2 particlePosY, DirectX::XMFLOAT2 particlePosZ, DirectX::XMFLOAT2 particleSize, DirectX::XMFLOAT2 particleVelX, DirectX::XMFLOAT2 particleVelY, DirectX::XMFLOAT2 particleVelZ, DirectX::XMFLOAT2 particleStartTime, DirectX::XMFLOAT2 particleLifeTime, DirectX::XMFLOAT2 particlePeriod, DirectX::XMFLOAT2 particleAmplifier)
 {
-	// 입력받아야 할 자료들
-	// world, particle name
-	// particle Param: pos, size,,,, 
-	// build particle verticies
 	std::vector<ParticleVertex> particleVertices;
 	particleVertices.resize(particleCount);
 
@@ -1398,16 +1414,11 @@ void AssertsReference::BuildBasicParticle(ID3D12Device* pDevice, ID3D12GraphicsC
 	{
 		indices[i] = i;
 	}
-
 	AllocateParticleBuffer(pDevice, pCommandList, particleName, particleVertices, indices);
 }
 
 void AssertsReference::BuildCircleParticle(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList, std::string particleName, int particleCount, DirectX::XMFLOAT3 particlePos, DirectX::XMFLOAT2 particleSize, DirectX::XMFLOAT2 particleVelX, DirectX::XMFLOAT2 particleVelY, DirectX::XMFLOAT2 particleVelZ, DirectX::XMFLOAT2 particleStartTime, DirectX::XMFLOAT2 particleLifeTime, DirectX::XMFLOAT2 particlePeriod, DirectX::XMFLOAT2 particleAmplifier, float radius)
 {
-	// 입력받아야 할 자료들
-	// world, particle name
-	// particle Param: pos, size,,,, 
-	// build particle verticies
 	std::vector<ParticleVertex> particleVertices;
 	particleVertices.resize(particleCount);
 
@@ -1426,8 +1437,6 @@ void AssertsReference::BuildCircleParticle(ID3D12Device* pDevice, ID3D12Graphics
 		particleVertices[i].amplifier = MathHelper::RandF(particleAmplifier.x, particleAmplifier.y);
 	}
 
-	///////////// 파티클 메시제작 동일
-	// build paritcle indicies
 	std::vector<std::uint16_t> indices;
 	indices.resize(particleCount);
 
@@ -1435,7 +1444,6 @@ void AssertsReference::BuildCircleParticle(ID3D12Device* pDevice, ID3D12Graphics
 	{
 		indices[i] = i;
 	}
-
 	AllocateParticleBuffer(pDevice, pCommandList, particleName, particleVertices, indices);
 }
 

@@ -42,7 +42,6 @@ Character::Character(std::string type, std::string id) :
 Character::~Character()
 {
 }
-
 void Character::InitializeTransform()
 {
 	GameObject::InitializeTransform();
@@ -914,19 +913,8 @@ void Character::SetParticle(std::string particleName, std::string instID)
 	m_Particles[particleName] = particle;
 }
 
-void Character::TransformParticle(bool isCapture)
+void Character::RespwanParticle(bool isCapture)
 {
 	// 변신시 파티클 on
 	AppContext->DisplayParticle(PARTICLE_NAME_SMOKE, m_MeshName, GetPosition(), true, isCapture);
-}
-
-void Character::ControlBlurEffect(bool onoff)
-{
-//	m_CharacterSwitchBlur = onoff;
-//	GraphicsContext::GetApp()->OnBlurEffect(onoff);
-//
-//	if (onoff)
-//		AppContext->DisplayUI2D(OBJECT_NAME_CRUSH_MIRROR, OBJECT_NAME_CRUSH_MIRROR, XMFLOAT2(0.f, 0.f), XMFLOAT2(Core::g_DisplayWidth * 10, Core::g_DisplayHeight * 10), false, AnchorType::Center);
-//	else
-//		AppContext->HiddenUI2D(OBJECT_NAME_CRUSH_MIRROR, OBJECT_NAME_CRUSH_MIRROR);
 }

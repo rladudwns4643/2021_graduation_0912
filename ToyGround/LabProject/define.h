@@ -82,6 +82,12 @@
 #define TEXTURE_INDEX_UI_GAMEPLAY_STATE_BACK					27
 #define TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD					28
 
+// 파티클
+#define TEXTURE_INDEX_T_Smoke_Tiled_D							29
+#define TEXTURE_INDEX_P_CHERRY_BLOSSOM							30
+
+
+
 // 텍스쳐 스트링
 #define TEXTURE_STR_Cartoon_CubeWorld_Texture			"Cartoon_CubeWorld_Texture"
 #define TEXTURE_STR_PolygonMinis_Texture_01_A			"PolygonMinis_Texture_01_A"
@@ -114,6 +120,11 @@
 #define TEXTURE_STR_UI_GAMEPLAY_STATE_FRONT				"UI_GAMEPLAY_STATE_FRONT"
 #define TEXTURE_STR_UI_GAMEPLAY_STATE_BACK				"UI_GAMEPLAY_STATE_BACK"
 #define TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD				"UI_GAMEPLAY_WINNERBOARD"
+
+#define TEXTURE_STR_T_Smoke_Tiled_D						"T_Smoke_Tiled_D"
+#define TEXTURE_STR_P_CHERRY_BLOSSOM					"P_CHERRY_BLOSSOM"
+
+
 
 // 캐릭터
 enum BoneIndex { Cowboy = 0, GunMan, Count };
@@ -157,6 +168,11 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 #define OBJECT_NAME_GAMEPLAY_STATE_FRONT		"GAMEPLAY_STATE_FRONT"
 #define OBJECT_NAME_GAMEPLAY_STATE_BACK			"GAMEPLAY_STATE_BACK"
 #define OBJECT_NAME_GAMEPLAY_WINNERBOARD		"GAMEPLAY_WINNERBOARD"
+
+// 파티클
+#define PARTICLE_NAME_SMOKE "particle_smoke"
+#define PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER "particle_cherry_blossom_character"
+
 
 // UI Layer
 #define UI_LAYER_BACK -1
@@ -266,3 +282,4 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 
 // 파티클
 #define PARTICLE_NAME_SMOKE "particle_smoke"
+#define PARTICLE_NAME_CHERRY_BLOSSOM_CHARACTER "particle_cherry_blossom_character"

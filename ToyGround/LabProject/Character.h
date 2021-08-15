@@ -35,9 +35,7 @@ public:
 
 public:
 	// 파티클 관련
-	void TransformParticle(bool isCapture = false);
-	void ControlBlurEffect(bool onoff);
-	void SetParticle(std::string particleName, std::string instID);
+	void RespwanParticle(bool isCapture = false);
 
 public:
 	void SetMapName(std::string mapName);
@@ -45,6 +43,7 @@ public:
 	void SetCamera(CameraType cameraType);
 	void SetController();
 	void SetParts(CharacterParts* parts);
+	void SetParticle(std::string particleName, std::string instID);
 
 	virtual bool	SetMesh(std::string meshName, std::string submeshName) override;
 	void			SetMaterial(int materialIndex);
@@ -158,10 +157,5 @@ private:
 	int m_tempHp;
 	int m_tempAttackGauge;
 	int m_tempSkillGauge;
-
-	// Blur Control Param - 자기자신만 소유하고있다.
-	bool		m_CharacterSwitchBlur = false;
-	float		m_BlurTotalTime = 0.f;
-	float		m_BlurLifeTime = 0.5f;
 };
 

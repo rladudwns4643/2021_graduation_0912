@@ -112,6 +112,7 @@ void PlayerController::MouseCallback()
 				Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_PUSH_ANIM, 1, static_cast<int>(MoveState::Attack));
 				CommandCenter::GetApp()->m_StartAttackAnim = true;
 				m_Owner->Attack();
+				m_Owner->RespwanParticle(true);
 			}
 		}
 	}
