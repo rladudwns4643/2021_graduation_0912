@@ -52,12 +52,13 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	case EVENT_ROOM_ENTER: {
 		//누군가 룸에 들어옴(나 포함)
 		int arg_id;
+		string arg_name;
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
+		arg_name = va_arg(ap, string);
 		va_end(ap);
 		SceneManager::GetApp()->ChangeScene(SceneType::eMatchingRoom);
-		cout << "ENTER ROOM id: " << arg_id << endl; //들어온id
 		break;
 	}
 	case EVENT_ROOM_LEAVE: {

@@ -108,11 +108,13 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 	}
 	case EVENT_ROOM_ENTER: {
 		int arg_id{};
+		string arg_name;
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
+		arg_name = va_arg(ap, string);
 		va_end(ap);
-		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_ROOM_ENTER, argsCount, arg_id);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_ROOM_ENTER, argsCount, arg_id, arg_name);
 		break;
 	}
 	case EVENT_ROOM_LEAVE: {

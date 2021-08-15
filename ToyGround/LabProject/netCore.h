@@ -73,9 +73,7 @@ public:
 	void SendBulletPacket(XMFLOAT3& dir, short bullet_type);
 
 	void SendUpdateUserInfo(int mmr);
-
 	void errorDisplay(const char* msg);
-
 private:
 	std::vector<PTC_ROOM> m_recved_room_list{};
 	int m_map_info;
