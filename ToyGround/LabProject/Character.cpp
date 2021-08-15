@@ -479,6 +479,7 @@ void Character::SetLookToCameraLook()
 	degree = 0.f;
 }
 
+//todo: call respawn
 void Character::Respawn()
 {
 	AppContext->DisplayCharacter(m_MapName, m_MeshName, true);
@@ -511,6 +512,8 @@ void Character::Death()
 		EnemyCommandCenter::GetApp()->m_StartDeathAnim = true;
 	}
 #elif DEBUG_SERVER
+
+	//todo: death packet
 	if (NetCore::GetApp()->GetBattleID() == m_PlayerID)
 	{
 		CommandCenter::GetApp()->ResetCommand();
