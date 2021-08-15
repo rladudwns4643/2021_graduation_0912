@@ -44,6 +44,6 @@ private:
 	std::mutex m_MutexChangeScene;
 
 public:
-	string p1name;
-	string p2name;
+	string myname;
+	string eyname;
 };

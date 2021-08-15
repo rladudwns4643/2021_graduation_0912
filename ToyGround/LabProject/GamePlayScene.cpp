@@ -47,15 +47,11 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
 		if (Service::GetApp()->GetMyBattleID() == 1) {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[1]);
-			playername = SceneManager::GetApp()->p1name;
 			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[2]);
-			enemyname = SceneManager::GetApp()->p2name;
 		}
 		else {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[2]);
-			playername = SceneManager::GetApp()->p2name;
 			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[1]);
-			enemyname = SceneManager::GetApp()->p1name;
 		}
 		break;
 	}

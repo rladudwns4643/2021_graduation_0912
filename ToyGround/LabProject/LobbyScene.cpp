@@ -58,12 +58,6 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		arg_name = va_arg(ap, string);
 		va_end(ap);
-		if (arg_id == 1) {
-			SceneManager::GetApp()->p1name = arg_name;
-		}
-		if (arg_id == 2) {
-			SceneManager::GetApp()->p2name = arg_name;
-		}
 		SceneManager::GetApp()->ChangeScene(SceneType::eMatchingRoom);
 		break;
 	}

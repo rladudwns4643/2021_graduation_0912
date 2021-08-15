@@ -261,6 +261,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		lc_packet_userinfo* p = reinterpret_cast<lc_packet_userinfo*>(packet_buf);
 		memcpy(m_client.id_str, p->id_str,sizeof(char) *  MAX_ID_LEN);
 		m_client.mmr = p->mmr;
+		SceneManager::GetApp()->myname = string(p->id_str);
 		Service::GetApp()->AddEvent(EVENT_LOBBY_UPDATE_CLIENT_USERINFO, 1, m_client.mmr);
 		break;
 	}
@@ -319,6 +320,8 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		std::unique_ptr<BattleClient> battleClient = std::make_unique<BattleClient>(p->id);
 		memcpy(battleClient->name, p->name, sizeof(char) * MAX_ID_LEN);
 		string name(p->name);
+		cout << "!!"<< name << endl;
+		SceneManager::GetApp()->eyname = string(p->name);
 		battleClient->mmr = p->mmr;
 		battleClient->m_host = p->isManager;
 		battleClient->m_player_num = p->player_no;
