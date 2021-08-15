@@ -78,11 +78,11 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		}
 		m_IsGameOver = true;
 		m_Winner = arg_winner;
-		if (arg_winner == 1) {
-			cout << "winner: " << SceneManager::GetApp()->p1name << " looser: " << SceneManager::GetApp()->p2name << endl;
+		if (arg_winner == m_PlayerID) {
+			cout << "winner: " << SceneManager::GetApp()->myname<< " looser: " << SceneManager::GetApp()->eyname<< endl;
 		}
-		if (arg_winner == 2) {
-			cout << "winner: " << SceneManager::GetApp()->p2name << " looser: " << SceneManager::GetApp()->p1name << endl;
+		else{
+			cout << "winner: " << SceneManager::GetApp()->eyname << " looser: " << SceneManager::GetApp()->myname << endl;
 		}
 		break;
 	}
