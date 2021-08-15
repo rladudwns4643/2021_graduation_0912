@@ -889,14 +889,13 @@ void Room::ProcMsg(message msg) {
 	case CB_GET_COIN: {
 		if (!IsGameStarted()) break;
 		int t_id{ msg.id };
-		int t_coin{};
 		int t_delete_coin_id{ (int)msg.vec.x };
 		cout << "delete coin id: " << t_delete_coin_id << endl;
 		for (auto& pl : m_players) {
 			if (pl->GetID() == t_id) {
 				pl->SetCoin(pl->GetCoin() + 1);
 				m_coins[t_delete_coin_id] = false;
-				PushUpdateCoinMsg(t_id, t_coin, t_delete_coin_id);
+				PushUpdateCoinMsg(t_id, pl->GetCoin(), t_delete_coin_id);
 			}
 			cout << " PLAYER: " << pl->GetID() << " COIN: " << pl->GetCoin();
 		}

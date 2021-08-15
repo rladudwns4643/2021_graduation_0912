@@ -42,8 +42,4 @@ private:
 	std::array<Scene*, static_cast<int>(SceneType::eCount)> m_Scenes;
 	UINT m_CurScene;
 	std::mutex m_MutexChangeScene;
-
-public:
-	string myname;
-	string eyname;
 };
