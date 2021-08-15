@@ -600,9 +600,13 @@ void GameplayScene::RenderText()
 
 	UITextInfo UIHealth = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_HEALTH);
 	// StartCount
-	m_StartCount;
-	GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 9.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
-	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
+	if (m_StartCount > 2)
+	{
+		auto sc = to_wstring(m_StartCount);
+		GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 3.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+		GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
+		GraphicsContext::GetApp()->DrawD2DText(sc, Core::g_DisplayWidth / 2 - 20, Core::g_DisplayHeight / 2, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	}
 
 	// HP
 	GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 9.f , DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
