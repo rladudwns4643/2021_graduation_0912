@@ -482,6 +482,13 @@ void Character::SetLookToCameraLook()
 void Character::Respawn()
 {
 	AppContext->DisplayCharacter(m_MapName, m_MeshName, true);
+#ifdef DEBUG_CLIENT
+	if (m_PlayerID == 1)
+		m_MyCamera->Update();
+#elif DEBUG_SERVER
+	if (NetCore::GetApp()->GetBattleID() == m_PlayerID)
+		m_MyCamera->Update();
+#endif
 }
 
 void Character::Death()
