@@ -8,6 +8,7 @@
 #include "AssertsReference.h"
 #include "CommandCenter.h"
 #include "EnemyCommandCenter.h"
+#include "SoundManager.h"
 
 using namespace Core;
 
@@ -27,9 +28,13 @@ void TOY_GROUND::Startup(void)
 	m_pAssetsRef = AssertsReference::GetApp();
 	m_CommandCenter = CommandCenter::GetApp();
 	m_EnemyCommandCenter = EnemyCommandCenter::GetApp();
+	m_SoundManager = SoundManager::GetApp();
 
 	// LoadFont
 	GraphicsContext::GetApp()->LoadFont(L"Showcard Gothic", 20);
+
+	// Build Sound
+	SoundManager::GetApp()->ReadySoundManager("./Sounds/");
 
 	// Build Asserts
 	BuildAsserts();
@@ -86,9 +91,12 @@ void TOY_GROUND::Update(float deltaT)
 	// Cursor
 	InputHandler::ShowMouseCursor();
 
-	/*CommandCenter*/
+	// CommandCenter
 	CommandCenter::GetApp()->Order(deltaT);
 	EnemyCommandCenter::GetApp()->Order(deltaT);
+
+	// SoundManager
+	SoundManager::GetApp()->UpdateSoundManager();
 
 	// SceneManage
 	if (m_pSceneManager)

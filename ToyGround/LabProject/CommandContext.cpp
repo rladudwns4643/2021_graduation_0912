@@ -313,7 +313,7 @@ void GraphicsContext::UpdateSkinnedCBs(UINT skinnedCBIndex, SkinnedModelInstance
 	m_SkinnedCBs[skinnedCBIndex]->CopyData(0, skinnedConstants);
 }
 
-void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer)
+void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool isShadow, int zLayer)
 {
 	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
 
@@ -323,6 +323,12 @@ void GraphicsContext::DrawRenderItem(ObjectInfo* objInfo, const std::vector<Game
 
 		if (ri->m_IsVisible && ri->m_ZLayer == zLayer)
 		{
+			if (isShadow)
+			{
+				if (rItems[i.second]->GetMeshName() == OBJECT_MESH_STR_WALL_21 ||
+					rItems[i.second]->GetMeshName() == OBJECT_MESH_STR_WALL_33)
+					continue;
+			}
 #ifdef FRUSTUM_CULLMODE
 			if (rItems[i.second]->m_IsCulling)
 			{

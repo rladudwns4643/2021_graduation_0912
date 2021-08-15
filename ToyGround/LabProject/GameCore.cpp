@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "GameCore.h"
 #include "IGameApp.h"
-#include "Timer.h"
 #include "GraphicsRenderer.h"
 #include "CommandContext.h"
+#include "Timer.h"
 #include "TOY_GROUND.h"
 #include "InputHandler.h"
 #include "netCore.h"
@@ -17,6 +17,9 @@ namespace Core
 	NetCore* g_netcore;
 	Service* g_service;
 #endif
+	int g_DisplayWidth = 1280;
+	int g_DisplayHeight = 720;
+
 	GameCore* g_Core = nullptr;
 	GameTimer* g_GameTimer = nullptr;
 
@@ -29,20 +32,17 @@ namespace Core
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> g_CommandQueue;
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> g_DirectCmdListAlloc;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> g_CommandList;
-
 	Microsoft::WRL::ComPtr<ID2D1DeviceContext2> g_D2dDeviceContext;
 	Microsoft::WRL::ComPtr<IDWriteFactory> g_DWriteFactory;
 
-	int g_DisplayWidth = 1280;
-	int g_DisplayHeight = 720;
 	D3D_DRIVER_TYPE g_d3dDriverType = D3D_DRIVER_TYPE_UNKNOWN;
 	DXGI_FORMAT g_BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	DXGI_FORMAT g_DepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	bool      g_4xMsaaState = false;    // 4X MSAA enabled
-	UINT      g_4xMsaaQuality = 0;		// quality level of 4X MSAA
+	bool      g_4xMsaaState = false;
+	UINT      g_4xMsaaQuality = 0;
 
 	bool g_InputSwitch = false;
-	int g_Chating = 0;	
+	int g_Chating = 0;
 	WCHAR g_ChatBuf[256] = L"";
 	WCHAR g_TempChatBuf[2] = L"";
 }
@@ -97,7 +97,6 @@ void Core::TerminateApplication(IGameApp& game)
 	game.Cleanup();
 	g_Core->ShutdownCore();
 
-	// Context Release
 	GameCore::DestroyApp();
 	GameTimer::DestroyApp();
 #ifdef DEBUG_SERVER
@@ -108,16 +107,11 @@ void Core::TerminateApplication(IGameApp& game)
 
 void Core::CalculateFrameStats()
 {
-	// Code computes the average frames per second, and also the 
-	// average time it takes to render one frame.  These stats 
-	// are appended to the window caption bar.
-
 	static int frameCnt = 0;
 	static float timeElapsed = 0.0f;
 
 	frameCnt++;
 
-	// Compute averages over one second period.
 	if ((g_GameTimer->GetTotalTime() - timeElapsed) >= 1.0f)
 	{
 		float fps = (float)frameCnt; // fps = frameCnt / 1
@@ -132,7 +126,6 @@ void Core::CalculateFrameStats()
 
 		SetWindowText(g_hMainWnd, windowText.c_str());
 
-		// Reset for next average.
 		frameCnt = 0;
 		timeElapsed += 1.0f;
 	}
@@ -141,8 +134,6 @@ void Core::CalculateFrameStats()
 LRESULT CALLBACK
 MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	// Forward hwnd on because we can get messages (e.g., WM_CREATE)
-	// before CreateWindow returns, and thus before mhMainWnd is valid.
 	return GameCore::GetApp()->MsgProc(hwnd, msg, wParam, lParam);
 }
 
@@ -156,10 +147,9 @@ void GameCore::InitializeCore(IGameApp& game)
 	InitDirect3D();
 	OnResize();
 
-	// FullScreenMode
 #ifdef FULLSCREEN_MODE
 	ToggleFullscreenWindow();
-#endif // FULLSCREEN_MODE
+#endif
 
 	ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), nullptr));
 
@@ -167,12 +157,10 @@ void GameCore::InitializeCore(IGameApp& game)
 	m_GraphicsContext->Initialize();
 	m_GraphicsRenderer->Initialize();
 
-	// Execute the initialization commands.
 	ThrowIfFailed(g_CommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { g_CommandList.Get() };
 	g_CommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	// Wait until initialization is complete.
 	FlushCommandQueue();
 }
 
@@ -188,9 +176,6 @@ bool GameCore::UpdateCore(IGameApp& game)
 
 		game.Update(deltaT);
 
-		//PreparePresent();
-
-		/////////////////////////////////////////////////////////////////////////////////////////
 		ThrowIfFailed(g_DirectCmdListAlloc->Reset());
 		ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), Graphics::g_OpaquePSO.Get()));
 
@@ -202,11 +187,9 @@ bool GameCore::UpdateCore(IGameApp& game)
 		g_CommandList->RSSetViewports(1, &mScreenViewport);
 		g_CommandList->RSSetScissorRects(1, &mScissorRect);
 
-		// Indicate a state transition on the resource usage.
 		g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
-		// Clear the back buffer and depth buffer.
 		g_CommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
 		g_CommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
@@ -219,21 +202,16 @@ bool GameCore::UpdateCore(IGameApp& game)
 		g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-		// Done recording commands.
 		ThrowIfFailed(g_CommandList->Close());
 
-		// Add the command list to the queue for execution.
 		ID3D12CommandList* cmdsLists[] = { g_CommandList.Get() };
 		g_CommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-		// D3D11On12 Device Rendering
 		D3D11DevicePreparePresent();
 		game.RenderText();
 		D3D11DeviceExecuteCommandList();
 
-		// swap the back and front buffers
 		MoveToNextFrame();
-
 		FlushCommandQueue();
 	}
 	else
@@ -281,13 +259,11 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (lParam & GCS_RESULTSTR)
 		{
 			wcscat(g_ChatBuf, tc);
-			//wcout << L"완성 - " << g_ChatBuf << endl;
 			g_TempChatBuf[0] = 0;
 		}
 		else if (lParam & GCS_COMPSTR)
 		{
 			wcscpy(g_TempChatBuf, tc);
-			//wcout << L"조합 - " << g_ChatBuf << g_TempChatBuf << endl;
 		}
 
 		return 0;
@@ -295,10 +271,6 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_CHAR:
 		if (!g_InputSwitch)
 		{
-			// if (wParam == 13)
-			// {
-			// 	// cout << "core - enter" << endl;
-			// }
 			InputHandler::ResetWString();
 			InputHandler::OnOffInputStringState(true);
 			InputHandler::SetWString(wParam);
@@ -311,12 +283,10 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			if (wParam == 13)
 			{
-				//cout << "채팅 입력 가능" << endl;
 				g_Chating = 2;
 			}
 			else
 			{
-				//cout << "wParam: " << wParam << endl;
 				InputHandler::SetWString(wParam);
 			}
 			return 0;
@@ -327,14 +297,11 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			int len = wcslen(g_ChatBuf);
 			if (len < 1)
 			{
-				//cout << "BackSpace Press 길이가 0보다 작습니다." << endl;
 				return 0;
 			}
-			// cout << "길이 - " << len << endl;
 			if (g_ChatBuf[len - 1] != 0)
 			{
 				g_ChatBuf[len - 1] = 0;
-				//wcout<< "BackSpace Press and ChatBuf: " << g_ChatBuf << endl;
 				return 0;
 			}
 		}
@@ -343,32 +310,13 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			tc[0] = 0x20;
 			tc[1] = 0;
 			wcscat(g_ChatBuf, tc);
-			//wcout << "Space Press and ChatBuf: " << g_ChatBuf << endl;
 		}
-		//else if (wParam == 13)	// enter
-		//{
-		//	if (g_Chating == 2)
-		//	{
-		//		//cout << "g_EndChating off" << endl;
-		//		g_Chating = 3;
-		//	}
-		//	else
-		//	{
-		//		//cout << "ggggg" << endl;
-		//		g_Chating = 2;
-		//	}
-		//	return 0;
-		//}
 		else
 		{
-			// 그 외 다른 문자
 			tc[0] = wParam;
 			tc[1] = 0;
 			wcscat(g_ChatBuf, tc);
-			//wcout << "Etc Press and ChatBuf: " << g_ChatBuf << endl;
 		}
-
-		// InputHandler::SetWString(wParam);
 
 		return 0;  
 
@@ -387,9 +335,7 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		return 0;
 
-		// WM_SIZE is sent when the user resizes the window.  
 	case WM_SIZE:
-		// Save the new client area dimensions.
 		g_DisplayWidth = LOWORD(lParam);
 		g_DisplayHeight = HIWORD(lParam);
 		if (g_Device)
@@ -406,12 +352,9 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				mMinimized = false;
 				mMaximized = true;
 				OnResize();
-				//ToggleFullscreenWindow();
 			}
 			else if (wParam == SIZE_RESTORED)
 			{
-
-				// Restoring from minimized state?
 				if (mMinimized)
 				{
 					mAppPaused = false;
@@ -419,14 +362,13 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					OnResize();
 				}
 
-				// Restoring from maximized state?
 				else if (mMaximized)
 				{
 					mAppPaused = false;
 					mMaximized = false;
 					OnResize();
 				}
-				else // API call such as SetWindowPos or mSwapChain->SetFullscreenState.
+				else
 				{
 					OnResize();
 				}
@@ -434,7 +376,6 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		return 0;
 
-		// WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
 	case WM_ENTERSIZEMOVE:
 #ifdef ON_PAUSE
 		mAppPaused = true;
@@ -443,8 +384,6 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #endif
 		return 0;
 
-		// WM_EXITSIZEMOVE is sent when the user releases the resize bars.
-		// Here we reset everything based on the new window dimensions.
 	case WM_EXITSIZEMOVE:
 		mAppPaused = false;
 		mResizing = false;
@@ -452,12 +391,10 @@ LRESULT GameCore::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		OnResize();
 		return 0;
 
-		// WM_DESTROY is sent when the window is being destroyed.
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
 
-		// Catch this message so to prevent the window from becoming too small.
 	case WM_GETMINMAXINFO:
 		((MINMAXINFO*)lParam)->ptMinTrackSize.x = 200;
 		((MINMAXINFO*)lParam)->ptMinTrackSize.y = 200;
@@ -498,11 +435,9 @@ void GameCore::PreparePresent()
 	g_CommandList->RSSetViewports(1, &mScreenViewport);
 	g_CommandList->RSSetScissorRects(1, &mScissorRect);
 
-	// Indicate a state transition on the resource usage.
 	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(),
 		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
-	// Clear the back buffer and depth buffer.
 	g_CommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Black, 0, nullptr);
 	g_CommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
@@ -511,17 +446,14 @@ void GameCore::PreparePresent()
 
 void GameCore::MoveToNextFrame()
 {
-	// swap the back and front buffers
 	ThrowIfFailed(mSwapChain->Present(0, 0));
 	mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
 }
 
 void GameCore::D3D11DevicePreparePresent()
 {
-	// Acquire our wrapped render target resource for the current back buffer.
 	m_D3d11On12Device->AcquireWrappedResources(m_WrappedBackBuffers[mCurrBackBuffer].GetAddressOf(), 1);
 
-	// Render text directly to the back buffer.
 	g_D2dDeviceContext->SetTarget(m_D2dRenderTargets[mCurrBackBuffer].Get());
 	g_D2dDeviceContext->BeginDraw();
 }
@@ -530,12 +462,8 @@ void GameCore::D3D11DeviceExecuteCommandList()
 {
 	ThrowIfFailed(g_D2dDeviceContext->EndDraw());
 
-	// Release our wrapped render target resource. Releasing 
-	// transitions the back buffer resource to the state specified
-	// as the OutState when the wrapped resource was created.
 	m_D3d11On12Device->ReleaseWrappedResources(m_WrappedBackBuffers[mCurrBackBuffer].GetAddressOf(), 1);
 
-	// Flush to submit the 11 command list to the shared command queue.
 	m_D3d11DeviceContext->Flush();
 }
 
@@ -568,7 +496,6 @@ void GameCore::InitMainWindow()
 		g_AppName, g_AppName,
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), 0, 0, g_hAppInst, 0);
 #else
-	// Compute window rectangle dimensions based on requested client area dimensions.
 	RECT R = { 0, 0, g_DisplayWidth, g_DisplayHeight };
 	AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW, false);
 	int width = R.right - R.left;
@@ -577,7 +504,7 @@ void GameCore::InitMainWindow()
 	g_hMainWnd = CreateWindow(
 		g_AppName, g_AppName,
 		WS_OVERLAPPED | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, g_hAppInst, 0);
-#endif // FULLSCREEN_MODE
+#endif
 
 	if (!g_hMainWnd)
 	{
@@ -589,12 +516,10 @@ void GameCore::InitMainWindow()
 	ShowWindow(g_hMainWnd, SW_MAXIMIZE);
 #else
 	ShowWindow(g_hMainWnd, SW_SHOW);
-#endif // FULLSCREEN_MODE
+#endif
 
 	ShowWindow(g_hMainWnd, SW_SHOW);
 	UpdateWindow(g_hMainWnd);
-
-	//InputHandler::ClipCursorToScreen();
 }
 
 void GameCore::ToggleFullscreenWindow(IDXGISwapChain* pSwapChain)
@@ -616,17 +541,12 @@ void GameCore::ToggleFullscreenWindow(IDXGISwapChain* pSwapChain)
 	}
 	else
 	{
-		// Save the old window rect so we can restore it when exiting fullscreen mode.
-		// GetWindowRect(m_hwnd, &m_windowRect);
-
-		// Make the window borderless so that the client area can fill the screen.
 		SetWindowLong(g_hMainWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW & ~(WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SYSMENU | WS_THICKFRAME));
 
 		RECT fullscreenWindowRect;
 
 		if (pSwapChain)
 		{
-			// Get the settings of the display on which the app's window is currently displayed
 			ComPtr<IDXGIOutput> pOutput;
 			ThrowIfFailed(pSwapChain->GetContainingOutput(&pOutput));
 			DXGI_OUTPUT_DESC Desc;
@@ -635,12 +555,10 @@ void GameCore::ToggleFullscreenWindow(IDXGISwapChain* pSwapChain)
 		}
 		else
 		{
-			// Get the settings of the primary display
 			DEVMODE devMode = {};
 			devMode.dmSize = sizeof(DEVMODE);
 			EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &devMode);
 
-			// Set global param
 			g_DisplayWidth = devMode.dmPelsWidth;
 			g_DisplayHeight = devMode.dmPelsHeight;
 
@@ -675,7 +593,6 @@ void GameCore::InitDirect3D()
 	D2D1_FACTORY_OPTIONS d2dFactoryOptions = {};
 
 #if defined(DEBUG) || defined(_DEBUG) 
-	// Enable the D3D12 debug layer.
 	{
 		ComPtr<ID3D12Debug> debugController;
 		ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
@@ -694,14 +611,11 @@ void GameCore::InitDirect3D()
 	Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
 	DXGI_ADAPTER_DESC adapterDesc;
 
-	// 그래픽 카드 어뎁터 체크 
-	// 요청한 그래픽 카드 인터페이스에 대한 어뎁터가 없습니다.
 	ThrowIfFailed(mdxgiFactory->EnumAdapters(0, (IDXGIAdapter**)&pAdapter));
 
 	pAdapter->GetDesc(&adapterDesc);
 	ui64VideoMemory = (std::size_t)(adapterDesc.DedicatedVideoMemory + adapterDesc.SharedSystemMemory);
 
-	// Compare Video Memory and Find better Gpu
 	int gpu_idx = 0;
 	int select = 0;
 	std::size_t comparison_videoMemory;
@@ -721,13 +635,11 @@ void GameCore::InitDirect3D()
 
 	mdxgiFactory->EnumAdapters(select, &pAdapter);
 
-	// Try to create hardware device.
 	HRESULT hardwareResult = D3D12CreateDevice(
-		pAdapter.Get(),             // the best adapter
+		pAdapter.Get(),
 		D3D_FEATURE_LEVEL_11_0,
 		IID_PPV_ARGS(&g_Device));
 
-	// Fallback to WARP device.
 	if (FAILED(hardwareResult))
 	{
 		ComPtr<IDXGIAdapter> pWarpAdapter;
@@ -746,10 +658,6 @@ void GameCore::InitDirect3D()
 	mDsvDescriptorSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 	mCbvSrvUavDescriptorSize = g_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	// Check 4X MSAA quality support for our back buffer format.
-	// All Direct3D 11 capable devices support 4X MSAA for all render 
-	// target formats, so we only need to check quality support.
-
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
 	msQualityLevels.Format = g_BackBufferFormat;
 	msQualityLevels.SampleCount = 4;
@@ -766,7 +674,6 @@ void GameCore::InitDirect3D()
 #ifdef _DEBUG
 	LogAdapters();
 #endif
-
 	CreateCommandObjects();
 	CreateSwapChain();
 	CreateRtvAndDsvDescriptorHeaps();
@@ -780,12 +687,10 @@ void GameCore::OnResize()
 	assert(mSwapChain);
 	assert(g_DirectCmdListAlloc);
 
-	// Flush before changing any resources.
 	FlushCommandQueue();
 
 	ThrowIfFailed(g_CommandList->Reset(g_DirectCmdListAlloc.Get(), nullptr));
 
-	// Release the previous resources we will be recreating.
 	for (int i = 0; i < SwapChainBufferCount; ++i) {
 		mSwapChainBuffer[i].Reset();
 		m_WrappedBackBuffers[i].Reset();
@@ -793,12 +698,9 @@ void GameCore::OnResize()
 	}
 	mDepthStencilBuffer.Reset();
 
-	// DirectX11은 리소스의 '지연된 파괴'를 하기떄문에 일반적으로 파기해야하는 경우
-	// 리소스를 렌더타겟에서 완전히 바인딩 해제하고 Flush해야한다.
 	g_D2dDeviceContext->SetTarget(nullptr);
 	m_D3d11DeviceContext->Flush();
 
-	// Resize the swap chain.
 	ThrowIfFailed(mSwapChain->ResizeBuffers(
 		SwapChainBufferCount,
 		g_DisplayWidth, g_DisplayHeight,
@@ -813,7 +715,6 @@ void GameCore::OnResize()
 		ThrowIfFailed(mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i])));
 		g_Device->CreateRenderTargetView(mSwapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
 
-		// Create a wrapped 11On12 resource of this back buffer.
 		D3D11_RESOURCE_FLAGS d3d11Flags = { D3D11_BIND_RENDER_TARGET };
 		ThrowIfFailed(m_D3d11On12Device->CreateWrappedResource(
 			mSwapChainBuffer[i].Get(),
@@ -823,7 +724,6 @@ void GameCore::OnResize()
 			IID_PPV_ARGS(&m_WrappedBackBuffers[i])
 		));
 
-		// Create a render target for D2D to draw directly to this back buffer.
 		ComPtr<IDXGISurface> surface;
 		ThrowIfFailed(m_WrappedBackBuffers[i].As(&surface));
 		ThrowIfFailed(g_D2dDeviceContext->CreateBitmapFromDxgiSurface(
@@ -837,7 +737,6 @@ void GameCore::OnResize()
 		ThrowIfFailed(g_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&g_DirectCmdListAlloc)));
 	}
 
-	// Create the depth/stencil buffer and view.
 	D3D12_RESOURCE_DESC depthStencilDesc;
 	depthStencilDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	depthStencilDesc.Alignment = 0;
@@ -845,12 +744,6 @@ void GameCore::OnResize()
 	depthStencilDesc.Height = g_DisplayHeight;
 	depthStencilDesc.DepthOrArraySize = 1;
 	depthStencilDesc.MipLevels = 1;
-
-	// Correction 11/12/2016: SSAO chapter requires an SRV to the depth buffer to read from 
-	// the depth buffer.  Therefore, because we need to create two views to the same resource:
-	//   1. SRV format: DXGI_FORMAT_R24_UNORM_X8_TYPELESS
-	//   2. DSV Format: DXGI_FORMAT_D24_UNORM_S8_UINT
-	// we need to create the depth buffer resource with a typeless format.  
 	depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 
 	depthStencilDesc.SampleDesc.Count = g_4xMsaaState ? 4 : 1;
@@ -870,7 +763,6 @@ void GameCore::OnResize()
 		&optClear,
 		IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf())));
 
-	// Create descriptor to mip level 0 of entire resource using the format of the resource.
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
@@ -878,19 +770,15 @@ void GameCore::OnResize()
 	dsvDesc.Texture2D.MipSlice = 0;
 	g_Device->CreateDepthStencilView(mDepthStencilBuffer.Get(), &dsvDesc, DepthStencilView());
 
-	// Transition the resource from its initial state to be used as a depth buffer.
 	g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mDepthStencilBuffer.Get(),
 		D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE));
 
-	// Execute the resize commands.
 	ThrowIfFailed(g_CommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { g_CommandList.Get() };
 	g_CommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	// Wait until resize is complete.
 	FlushCommandQueue();
 
-	// Update the viewport transform to cover the client area.
 	mScreenViewport.TopLeftX = 0;
 	mScreenViewport.TopLeftY = 0;
 	mScreenViewport.Width = static_cast<float>(g_DisplayWidth);
@@ -900,19 +788,12 @@ void GameCore::OnResize()
 
 	mScissorRect = { 0, 0, g_DisplayWidth, g_DisplayHeight };
 
-	// Set Lens
 	if (TOY_GROUND::GetApp())
-	{
 		TOY_GROUND::GetApp()->OnResize();
-	}
-
-	//InputHandler::ClipCursorToScreen();
 }
 
 void GameCore::CreateID3D11On12Device(UINT dxgiFactoryFlags, UINT d3d11DeviceFlags, D2D1_FACTORY_OPTIONS d2dFactoryOptions)
 {
-	// Create an 11 device wrapped around the 12 device and share
-// 12's command queue.
 	Microsoft::WRL::ComPtr<ID3D11Device> d3d11Device;
 	ThrowIfFailed(D3D11On12CreateDevice(
 		g_Device.Get(),
@@ -929,8 +810,6 @@ void GameCore::CreateID3D11On12Device(UINT dxgiFactoryFlags, UINT d3d11DeviceFla
 
 	ThrowIfFailed(d3d11Device.As(&m_D3d11On12Device));
 
-	// Create D2D Factory
-	// Create D2D/DWrite components.
 	D2D1_DEVICE_CONTEXT_OPTIONS deviceOptions = D2D1_DEVICE_CONTEXT_OPTIONS_NONE;
 	ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory3), &d2dFactoryOptions, &m_D2dFactory));
 	ComPtr<IDXGIDevice> dxgiDevice;
@@ -939,8 +818,6 @@ void GameCore::CreateID3D11On12Device(UINT dxgiFactoryFlags, UINT d3d11DeviceFla
 	ThrowIfFailed(m_D2dDevice->CreateDeviceContext(deviceOptions, &g_D2dDeviceContext));
 	ThrowIfFailed(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &g_DWriteFactory));
 
-	// Query the desktop's dpi settings, which will be used to create
-	// D2D's render targets.
 	float dpiX;
 	float dpiY;
 	dpiX = GetDpiForWindow(Core::g_hMainWnd);
@@ -967,19 +844,15 @@ void GameCore::CreateCommandObjects()
 	ThrowIfFailed(g_Device->CreateCommandList(
 		0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		g_DirectCmdListAlloc.Get(), // Associated command allocator
-		nullptr,                   // Initial PipelineStateObject
+		g_DirectCmdListAlloc.Get(),
+		nullptr,
 		IID_PPV_ARGS(g_CommandList.GetAddressOf())));
 
-	// 닫힌 상태로 시작한. 이후 명령 리스트를 처음 참조할 때 
-	// Reset을 호출하는데, Reset을 호출하려면 명령 리스트가
-	// 닫혀 있어야하기 때문이다.
 	g_CommandList->Close();
 }
 
 void GameCore::CreateSwapChain()
 {
-	// Release the previous swapchain we will be recreating.
 	mSwapChain.Reset();
 
 	DXGI_SWAP_CHAIN_DESC sd;
@@ -999,7 +872,6 @@ void GameCore::CreateSwapChain()
 	sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	// Note: Swap chain uses queue to perform flush.
 	ThrowIfFailed(mdxgiFactory->CreateSwapChain(
 		g_CommandQueue.Get(),
 		&sd,
@@ -1028,23 +900,14 @@ void GameCore::CreateRtvAndDsvDescriptorHeaps()
 
 void GameCore::FlushCommandQueue()
 {
-	// Advance the fence value to mark commands up to this fence point.
 	mCurrentFence++;
 
-	// Add an instruction to the command queue to set a new fence point.  Because we 
-	// are on the GPU timeline, the new fence point won't be set until the GPU finishes
-	// processing all the commands prior to this Signal().
 	ThrowIfFailed(g_CommandQueue->Signal(mFence.Get(), mCurrentFence));
 
-	// Wait until the GPU has completed commands up to this fence point.
 	if (mFence->GetCompletedValue() < mCurrentFence)
 	{
 		HANDLE eventHandle = CreateEventEx(nullptr, (LPCWSTR)false, false, EVENT_ALL_ACCESS);
-
-		// Fire event when GPU hits current fence.  
 		ThrowIfFailed(mFence->SetEventOnCompletion(mCurrentFence, eventHandle));
-
-		// Wait until the GPU hits current fence event is fired.
 		WaitForSingleObject(eventHandle, INFINITE);
 		CloseHandle(eventHandle);
 	}
@@ -1123,7 +986,6 @@ void GameCore::LogOutputDisplayModes(IDXGIOutput* output, DXGI_FORMAT format)
 	UINT count = 0;
 	UINT flags = 0;
 
-	// Call with nullptr to get list count.
 	output->GetDisplayModeList(format, flags, &count, nullptr);
 
 	std::vector<DXGI_MODE_DESC> modeList(count);

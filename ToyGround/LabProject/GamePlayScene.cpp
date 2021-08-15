@@ -527,7 +527,7 @@ void GameplayScene::WriteShadow()
 	// Shadow Props
 	for (std::string prop : AppContext->m_Maps[m_MapName]->propTypeVector)
 	{
-		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[prop], AppContext->m_RItemsVec, true);
 	}
 
 	// Gem
