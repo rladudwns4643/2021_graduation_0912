@@ -323,6 +323,15 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_TIMER, argsCount, t);
 		break;
 	}
+	case EVENT_GAME_WIN_SATISFACTION: {
+		int arg_id;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		va_end(ap);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_WIN_SATISFACTION, argsCount, arg_id);
+		break;
+	}
 	case EVENT_GAME_UPDATE_COIN: {
 		int arg_id;
 		int arg_coin_cnt;

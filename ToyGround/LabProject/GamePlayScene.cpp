@@ -106,6 +106,16 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 //#endif LOG_ON
 		break;
 	}
+	case EVENT_GAME_WIN_SATISFACTION: {
+		int arg_id;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		va_end(ap);
+
+		cout << "WIN_SATISFACTION: " << arg_id << endl;
+		break;
+	}
 	case EVENT_GAME_UPDATE_COIN: {
 		int arg_id;
 		int arg_coin_cnt;

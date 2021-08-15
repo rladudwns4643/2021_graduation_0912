@@ -182,6 +182,7 @@ struct cl_packet_cancel_automatch {
 #define BC_ADD_COIN				28
 #define BC_RELOAD_BULLET		29
 #define BC_UPDATE_COIN			30
+#define BC_WIN_SATISFACTION		130
 #define BC_PLAYER_POS			31
 #define BC_PLAYER_ROT			32
 #define BC_OBJECT_POS			33
@@ -307,6 +308,12 @@ struct bc_packet_update_coin {
 	int id;
 	int coin_cnt;
 	int delete_coin_id;
+};
+struct bc_packet_win_satisfaction {
+	BYTE size;
+	BYTE type;
+
+	int satisfaction_id;
 };
 struct bc_packet_left_time {
 	BYTE size;

@@ -185,13 +185,7 @@ void Room::AnimationUpdate(float elapsedMilliSec)
 		int id{ m_players[i]->GetID() };
 		if (id != -1) {//not unset
 			m_players[i]->Update(elapsedMilliSec);
-			//anim
 			int anim_type{ m_players[i]->GetAnimType() };
-			int t_id = abs(id - 1);
-			if (anim_type != m_players[i]->GetPrevAnimType()) {
-				//PushAnimMsg(t_id, id, anim_type);
-				//m_players[i]->SetPrevAnimType(anim_type);
-			}
 		}
 	}
 }
@@ -339,7 +333,8 @@ void Room::CreateAddCoinEvent() {
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EVENT_TYPE::EV_ADD_COIN };
 	BattleServer::GetInstance()->AddTimer(ev);
 	
-	PTC_VECTOR coin_pos{ static_cast<float>(rand() % 300 - 150) , 0, static_cast<float>(rand() % 300 - 150) };
+	srand(time(NULL));
+	PTC_VECTOR coin_pos{ static_cast<float>(rand() % 400 - 200) , 0, static_cast<float>(rand() % 400 - 200) };
 	m_coins[m_coin_cur] = true;
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		int id = m_players[i]->GetID();
@@ -675,6 +670,16 @@ void Room::PushUpdateCoinMsg(int update_id, int update_cnt, int delete_coin_id) 
 	p.id = update_id;
 	p.coin_cnt = update_cnt;
 	p.delete_coin_id = delete_coin_id;
+	for (const auto& pl : m_players) {
+		PushSendMsg(pl->GetID(), &p);
+	}
+}
+
+void Room::PushNewWinSatisfaction(int satisfaction_id) {
+	bc_packet_win_satisfaction p;
+	p.size = sizeof(p);
+	p.type = BC_WIN_SATISFACTION;
+	p.satisfaction_id = satisfaction_id;
 	for (const auto& pl : m_players) {
 		PushSendMsg(pl->GetID(), &p);
 	}
