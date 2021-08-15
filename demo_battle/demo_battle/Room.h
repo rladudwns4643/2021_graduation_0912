@@ -68,8 +68,16 @@ public:		//send msg
 	void PushRemoveBulletMsg(int bullet_id);
 	void PushHitMsg(int hit_id, int dmg);
 	void PushDieMsg(int die_id);
+	void PushAddCoinMsg(PTC_VECTOR coin_pos, int coin_id);
 	void PushUpdateCoinMsg(int update_id, int update_cnt, int delete_coin_id);
 	void PushNewWinSatisfaction(int satisfaction_id);
+	void PushGameOverMsg(int winner_id);
+	void PushSendTimeMsg(char left_time);
+	void PushReloadBulletMsg();
+	void PushPlayerLookMsg(int to, int from, PTC_VECTOR look);
+	void PushRoundStartMsg();
+	void PushRoomLeaveMsg(int to, int leave);
+	void PushGameStartMsg(int id, PTC_START_INFO* player_info);
 
 	void PushReadyMsg(int id, bool ready);
 	void PushUnReadyMsg(int id);

@@ -297,7 +297,7 @@ void Room::LeaveRoom(int id) {
 	for (const auto& p : m_players) {
 		leaverID = p->GetID();
 		if (leaverID != -1 && leaverID != id) { //나간사람일 경우
-			BattleServer::GetInstance()->SendRoomLeavePacket(leaverID, id);
+			PushRoomLeaveMsg(leaverID, id);
 		}
 	}
 }
@@ -336,12 +336,7 @@ void Room::CreateAddCoinEvent() {
 	srand(time(NULL));
 	PTC_VECTOR coin_pos{ static_cast<float>(rand() % 400 - 200) , 0, static_cast<float>(rand() % 400 - 200) };
 	m_coins[m_coin_cur] = true;
-	for (int i = 0; i < MAX_PLAYER; ++i) {
-		int id = m_players[i]->GetID();
-		if (id != -1) {
-			BattleServer::GetInstance()->SendAddCoinPacket(id, coin_pos, m_coin_cur);
-		}
-	}
+	PushAddCoinMsg(coin_pos, m_coin_cur);
 	m_coin_cur++;
 }
 
@@ -350,14 +345,7 @@ void Room::CreateReloadBulletEvent(){
 	if (!IsGameStarted()) return;
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(RELOAD_BULLET_TIME), EVENT_TYPE::EV_RELOAD_BULLET };
 	BattleServer::GetInstance()->AddTimer(ev);
-
-	for (int i = 0; i < MAX_PLAYER; ++i) {
-		int id = m_players[i]->GetID();
-		if (id != -1) {
-			BattleServer::GetInstance()->SendReloadBulletPacket(id);
-		}
-	}
-
+	PushReloadBulletMsg();
 }
 
 void Room::SendLeftTimePacket() {
@@ -365,10 +353,7 @@ void Room::SendLeftTimePacket() {
 	if (m_leftTime > 1 && m_isGameStarted) {
 		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(1), EVENT_TYPE::EV_TICK };
 		BattleServer::GetInstance()->AddTimer(ev);
-		for (int i = 0; i < MAX_PLAYER; ++i) {
-			int id = m_players[i]->GetID();
-			if (id != -1) BattleServer::GetInstance()->SendLeftTimePacket(id, m_leftTime);
-		}
+		PushSendTimeMsg(m_leftTime);
 	}
 }
 
@@ -389,6 +374,7 @@ void Room::CheckGameState() {
 		for (int i = 0; i < MAX_PLAYER; ++i) {
 			if (m_players[i]->GetCoin() > WIN_COIN_CNT && !m_players[i]->GetWinSatisfaction()) {
 				m_players[i]->SetWinSatisfaction(true);
+				PushNewWinSatisfaction(m_players[i]->GetID());
 				m_players[i]->SetWinTime(m_leftTime - NEED_TIME_TO_WIN);
 				//GameOver(m_players[i]->GetID());
 			}
@@ -408,7 +394,7 @@ void Room::GameStart(){
 		PTC_START_INFO info;
 		info.id = m_players[i]->GetID();
 		info.spawn_pos = SR::g_spawn_pos.GetSpawnPosition(SpawnPosition::ePositionType(i));
-		BattleServer::GetInstance()->SendGameStartPacket(info.id, &info);
+		PushGameStartMsg(info.id, &info);
 	}
 
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(2), EVENT_TYPE::EV_WORLD_UPDATE };
@@ -422,7 +408,7 @@ void Room::RoundStart() {
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		const int& id = m_players[i]->GetID();
 		if (id != -1) {
-			BattleServer::GetInstance()->SendRoundStartPacket(id);
+			PushRoundStartMsg();
 			CreateAddCoinEvent();
 		}
 	}
@@ -434,9 +420,7 @@ void Room::GameOver(int winner) {
 	BattleServer::GetInstance()->AddTimer(ev);
 	m_isGameStarted = false;
 	m_isEnterable = true;
-	for (const auto& pl : m_players) {
-		BattleServer::GetInstance()->SendGameOverPacket(pl->GetID(), winner);
-	}
+	PushGameOverMsg(winner);
 }
 
 void Room::UpdateUserInfo_DB(int winner) {
@@ -663,6 +647,20 @@ void Room::PushAnimPopMsg(int to, int from, int animType) {
 	PushSendMsg(to, &p);
 }
 
+void Room::PushAddCoinMsg(PTC_VECTOR coin_pos, int coin_id) {
+//#ifdef LOG_ON
+	cout << "SendAddCoinPacket: coin_pos: [" << coin_pos.x << ", " << coin_pos.y << ", " << coin_pos.z << "]" << endl;
+//#endif LOG_ON
+	bc_packet_add_coin p;
+	p.size = sizeof(p);
+	p.type = BC_ADD_COIN;
+	p.pos = coin_pos;
+	p.coin_id = coin_id;
+	for (const auto& pl : m_players) {
+		PushSendMsg(pl->GetID(), &p);
+	}
+}
+
 void Room::PushUpdateCoinMsg(int update_id, int update_cnt, int delete_coin_id) {
 	bc_packet_update_coin p;
 	p.size = sizeof(p);
@@ -683,6 +681,80 @@ void Room::PushNewWinSatisfaction(int satisfaction_id) {
 	for (const auto& pl : m_players) {
 		PushSendMsg(pl->GetID(), &p);
 	}
+}
+
+void Room::PushGameOverMsg(int winner_id) {
+	bc_packet_game_over p;
+	p.size = sizeof(p);
+	p.type = BC_GAME_OVER;
+	p.win_team = winner_id;
+
+	for (const auto& pl : m_players) {
+		PushSendMsg(pl->GetID(), &p);
+	}
+}
+
+void Room::PushSendTimeMsg(char left_time) {
+	bc_packet_left_time p;
+	p.size = sizeof(p);
+	p.type = BC_LEFT_TIME;
+	p.left_time = left_time;
+	for (const auto& pl : m_players) {
+		PushSendMsg(pl->GetID(), &p);
+	}
+}
+
+void Room::PushReloadBulletMsg() {
+	bc_packet_reload_bullet p;
+	p.size = sizeof(p);
+	p.type = BC_RELOAD_BULLET;
+	for (const auto& pl : m_players) {
+		PushSendMsg(pl->GetID(), &p);
+	}
+}
+
+void Room::PushPlayerLookMsg(int to, int from, PTC_VECTOR look) {
+#ifdef LOG_ON
+	cout << "SendPlayerRotation: " <<
+		"to: " << to <<
+		" from: " << from << endl;
+#endif
+	bc_packet_player_rot p;
+	p.size = sizeof(p);
+	p.type = BC_PLAYER_ROT;
+	p.id = from;
+	p.look = look;
+	PushSendMsg(to, &p);
+}
+
+void Room::PushRoundStartMsg() {
+	bc_packet_round_start p;
+	p.size = sizeof(p);
+	p.type = BC_ROUND_START;
+	for (const auto& pl : m_players) {
+		PushSendMsg(pl->GetID(), &p);
+	}
+}
+
+void Room::PushRoomLeaveMsg(int to, int leave) {
+#ifdef LOG_ON
+	cout << "SendRoomLeavePacket: " <<
+		"to: " << to <<
+		" leaver: " << leave << endl;
+#endif
+	bc_packet_room_leaved p;
+	p.size = sizeof(p);
+	p.type = BC_ROOM_LEAVED;
+	p.id = leave;
+	PushSendMsg(to, &p);
+}
+
+void Room::PushGameStartMsg(int id, PTC_START_INFO* player_info) {
+	bc_packet_room_start p;
+	p.size = sizeof(p);
+	p.type = BC_ROOM_START;
+	memcpy(&p.start_info, player_info, sizeof(PTC_START_INFO));
+	PushSendMsg(id, &p);
 }
 
 void Room::MakeMove(int id) {
@@ -843,7 +915,7 @@ void Room::ProcMsg(message msg) {
 				}
 				else {
 					PTC_VECTOR recv_look{ msg.vec.x, msg.vec.y, msg.vec.z };
-					BattleServer::GetInstance()->SendPlayerLook(id, msg.id, recv_look);
+					PushPlayerLookMsg(id, msg.id, recv_look);
 				}
 			}
 		}
@@ -874,3 +946,4 @@ void Room::SetEmptyBullet()
 	m_q_bullet.pop();
 	m_bullets[pop] = false;
 }
+
