@@ -2,6 +2,7 @@
 #include "Singleton.h"
 #include "GameObject.h"
 #include "ObjectInfo.h"
+#include "Service.h"
 
 namespace Core {
 	extern int g_DisplayWidth;

@@ -334,8 +334,20 @@ void Room::CreateAddCoinEvent() {
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EVENT_TYPE::EV_ADD_COIN };
 	BattleServer::GetInstance()->AddTimer(ev);
 	
-	srand(time(NULL));
 	PTC_VECTOR coin_pos{ static_cast<float>(rand() % 400 - 200) , 0, static_cast<float>(rand() % 400 - 200) };
+	m_coins[m_coin_cur] = true;
+	PushAddCoinMsg(coin_pos, m_coin_cur);
+	m_coin_cur++;
+}
+
+void Room::AddCoinByDie(int die_id) {
+	if (this == nullptr) return;
+	if (!IsGameStarted()) return;
+
+	PTC_VECTOR coin_pos{ 
+		static_cast<float>(m_players[die_id]->GetPosition().x + rand() % 400 - 200),
+		0, 
+		static_cast<float>(m_players[die_id]->GetPosition().z + rand() % 400 - 200) };
 	m_coins[m_coin_cur] = true;
 	PushAddCoinMsg(coin_pos, m_coin_cur);
 	m_coin_cur++;
@@ -526,10 +538,8 @@ void Room::PushShootBulletMsg(int from, short bullet_type, short bullet_idx, PTC
 	p.cam_look = look;
 	p.bullet_pos = pos;
 
-	int id{};
 	for (const auto& pl : m_players) {
-		id = pl->GetID();
-		if (id != -1) PushSendMsg(id, &p);
+		PushSendMsg(pl->GetID(), &p);
 	}
 }
 
@@ -557,17 +567,13 @@ void Room::PushCallBackHitMsg(int be_hit_id) {
 }
 
 void Room::PushDieMsg(int die_id) {
-	bc_packet_die p;
-	p.type = BC_DIE;
+	bc_packet_callback_die p;
+	p.type = BC_CALLBACK_DIE;
 	p.size = sizeof(p);
 	p.id = die_id;
 
-	int id{};
 	for (const auto& pl : m_players) {
-		id = pl->GetID();
-		if (id != -1) {
-			PushSendMsg(id, &p);
-		}
+		PushSendMsg(pl->GetID(), &p);
 	}
 }
 
@@ -884,6 +890,17 @@ void Room::ProcMsg(message msg) {
 		int a_id = 1;
 		if (t_id == 1) a_id = 2;
 		PushAnimPopMsg(a_id, t_id, t_anim);
+		break;
+	}
+	case CB_REQUEST_DIE: {
+		cout << "REQ DIE" << endl;
+		int t_id{ msg.id };
+
+		PushDieMsg(t_id);
+		for (int i = m_players[t_id]->GetCoin(); i > 0; --i) {
+			AddCoinByDie(t_id);
+		}
+		m_players[t_id]->SetCoin(0);
 		break;
 	}
 	case CB_GET_COIN: {

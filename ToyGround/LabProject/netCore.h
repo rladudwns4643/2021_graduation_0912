@@ -71,6 +71,7 @@ public:
 	void SendPositionPacket(XMFLOAT3 pos, int anim_type);
 	void SendLookVectorPacket(XMFLOAT3& look);
 	void SendBulletPacket(XMFLOAT3& dir, short bullet_type);
+	void SendRequestDiePacket(int id);
 
 	void SendUpdateUserInfo(int mmr);
 	void errorDisplay(const char* msg);

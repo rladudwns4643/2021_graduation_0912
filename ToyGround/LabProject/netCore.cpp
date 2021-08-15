@@ -417,26 +417,26 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_UPDATE_COIN: {
-//#ifdef DEB
+#ifdef DEB
 		cout << "BC_UPDATE_COIN\n";
-//#endif
+#endif
 		bc_packet_update_coin* p = reinterpret_cast<bc_packet_update_coin*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_COIN, 3, p->id, p->coin_cnt, p->delete_coin_id);
 		break;
 	}
 
 	case BC_WIN_SATISFACTION: {
-		//#ifdef DEB
+#ifdef DEB
 		cout << "BC_WIN_SATISFACTION\n";
-		//#endif
+#endif
 		bc_packet_win_satisfaction* p = reinterpret_cast<bc_packet_win_satisfaction*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_WIN_SATISFACTION, 1, p->satisfaction_id);
 		break;
 	}
 	case BC_PLAYER_POS: {
-//#ifdef DEB
+#ifdef DEB
 		cout << "BC_PLAYER_POS\n";
-//#endif
+#endif
 		bc_packet_player_pos* p = reinterpret_cast<bc_packet_player_pos*>(packet_buf);
 
 		XMFLOAT3 arg_pos;
@@ -448,9 +448,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_PLAYER_ROT: {
-//#ifdef DEB
+#ifdef DEB
 		cout << "BC_PLAYER_ROT\n";
-//#endif
+#endif
 		bc_packet_player_rot* p = reinterpret_cast<bc_packet_player_rot*>(packet_buf);
 
 		XMFLOAT3 arg_look;
@@ -462,9 +462,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_CALLBACK_BULLET: {
-//#ifdef DEB
+#ifdef DEB
 		cout << "BC_CALLBACK_BULLET\n";
-//#endif
+#endif
 		bc_packet_callback_bullet* p = reinterpret_cast<bc_packet_callback_bullet*>(packet_buf);
 
 		int arg_shootter;
@@ -504,27 +504,27 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_HIT, 1, p->id);
 		break;
 	}
-	case BC_DIE: {
+	case BC_CALLBACK_DIE: {
 #ifdef DEB
-		cout << "BC_DIE\n";
+		cout << "BC_CALLBACK_DIE\n";
 #endif
-		bc_packet_die* p = reinterpret_cast<bc_packet_die*>(packet_buf);
-		Service::GetApp()->AddEvent(EVENT_GAME_DIE, 1, p->id);
+		bc_packet_callback_die* p = reinterpret_cast<bc_packet_callback_die*>(packet_buf);
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_DIE, 1, p->id);
 		break;
 	}
 	case BC_ANIM_PUSH: {
 		bc_packet_push_anim_type* p = reinterpret_cast<bc_packet_push_anim_type*>(packet_buf);
-		//#ifdef DEB
+#ifdef DEB
 		cout << "BC_ANIM_PUSH: " << p->id << p->anim_type << endl;
-		//#endif
+#endif
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_PUSH_ANIM, 2, p->id, p->anim_type);
 		break;
 	}
 	case BC_ANIM_POP: {
 		bc_packet_pop_anim_type* p = reinterpret_cast<bc_packet_pop_anim_type*>(packet_buf);
-		//#ifdef DEB
+#ifdef DEB
 		cout << "BC_ANIM_POP: " << p->id << p->anim_type << endl;
-		//#endif
+#endif
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_POP_ANIM, 2, p->id, p->anim_type);
 		break;
 	}
@@ -710,6 +710,15 @@ void NetCore::SendLookVectorPacket(XMFLOAT3& look) {
 	p.look.x = look.x;
 	p.look.y = look.y;
 	p.look.z = look.z;
+	SendPacket(&p, SV_BATTLE);
+}
+
+void NetCore::SendRequestDiePacket(int id) {
+	cout << "SEND REQUEST DIE" << endl;
+	cb_packet_request_die p;
+	p.size = sizeof(p);
+	p.type = CB_REQUEST_DIE;
+	p.id = id;
 	SendPacket(&p, SV_BATTLE);
 }
 

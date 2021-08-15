@@ -194,7 +194,7 @@ struct cl_packet_cancel_automatch {
 #define BC_REMOVE_BULLET		38
 
 #define BC_CALLBACK_HIT			39
-#define BC_DIE					40
+#define BC_CALLBACK_DIE			40
 
 #define BC_UPDATED_USER_INFO	41
 
@@ -377,7 +377,7 @@ struct bc_packet_callback_hit {
 
 	int id;
 };
-struct bc_packet_die {
+struct bc_packet_callback_die {
 	BYTE size;
 	BYTE type;
 
@@ -418,6 +418,7 @@ struct bc_packet_updated_user_info {
 #define CB_LOOK_VECTOR			49
 #define CB_PUSH_ANIM			50
 #define CB_POP_ANIM				51
+#define CB_REQUEST_DIE			52
 
 #pragma pack(push, 1)
 struct cb_packet_login {
@@ -489,6 +490,12 @@ struct cb_packet_look_vector {
 
 	int id;
 	PTC_VECTOR look;
+};
+struct cb_packet_request_die {
+	BYTE size;
+	BYTE type;
+
+	int id;
 };
 #pragma pack (pop)
 //------------------------------------------------------------------

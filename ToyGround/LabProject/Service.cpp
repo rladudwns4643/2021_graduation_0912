@@ -294,6 +294,7 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		va_end(ap);
 
 		NetCore::GetApp()->SendBulletPacket(arg_dir, arg_bullet_type);
+		break;
 	}
 	case EVENT_GAME_REMOVE_BULLET: {
 		int arg_bullet_id;
@@ -315,14 +316,24 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_HIT, argsCount, arg_id);
 		break;
 	}
-	case EVENT_GAME_DIE: {
+	case EVENT_GAME_CALLBACK_DIE: {
 		int arg_id;
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
 		va_end(ap);
 
-		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_DIE, argsCount, arg_id);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_DIE, argsCount, arg_id);
+		break;
+	}
+	case EVENT_GAME_REQUEST_DIE: {
+		int arg_id;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		va_end(ap);
+
+		NetCore::GetApp()->SendRequestDiePacket(arg_id);
 		break;
 	}
 	case EVENT_GAME_TIMER: { //BC_LEFT_TIME
