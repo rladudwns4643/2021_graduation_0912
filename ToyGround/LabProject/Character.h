@@ -149,6 +149,7 @@ private:
 	bool m_isGround = true;
 	DirectX::XMFLOAT3 m_jumpForce{0.f, 0.f, 0.f};
 
+public:
 	// 공격 관련
 	int m_attackGauge = MAX_ATTACKGAUGE;
 	XMFLOAT3 m_attackDirection;

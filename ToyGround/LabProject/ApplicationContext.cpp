@@ -295,7 +295,7 @@ void ApplicationContext::UpdateBullet()
 					continue;
 
 				// 캐릭터와 충돌
-				if (bullet->m_FiredPlayerID != player1->m_PlayerID)
+				if (bullet->m_FiredPlayerID == player2->m_PlayerID)
 				{
 					if (player1IndexPos.x == aX &&
 						player1IndexPos.y == aY &&
@@ -321,12 +321,14 @@ void ApplicationContext::UpdateBullet()
 							hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 							bulletCollObj = true;
 							player1->m_hp -= 450;
-							cout << "Player1 HP: " << player1->m_hp << endl;
+							if (player2->m_skillGauge < MAX_SKILLGAUGE)
+								player2->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+							//cout << "Player1 HP: " << player1->m_hp << endl;
 							break;
 						}
 					}
 				}
-				else if (bullet->m_FiredPlayerID != player2->m_PlayerID)
+				else if (bullet->m_FiredPlayerID == player1->m_PlayerID)
 				{
 					if (player2IndexPos.x == aX &&
 						player2IndexPos.y == aY &&
@@ -352,7 +354,9 @@ void ApplicationContext::UpdateBullet()
 							hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 							bulletCollObj = true;
 							player2->m_hp -= 450;
-							cout << "Player2 HP: " << player2->m_hp << endl;
+							if (player1->m_skillGauge < MAX_SKILLGAUGE)
+								player1->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+							//cout << "Player2 HP: " << player2->m_hp << endl;
 							break;
 						}
 					}
@@ -459,7 +463,7 @@ void ApplicationContext::UpdateBullet()
 					continue;
 
 				// 캐릭터와 충돌
-				if (bullet->m_FiredPlayerID != player1->m_PlayerID)
+				if (bullet->m_FiredPlayerID == player2->m_PlayerID)
 				{
 					if (player1IndexPos.x == aX &&
 						player1IndexPos.y == aY &&
@@ -485,12 +489,14 @@ void ApplicationContext::UpdateBullet()
 							hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
 							bulletCollObj = true;
 							player1->m_hp -= 450;
-							cout << "Player1 HP: " << player1->m_hp << endl;
+							if (player2->m_skillGauge < MAX_SKILLGAUGE)
+								player2->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+							//cout << "Player1 HP: " << player1->m_hp << endl;
 							break;
 						}
 					}
 				}
-				else if (bullet->m_FiredPlayerID != player2->m_PlayerID)
+				else if (bullet->m_FiredPlayerID == player1->m_PlayerID)
 				{
 					if (player2IndexPos.x == aX &&
 						player2IndexPos.y == aY &&
@@ -516,7 +522,9 @@ void ApplicationContext::UpdateBullet()
 							hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
 							bulletCollObj = true;
 							player2->m_hp -= 450;
-							cout << "Player2 HP: " << player2->m_hp << endl;
+							if (player1->m_skillGauge < MAX_SKILLGAUGE)
+								player1->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+							//cout << "Player2 HP: " << player2->m_hp << endl;
 							break;
 						}
 					}
@@ -567,6 +575,10 @@ void ApplicationContext::UpdateBullet()
 	{
 		HiddenBullet(hiddenSkillBulletIndex[i], 2);
 	}
+
+	cout << "player1 HP: " << player1->m_hp << endl;
+	cout << "player2 HP: " << player2->m_hp << endl;
+
 }
 
 void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 look, int firedPlayerID, int bulletNum)

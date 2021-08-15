@@ -276,8 +276,9 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 // 플레이어 상태
 #define MAX_HP 4000
 #define MAX_ATTACKGAUGE 300
+#define ONE_SHOT_GAUGE 50
 #define MAX_SKILLGAUGE 120
-#define ONE_HIT_CHARGE_SKILLGAUGE 10
+#define ONE_HIT_CHARGE_SKILLGAUGE 40
 #define MAXGAUGE_SIZE_X 245
 
 // 파티클
