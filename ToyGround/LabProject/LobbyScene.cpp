@@ -37,8 +37,6 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	}
 	case EVENT_BATTLE_LOGIN_OK: {
 		cout << "LOGIN OK" << endl;
-		//당장은 바로 방찾기 (버튼으로 받아야 함)
-		NetCore::GetApp()->SendFindRoomPacket();
 		break;
 	}
 	case EVENT_BATTLE_LOGIN_FAIL: {
@@ -55,6 +53,7 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
 		va_end(ap);
+		SceneManager::GetApp()->ChangeScene(SceneType::eMatchingRoom);
 		cout << "ENTER ROOM id: " << arg_id << endl; //들어온id
 		break;
 	}
@@ -197,8 +196,6 @@ void LobbyScene::Update(const float& fDeltaTime)
 			LoadingBarSpeed = 0;
 			LoadingTest++;
 		}
-		if(LoadingTest > 5)
-			SceneManager::GetApp()->ChangeScene(SceneType::eMatchingRoom);
 		//cout << LoadingBarPosX << endl;
 		AppContext->UpdateLoadingBarUI2D(XMFLOAT2(LoadingBarPosX, -411.f));
 

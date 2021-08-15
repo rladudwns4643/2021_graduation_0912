@@ -42,7 +42,7 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		pw = va_arg(ap, std::string);
 		va_end(ap);
 
-		cout << "ID: " << id << " PW: " << pw << endl;
+		//cout << "ID: " << id << " PW: " << pw << endl;
 
 		NetCore::GetApp()->SendLobbyLoginPacket(id, pw);
 		break;
