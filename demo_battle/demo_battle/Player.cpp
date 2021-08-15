@@ -11,6 +11,8 @@ Player::Player(const Player& rhs) {
 		m_isEmpty = rhs.m_isEmpty;
 		m_isReady = rhs.m_isReady;
 		m_isDead = rhs.m_isDead;
+		m_winSatisfaction = rhs.m_winSatisfaction;
+		m_winTime = rhs.m_winTime;
 		memcpy(m_idStr, rhs.m_idStr, sizeof(char) * 10);
 		m_mmr = rhs.m_mmr;
 	}
@@ -24,6 +26,8 @@ Player& Player::operator=(const Player& rhs) noexcept {
 		m_isEmpty = rhs.m_isEmpty;
 		m_isReady = rhs.m_isReady;
 		m_isDead = rhs.m_isDead;
+		m_winSatisfaction = rhs.m_winSatisfaction;
+		m_winTime = rhs.m_winTime;
 		memcpy(m_idStr, rhs.m_idStr, sizeof(char) * 10);
 		m_mmr = rhs.m_mmr;
 		delete& rhs;
@@ -44,6 +48,8 @@ void Player::Initialize() {
 	m_isEmpty = true;
 	m_isReady = false;
 	m_isDead = false;
+	m_winSatisfaction = false;
+	m_winTime = 0;
 	m_coin_cnt = 0;
 	ZeroMemory(&m_idStr, sizeof(char) * 10);
 	m_mmr = 0;
@@ -148,6 +154,26 @@ void Player::SetLook(XMFLOAT3 look) {
 
 XMFLOAT3 Player::GetLook() {
 	return m_look;
+}
+
+void Player::SetWinSatisfaction(bool satisfaction)
+{
+	m_winSatisfaction = satisfaction;
+}
+
+bool Player::GetWinSatisfaction()
+{
+	return m_winSatisfaction;
+}
+
+void Player::SetWinTime(int time)
+{
+	m_winTime = time;
+}
+
+int Player::GetWinTime()
+{
+	return m_winTime;
 }
 
 int Player::GetPrevAnimType() {

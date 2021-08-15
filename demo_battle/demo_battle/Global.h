@@ -16,8 +16,9 @@ constexpr int MAX_CLIENT = 5100;
 
 //constexpr size_t MAX_LEFT_TIME = 180 + 1; // 180√ ∏∏
 constexpr size_t MAX_LEFT_TIME = 180 + 1; // test
-constexpr size_t COUNTDOWN_TIME = 5;
-constexpr size_t WIN_COIN_CNT = 3;
+constexpr size_t COUNTDOWN_TIME = 3;
+constexpr size_t NEED_TIME_TO_WIN = 10;
+constexpr size_t WIN_COIN_CNT = 15;
 
 constexpr int WINNER_PLUS_MMR = 50;
 constexpr int LOOSER_MIN_MMR = -40;

@@ -52,7 +52,7 @@ private:
 
 	// 기타 이벤트 변수들
 	std::string m_MapName;
-	int			m_Timer;
+	int			m_Timer{};
 
 private:
 	bool m_IsGameOver = false;

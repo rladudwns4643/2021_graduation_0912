@@ -415,11 +415,10 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_UPDATE_COIN: {
-#ifdef DEB
+//#ifdef DEB
 		cout << "BC_UPDATE_COIN\n";
-#endif
+//#endif
 		bc_packet_update_coin* p = reinterpret_cast<bc_packet_update_coin*>(packet_buf);
-		cout << "update coin" << endl;
 		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_COIN, 3, p->id, p->coin_cnt, p->delete_coin_id);
 	}
 	case BC_PLAYER_POS: {

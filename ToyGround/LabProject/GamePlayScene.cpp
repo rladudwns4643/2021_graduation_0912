@@ -87,9 +87,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		va_start(ap, argsCount);
 		t = va_arg(ap, int);
 		va_end(ap);
-#ifdef LOG_ON
-		cout << "left Time: " << t << endl;
-#endif LOG_ON
+		m_Timer = t;
 		break;
 	}
 	case EVENT_GAME_ADD_COIN: {
@@ -103,9 +101,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		
 		AppContext->DisplayGem(arg_coin_id, arg_pos.x, arg_pos.y, arg_pos.z);
 
-#ifdef LOG_ON
+//#ifdef LOG_ON
 		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
-#endif LOG_ON
+//#endif LOG_ON
 		break;
 	}
 	case EVENT_GAME_UPDATE_COIN: {
@@ -118,9 +116,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_coin_cnt = va_arg(ap, int);
 		arg_delete_coin_id = va_arg(ap, int);
 		va_end(ap);
-#ifdef LOG_ON
-		cout << "delete Coin: " << arg_delete_coin_id << endl;
-#endif LOG_ON
+//#ifdef LOG_ON
+		cout << "Get coin ID: " << arg_id << " ID COIN COUNT: " << arg_coin_cnt << " delete CoinID: " << arg_delete_coin_id << endl;
+//#endif LOG_ON
 		AppContext->HiddenGem(arg_delete_coin_id, false);
 		break;
 	}
@@ -499,9 +497,8 @@ void GameplayScene::RenderText()
 	UITextInfo UITimer = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_TIMER);
 	GraphicsContext::GetApp()->SetTextSize(UITimer.size.y / 13.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
 	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
-	wstring TestTimerString;
-	TestTimerString = L"2:00";
-	GraphicsContext::GetApp()->DrawD2DText(TestTimerString, UITimer.size.x / 2.36f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	auto t = to_wstring(m_Timer);
+	GraphicsContext::GetApp()->DrawD2DText(t, UITimer.size.x / 2.36f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 
 	// HP
 	UITextInfo UIHealth = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_HEALTH);

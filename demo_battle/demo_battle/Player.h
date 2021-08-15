@@ -53,6 +53,12 @@ public:
 	void SetLook(XMFLOAT3 look);
 	XMFLOAT3 GetLook();
 
+	void SetWinSatisfaction(bool satisfaction);
+	bool GetWinSatisfaction();
+
+	void SetWinTime(int time);
+	int GetWinTime();
+
 public:
 	virtual int GetAnimType() = 0;
 	virtual void SetAnimType(int) = 0;
@@ -66,7 +72,10 @@ protected:
 	bool m_isReady;
 	bool m_isMoveable;
 	bool m_isDead;
+	bool m_winSatisfaction;
 	size_t m_coin_cnt;
+	int m_winTime;
+
 
 	char m_idStr[MAX_ID_LEN];
 	int m_mmr;

@@ -278,9 +278,9 @@ void BattleServer::SendPlayerLook(int to, int from, PTC_VECTOR look) {
 }
 
 void BattleServer::SendAddCoinPacket(int id, PTC_VECTOR coin_pos, int coin_id) {
-#ifdef LOG_ON
+//#ifdef LOG_ON
 	cout << "SendAddCoinPacket: " << id << " coin_pos: [" << coin_pos.x << ", " << coin_pos.y << ", " << coin_pos.z << "]" << endl;
-#endif
+//#endif LOG_ON
 	bc_packet_add_coin p;
 	p.size = sizeof(p);
 	p.type = BC_ADD_COIN;

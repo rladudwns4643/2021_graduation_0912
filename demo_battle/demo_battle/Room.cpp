@@ -389,10 +389,15 @@ void Room::CheckGameState() {
 
 	if (m_isGameStarted) {
 		if (m_leftTime <= 0) {
-			GameOver(0);
+			GameOver(0); //draw
 		}
 		for (int i = 0; i < MAX_PLAYER; ++i) {
-			if (m_players[i]->GetCoin() > WIN_COIN_CNT) {
+			if (m_players[i]->GetCoin() > WIN_COIN_CNT && !m_players[i]->GetWinSatisfaction()) {
+				m_players[i]->SetWinSatisfaction(true);
+				m_players[i]->SetWinTime(m_leftTime - NEED_TIME_TO_WIN);
+				//GameOver(m_players[i]->GetID());
+			}
+			if (m_players[i]->GetWinTime() < m_leftTime && m_players[i]->GetWinSatisfaction()) {
 				GameOver(m_players[i]->GetID());
 			}
 		}
@@ -808,14 +813,10 @@ void Room::ProcMsg(message msg) {
 		int t_id{ msg.id };
 		int t_coin{};
 		int t_delete_coin_id{ (int)msg.vec.x };
-		cout << t_delete_coin_id << endl;
+		cout << "delete coin id: " << t_delete_coin_id << endl;
 		for (auto& pl : m_players) {
 			if (pl->GetID() == t_id) {
 				pl->SetCoin(pl->GetCoin() + 1);
-				t_coin = pl->GetCoin();
-				if (t_coin >= WIN_COIN_CNT) {
-					GameOver(pl->GetID());
-				}
 				m_coins[t_delete_coin_id] = false;
 				PushUpdateCoinMsg(t_id, t_coin, t_delete_coin_id);
 			}
