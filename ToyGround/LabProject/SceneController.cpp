@@ -10,6 +10,10 @@
 #include "MatchingRoomScene.h"
 #include "GameplayScene.h"
 
+#include "EnemyCommandCenter.h"
+#include "CommandCenter.h"
+#include "MoveCommand.h"
+
 //юс╫ц
 #include "Service.h"
 
@@ -47,6 +51,7 @@ void MatchingRoomController::MouseCallback()
 			&& 600 * ScaleConvert.y <= mousePosY && mousePosY <= 690 * ScaleConvert.y
 			&& m_MyScene->m_isReady1 == false)
 		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[0]);
 			m_MyScene->m_isReady1 = true;
 		}
 
@@ -55,6 +60,7 @@ void MatchingRoomController::MouseCallback()
 			&& 600 * ScaleConvert.y <= mousePosY && mousePosY <= 690 * ScaleConvert.y
 			&& m_MyScene->m_isReady2 == false)
 		{
+			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[1]);
 			m_MyScene->m_isReady2 = true;
 		}
 	}

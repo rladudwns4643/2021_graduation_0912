@@ -31,6 +31,14 @@ public:
 			});
 	}
 
+	void ResetCommand()
+	{
+		while (m_FSM.size() > 0)
+		{
+			m_FSM.pop_back();
+		}
+	}
+
 	void Order(float deltaT)
 	{
 		if (m_FSM.empty()) return;

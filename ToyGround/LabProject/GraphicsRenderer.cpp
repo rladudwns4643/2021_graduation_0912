@@ -54,7 +54,6 @@ void GraphicsRenderer::SetGraphicsDescriptorHeap()
 
 void GraphicsRenderer::RenderGraphics()
 {
-	/****************************** Render **********************************/
 	g_CommandList->SetGraphicsRootSignature(m_RenderRS.Get());
 
 	auto matBuffer = GraphicsContext::GetApp()->MaterialBuffer->Resource();
@@ -88,8 +87,6 @@ void GraphicsRenderer::ExecuteBlurEffects()
 	if (m_SwitchBlur) {
 		mBlurFilter->Execute(Core::g_CommandList.Get(), m_PostProcessRS.Get(),
 			g_HorzBlurPSO.Get(), g_VertBlurPSO.Get(), GameCore::GetApp()->CurrentBackBuffer(), 4);
-
-		// Prepare to copy blurred output to the back buffer.
 		Core::g_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GameCore::GetApp()->CurrentBackBuffer(),
 			D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
 

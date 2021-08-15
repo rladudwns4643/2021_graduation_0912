@@ -49,6 +49,7 @@ public:
 
 	void SetIndexPos(float posX, float posY, float posZ);
 	void SetIndexPos(DirectX::XMFLOAT3 xmPos);
+	DirectX::XMFLOAT3 GetIndexPos() { return XMFLOAT3(m_IndexPosX, m_IndexPosY, m_IndexPosZ); }
 
 	void SetAnimationController(SkinnedModelInstance* skinnedModelInst);
 	void SetAnimationPlayerState(AnimationController::PlayerState playerState);

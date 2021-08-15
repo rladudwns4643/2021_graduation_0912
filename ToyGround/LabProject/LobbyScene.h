@@ -58,5 +58,6 @@ public:
 	int LoadingBarDirection = 1;
 	float LoadingBarSpeed = 0;
 	float LoadingBarAccel = 0.2;
+	int LoadingTest = 0;
 };
 

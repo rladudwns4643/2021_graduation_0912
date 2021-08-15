@@ -154,7 +154,7 @@ void Camera::CameraInitialize(SceneType sceneType)
 		SetLens(0.35f * MathHelper::Pi, static_cast<float>(Core::g_DisplayWidth) / Core::g_DisplayHeight, CAMERA_ZNEAR, CAMERA_ZFAR);
 
 		m_Owner = nullptr;
-		mPosition = { 0.f, 0.f, 550.f };
+		mPosition = { 0.f, 0.f, 500.f };
 		mRight = { 1.f, 0.f, 0.f };
 		mUp = { 0.f, 1.f, 0.f };
 		mLook = { 0.f, 0.f, -1.f };

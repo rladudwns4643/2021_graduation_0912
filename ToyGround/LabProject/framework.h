@@ -73,6 +73,9 @@
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "d3d11.lib")
 
+// FMOD
+#include "../FMOD/inc/fmod.h"
+#pragma comment(lib,"../FMOD/lib_x64/fmodL_vc.lib")
 
 using namespace std;
 using namespace DirectX;
@@ -89,3 +92,5 @@ using namespace DirectX::PackedVector;
 		ptr = nullptr;			\
 	}							\
 }
+
+#define _MSG_BOX(MESSAGE) MessageBox(0, TEXT(MESSAGE), TEXT("System Message"), MB_OK);

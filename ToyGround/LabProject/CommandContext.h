@@ -70,7 +70,7 @@ public:
 	void OnBlurEffect(bool onoff);
 	void OnResizeBlur();
 
-	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, int zLayer = -1);
+	void DrawRenderItem(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool isShadow = false, int zLayer = -1);
 	void DrawBoundingBox(ObjectInfo* objInfo, const std::vector<GameObject*>& rItems, bool drawAABB = true, int zLayer = -1);
 	void DrawRenderItems(std::vector<ObjectInfo*>& objInfos, const std::vector<GameObject*>& rItems);
 

@@ -253,7 +253,7 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 
 #define KEY_ATTACK "Attack"
 #define KEY_JUMP "Jump"
-#define KEY_T_POSE "T_POSE"
+#define KEY_T_POSE "T_Pose"
 
 #define MAX_ID_LEN 10
 

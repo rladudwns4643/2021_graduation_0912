@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneController.h"
+#include "SoundManager.h"
 
 namespace Core
 {

@@ -635,7 +635,7 @@ void AssertsReference::BuildMaterials()
 	PolygonMinis_Texture_01_A->DiffuseSrvHeapIndex = TEXTURE_INDEX_PolygonMinis_Texture_01_A;
 	PolygonMinis_Texture_01_A->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	PolygonMinis_Texture_01_A->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
-	PolygonMinis_Texture_01_A->Roughness = 0.717734;
+	PolygonMinis_Texture_01_A->Roughness = 0.987734f;
 
 	auto Polygon_Plane_Texture_02 = std::make_unique<Material>();
 	Polygon_Plane_Texture_02->MatCBIndex = TEXTURE_INDEX_Polygon_Plane_Texture_02;

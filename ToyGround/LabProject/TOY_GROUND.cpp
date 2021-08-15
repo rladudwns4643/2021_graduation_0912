@@ -8,6 +8,7 @@
 #include "AssertsReference.h"
 #include "CommandCenter.h"
 #include "EnemyCommandCenter.h"
+#include "SoundManager.h"
 
 using namespace Core;
 
@@ -27,9 +28,13 @@ void TOY_GROUND::Startup(void)
 	m_pAssetsRef = AssertsReference::GetApp();
 	m_CommandCenter = CommandCenter::GetApp();
 	m_EnemyCommandCenter = EnemyCommandCenter::GetApp();
+	m_SoundManager = SoundManager::GetApp();
 
 	// LoadFont
 	GraphicsContext::GetApp()->LoadFont(L"Showcard Gothic", 20);
+
+	// Build Sound
+	SoundManager::GetApp()->ReadySoundManager("./Sounds/");
 
 	// Build Asserts
 	BuildAsserts();
@@ -86,9 +91,12 @@ void TOY_GROUND::Update(float deltaT)
 	// Cursor
 	InputHandler::ShowMouseCursor();
 
-	/*CommandCenter*/
+	// CommandCenter
 	CommandCenter::GetApp()->Order(deltaT);
 	EnemyCommandCenter::GetApp()->Order(deltaT);
+
+	// SoundManager
+	SoundManager::GetApp()->UpdateSoundManager();
 
 	// SceneManage
 	if (m_pSceneManager)
@@ -154,11 +162,13 @@ void TOY_GROUND::BuildAsserts()
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Running");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Jump");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "Attack");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_COWBOY, "T_Pose");
 	AssertsReference::GetApp()->BuildSkinnedModel(g_Device.Get(), g_CommandList.Get(), CHARACTER_GUNMAN);
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Idle");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Running");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Jump");
 	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "Attack");
+	AssertsReference::GetApp()->BuildSkinnedModelAnimation(CHARACTER_GUNMAN, "T_Pose");
 
 	// Build BoundingBox
 	AssertsReference::GetApp()->BuildBoundingBoxMeshes(g_Device.Get(), g_CommandList.Get());

@@ -20,6 +20,7 @@ class ApplicationContext;
 class AssertsReference;
 class CommandCenter;
 class EnemyCommandCenter;
+class SoundManager;
 
 class TOY_GROUND : public IGameApp, public TemplateSingleton<TOY_GROUND>
 {
@@ -49,5 +50,6 @@ private:
 	AssertsReference				*m_pAssetsRef = NULL;
 	CommandCenter					*m_CommandCenter = NULL;
 	EnemyCommandCenter				*m_EnemyCommandCenter = NULL;
+	SoundManager					*m_SoundManager = NULL;
 };
 

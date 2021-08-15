@@ -7,6 +7,10 @@
 #include "MatchingRoomScene.h"
 #include "GameplayScene.h"
 
+#include "EnemyCommandCenter.h"
+#include "CommandCenter.h"
+#include "MoveCommand.h"
+
 void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 #ifdef LOG_ON
 	if (st == SceneType::eGamePlay) {
@@ -309,6 +313,9 @@ void SceneManager::ChangeScene()
 
 void SceneManager::ChangeScene(SceneType sceneType)
 {
+	EnemyCommandCenter::GetApp()->ResetCommand();
+	CommandCenter::GetApp()->ResetCommand();
+
 	if (m_CurScene == -1)
 		cout << "NullScene" << endl;
 	if (m_CurScene == (int)sceneType) return;

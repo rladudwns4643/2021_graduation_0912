@@ -40,3 +40,8 @@ void MoveCommand::Jump()
 {
 	m_Owner->SetAnimationKeyState(AnimationController::PlayerState::STATE_JUMP);
 }
+
+void MoveCommand::T_Pose()
+{
+	m_Owner->SetAnimationKeyState(AnimationController::PlayerState::STATE_T_POSE);
+}
