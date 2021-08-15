@@ -167,7 +167,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		else {
 			AppContext->DisplayBullet(arg_bullet_idx, arg_bullet_pos, arg_cam_look, arg_shootter, arg_bullet_type);
 			AppContext->m_AtiveSkillBulletCheck[arg_bullet_idx] = true;
-			AppContext->m_AtiveSkillBulletCheck[AppContext->m_ActiveBulletCnt] = arg_bullet_idx;
+			AppContext->m_AtiveSkillBullet[AppContext->m_ActiveBulletCnt] = arg_bullet_idx;
 			AppContext->m_AtiveSkillBulletCnt++;
 		}
 		break;

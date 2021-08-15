@@ -854,10 +854,12 @@ void Character::Attack()
 {
 #ifdef DEBUG_SERVER
 	if (m_isSkillOn == true) {
+		m_skillGauge = 0;
 		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 2, m_attackDirection, 2);
-		m_isSkillOn = false;
+		OnOffSkillMode();
 	}
 	else {
+		m_attackGauge -= ONE_SHOT_GAUGE;
 		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 2, m_attackDirection, 1);
 	}
 #elif DEBUG_CLIENT

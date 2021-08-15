@@ -322,6 +322,7 @@ void ApplicationContext::UpdateBullet()
 							bulletCollObj = true;
 							player1->m_hp -= 450;
 							if (player1->m_hp <= 0) {
+								player1->m_hp = 0;
 								if (Service::GetApp()->GetMyBattleID() == 1) {
 									Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_DIE, 1, 1);
 								}
@@ -329,6 +330,8 @@ void ApplicationContext::UpdateBullet()
 							}
 							if (player2->m_skillGauge < MAX_SKILLGAUGE)
 								player2->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+							else
+								player2->m_skillGauge = MAX_SKILLGAUGE;
 							//cout << "Player1 HP: " << player1->m_hp << endl;
 							break;
 						}
@@ -361,6 +364,7 @@ void ApplicationContext::UpdateBullet()
 							bulletCollObj = true;
 							player2->m_hp -= 450;
 							if (player2->m_hp <= 0) {
+								player2->m_hp = 0;
 								if (Service::GetApp()->GetMyBattleID() == 2) {
 									Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_DIE, 1, 2);
 								}
@@ -368,6 +372,8 @@ void ApplicationContext::UpdateBullet()
 								//player2->Death();
 							if (player1->m_skillGauge < MAX_SKILLGAUGE)
 								player1->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+							else
+								player1->m_skillGauge = MAX_SKILLGAUGE;
 							//cout << "Player2 HP: " << player2->m_hp << endl;
 							break;
 						}
@@ -502,12 +508,15 @@ void ApplicationContext::UpdateBullet()
 							bulletCollObj = true;
 							player1->m_hp -= 450;
 							if (player1->m_hp <= 0) {
+								player1->m_hp = 0;
 								if (Service::GetApp()->GetMyBattleID() == 1) {
 									Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_DIE, 1, 1);
 								}
 							}
 							if (player2->m_skillGauge < MAX_SKILLGAUGE)
 								player2->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+							else
+								player2->m_skillGauge = MAX_SKILLGAUGE;
 							//cout << "Player1 HP: " << player1->m_hp << endl;
 							break;
 						}
@@ -540,12 +549,15 @@ void ApplicationContext::UpdateBullet()
 							bulletCollObj = true;
 							player2->m_hp -= 450;
 							if (player2->m_hp <= 0) {
+								player2->m_hp = 0;
 								if (Service::GetApp()->GetMyBattleID() == 2) {
 									Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_DIE, 1, 2);
 								}
 							}
 							if (player1->m_skillGauge < MAX_SKILLGAUGE)
 								player1->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+							else
+								player1->m_skillGauge = MAX_SKILLGAUGE;
 							//cout << "Player2 HP: " << player2->m_hp << endl;
 							break;
 						}

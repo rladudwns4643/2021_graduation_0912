@@ -918,7 +918,6 @@ void Room::ProcMsg(message msg) {
 		break;
 	}
 	case CB_REQUEST_DIE: {
-		cout << "REQ DIE" << endl;
 		int t_id{ msg.id };
 
 		for (auto& pl : m_players) {
