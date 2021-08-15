@@ -576,7 +576,6 @@ void NetCore::errorDisplay(const char* msg)
 }
 
 //sendPacket
-
 void NetCore::SendLobbyLoginPacket(const std::string& id, const std::string& pw) {
 	memcpy(m_client.id_str, id.c_str(), sizeof(char) * MAX_ID_LEN);
 
@@ -596,6 +595,12 @@ void NetCore::SendLobbyLoginPacket(const std::string& id, const std::string& pw)
 
 void NetCore::SendLobbySignUpPacket(const std::string& id, const std::string& pw) {
 	//DB ¾÷µ« ÀÌÈÄ 
+	cl_packet_signup p;
+	p.size = sizeof(p);
+	p.type = CL_SIGNUP;
+	memcpy(p.id, id.c_str(), sizeof(char) * MAX_ID_LEN);
+	memcpy(p.pw, pw.c_str(), sizeof(char) * MAX_ID_LEN);
+	SendPacket(&p, SV_LOBBY);
 }
 
 void NetCore::SendFindRoomPacket() {
