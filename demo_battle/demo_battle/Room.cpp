@@ -869,14 +869,29 @@ void Room::ProcMsg(message msg) {
 				break;
 			}
 		}
-		for (size_t i = 0; i < 2; ++i)
-		{
-			XMFLOAT3 T{ 0.f, 0.f, 0.f };
-			T = SMathHelper::Add(T, msg.vec, i * 100);
+		if (t_bullet_type == 1) {
+			for (size_t i = 0; i < 2; ++i)
+			{
+				XMFLOAT3 T{ 0.f, 0.f, 0.f };
+				T = SMathHelper::Add(T, msg.vec, i * 100);
+				PTC_VECTOR t_pos{};
+				t_pos.x = pos.x + T.x;
+				t_pos.y = pos.y + 90.f + T.y;
+				t_pos.z = pos.z + T.z;
+				int bullet_idx = GetEmptyBullet();
+
+				EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(MAKE_BULLET_EMPTY), EVENT_TYPE::EV_MAKE_EMPTY_BULLET };
+				BattleServer::GetInstance()->AddTimer(ev);
+
+				PushShootBulletMsg(t_id, t_bullet_type, bullet_idx, t_v, t_pos);
+			}
+		}
+		if (t_bullet_type == 2) {
+			cout << "BULLET TYPE : 2" << endl;
 			PTC_VECTOR t_pos{};
-			t_pos.x = pos.x + T.x;
-			t_pos.y = pos.y + 90.f + T.y;
-			t_pos.z = pos.z + T.z;
+			t_pos.x = pos.x ;
+			t_pos.y = pos.y + 90.f;
+			t_pos.z = pos.z;
 			int bullet_idx = GetEmptyBullet();
 
 			EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(MAKE_BULLET_EMPTY), EVENT_TYPE::EV_MAKE_EMPTY_BULLET };
