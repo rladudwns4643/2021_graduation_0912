@@ -17,6 +17,33 @@
 #define WIDTH_NORMALIZE_UI(x) (x + (Core::g_DisplayWidth / 2.f))
 #define HEIGHT_NORMALIZE_UI(y) (-y + (Core::g_DisplayHeight / 2.f))
 
+void MatchingRoomScene::ProcessEvent(int sEvent, int argsCount, ...) {
+	switch (sEvent) {
+	case EVENT_ROOM_READY: {
+		int id;
+		bool ready;
+		va_list ap;
+		va_start(ap, argsCount);
+		id = va_arg(ap, int);
+		ready = va_arg(ap, bool);
+		va_end(ap);
+		cout << " READY ID: " << id << endl;
+		if (id == 1)
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Toys[0]);
+			m_isReady1 = true;
+		}
+		else if (id == 2)
+		{
+			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Toys[1]);
+			m_isReady2 = true;
+		}
+		break;
+	}
+	}
+	
+}
+
 void MatchingRoomScene::Initialize()
 {
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eMatchingRoom);

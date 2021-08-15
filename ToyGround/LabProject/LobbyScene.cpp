@@ -8,6 +8,9 @@
 #include "Service.h"
 #include "AssertsReference.h"
 #include "UserInterface.h"
+#include "EnemyCommandCenter.h"
+#include "CommandCenter.h"
+#include "MoveCommand.h"
 
 #define WIDTH_NORMALIZE_UI(x) (x + (Core::g_DisplayWidth / 2.f))
 #define HEIGHT_NORMALIZE_UI(y) (-y + (Core::g_DisplayHeight / 2.f))
@@ -37,8 +40,6 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 	}
 	case EVENT_BATTLE_LOGIN_OK: {
 		cout << "LOGIN OK" << endl;
-		//당장은 바로 방찾기 (버튼으로 받아야 함)
-		NetCore::GetApp()->SendFindRoomPacket();
 		break;
 	}
 	case EVENT_BATTLE_LOGIN_FAIL: {
@@ -55,18 +56,9 @@ void LobbyScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
 		va_end(ap);
+		SceneManager::GetApp()->ChangeScene(SceneType::eMatchingRoom);
 		cout << "ENTER ROOM id: " << arg_id << endl; //들어온id
 		break;
-	}
-	case EVENT_ROOM_READY: {
-		int id;
-		bool ready;
-		va_list ap;
-		va_start(ap, argsCount);
-		id = va_arg(ap, int);
-		ready = va_arg(ap, bool);
-		va_end(ap);
-		cout << " READY ID: " << id << endl;
 	}
 	case EVENT_ROOM_LEAVE: {
 		//누군가 룸에서 나감 나간놈 id
@@ -197,8 +189,6 @@ void LobbyScene::Update(const float& fDeltaTime)
 			LoadingBarSpeed = 0;
 			LoadingTest++;
 		}
-		if(LoadingTest > 5)
-			SceneManager::GetApp()->ChangeScene(SceneType::eMatchingRoom);
 		//cout << LoadingBarPosX << endl;
 		AppContext->UpdateLoadingBarUI2D(XMFLOAT2(LoadingBarPosX, -411.f));
 

@@ -18,7 +18,8 @@ class Character;
 class MatchingRoomScene : public Scene
 {
 	friend class MatchingRoomController;
-
+private:
+	virtual void ProcessEvent(int sEvent, int argsCount = 0, ...) override;
 public:
 	virtual void Initialize() override;
 	virtual void OnResize() override;

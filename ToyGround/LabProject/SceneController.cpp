@@ -51,8 +51,11 @@ void MatchingRoomController::MouseCallback()
 			&& 600 * ScaleConvert.y <= mousePosY && mousePosY <= 690 * ScaleConvert.y
 			&& m_MyScene->m_isReady1 == false)
 		{
-			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[0]);
-			m_MyScene->m_isReady1 = true;
+			if (NetCore::GetApp()->GetBattleID() == 1) {
+				NetCore::GetApp()->SendReadyPacket();
+				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[0]);
+				m_MyScene->m_isReady1 = true;
+			}
 		}
 
 		// Ready2(Right)
@@ -60,8 +63,11 @@ void MatchingRoomController::MouseCallback()
 			&& 600 * ScaleConvert.y <= mousePosY && mousePosY <= 690 * ScaleConvert.y
 			&& m_MyScene->m_isReady2 == false)
 		{
-			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[1]);
-			m_MyScene->m_isReady2 = true;
+			if (NetCore::GetApp()->GetBattleID() == 2) {
+				NetCore::GetApp()->SendReadyPacket();
+				EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[1]);
+				m_MyScene->m_isReady2 = true;
+			}
 		}
 	}
 	InputHandler::ResetClickState();
@@ -140,7 +146,6 @@ void LobbyController::MouseCallback()
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "New Id Button Click" << endl;
-			NetCore::GetApp()->SendReadyPacket();
 		}
 		// Login Button
 		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 710 * ScaleConvert.x
@@ -148,21 +153,19 @@ void LobbyController::MouseCallback()
 		{
 			//cout << "Login Button Click" << endl;
 			Core::g_Chating = 0;
-			//Service::GetApp()->AddEvent(EVENT_ROOM_START);
-			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
-		}
-		// EXit Button
-
-		// EXit Button
-		if (730 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
-			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
-		{
-			//cout << "Exit Button Click" << endl;
 			string id;
 			string pw;
 			id.assign(m_MyScene->m_ID.begin(), m_MyScene->m_ID.end());
 			pw.assign(m_MyScene->m_Password.begin(), m_MyScene->m_Password.end());
 			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST, 2, id, pw);
+		}
+		// Start Button
+		if (730 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
+		{
+			//cout << "Exit Button Click" << endl;
+			NetCore::GetApp()->SendFindRoomPacket();
+			m_MyScene->m_isMatching = true;
 		}
 	}
 #endif
@@ -257,14 +260,6 @@ void GameplayController::HandleInput(const float deltaT)
 	if (InputHandler::IsKeyUp(VK_F3)) {
 		SceneManager::GetApp()->ChangeScene(SceneType::eMatchingRoom);
 	}
-
-#ifdef DEBUG_SERVER
-	//if (InputHandler::IsKeyUp(VK_F1) && c == false) {
-	//	cout << "!";
-	//	Service::GetApp()->AddEvent(EVENT_GAME_GET_COIN);
-	//	c = true;
-	//}
-#endif
 	if (InputHandler::IsKeyUp(VK_F10)) {
 		m_MyScene->m_PauseScene = !m_MyScene->m_PauseScene;
 	}

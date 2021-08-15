@@ -66,8 +66,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_winner = va_arg(ap, int);
 		va_end(ap);
 
-		for (int i = 0; i < MAX_GEM_COUNT; ++i)
+		for (int i = 0; i < MAX_GEM_COUNT; ++i) {
 			AppContext->HiddenGem(i, false);
+		}
 		AppContext->HiddenProps(m_MapName);
 
 		for (auto& u : m_Users) {
@@ -75,11 +76,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 				AppContext->HiddenCharacter(u.second);
 			}
 		}
-		//todo Scene Change /*& show result*/
-		SceneManager::GetApp()->ChangeScene(SceneType::eLobby);
-#ifdef LOG_ON
-		cout << "WINNER: " << arg_winner << endl;
-#endif LOG_ON
+		m_IsGameOver = true;
 		break;
 	}
 	case EVENT_GAME_TIMER: {
@@ -298,6 +295,7 @@ bool GameplayScene::Enter()
 	m_player_in_room.resize(cnt);
 	Service::GetApp()->AddEvent(EVENT_GAME_START);
 #endif
+	m_IsGameOver = false;
 
 #ifdef DEBUG_CLIENT
 	m_Users[m_PlayerID] = AppContext->FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
@@ -334,7 +332,7 @@ bool GameplayScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, XMFLOAT2(-730.f, -495.f), XMFLOAT2(0, 35), TextAlignType::Center, -1, true);
 	AppContext->DisplayUI2D(OBJECT_TYPE_STATE_FRONT, OBJECT_NAME_GAMEPLAY_STATE_FRONT, XMFLOAT2(-730.f, -423.f), XMFLOAT2(255, 140), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK, XMFLOAT2(-730.f, -423.f), XMFLOAT2(255, 140), TextAlignType::Center);
-//	AppContext->DisplayUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD, XMFLOAT2(-730.f, -495.f), XMFLOAT2(0, 35), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD, XMFLOAT2(500.f, 150.f), XMFLOAT2(0, 0), TextAlignType::Center);
 
 
 	// 카메라 세팅
@@ -372,7 +370,7 @@ void GameplayScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_STATE_FRONT, OBJECT_NAME_GAMEPLAY_STATE_FRONT);
 	AppContext->HiddenUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK);
-//	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD);
+	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD);
 
 	// 파티클
 	AppContext->HiddenParticle(PARTICLE_NAME_SMOKE, CHARACTER_COWBOY);
@@ -437,8 +435,9 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_STATE_FRONT], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_STATE_BACK], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_STATE_BACK], AppContext->m_RItemsVec);
-//	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
-//	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
+	
 
 	// Particle
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[PARTICLE_NAME_SMOKE], AppContext->m_RItemsVec, false, true);
@@ -516,9 +515,13 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_STATE_BACK], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec);
-	if (!AimCheck)
+	if (!AimCheck && m_IsGameOver == false) {
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec);
+	}
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_STATE_FRONT], AppContext->m_RItemsVec);
+	if (m_IsGameOver == true) {
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
+	}
 
 }
 
