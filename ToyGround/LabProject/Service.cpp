@@ -131,7 +131,7 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		id = va_arg(ap, int);
 		ready = va_arg(ap, bool);
 		va_end(ap);
-		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_ROOM_READY, 2, id, ready);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eMatchingRoom, EVENT_ROOM_READY, 2, id, ready);
 		break;
 	}
 	case EVENT_ROOM_START_AVAILABLE: { //BC_GAME_START_AVAILABLE
