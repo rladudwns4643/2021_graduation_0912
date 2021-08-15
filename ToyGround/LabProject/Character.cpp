@@ -817,7 +817,7 @@ void Character::Attack()
 		//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
 		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
 		AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 2);
-		m_isSkillOn = false;
+		OnOffSkillMode();
 	}
 	else
 	{
@@ -849,12 +849,14 @@ void Character::OnOffSkillMode()
 	{
 		cout << "SkillOff" << endl;
 		m_isSkillOn = false;
+		AppContext->HiddenParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, m_MeshName);
 		return;
 	}
 	if (m_skillGauge >= MAX_SKILLGAUGE)
 	{
 		cout << "SkillOn" << endl;
 		m_isSkillOn = true;
+		AppContext->DisplayParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, m_MeshName, GetPosition(), true);
 	}
 }
 
@@ -915,5 +917,5 @@ void Character::SetParticle(std::string particleName, std::string instID)
 void Character::RespwanParticle(bool isCapture)
 {
 	// 변신시 파티클 on
-	AppContext->DisplayParticle(PARTICLE_NAME_SMOKE, m_MeshName, GetPosition(), true, isCapture);
+//	AppContext->DisplayParticle(PARTICLE_NAME_SMOKE, m_MeshName, GetPosition(), true, isCapture);
 }

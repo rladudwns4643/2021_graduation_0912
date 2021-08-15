@@ -374,7 +374,8 @@ void GameplayScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD);
 
 	// ÆÄÆ¼Å¬
-	AppContext->HiddenParticle(PARTICLE_NAME_SMOKE, CHARACTER_COWBOY);
+	AppContext->HiddenParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_COWBOY);
+	AppContext->HiddenParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_GUNMAN);
 
 	for (int i = 0; i < MAX_GEM_COUNT; ++i)
 	{
@@ -441,7 +442,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	
 
 	// Particle
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[PARTICLE_NAME_SMOKE], AppContext->m_RItemsVec, false, true);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[PARTICLE_NAME_SKILL_ON_CHARACTER], AppContext->m_RItemsVec, false, true);
 
 	// Shadow
 	GraphicsContext::GetApp()->UpdateShadowTransform(TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
@@ -510,7 +511,7 @@ void GameplayScene::Render()
 
 	// Particle
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
-	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[PARTICLE_NAME_SMOKE], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[PARTICLE_NAME_SKILL_ON_CHARACTER], AppContext->m_RItemsVec);
 
 	// UI
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());
@@ -533,18 +534,22 @@ void GameplayScene::RenderText()
 	GraphicsContext::GetApp()->SetTextSize(UITimer.size.y / 13.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
 	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
 	auto t = to_wstring(m_Timer);
-	GraphicsContext::GetApp()->DrawD2DText(t, UITimer.size.x / 2.36f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	GraphicsContext::GetApp()->DrawD2DText(L"10", UITimer.size.x / 2.29f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 
 	// HP
 	UITextInfo UIHealth = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_HEALTH);
 	GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 9.f , DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
 	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
-	wstring TestHPString;
-	TestHPString = L"4000";
+	
+#ifdef DEBUG_CLIENT
+	auto hp = to_wstring(m_Users[1]->m_hp);
+#elif DEBUG_SERVER
+	auto hp = to_wstring(m_Users[NetCore::GetApp()->GetBattleID()]->m_hp);
+#endif
 	float hpPosY = UIHealth.size.y * 0.21f;
-	for(int i = 0; i < 4 - TestHPString.size(); ++i)
+	for(int i = 0; i < 4 - hp.size(); ++i)
 		hpPosY += 15;
-	GraphicsContext::GetApp()->DrawD2DText(TestHPString, hpPosY, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	GraphicsContext::GetApp()->DrawD2DText(hp, hpPosY, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 }
 
 void GameplayScene::WriteShadow()
