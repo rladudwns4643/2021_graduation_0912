@@ -765,9 +765,10 @@ void ApplicationContext::DisplayCharacter(std::string mapName, Character* user, 
 
 			user->m_IsVisible = isVisible;
 			user->m_IsVisibleOnePassCheck = isVisible;
-			user->m_hp = MAX_HP;
-			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
+
+			user->ResetCharacterState();
 			user->SetPosition(p.position);
+			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
 		}
 	}
 }
@@ -789,8 +790,10 @@ void ApplicationContext::DisplayCharacter(std::string mapName, std::string userN
 
 			user->m_IsVisible = isVisible;
 			user->m_IsVisibleOnePassCheck = isVisible;
-			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
+
+			user->ResetCharacterState();
 			user->SetPosition(p.position);
+			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
 
 			return;
 		}

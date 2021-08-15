@@ -101,6 +101,7 @@ void PlayerController::MouseCallback()
 		SetCursorPos(ptMouse.x, ptMouse.y);
 		InputHandler::g_MoveMouseCallback = false;
 	}
+	if (!m_Owner->m_isLive) return;
 	if (InputHandler::g_LeftMouseClick)
 	{
 		if (CommandCenter::GetApp()->m_StartAttackAnim == false)
@@ -127,6 +128,7 @@ void PlayerController::OnKeyPressed()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
+	if (!m_Owner->m_isLive) return;
 
 	if (CommandCenter::GetApp()->m_StartJumpAnim) return;
 

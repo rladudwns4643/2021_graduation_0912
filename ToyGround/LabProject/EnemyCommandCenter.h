@@ -1,6 +1,7 @@
 #pragma once
 #include "ICommand.h"
 #include "Singleton.h"
+#include "ApplicationContext.h"
 #include <list>
 
 class Character;
@@ -13,6 +14,7 @@ public:
 	template <class TCommand>
 	void PushCommand(int cEvent, Character* owner)
 	{
+		m_MyPlayer = owner;
 		// Command »ý¼º
 		ICommand* iCmd = new TCommand(owner);
 		iCmd->SetState(cEvent);
@@ -76,6 +78,7 @@ public:
 			{
 				m_DeathDeltaT = 0;
 				m_StartDeathAnim = false;
+				AppContext->HiddenCharacter(m_MyPlayer);
 				PopCommand(static_cast<int>(MoveState::Death));
 			}
 		}
@@ -87,6 +90,8 @@ private:
 	std::list<ICommand*> m_FSM;
 
 public:
+	Character* m_MyPlayer;
+	
 	bool  m_StartAttackAnim = false;
 	bool  m_AttackCoolTimeSwitch = false;
 	float m_AttackAnimTime = 40.f;
@@ -97,7 +102,7 @@ public:
 	float	m_JumpDeltaT = 0;
 
 	bool	m_StartDeathAnim = false;
-	float	m_DeathAnimTime = 80.f;
+	float	m_DeathAnimTime = 60.f;
 	float	m_DeathDeltaT = 0;
 };
 

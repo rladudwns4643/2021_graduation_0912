@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "ApplicationContext.h"
 #include "AssertsReference.h"
+#include "MoveCommand.h"
 #include "CommandContext.h"
 #include "EnemyCommandCenter.h"
 #include "CommandCenter.h"
@@ -16,7 +17,18 @@ Character::Character(std::string type, std::string id) :
 	m_PlayerController(nullptr),
 	m_MyCamera(nullptr)
 {
+	ResetCharacterState();
+}
+
+Character::~Character()
+{
+}
+void Character::ResetCharacterState()
+{
+	m_isLive = true;
+
 	m_Position = { 0,0,0 };
+
 	m_Right = { 1,0,0 };
 	m_Up = { 0,1,0 };
 	m_Look = { 0,0,1 };
@@ -37,10 +49,6 @@ Character::Character(std::string type, std::string id) :
 	m_tempSkillGauge = m_skillGauge;
 
 	SetIndexPos(m_Position);
-}
-
-Character::~Character()
-{
 }
 void Character::InitializeTransform()
 {
@@ -468,6 +476,40 @@ void Character::SetLookToCameraLook()
 	if (fabs(degree) > 1.f)
 		Rotate(0.f, XMConvertToRadians(degree), 0.f);
 	degree = 0.f;
+}
+
+void Character::Respawn()
+{
+	AppContext->DisplayCharacter(m_MapName, m_MeshName, true);
+	m_MyCamera->Update();
+}
+
+void Character::Death()
+{
+	m_isLive = false;
+#ifdef DEBUG_CLIENT
+	if (m_PlayerID == 1)
+	{
+		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);
+		CommandCenter::GetApp()->m_StartDeathAnim = true;
+	}
+	else if (m_PlayerID == 2)
+	{
+		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);
+		EnemyCommandCenter::GetApp()->m_StartDeathAnim = true;
+	}
+#elif DEBUG_SERVER
+	if (NetCore::GetApp()->GetBattleID() == m_PlayerID)
+	{
+		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);
+		CommandCenter::GetApp()->m_StartDeathAnim = true;
+	}
+	else if (NetCore::GetApp()->GetBattleID() != m_PlayerID && m_PlayerID < 3)
+	{
+		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);
+		EnemyCommandCenter::GetApp()->m_StartDeathAnim = true;
+	}
+#endif
 }
 
 void Character::Move(DWORD dwDirection, float fDistance, bool bUpdateVelocity)

@@ -25,6 +25,8 @@ public:
 	explicit Character(std::string type, std::string id);
 	virtual ~Character();
 
+	void ResetCharacterState();
+
 	virtual void InitializeTransform() override;
 	bool ReleaseTransform();
 
@@ -61,6 +63,9 @@ public:
 
 	void SetLookToCameraLook();
 
+	void Respawn();
+	void Death();
+
 public:
 	// 이동 & 회전
 	bool			Move(DWORD dwDirection, float fDistance);
@@ -89,6 +94,7 @@ public:
 	int m_PlayerID = 0;
 
 public:
+	bool m_isLive = true;
 	int m_hp = MAX_HP;
 	bool			m_IsThirdCamera = true;
 
