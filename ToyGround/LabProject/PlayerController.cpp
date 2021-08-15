@@ -127,7 +127,6 @@ void PlayerController::OnKeyPressed()
 {
 	if (!m_Owner) return;
 	if (!m_Owner->m_MyCamera) return;
-	if (!m_Owner->m_isLive) return;
 
 	if (CommandCenter::GetApp()->m_StartJumpAnim) return;
 
@@ -161,6 +160,12 @@ void PlayerController::OnKeyPressed()
 			if (InputHandler::IsKeyUp('Q')) {
 				m_Owner->OnOffSkillMode();
 			}
+			//if (InputHandler::IsKeyUp('R')) {
+			//	m_Owner->Death();
+			//}
+			//if (InputHandler::IsKeyUp('E')) {
+			//	m_Owner->Respawn();
+			//}
 		}
 #elif DEBUG_SERVER
 		if (InputHandler::IsKeyDown('W'))

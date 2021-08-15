@@ -2,6 +2,7 @@
 #include "ICommand.h"
 #include "Singleton.h"
 #include "ApplicationContext.h"
+#include "Character.h"
 #include <list>
 
 class Character;
@@ -73,11 +74,15 @@ public:
 		else if (m_StartDeathAnim)
 		{
 			m_DeathDeltaT += 60.f / (1.f / deltaT);
+			//if (m_MyPlayer)
+			//	m_MyPlayer->Rotate(0.f, 0.f, 10.f);
 
 			if (m_DeathAnimTime < m_DeathDeltaT)
 			{
 				m_DeathDeltaT = 0;
 				m_StartDeathAnim = false;
+				m_StartAttackAnim = false;
+				m_StartJumpAnim = false;
 				AppContext->HiddenCharacter(m_MyPlayer);
 				PopCommand(static_cast<int>(MoveState::Death));
 			}
@@ -102,7 +107,7 @@ public:
 	float	m_JumpDeltaT = 0;
 
 	bool	m_StartDeathAnim = false;
-	float	m_DeathAnimTime = 80.f;
+	float	m_DeathAnimTime = 160.f;
 	float	m_DeathDeltaT = 0;
 };
 

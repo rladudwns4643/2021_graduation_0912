@@ -527,7 +527,6 @@ void GameplayScene::Render()
 	if (m_IsGameOver == true) {
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
 	}
-
 }
 
 void GameplayScene::RenderText()

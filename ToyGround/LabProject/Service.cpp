@@ -63,7 +63,7 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		id = va_arg(ap, std::string);
 		pw = va_arg(ap, std::string);
 		va_end(ap);
-		NetCore::GetApp()->SendLobbySignupPacket(id, pw);
+		NetCore::GetApp()->SendLobbySignUpPacket(id, pw);
 
 		break;
 	}

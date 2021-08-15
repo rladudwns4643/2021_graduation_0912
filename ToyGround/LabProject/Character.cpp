@@ -375,6 +375,7 @@ void Character::SetMaterial(int materialIndex)
 
 void Character::SetPosition(float posX, float posY, float posZ)
 {
+	if(!m_isLive) return;
 	SetIndexPos(posX, posY, posZ);
 	// Attack_Box
 	if (m_MyCamera)
@@ -493,25 +494,34 @@ void Character::Respawn()
 void Character::Death()
 {
 	m_isLive = false;
+	AppContext->HiddenParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, m_MeshName);
 #ifdef DEBUG_CLIENT
 	if (m_PlayerID == 1)
 	{
+		CommandCenter::GetApp()->ResetCommand();
+		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), this);
 		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);
 		CommandCenter::GetApp()->m_StartDeathAnim = true;
 	}
 	else if (m_PlayerID == 2)
 	{
+		EnemyCommandCenter::GetApp()->ResetCommand();
+		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), this);
 		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);
 		EnemyCommandCenter::GetApp()->m_StartDeathAnim = true;
 	}
 #elif DEBUG_SERVER
 	if (NetCore::GetApp()->GetBattleID() == m_PlayerID)
 	{
+		CommandCenter::GetApp()->ResetCommand();
+		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), this);
 		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);
 		CommandCenter::GetApp()->m_StartDeathAnim = true;
 	}
 	else if (NetCore::GetApp()->GetBattleID() != m_PlayerID && m_PlayerID < 3)
 	{
+		EnemyCommandCenter::GetApp()->ResetCommand();
+		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), this);
 		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);
 		EnemyCommandCenter::GetApp()->m_StartDeathAnim = true;
 	}
@@ -940,6 +950,14 @@ void Character::Rotate(float pitch, float yaw, float roll)
 		m_Look = MathHelper::TransformNormal(m_Look, xmmtxRotate);
 		m_Right = MathHelper::TransformNormal(m_Right, xmmtxRotate);
 
+	}
+	if (roll)
+	{
+		XMFLOAT3 xmf3Look = this->m_Look;
+		XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Look), (roll));
+		m_Look = MathHelper::TransformNormal(m_Look, xmmtxRotate);
+		m_Right = MathHelper::TransformNormal(m_Right, xmmtxRotate);
+		m_Up = MathHelper::TransformNormal(m_Up, xmmtxRotate);
 	}
 
 	m_Look = MathHelper::Normalize(m_Look);
