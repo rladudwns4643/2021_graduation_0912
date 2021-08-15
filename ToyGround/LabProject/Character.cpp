@@ -479,7 +479,6 @@ void Character::SetLookToCameraLook()
 	degree = 0.f;
 }
 
-//todo: call respawn
 void Character::Respawn()
 {
 	if (m_isLive) return;

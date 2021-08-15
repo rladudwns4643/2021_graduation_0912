@@ -216,6 +216,10 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_pos, arg_coin_id);
 		break;
 	}
+	case EVENT_GAME_RESPAWN: {
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount);
+		break;
+	}
 	case EVENT_GAME_WIN_SATISFACTION: {
 		int arg_id;
 		va_list ap;

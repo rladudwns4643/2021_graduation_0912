@@ -461,6 +461,12 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_MOUSE, 2, p->id, arg_look);
 		break;
 	}
+	case BC_RESPAWN: {
+		bc_packet_respawn* p = reinterpret_cast<bc_packet_respawn*>(packet_buf);
+
+		Service::GetApp()->AddEvent(EVENT_GAME_RESPAWN);
+		break;
+	}
 	case BC_CALLBACK_BULLET: {
 #ifdef DEB
 		cout << "BC_CALLBACK_BULLET\n";

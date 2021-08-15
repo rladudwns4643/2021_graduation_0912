@@ -391,6 +391,10 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		NetCore::GetApp()->SendGetCoinPacket(arg_coin_id);
 		break;
 	}
+	case BC_RESPAWN: {
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_RESPAWN);
+		break;
+	}
 	case EVENT_GAME_GAMEOVER: { //BC_GAME_OVER
 		int arg_winner;
 		va_list ap;
