@@ -482,6 +482,7 @@ void Character::SetLookToCameraLook()
 //todo: call respawn
 void Character::Respawn()
 {
+	if (m_isLive) return;
 	AppContext->DisplayCharacter(m_MapName, m_MeshName, true);
 #ifdef DEBUG_CLIENT
 	if (m_PlayerID == 1)

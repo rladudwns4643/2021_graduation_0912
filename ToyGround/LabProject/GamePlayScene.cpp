@@ -244,13 +244,14 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D(OBJECT_TYPE_AIM, OBJECT_NAME_GAMEPLAY_AIM, TEXTURE_INDEX_UI_GAMEPLAY_AIM);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE, TEXTURE_INDEX_UI_GAMEPLAY_PLAYER1_SCORE);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE, TEXTURE_INDEX_UI_GAMEPLAY_PLAYER2_SCORE);
-	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER, TEXTURE_INDEX_UI_GAMEPLAY_TIMER);
+	AppContext->CreateUI2D(OBJECT_TYPE_COUNTDOWN, OBJECT_NAME_GAMEPLAY_TIMER, TEXTURE_INDEX_UI_GAMEPLAY_TIMER);
 	AppContext->CreateUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK, TEXTURE_INDEX_UI_GAMEPLAY_STATE_BACK);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_HEALTH, TEXTURE_INDEX_UI_GAMEPLAY_HEALTH);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, TEXTURE_INDEX_UI_GAMEPLAY_ATTACK_GAUGE);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, TEXTURE_INDEX_UI_GAMEPLAY_SKILL_GAUGE);
 	AppContext->CreateUI2D(OBJECT_TYPE_STATE_FRONT, OBJECT_NAME_GAMEPLAY_STATE_FRONT, TEXTURE_INDEX_UI_GAMEPLAY_STATE_FRONT);
 	AppContext->CreateUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD, TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD);
+	AppContext->CreateUI2D(OBJECT_TYPE_WINNERBOARD2, OBJECT_NAME_GAMEPLAY_WINNERBOARD2, TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD2);
 
 	// 보석 생성
 	AppContext->CreateGem();
@@ -330,13 +331,14 @@ bool GameplayScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_TYPE_AIM, OBJECT_NAME_GAMEPLAY_AIM, XMFLOAT2(-60.f, -80.f), XMFLOAT2(39, 39), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE, XMFLOAT2(-730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE, XMFLOAT2(730.f, 450.f), XMFLOAT2(227, 60), TextAlignType::Center);
-	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER, XMFLOAT2(0.f, 450.f), XMFLOAT2(143, 47), TextAlignType::Center, -1, true);
+	AppContext->DisplayUI2D(OBJECT_TYPE_COUNTDOWN, OBJECT_NAME_GAMEPLAY_TIMER, XMFLOAT2(0.f, 450.f), XMFLOAT2(143, 47), TextAlignType::Center, -1, true);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_HEALTH, XMFLOAT2(-730.f, -360.f), XMFLOAT2(245, 45), TextAlignType::Center, -1, true);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, XMFLOAT2(-730.f, -430.f), XMFLOAT2(245, 40), TextAlignType::Center, -1, true);
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, XMFLOAT2(-730.f, -495.f), XMFLOAT2(0, 35), TextAlignType::Center, -1, true);
 	AppContext->DisplayUI2D(OBJECT_TYPE_STATE_FRONT, OBJECT_NAME_GAMEPLAY_STATE_FRONT, XMFLOAT2(-730.f, -423.f), XMFLOAT2(255, 140), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK, XMFLOAT2(-730.f, -423.f), XMFLOAT2(255, 140), TextAlignType::Center);
-	AppContext->DisplayUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD, XMFLOAT2(500.f, 150.f), XMFLOAT2(0, 0), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD, XMFLOAT2(0, 0), XMFLOAT2(500.f, 150.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_WINNERBOARD2, OBJECT_NAME_GAMEPLAY_WINNERBOARD2, XMFLOAT2(0, 0), XMFLOAT2(500.f, 150.f), TextAlignType::Center);
 
 
 	// 카메라 세팅
@@ -356,6 +358,13 @@ bool GameplayScene::Enter()
 		AppContext->HiddenBullet(i, 2);
 	}
 	AppContext->BulletReset();
+	
+	m_IsGameOver = false;
+	m_isCountDownOn = false;
+	m_countDown = 0;
+	m_CowBoyGemNum = 0;
+	m_GunManGemNum = 0;
+	m_StartCount = 1;
 
 	return false;
 }
@@ -368,13 +377,14 @@ void GameplayScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_AIM, OBJECT_NAME_GAMEPLAY_AIM);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER1_SCORE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE);
-	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_TIMER);
+	AppContext->HiddenUI2D(OBJECT_TYPE_COUNTDOWN, OBJECT_NAME_GAMEPLAY_TIMER);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_HEALTH);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_STATE_FRONT, OBJECT_NAME_GAMEPLAY_STATE_FRONT);
 	AppContext->HiddenUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK);
 	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD);
+	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD2, OBJECT_NAME_GAMEPLAY_WINNERBOARD2);
 
 	// 파티클
 	AppContext->HiddenParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_COWBOY);
@@ -442,6 +452,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_STATE_BACK], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD2], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD2], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_COUNTDOWN], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_COUNTDOWN], AppContext->m_RItemsVec);
 	
 
 	// Particle
@@ -524,25 +538,59 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_AIM], AppContext->m_RItemsVec);
 	}
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_STATE_FRONT], AppContext->m_RItemsVec);
-	if (m_IsGameOver == true) {
-		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
+	if (m_isCountDownOn == true)
+	{
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_COUNTDOWN], AppContext->m_RItemsVec);
+	}
+	if (m_IsGameOver == true) 
+	{
+		if(m_Winner == 1)
+			GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD], AppContext->m_RItemsVec);
+		else
+			GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD2], AppContext->m_RItemsVec);
 	}
 }
 
 void GameplayScene::RenderText()
 {
 	// Timer
-	UITextInfo UITimer = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_TIMER);
+	if (m_isCountDownOn == true)
+	{
+		UITextInfo UITimer = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_COUNTDOWN], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_TIMER);
+		GraphicsContext::GetApp()->SetTextSize(UITimer.size.y / 13.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+		GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
+		auto t = to_wstring(m_countDown);
+		if (t.size() > 1)
+			GraphicsContext::GetApp()->DrawD2DText(t, UITimer.size.x / 2.29f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+		else
+			GraphicsContext::GetApp()->DrawD2DText(t, UITimer.size.x / 2.27f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	}
+
+	// Score
+	UITextInfo UITimer = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_COUNTDOWN], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_TIMER);
 	GraphicsContext::GetApp()->SetTextSize(UITimer.size.y / 13.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
 	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
-	auto t = to_wstring(m_Timer);
-	GraphicsContext::GetApp()->DrawD2DText(L"10", UITimer.size.x / 2.29f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	auto cs = to_wstring(m_CowBoyGemNum);
+	auto gs = to_wstring(m_GunManGemNum);
+	if(cs.size() > 1)
+		GraphicsContext::GetApp()->DrawD2DText(cs, UITimer.size.x * 0.033f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	else
+		GraphicsContext::GetApp()->DrawD2DText(cs, UITimer.size.x * 0.038f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	if(gs.size() > 1)
+		GraphicsContext::GetApp()->DrawD2DText(gs, UITimer.size.x * 0.837f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	else
+		GraphicsContext::GetApp()->DrawD2DText(gs, UITimer.size.x * 0.842f, UITimer.pos.y / 5.f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+
+	UITextInfo UIHealth = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_HEALTH);
+	// StartCount
+	m_StartCount;
+	GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 9.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
 
 	// HP
-	UITextInfo UIHealth = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_HEALTH);
 	GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 9.f , DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
 	GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
-	
+
 #ifdef DEBUG_CLIENT
 	auto hp = to_wstring(m_Users[1]->m_hp);
 #elif DEBUG_SERVER

@@ -44,6 +44,12 @@ public:
 public:
 	bool m_PauseScene = true;
 
+	bool m_isCountDownOn = false;
+	int m_countDown;
+
+	int m_CowBoyGemNum = 0;
+	int m_GunManGemNum = 0;
+
 private:
 	// 플레이어들
 	std::map<int, Character*> m_Users;
@@ -60,5 +66,7 @@ private:
 private:
 	bool m_IsGameOver = false;
 	int m_Winner{ 0 };
+
+	int m_StartCount = 1;
 };
 

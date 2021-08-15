@@ -822,6 +822,13 @@ void AssertsReference::BuildMaterials()
 	GAMEPLAY_WINNERBOARD->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	GAMEPLAY_WINNERBOARD->Roughness = 0.9;
 
+	auto GAMEPLAY_WINNERBOARD2 = std::make_unique<Material>();
+	GAMEPLAY_WINNERBOARD2->MatCBIndex = TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD2;
+	GAMEPLAY_WINNERBOARD2->DiffuseSrvHeapIndex = TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD2;
+	GAMEPLAY_WINNERBOARD2->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	GAMEPLAY_WINNERBOARD2->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	GAMEPLAY_WINNERBOARD2->Roughness = 0.9;
+
 	// ------------------------------------------------------------------------------------
 
 	auto T_Smoke_Tiled_D = std::make_unique<Material>();
@@ -872,6 +879,7 @@ void AssertsReference::BuildMaterials()
 	m_Materials[TEXTURE_STR_UI_GAMEPLAY_STATE_FRONT] = std::move(GAMEPLAY_STATE_FRONT);
 	m_Materials[TEXTURE_STR_UI_GAMEPLAY_STATE_BACK] = std::move(GAMEPLAY_STATE_BACK);
 	m_Materials[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD] = std::move(GAMEPLAY_WINNERBOARD);
+	m_Materials[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD2] = std::move(GAMEPLAY_WINNERBOARD2);
 
 	m_Materials[TEXTURE_STR_T_Smoke_Tiled_D] = std::move(T_Smoke_Tiled_D);
 	m_Materials[TEXTURE_STR_P_SKILL_ON] = std::move(P_SKILL_ON);
