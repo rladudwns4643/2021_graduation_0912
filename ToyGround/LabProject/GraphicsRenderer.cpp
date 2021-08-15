@@ -134,7 +134,7 @@ void GraphicsRenderer::LoadTextures()
 		"UI_GAMEPLAY_STATE_BACK",
 		"UI_GAMEPLAY_WINNERBOARD",
 		"T_Smoke_Tiled_D",
-		"P_CHERRY_BLOSSOM",
+		"P_SKILL_ON",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -169,7 +169,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/GamePlay/GamePlay_StateUI_Back.dds",
 		L"./Textures/GamePlay/GamePlay_WinnerBoard.dds",
 		L"./Textures/Particle/T_Smoke_Tiled_D.dds",
-		L"./Textures/Particle/cherry_blossom.dds",
+		L"./Textures/Particle/P_Skill_On.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -236,7 +236,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_STATE_BACK]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD]->Resource,
 		m_Textures[TEXTURE_STR_T_Smoke_Tiled_D]->Resource,
-		m_Textures[TEXTURE_STR_P_CHERRY_BLOSSOM]->Resource,
+		m_Textures[TEXTURE_STR_P_SKILL_ON]->Resource,
 	};
 
 	auto SkyBox = m_Textures["SkyBox"]->Resource;

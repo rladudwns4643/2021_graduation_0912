@@ -831,12 +831,12 @@ void AssertsReference::BuildMaterials()
 	T_Smoke_Tiled_D->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	T_Smoke_Tiled_D->Roughness = 0.9;
 
-	auto CHERRY_BLOSSOM = std::make_unique<Material>();
-	CHERRY_BLOSSOM->MatCBIndex = TEXTURE_INDEX_P_CHERRY_BLOSSOM;
-	CHERRY_BLOSSOM->DiffuseSrvHeapIndex = TEXTURE_INDEX_P_CHERRY_BLOSSOM;
-	CHERRY_BLOSSOM->DiffuseAlbedo = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-	CHERRY_BLOSSOM->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
-	CHERRY_BLOSSOM->Roughness = 0.9;
+	auto P_SKILL_ON = std::make_unique<Material>();
+	P_SKILL_ON->MatCBIndex = TEXTURE_INDEX_P_SKILL_ON;
+	P_SKILL_ON->DiffuseSrvHeapIndex = TEXTURE_INDEX_P_SKILL_ON;
+	P_SKILL_ON->DiffuseAlbedo = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	P_SKILL_ON->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
+	P_SKILL_ON->Roughness = 0.9;
 
 	// ------------------------------------------------------------------------------------
 
@@ -874,7 +874,7 @@ void AssertsReference::BuildMaterials()
 	m_Materials[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD] = std::move(GAMEPLAY_WINNERBOARD);
 
 	m_Materials[TEXTURE_STR_T_Smoke_Tiled_D] = std::move(T_Smoke_Tiled_D);
-	m_Materials[TEXTURE_STR_P_CHERRY_BLOSSOM] = std::move(CHERRY_BLOSSOM);
+	m_Materials[TEXTURE_STR_P_SKILL_ON] = std::move(P_SKILL_ON);
 }
 
 void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)

@@ -575,10 +575,6 @@ void ApplicationContext::UpdateBullet()
 	{
 		HiddenBullet(hiddenSkillBulletIndex[i], 2);
 	}
-
-	cout << "player1 HP: " << player1->m_hp << endl;
-	cout << "player2 HP: " << player2->m_hp << endl;
-
 }
 
 void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 look, int firedPlayerID, int bulletNum)
