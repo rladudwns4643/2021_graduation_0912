@@ -154,7 +154,7 @@ void LobbyController::MouseCallback()
 		// EXit Button
 
 		// EXit Button
-		if (530 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+		if (730 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "Exit Button Click" << endl;
