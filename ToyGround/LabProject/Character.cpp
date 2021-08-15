@@ -795,8 +795,6 @@ void Character::Attack()
 	}
 	else {
 		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 2, m_attackDirection, 1);
-		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 2, m_attackDirection, 1);
-		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 2, m_attackDirection, 1);
 	}
 #elif DEBUG_CLIENT
 	if(m_isSkillOn == true)
