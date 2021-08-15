@@ -273,6 +273,7 @@ void Room::LeaveRoom(int id) {
 	int leaverID;
 
 	for (int i = 0; i < MAX_PLAYER; ++i) {
+		if (m_players[i] == nullptr) return;
 		leaverID = m_players[i]->GetID();
 		if (leaverID == id) leaverIdx = i;
 	}
@@ -372,13 +373,13 @@ void Room::CheckGameState() {
 			GameOver(0); //draw
 		}
 		for (int i = 0; i < MAX_PLAYER; ++i) {
-			if (m_players[i]->GetCoin() > WIN_COIN_CNT && !m_players[i]->GetWinSatisfaction()) {
+			if (m_players[i]->GetCoin() >= WIN_COIN_CNT && !m_players[i]->GetWinSatisfaction()) {
 				m_players[i]->SetWinSatisfaction(true);
 				PushNewWinSatisfaction(m_players[i]->GetID());
 				m_players[i]->SetWinTime(m_leftTime - NEED_TIME_TO_WIN);
 				//GameOver(m_players[i]->GetID());
 			}
-			if (m_players[i]->GetWinTime() < m_leftTime && m_players[i]->GetWinSatisfaction()) {
+			if (m_players[i]->GetWinTime() >= m_leftTime && m_players[i]->GetWinSatisfaction()) {
 				GameOver(m_players[i]->GetID());
 			}
 		}
@@ -409,9 +410,9 @@ void Room::RoundStart() {
 		const int& id = m_players[i]->GetID();
 		if (id != -1) {
 			PushRoundStartMsg();
-			CreateAddCoinEvent();
 		}
 	}
+	CreateAddCoinEvent();
 }
 
 void Room::GameOver(int winner) {
@@ -897,7 +898,9 @@ void Room::ProcMsg(message msg) {
 				m_coins[t_delete_coin_id] = false;
 				PushUpdateCoinMsg(t_id, t_coin, t_delete_coin_id);
 			}
+			cout << " PLAYER: " << pl->GetID() << " COIN: " << pl->GetCoin();
 		}
+		cout << endl;
 		break;
 	}
 	case CB_LOOK_VECTOR: {
