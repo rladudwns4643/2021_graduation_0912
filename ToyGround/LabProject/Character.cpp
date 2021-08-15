@@ -49,6 +49,8 @@ void Character::ResetCharacterState()
 	m_tempSkillGauge = m_skillGauge;
 
 	SetIndexPos(m_Position);
+
+	UpdateStateUI();
 }
 void Character::InitializeTransform()
 {

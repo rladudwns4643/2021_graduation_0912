@@ -172,15 +172,21 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		va_end(ap);
 
 		cout << "CALLBACK DIE" << endl;
-		m_Users[arg_id]->Death();
-
-		break;
-	}
-	case EVENT_GAME_RESPAWN: {
-		cout << "EVENT_GAME_RESPAWN" << endl;
-		for (auto& a : m_Users) {
-			a.second->Respawn();
+		if (arg_id == Service::GetApp()->GetMyBattleID()) {
+			CommandCenter::GetApp()->ResetCommand();
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[arg_id]);
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), m_Users[arg_id]);
+			m_Users[arg_id]->m_isLive = false;
+			CommandCenter::GetApp()->m_StartDeathAnim = true;
 		}
+		else {
+			EnemyCommandCenter::GetApp()->ResetCommand();
+			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[arg_id]);
+			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), m_Users[arg_id]);
+			m_Users[arg_id]->m_isLive = false;
+			EnemyCommandCenter::GetApp()->m_StartDeathAnim = true;
+		}
+
 		break;
 	}
 	case EVENT_GAME_CALLBACK_PUSH_ANIM: {
@@ -191,7 +197,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
-		//cout << "EVENT_GAME_CALLBACK_PUSH_ANIM: " << arg_id << "type: " << arg_anim_type << endl;
+		cout << "EVENT_GAME_CALLBACK_PUSH_ANIM: " << arg_id << "type: " << arg_anim_type << endl;
 		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[arg_id]);
 		if (arg_anim_type == static_cast<int>(MoveState::Jump)) {
 			EnemyCommandCenter::GetApp()->m_StartJumpAnim = true;
@@ -209,7 +215,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
-		//cout << "EVENT_GAME_CALLBACK_POP_ANIM: " << arg_id << "type: " << arg_anim_type << endl;
+		cout << "EVENT_GAME_CALLBACK_POP_ANIM: " << arg_id << "type: " << arg_anim_type << endl;
 		EnemyCommandCenter::GetApp()->PopCommand(arg_anim_type);
 		break;
 	}
