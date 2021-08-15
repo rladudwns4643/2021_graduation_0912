@@ -57,6 +57,7 @@
 #define ADD_COIN_TIME 15 //second
 #define RELOAD_BULLET_TIME 2 //second
 #define MAKE_BULLET_EMPTY 5 //second
+#define RESPAWN_TIME 10 //second
 //------------------------------------------------------------------
 
 
@@ -195,7 +196,7 @@ struct cl_packet_cancel_automatch {
 
 #define BC_CALLBACK_HIT			39
 #define BC_CALLBACK_DIE			40
-
+#define BC_RESPAWN				141
 #define BC_UPDATED_USER_INFO	41
 
 #pragma pack(push, 1)
@@ -382,6 +383,10 @@ struct bc_packet_callback_die {
 	BYTE type;
 
 	int id;
+};
+struct bc_packet_respawn {
+	BYTE size;
+	BYTE type;
 };
 struct bc_packet_push_anim_type {
 	BYTE size;

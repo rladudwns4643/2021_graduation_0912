@@ -125,6 +125,11 @@ void WorkerThread::ProcThread() {
 			SR::g_rooms[room_id]->SetEmptyBullet();
 			break;
 		}
+		case EVENT_TYPE::EV_RESPAWN: {
+			int room_id = *(int*)ex_over->net_buf;
+			SR::g_rooms[room_id]->Respawn();
+			break;
+		}
 		case EVENT_TYPE::EV_MOVE_ENABLE: {
 			int room_id = *(int*)ex_over->net_buf;
 			SR::g_rooms[room_id]->MakeMove(key);
@@ -288,6 +293,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 			break;
 		}
 		msg.id = p->id;
+		msg.type = CB_REQUEST_DIE;
 		break;
 	}
 	case CB_POSITION_VECTOR: {

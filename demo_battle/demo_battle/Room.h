@@ -80,6 +80,7 @@ public:		//send msg
 	void PushRoundStartMsg();
 	void PushRoomLeaveMsg(int to, int leave);
 	void PushGameStartMsg(int id, PTC_START_INFO* player_info);
+	void PushRespawnMsg();
 
 	void PushReadyMsg(int id, bool ready);
 	void PushUnReadyMsg(int id);
@@ -97,6 +98,7 @@ public:		//send msg
 
 	int GetEmptyBullet();
 	void SetEmptyBullet();
+	void Respawn();
 
 private:	//recv msg
 	void CopyRecvMsgs();		//m_msg¿¡ msg push

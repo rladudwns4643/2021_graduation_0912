@@ -59,6 +59,11 @@ void TimerThread::ProcThread() {
 				*(int*)ex_over->net_buf = proc_ev.target;
 				break;
 			}
+			case EVENT_TYPE::EV_RESPAWN: {
+				ex_over->ev_type = EVENT_TYPE::EV_RESPAWN;
+				*(int*)ex_over->net_buf = proc_ev.target;
+				break;
+			}
 			case EVENT_TYPE::EV_MAKE_MOVE_DISABLE: {
 				ex_over->ev_type = EVENT_TYPE::EV_MAKE_MOVE_DISABLE;
 				*(int*)ex_over->net_buf = proc_ev.target;
