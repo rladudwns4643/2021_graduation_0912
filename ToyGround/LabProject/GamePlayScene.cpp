@@ -171,13 +171,11 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		va_end(ap);
 
-		cout << "CALLBACK DIE" << endl;
 		m_Users[arg_id]->Death();
 
 		break;
 	}
 	case EVENT_GAME_RESPAWN: {
-		cout << "EVENT_GAME_RESPAWN" << endl;
 		for (auto& a : m_Users) {
 			a.second->Respawn();
 		}
