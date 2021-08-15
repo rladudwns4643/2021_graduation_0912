@@ -268,6 +268,7 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D(OBJECT_TYPE_STATE_FRONT, OBJECT_NAME_GAMEPLAY_STATE_FRONT, TEXTURE_INDEX_UI_GAMEPLAY_STATE_FRONT);
 	AppContext->CreateUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD, TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD);
 	AppContext->CreateUI2D(OBJECT_TYPE_WINNERBOARD2, OBJECT_NAME_GAMEPLAY_WINNERBOARD2, TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD2);
+	AppContext->CreateUI2D(OBJECT_TYPE_ENEMY_HEALTH, OBJECT_NAME_GAMEPLAY_ENEMY_HEALTH, TEXTURE_INDEX_UI_GAMEPLAY_HEALTH);
 
 	// 보석 생성
 	AppContext->CreateGem();
@@ -355,6 +356,7 @@ bool GameplayScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK, XMFLOAT2(-730.f, -423.f), XMFLOAT2(255, 140), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD, XMFLOAT2(0, 0), XMFLOAT2(500.f, 150.f), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_WINNERBOARD2, OBJECT_NAME_GAMEPLAY_WINNERBOARD2, XMFLOAT2(0, 0), XMFLOAT2(500.f, 150.f), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_ENEMY_HEALTH, OBJECT_NAME_GAMEPLAY_ENEMY_HEALTH, XMFLOAT2(730.f, -360.f), XMFLOAT2(245, 45), TextAlignType::Center, -1, true);
 
 
 	// 카메라 세팅
@@ -401,6 +403,7 @@ void GameplayScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK);
 	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD);
 	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD2, OBJECT_NAME_GAMEPLAY_WINNERBOARD2);
+	AppContext->HiddenUI2D(OBJECT_TYPE_ENEMY_HEALTH, OBJECT_NAME_GAMEPLAY_ENEMY_HEALTH);
 
 	// 파티클
 	AppContext->HiddenParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_COWBOY);
@@ -473,6 +476,8 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD2], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_COUNTDOWN], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_COUNTDOWN], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
 	
 
 	// Particle
@@ -568,6 +573,7 @@ void GameplayScene::Render()
 		else
 			GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD2], AppContext->m_RItemsVec);
 	}
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
 }
 
 void GameplayScene::RenderText()
@@ -616,13 +622,20 @@ void GameplayScene::RenderText()
 
 #ifdef DEBUG_CLIENT
 	auto hp = to_wstring(m_Users[1]->m_hp);
+	auto ehp = to_wstring(m_Users[2]->m_hp);
 #elif DEBUG_SERVER
 	auto hp = to_wstring(m_Users[NetCore::GetApp()->GetBattleID()]->m_hp);
+	auto ehp = to_wstring(m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp);
 #endif
-	float hpPosY = UIHealth.size.y * 0.21f;
+	float hpPosX = UIHealth.size.y * 0.21f;
 	for(int i = 0; i < 4 - hp.size(); ++i)
-		hpPosY += 15;
-	GraphicsContext::GetApp()->DrawD2DText(hp, hpPosY, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+		hpPosX += 15;
+
+	float ehpPosX = UIHealth.size.y * 2.38f;
+	for (int i = 0; i < 4 - ehp.size(); ++i)
+		ehpPosX += 15;
+	GraphicsContext::GetApp()->DrawD2DText(hp, hpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 }
 
 void GameplayScene::WriteShadow()
