@@ -64,11 +64,13 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 	}
 	case EVENT_ROOM_ENTER: {
 		int arg_id;
+		string arg_name;
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
+		arg_name = va_arg(ap, string);
 		va_end(ap);
-		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id, arg_name);
 		break;
 	}
 	case EVENT_ROOM_LEAVE: {

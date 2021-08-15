@@ -223,7 +223,7 @@ void BattleServer::SendRoomEnterPacket(int to, int enterer, bool ready, char pla
 	p.id = enterer;
 	p.ready = ready;
 	p.player_no = playerNo;
-	strcpy(p.name, name);
+	memcpy(p.name, name, sizeof(char) * MAX_ID_LEN);
 	p.mmr = mmr;
 	p.isManager = isManager;
 	SendPacket(to, &p);
