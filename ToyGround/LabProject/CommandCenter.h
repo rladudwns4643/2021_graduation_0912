@@ -76,7 +76,7 @@ private:
 public:
 	bool  m_StartAttackAnim = false;
 	bool  m_AttackCoolTimeSwitch = false;
-	float m_AttackAnimTime = 80.f;
+	float m_AttackAnimTime = 40.f;
 	float m_AttackDeltaT = 0;
 
 	bool	m_StartJumpAnim = false;

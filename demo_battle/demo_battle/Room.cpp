@@ -853,18 +853,21 @@ void Room::ProcMsg(message msg) {
 				break;
 			}
 		}
-		PTC_VECTOR t_pos{};
-		t_pos.x = pos.x;
-		t_pos.y = pos.y + 90.f;
-		t_pos.z = pos.z;
-		int bullet_idx = GetEmptyBullet();
+		for (size_t i = 0; i < 3; ++i)
+		{
+			XMFLOAT3 T{ 0.f, 0.f, 0.f };
+			T = SMathHelper::Add(T, msg.vec, i * 100);
+			PTC_VECTOR t_pos{};
+			t_pos.x = pos.x + T.x;
+			t_pos.y = pos.y + 90.f + T.y;
+			t_pos.z = pos.z + T.z;
+			int bullet_idx = GetEmptyBullet();
 
-		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(MAKE_BULLET_EMPTY), EVENT_TYPE::EV_MAKE_EMPTY_BULLET };
-		BattleServer::GetInstance()->AddTimer(ev);
+			EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(MAKE_BULLET_EMPTY), EVENT_TYPE::EV_MAKE_EMPTY_BULLET };
+			BattleServer::GetInstance()->AddTimer(ev);
 
-		cout << "GET REQUEST BULLET" << endl;
-
-		PushShootBulletMsg(t_id, t_bullet_type, bullet_idx, t_v, t_pos);
+			PushShootBulletMsg(t_id, t_bullet_type, bullet_idx, t_v, t_pos);
+		}
 		break;
 	}
 	case CB_PUSH_ANIM: {
