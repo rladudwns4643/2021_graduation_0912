@@ -366,6 +366,7 @@ void Character::SetMaterial(int materialIndex)
 
 void Character::SetPosition(float posX, float posY, float posZ)
 {
+	SetIndexPos(posX, posY, posZ);
 	// Attack_Box
 	if (m_MyCamera)
 	{

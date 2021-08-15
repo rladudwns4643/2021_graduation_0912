@@ -225,9 +225,17 @@ void ApplicationContext::UpdateBullet()
 {
 	int hiddenBulletIndex[MAX_BULLET_COUNT];
 	int hiddenBulletCount = 0;
+	Character* player1 = FindObject<Character>(CHARACTER_COWBOY, CHARACTER_COWBOY);
+	Character* player2 = FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
+	XMFLOAT3 player1IndexPos = player1->GetIndexPos();
+	XMFLOAT3 player2IndexPos = player2->GetIndexPos();
+	XMFLOAT3 player1Pos = player2->GetPosition();
+	XMFLOAT3 player2Pos = player2->GetPosition();
+	BoundingBox player1Bound = player1->GetBoundingBox();
+	BoundingBox player2Bound = player2->GetBoundingBox();
+	
 	for (int i = 0; i < m_ActiveBulletCnt; ++i)
 	{
-		cout << "!!" << endl;
 		GameObject* bullet = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + m_ActiveBullet[i]));
 		if (bullet->m_IsVisible == false || !bullet) continue;
 		bullet->Update();
@@ -285,6 +293,71 @@ void ApplicationContext::UpdateBullet()
 					|| aZ < 0 || aZ >= MAP_DEPTH_BLOCK_NUM)
 					continue;
 
+				// 캐릭터와 충돌
+				if (bullet->m_FiredPlayerID != player1->m_PlayerID)
+				{
+					if (player1IndexPos.x == aX &&
+						player1IndexPos.y == aY &&
+						player1IndexPos.z == aZ)
+					{
+						XMFLOAT3 player1Min(player1Pos.x + player1Bound.Center.x - (player1Bound.Extents.x / 2),
+							player1Pos.y + player1Bound.Center.y,
+							player1Pos.z + player1Bound.Center.z - (player1Bound.Extents.z / 2));
+						XMFLOAT3 bulletMin(pos.x + bound.Center.x - (bound.Extents.x / 2),
+							pos.y + bound.Center.y,
+							pos.z + bound.Center.z - (bound.Extents.z / 2));
+						XMFLOAT3 player1Max(player1Pos.x + player1Bound.Center.x + (player1Bound.Extents.x / 2),
+							player1Pos.y + player1Bound.Center.y + player1Bound.Extents.y,
+							player1Pos.z + player1Bound.Center.z + (player1Bound.Extents.z / 2));
+						XMFLOAT3 bulletMax(pos.x + bound.Center.x + (bound.Extents.x / 2),
+							pos.y + bound.Center.y + bound.Extents.y,
+							pos.z + bound.Center.z + (bound.Extents.z / 2));
+
+						if (player1Min.x <= bulletMax.x && player1Max.x >= bulletMin.x &&
+							player1Min.y <= bulletMax.y && player1Max.y >= bulletMin.y &&
+							player1Min.z <= bulletMax.z && player1Max.z >= bulletMin.z)
+						{
+							hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
+							bulletCollObj = true;
+							player1->m_hp -= 450;
+							cout << "Player1 HP: " << player1->m_hp << endl;
+							break;
+						}
+					}
+				}
+				else if (bullet->m_FiredPlayerID != player2->m_PlayerID)
+				{
+					if (player2IndexPos.x == aX &&
+						player2IndexPos.y == aY &&
+						player2IndexPos.z == aZ)
+					{
+						XMFLOAT3 player2Min(player2Pos.x + player2Bound.Center.x - (player2Bound.Extents.x / 2),
+							player2Pos.y + player2Bound.Center.y,
+							player2Pos.z + player2Bound.Center.z - (player2Bound.Extents.z / 2));
+						XMFLOAT3 bulletMin(pos.x + bound.Center.x - (bound.Extents.x / 2),
+							pos.y + bound.Center.y,
+							pos.z + bound.Center.z - (bound.Extents.z / 2));
+						XMFLOAT3 player2Max(player2Pos.x + player2Bound.Center.x + (player2Bound.Extents.x / 2),
+							player2Pos.y + player2Bound.Center.y + player2Bound.Extents.y,
+							player2Pos.z + player2Bound.Center.z + (player2Bound.Extents.z / 2));
+						XMFLOAT3 bulletMax(pos.x + bound.Center.x + (bound.Extents.x / 2),
+							pos.y + bound.Center.y + bound.Extents.y,
+							pos.z + bound.Center.z + (bound.Extents.z / 2));
+
+						if (player2Min.x <= bulletMax.x && player2Max.x >= bulletMin.x &&
+							player2Min.y <= bulletMax.y && player2Max.y >= bulletMin.y &&
+							player2Min.z <= bulletMax.z && player2Max.z >= bulletMin.z)
+						{
+							hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
+							bulletCollObj = true;
+							player2->m_hp -= 450;
+							cout << "Player2 HP: " << player2->m_hp << endl;
+							break;
+						}
+					}
+				}
+
+				// 오브젝트와 충돌
 				if (p.typeID == AppContext->m_MapArray[aY][aZ][aX] && p.colWithChar)
 				{
 					GameObject* obj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
@@ -383,6 +456,71 @@ void ApplicationContext::UpdateBullet()
 					|| aY <= 0 || aY >= MAP_HEIGHT_BLOCK_NUM
 					|| aZ < 0 || aZ >= MAP_DEPTH_BLOCK_NUM)
 					continue;
+
+				// 캐릭터와 충돌
+				if (bullet->m_FiredPlayerID != player1->m_PlayerID)
+				{
+					if (player1IndexPos.x == aX &&
+						player1IndexPos.y == aY &&
+						player1IndexPos.z == aZ)
+					{
+						XMFLOAT3 player1Min(player1Pos.x + player1Bound.Center.x - (player1Bound.Extents.x / 2),
+							player1Pos.y + player1Bound.Center.y,
+							player1Pos.z + player1Bound.Center.z - (player1Bound.Extents.z / 2));
+						XMFLOAT3 bulletMin(pos.x + bound.Center.x - (bound.Extents.x / 2),
+							pos.y + bound.Center.y,
+							pos.z + bound.Center.z - (bound.Extents.z / 2));
+						XMFLOAT3 player1Max(player1Pos.x + player1Bound.Center.x + (player1Bound.Extents.x / 2),
+							player1Pos.y + player1Bound.Center.y + player1Bound.Extents.y,
+							player1Pos.z + player1Bound.Center.z + (player1Bound.Extents.z / 2));
+						XMFLOAT3 bulletMax(pos.x + bound.Center.x + (bound.Extents.x / 2),
+							pos.y + bound.Center.y + bound.Extents.y,
+							pos.z + bound.Center.z + (bound.Extents.z / 2));
+
+						if (player1Min.x <= bulletMax.x && player1Max.x >= bulletMin.x &&
+							player1Min.y <= bulletMax.y && player1Max.y >= bulletMin.y &&
+							player1Min.z <= bulletMax.z && player1Max.z >= bulletMin.z)
+						{
+							hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
+							bulletCollObj = true;
+							player1->m_hp -= 450;
+							cout << "Player1 HP: " << player1->m_hp << endl;
+							break;
+						}
+					}
+				}
+				else if (bullet->m_FiredPlayerID != player2->m_PlayerID)
+				{
+					if (player2IndexPos.x == aX &&
+						player2IndexPos.y == aY &&
+						player2IndexPos.z == aZ)
+					{
+						XMFLOAT3 player2Min(player2Pos.x + player2Bound.Center.x - (player2Bound.Extents.x / 2),
+							player2Pos.y + player2Bound.Center.y,
+							player2Pos.z + player2Bound.Center.z - (player2Bound.Extents.z / 2));
+						XMFLOAT3 bulletMin(pos.x + bound.Center.x - (bound.Extents.x / 2),
+							pos.y + bound.Center.y,
+							pos.z + bound.Center.z - (bound.Extents.z / 2));
+						XMFLOAT3 player2Max(player2Pos.x + player2Bound.Center.x + (player2Bound.Extents.x / 2),
+							player2Pos.y + player2Bound.Center.y + player2Bound.Extents.y,
+							player2Pos.z + player2Bound.Center.z + (player2Bound.Extents.z / 2));
+						XMFLOAT3 bulletMax(pos.x + bound.Center.x + (bound.Extents.x / 2),
+							pos.y + bound.Center.y + bound.Extents.y,
+							pos.z + bound.Center.z + (bound.Extents.z / 2));
+
+						if (player2Min.x <= bulletMax.x && player2Max.x >= bulletMin.x &&
+							player2Min.y <= bulletMax.y && player2Max.y >= bulletMin.y &&
+							player2Min.z <= bulletMax.z && player2Max.z >= bulletMin.z)
+						{
+							hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
+							bulletCollObj = true;
+							player2->m_hp -= 450;
+							cout << "Player2 HP: " << player2->m_hp << endl;
+							break;
+						}
+					}
+				}
+
 
 				if (p.typeID == AppContext->m_MapArray[aY][aZ][aX])
 				{
