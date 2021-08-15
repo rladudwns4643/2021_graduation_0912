@@ -101,6 +101,11 @@ bool MatchingRoomScene::Enter()
 
 	TOY_GROUND::GetApp()->m_Camera->CameraInitialize(SceneType::eMatchingRoom);
 
+	CommandCenter::GetApp()->ResetCommand();
+	EnemyCommandCenter::GetApp()->ResetCommand();
+	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::T_Pose), m_Toys[0]);
+	EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::T_Pose), m_Toys[1]);
+
 	m_ScaleConvert = XMFLOAT2(1.f, 1.f);
 
 	AppContext->DisplayUI2D(OBJECT_NAME_MATCHINGROOM_BACKGROUND, OBJECT_NAME_MATCHINGROOM_BACKGROUND, XMFLOAT2(0.f, 0.f), XMFLOAT2(1280, 720), TextAlignType::Center);

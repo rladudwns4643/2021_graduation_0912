@@ -310,9 +310,12 @@ bool GameplayScene::Enter()
 	m_Users[2]->m_IsVisibleOnePassCheck = true;
 	m_Users[2]->m_MapName = m_MapName;
 
-	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[m_PlayerID]);
+	CommandCenter::GetApp()->ResetCommand();
+	EnemyCommandCenter::GetApp()->ResetCommand();
+	CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[1]);
 	EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[2]);
-#endif
+#endif:
+
 	m_Users[m_PlayerID]->SetCamera(TOY_GROUND::GetApp()->m_Camera, CameraType::eThird);
 	m_Users[m_PlayerID]->SetController();
 	///---
