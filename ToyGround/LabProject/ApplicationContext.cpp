@@ -230,7 +230,7 @@ void ApplicationContext::UpdateBullet()
 	Character* player2 = FindObject<Character>(CHARACTER_GUNMAN, CHARACTER_GUNMAN);
 	XMFLOAT3 player1IndexPos = player1->GetIndexPos();
 	XMFLOAT3 player2IndexPos = player2->GetIndexPos();
-	XMFLOAT3 player1Pos = player2->GetPosition();
+	XMFLOAT3 player1Pos = player1->GetPosition();
 	XMFLOAT3 player2Pos = player2->GetPosition();
 	BoundingBox player1Bound = player1->GetBoundingBox();
 	BoundingBox player2Bound = player2->GetBoundingBox();

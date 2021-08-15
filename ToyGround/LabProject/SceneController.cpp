@@ -223,7 +223,7 @@ void LobbyController::MouseCallback()
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 		}
 		// Start Button
-		if (530 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+		if (730 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			m_MyScene->m_isMatching = true;
