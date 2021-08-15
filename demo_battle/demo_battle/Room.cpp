@@ -42,8 +42,12 @@ void Room::Initialize(int room_no) {
 
 	for (auto& p : m_players) p = new Toy();
 
-	int bulletUniqueID{ OBJECT_START_INDEX_BULLET_01 };
-	for (int i = 0; i < MAX_BULLET_COUNT; ++i) m_bullets[i].SetuniqueID(bulletUniqueID++);
+	for (auto& a : m_bullets) {
+		a = false;
+	}
+	while (!m_q_bullet.empty()) {
+		m_q_bullet.pop();
+	}
 
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(30ms), EVENT_TYPE::EV_UPDATE };
 	BattleServer::GetInstance()->AddTimer(ev);
@@ -346,8 +350,7 @@ void Room::CreateAddCoinEvent() {
 	m_coin_cur++;
 }
 
-void Room::CreateReloadBulletEvent()
-{
+void Room::CreateReloadBulletEvent(){
 	if (this == nullptr) return;
 	if (!IsGameStarted()) return;
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(RELOAD_BULLET_TIME), EVENT_TYPE::EV_RELOAD_BULLET };
@@ -528,13 +531,21 @@ void Room::PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* 
 	PushSendMsg(id, &p);
 }
 
-void Room::PushShootBulletMsg(int to, int bullet_id, PTC_VECTOR look) {
-	bc_packet_shoot_bullet p;
+void Room::PushShootBulletMsg(int from, short bullet_type, short bullet_idx, PTC_VECTOR look, PTC_VECTOR pos) {
+	bc_packet_callback_bullet p;
 	p.size = sizeof(p);
-	p.type = BC_SHOOT_BULLET;
-	p.bullet_id = bullet_id;
-	p.pos = look;
-	PushSendMsg(to, &p);
+	p.type = BC_CALLBACK_BULLET;
+	p.shootter_id = from;
+	p.bullet_type = bullet_type;
+	p.bullet_idx = bullet_idx;
+	p.cam_look = look;
+	p.bullet_pos = pos;
+
+	int id{};
+	for (const auto& pl : m_players) {
+		id = pl->GetID();
+		if (id != -1) PushSendMsg(id, &p);
+	}
 }
 
 void Room::PushRemoveBulletMsg(int bullet_id) {
@@ -728,13 +739,13 @@ void Room::ProcMsg(message msg) {
 		break;
 	}
 	case CB_POSITION_VECTOR: {
+		int t_id{ msg.id };
+		PTC_VECTOR t_v;
+		int t_anim{ msg.anim_type };
+		t_v.x = msg.vec.x;
+		t_v.y = msg.vec.y;
+		t_v.z = msg.vec.z;
 		for (auto& pl : m_players) {
-			int t_id{ msg.id };
-			PTC_VECTOR t_v;
-			int t_anim{ msg.anim_type };
-			t_v.x = msg.vec.x;
-			t_v.y = msg.vec.y;
-			t_v.z = msg.vec.z;
 			if (t_id == pl->GetID()) {
 				pl->SetPosition(XMFLOAT3{ t_v.x, t_v.y, t_v.z });
 				//pl->SetAnimType(t_anim);
@@ -745,6 +756,35 @@ void Room::ProcMsg(message msg) {
 				//PushAnimMsg(pl->GetID(), t_id, pl->GetAnimType());
 			}
 		}
+		break;
+	}
+	case CB_REQUEST_BULLET: {
+		int t_id{ msg.id };
+		int t_bullet_type{ msg.anim_type };
+		PTC_VECTOR t_v{};
+		t_v.x = msg.vec.x;
+		t_v.y = msg.vec.y;
+		t_v.z = msg.vec.z;
+
+		XMFLOAT3 pos{};
+		for (auto& pl : m_players) {
+			if (pl->GetID() == t_id) {
+				pos = pl->GetPosition();
+				break;
+			}
+		}
+		PTC_VECTOR t_pos{};
+		t_pos.x = pos.x;
+		t_pos.y = pos.y + 90.f;
+		t_pos.z = pos.z;
+		int bullet_idx = GetEmptyBullet();
+
+		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(MAKE_BULLET_EMPTY), EVENT_TYPE::EV_MAKE_EMPTY_BULLET };
+		BattleServer::GetInstance()->AddTimer(ev);
+
+		cout << "GET REQUEST BULLET" << endl;
+
+		PushShootBulletMsg(t_id, t_bullet_type, bullet_idx, t_v, t_pos);
 		break;
 	}
 	case CB_PUSH_ANIM: {
@@ -782,44 +822,6 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_BULLET: {
-		if (!m_isRoundStarted) break;
-		int bullet_id{};
-		for (auto& pl : m_players) {
-			for (int i = 0; i < MAX_BULLET_COUNT; ++i) {
-				if (!m_bullets[i].isBulletActive()) {
-					bullet_id = i;
-					//todo~
-					//서버에서 물리처리 삭제
-					XMFLOAT3 look{ pl->GetCurObject()->GetLook() };
-					m_bullets[i].Shoot(pl->GetCurObject()->GetPosition(), look, msg.vec, 1.f);
-					//~
-					static_cast<Toy*>(pl)->SetIsShoot(true);
-					break;
-				}
-				else if (i + 1 == MAX_BULLET_COUNT) {
-#ifdef LOG_ON
-					cout << "bullet max\n";
-#endif LOG_ON
-				}
-			}
-		}
-
-		XMFLOAT3 bullet_pos{ m_bullets[bullet_id].GetPosition() };
-		PTC_VECTOR ptc_bullet_pos{};
-		ptc_bullet_pos.x = bullet_pos.x;
-		ptc_bullet_pos.y = bullet_pos.y;
-		ptc_bullet_pos.z = bullet_pos.z;
-		
-		int id{};
-		for (const auto& pl : m_players) {
-			id = pl->GetID();
-			if (id != -1) {
-				PushShootBulletMsg(id, bullet_id, ptc_bullet_pos);
-			}
-		}
-		break;
-	}
 	case CB_LOOK_VECTOR: {
 		for (auto& pl : m_players) {
 			int id = pl->GetID();
@@ -841,15 +843,28 @@ void Room::ProcMsg(message msg) {
 		}
 		break;
 	}
-	case CB_TEST_TIME_MINUS: {
-		break;
-	}
-	case CB_TEST_TIME_PLUS: {
-		break;
-	}
 	default: {
 		//unknown MSG
 		while (true);
 	}
 	}
+}
+
+int Room::GetEmptyBullet()
+{
+	for (int i = 0; i < MAX_BULLET; ++i) {
+		if (m_bullets[i] == false) {
+			m_bullets[i] = true;
+			m_q_bullet.push(i);
+			return i;
+		}
+	}
+	return 999;
+}
+
+void Room::SetEmptyBullet()
+{
+	int pop = m_q_bullet.front();
+	m_q_bullet.pop();
+	m_bullets[pop] = false;
 }

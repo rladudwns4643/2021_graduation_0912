@@ -225,9 +225,10 @@ void ApplicationContext::UpdateBullet()
 {
 	int hiddenBulletIndex[MAX_BULLET_COUNT];
 	int hiddenBulletCount = 0;
-	for (int i = 0; i < m_AtiveBulletCnt; ++i)
+	for (int i = 0; i < m_ActiveBulletCnt; ++i)
 	{
-		GameObject* bullet = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + m_AtiveBullet[i]));
+		cout << "!!" << endl;
+		GameObject* bullet = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + m_ActiveBullet[i]));
 		if (bullet->m_IsVisible == false || !bullet) continue;
 		bullet->Update();
 
@@ -237,7 +238,7 @@ void ApplicationContext::UpdateBullet()
 			pos.z >= (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE ||
 			pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE) ||
 			pos.y <= 0) {
-			hiddenBulletIndex[hiddenBulletCount++] = m_AtiveBullet[i];
+			hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 			continue;
 		}
 
@@ -260,7 +261,7 @@ void ApplicationContext::UpdateBullet()
 			endCheckZ = true;
 		if (endCheckX && endCheckY && endCheckZ)
 		{
-			hiddenBulletIndex[hiddenBulletCount++] = m_AtiveBullet[i];
+			hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 			continue;
 		}
 
@@ -306,7 +307,7 @@ void ApplicationContext::UpdateBullet()
 						objMin.y <= bulletMax.y && objMax.y >= bulletMin.y &&
 						objMin.z <= bulletMax.z && objMax.z >= bulletMin.z)
 					{
-						hiddenBulletIndex[hiddenBulletCount++] = m_AtiveBullet[i];
+						hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 						bulletCollObj = true;
 						break;
 					}
@@ -505,17 +506,17 @@ void ApplicationContext::HiddenBullet(int instID, int bulletNum)
 
 		obj->m_IsVisible = false;
 		obj->m_IsVisibleOnePassCheck = false;
-		m_AtiveBulletCheck[instID] = false;
+		m_ActiveBulletCheck[instID] = false;
 
 		bool check = false;
-		for (int j = 0; j < m_AtiveBulletCnt; ++j)
+		for (int j = 0; j < m_ActiveBulletCnt; ++j)
 		{
 			if (check)
-				m_AtiveBullet[j - 1] = m_AtiveBullet[j];
-			if (m_AtiveBullet[j] == instID)
+				m_ActiveBullet[j - 1] = m_ActiveBullet[j];
+			if (m_ActiveBullet[j] == instID)
 				check = true;
 		}
-		m_AtiveBulletCnt--;
+		m_ActiveBulletCnt--;
 	}
 	else
 	{
@@ -802,10 +803,10 @@ void ApplicationContext::BulletReset()
 {
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 	{
-		m_AtiveBulletCheck[i] = false;
-		m_AtiveBullet[i] = 0;
+		m_ActiveBulletCheck[i] = false;
+		m_ActiveBullet[i] = 0;
 	}
-	m_AtiveBulletCnt = 0;
+	m_ActiveBulletCnt = 0;
 
 	for (int i = 0; i < MAX_SKILL_BULLET_COUNT; ++i)
 	{

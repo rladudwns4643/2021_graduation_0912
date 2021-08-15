@@ -56,6 +56,7 @@
 //#define MAX_ROOM_COUNT 5
 #define ADD_COIN_TIME 15 //second
 #define RELOAD_BULLET_TIME 2 //second
+#define MAKE_BULLET_EMPTY 5 //second
 //------------------------------------------------------------------
 
 
@@ -188,7 +189,7 @@ struct cl_packet_cancel_automatch {
 #define BC_ANIM_PUSH			35
 #define BC_ANIM_POP				36
 
-#define BC_SHOOT_BULLET			37
+#define BC_CALLBACK_BULLET		37
 #define BC_REMOVE_BULLET		38
 
 #define BC_HIT					39
@@ -346,13 +347,15 @@ struct bc_packet_object_rot {
 	short type_id;
 	float rot_y;
 };
-struct bc_packet_shoot_bullet {
+struct bc_packet_callback_bullet{
 	BYTE size;
 	BYTE type;
 
-	char bullet_id;
-	PTC_VECTOR pos;
-	PTC_VECTOR look;
+	int shootter_id;
+	short bullet_type;
+	short bullet_idx;
+	PTC_VECTOR cam_look;
+	PTC_VECTOR bullet_pos;
 };
 struct bc_packet_remove_bullet {
 	BYTE size;
@@ -404,13 +407,11 @@ struct bc_packet_updated_user_info {
 #define CB_READY				45
 
 #define CB_GET_COIN				46
-#define CB_BULLET				47
+#define CB_REQUEST_BULLET		47
 #define CB_POSITION_VECTOR		48
 #define CB_LOOK_VECTOR			49
 #define CB_PUSH_ANIM			50
 #define CB_POP_ANIM				51
-#define CB_TEST_TIME_PLUS		52
-#define CB_TEST_TIME_MINUS		53
 
 #pragma pack(push, 1)
 struct cb_packet_login {
@@ -468,11 +469,13 @@ struct cb_packet_pop_anim {
 	int id;
 	int anim_type;
 };
-struct cb_packet_bullet {
+struct cb_packet_request_bullet {
 	BYTE size;
 	BYTE type;
-
-	PTC_VECTOR dir; //look angle
+	
+	int id;
+	PTC_VECTOR cam_look; //look angle
+	short bullet_type;
 };
 struct cb_packet_look_vector {
 	BYTE size;
@@ -480,14 +483,6 @@ struct cb_packet_look_vector {
 
 	int id;
 	PTC_VECTOR look;
-};
-struct cb_test_packet_time_plus {
-	BYTE size;
-	BYTE type;
-};
-struct cb_test_packet_time_mimus {
-	BYTE size;
-	BYTE type;
 };
 #pragma pack (pop)
 //------------------------------------------------------------------

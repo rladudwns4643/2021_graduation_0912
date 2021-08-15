@@ -97,7 +97,6 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 	case EVENT_ROOM_FIND_ROOM: {
 		//방찾으면 바로 join 보내기
 		NetCore::GetApp()->SendBattleRoomJoinPacket();
-		//SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_ROOM_FIND_ROOM);
 		break;
 	}
 	case EVENT_ROOM_JOIN_OK: {
@@ -214,7 +213,6 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		va_start(ap, argsCount);
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
-		cout << "REQUEST_PUSH_ANIM" << endl;
 		NetCore::GetApp()->SendRequestPushAnimPacket(arg_anim_type);
 		break;
 	}	
@@ -224,7 +222,6 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		va_start(ap, argsCount);
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
-		cout << "REQUEST_POP_ANIM" << endl;
 		NetCore::GetApp()->SendRequestPopAnimPacket(arg_anim_type);
 		break;
 	}
@@ -254,17 +251,35 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_POP_ANIM, argsCount, arg_id, arg_anim_type);
 		break;
 	}
-	case EVENT_GAME_SHOOT_BULLET: {
-		int arg_bullet_id;
-		XMFLOAT3 arg_start_pos;
+	case EVENT_GAME_CALLBACK_BULLET: {
+		int arg_shootter;
+		short arg_bullet_type;
+		short arg_bullet_idx;
+		XMFLOAT3 arg_cam_look;
+		XMFLOAT3 arg_bullet_pos;
+
 		va_list ap;
 		va_start(ap, argsCount);
-		arg_bullet_id = va_arg(ap, int);
-		arg_start_pos = va_arg(ap, XMFLOAT3);
+		arg_shootter = va_arg(ap, int);
+		arg_bullet_type = va_arg(ap, short);
+		arg_bullet_idx = va_arg(ap, short);
+		arg_cam_look = va_arg(ap, XMFLOAT3);
+		arg_bullet_pos = va_arg(ap, XMFLOAT3);
 		va_end(ap);
 
-		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_SHOOT_BULLET, argsCount, arg_bullet_id, arg_start_pos);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_BULLET, argsCount, arg_shootter, arg_bullet_type, arg_bullet_idx, arg_cam_look, arg_bullet_pos);
 		break;
+	}
+	case EVENT_GAME_REQUEST_BULLET: {
+		XMFLOAT3 arg_dir;
+		short arg_bullet_type;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_dir = va_arg(ap, XMFLOAT3);
+		arg_bullet_type = va_arg(ap, short);
+		va_end(ap);
+
+		NetCore::GetApp()->SendBulletPacket(arg_dir, arg_bullet_type);
 	}
 	case EVENT_GAME_REMOVE_BULLET: {
 		int arg_bullet_id;

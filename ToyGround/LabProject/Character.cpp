@@ -787,55 +787,57 @@ void Character::OnGround()
 
 void Character::Attack()
 {
-	if(m_isSkillOn == true)
-	{
-		m_skillGauge = 0;
-		int bIndex = 0;
-		for (int i = 0; i < MAX_SKILL_BULLET_COUNT; ++i)
-		{
-			if (AppContext->m_AtiveSkillBulletCheck[i] == false)
-			{
-				bIndex = i;
-				AppContext->m_AtiveSkillBullet[AppContext->m_AtiveSkillBulletCnt++] = bIndex;
-				AppContext->m_AtiveSkillBulletCheck[i] = true;
-				break;
-			}
-		}
-
-		XMFLOAT3 bStartPos = GetPosition();
-		bStartPos.y += 90.f;
-
-		//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
-		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
-
-		AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 2);
+	if (m_isSkillOn == true) {
+		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 2, m_attackDirection, 2);
 		m_isSkillOn = false;
 	}
-	else
-	{
-		if(m_skillGauge <MAX_SKILLGAUGE)	
-			m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
-		m_attackGauge -= 100;
-		int bIndex = 0;
-		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
-		{
-			if (AppContext->m_AtiveBulletCheck[i] == false)
-			{
-				bIndex = i;
-				AppContext->m_AtiveBullet[AppContext->m_AtiveBulletCnt++] = bIndex;
-				AppContext->m_AtiveBulletCheck[i] = true;
-				break;
-			}
-		}
-
-		XMFLOAT3 bStartPos = GetPosition();
-		bStartPos.y += 90.f;
-
-		//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
-		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
-
-		AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 1);
+	else {
+		Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_BULLET, 2, m_attackDirection, 1);
 	}
+
+	//if(m_isSkillOn == true)
+	//{
+	//	m_skillGauge = 0;
+	//	int bIndex = 0;
+	//	for (int i = 0; i < MAX_SKILL_BULLET_COUNT; ++i)
+	//	{
+	//		if (AppContext->m_AtiveSkillBulletCheck[i] == false)
+	//		{
+	//			bIndex = i;
+	//			AppContext->m_AtiveSkillBullet[AppContext->m_AtiveSkillBulletCnt++] = bIndex;
+	//			AppContext->m_AtiveSkillBulletCheck[i] = true;
+	//			break;
+	//		}
+	//	}
+	//	XMFLOAT3 bStartPos = GetPosition();
+	//	bStartPos.y += 90.f;
+	//	//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
+	//	//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
+	//	AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 2);
+	//	m_isSkillOn = false;
+	//}
+	//else
+	//{
+	//	if(m_skillGauge <MAX_SKILLGAUGE)	
+	//		m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
+	//	m_attackGauge -= 100;
+	//	int bIndex = 0;
+	//	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	//	{
+	//		if (AppContext->m_AtiveBulletCheck[i] == false)
+	//		{
+	//			bIndex = i;
+	//			AppContext->m_AtiveBullet[AppContext->m_AtiveBulletCnt++] = bIndex;
+	//			AppContext->m_AtiveBulletCheck[i] = true;
+	//			break;
+	//		}
+	//	}
+	//	XMFLOAT3 bStartPos = GetPosition();
+	//	bStartPos.y += 90.f;
+	//	//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
+	//	//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
+	//	AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 1);
+	//}
 }
 
 void Character::OnOffSkillMode()

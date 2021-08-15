@@ -104,9 +104,9 @@ public:
 	int m_LastTypeId;
 
 	// Bullet ฐüทร
-	bool m_AtiveBulletCheck[MAX_BULLET_COUNT] = { false };
-	int m_AtiveBullet[MAX_BULLET_COUNT];
-	int m_AtiveBulletCnt = 0;
+	bool m_ActiveBulletCheck[MAX_BULLET_COUNT] = { false };
+	int m_ActiveBullet[MAX_BULLET_COUNT];
+	int m_ActiveBulletCnt = 0;
 
 	bool m_AtiveSkillBulletCheck[MAX_SKILL_BULLET_COUNT] = { false };
 	int m_AtiveSkillBullet[MAX_SKILL_BULLET_COUNT];

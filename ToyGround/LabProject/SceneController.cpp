@@ -148,6 +148,7 @@ void LobbyController::MouseCallback()
 		{
 			//cout << "Login Button Click" << endl;
 			Core::g_Chating = 0;
+			//Service::GetApp()->AddEvent(EVENT_ROOM_START);
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
 		}
 		// EXit Button

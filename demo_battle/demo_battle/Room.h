@@ -64,7 +64,7 @@ public:		//send msg
 	void PushPlayerPositionMsg(int to, int from, PTC_VECTOR* position_info);
 	void PushPlayerDirectionMsg(int to, int from, PTC_VECTOR look);
 	void PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* position_info);
-	void PushShootBulletMsg(int to, int bullet_id, PTC_VECTOR look);
+	void PushShootBulletMsg(int from, short bullet_type, short bullet_idx, PTC_VECTOR look, PTC_VECTOR pos);
 	void PushRemoveBulletMsg(int bullet_id);
 	void PushHitMsg(int hit_id, int dmg);
 	void PushDieMsg(int die_id);
@@ -84,6 +84,8 @@ public:		//send msg
 	void MakeMove(int id);
 	void MakeStop(int id);
 
+	int GetEmptyBullet();
+	void SetEmptyBullet();
 
 private:	//recv msg
 	void CopyRecvMsgs();		//m_msg¿¡ msg push
@@ -107,7 +109,8 @@ private:
 	std::array<Player*, MAX_PLAYER> m_players;
 	std::atomic_int	m_curPlayerNum;
 
-	std::array<Bullet, MAX_BULLET> m_bullets;
+	std::array<bool, MAX_BULLET> m_bullets;
+	std::queue<int> m_q_bullet;
 
 	std::array<bool, MAX_COIN> m_coins;
 	int m_coin_cur{ 0 };
