@@ -55,6 +55,18 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_LOGIN_FAIL);
 		break;
 	}
+	case EVENT_LOBBY_REQUEST_SIGNUP: {
+		std::string id{};
+		std::string pw{};
+		va_list ap;
+		va_start(ap, argsCount);
+		id = va_arg(ap, std::string);
+		pw = va_arg(ap, std::string);
+		va_end(ap);
+		NetCore::GetApp()->SendLobbySignupPacket(id, pw);
+
+		break;
+	}
 	case EVENT_LOBBY_SIGNUP_OK: { //LC_SIGNUP_OK
 		SceneManager::GetApp()->SendEventArgs(SceneType::eLobby, EVENT_LOBBY_SIGNUP_OK);
 		break;

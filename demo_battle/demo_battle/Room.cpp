@@ -853,7 +853,7 @@ void Room::ProcMsg(message msg) {
 				break;
 			}
 		}
-		for (size_t i = 0; i < 3; ++i)
+		for (size_t i = 0; i < 2; ++i)
 		{
 			XMFLOAT3 T{ 0.f, 0.f, 0.f };
 			T = SMathHelper::Add(T, msg.vec, i * 100);
