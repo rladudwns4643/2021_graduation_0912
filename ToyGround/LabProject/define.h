@@ -84,7 +84,7 @@
 
 // ÆÄÆ¼Å¬
 #define TEXTURE_INDEX_T_Smoke_Tiled_D							29
-#define TEXTURE_INDEX_P_SKILL_ON							30
+#define TEXTURE_INDEX_P_SKILL_ON								30
 
 
 
@@ -270,6 +270,7 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 #define KEY_ATTACK "Attack"
 #define KEY_JUMP "Jump"
 #define KEY_T_POSE "T_Pose"
+#define KEY_DEATH "Death"
 
 #define MAX_ID_LEN 10
 

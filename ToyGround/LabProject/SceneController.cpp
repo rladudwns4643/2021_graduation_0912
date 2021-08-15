@@ -43,9 +43,9 @@ void MatchingRoomController::MouseCallback()
 		LONG mousePosX = InputHandler::g_LastMousePos.x;
 		LONG mousePosY = InputHandler::g_LastMousePos.y;
 		//cout << "x: " << mousePosX << ", y: " << mousePosY << endl;
-
 		XMFLOAT2 ScaleConvert = m_MyScene->m_ScaleConvert;
 
+#ifdef DEBUG_SERVER
 		// Ready1(Left)
 		if (140 * ScaleConvert.x <= mousePosX && mousePosX <= 440 * ScaleConvert.x
 			&& 600 * ScaleConvert.y <= mousePosY && mousePosY <= 690 * ScaleConvert.y
@@ -69,6 +69,26 @@ void MatchingRoomController::MouseCallback()
 				m_MyScene->m_isReady2 = true;
 			}
 		}
+#elif DEBUG_CLIENT
+		// Ready1(Left)
+		if (140 * ScaleConvert.x <= mousePosX && mousePosX <= 440 * ScaleConvert.x
+			&& 600 * ScaleConvert.y <= mousePosY && mousePosY <= 690 * ScaleConvert.y
+			&& m_MyScene->m_isReady1 == false)
+		{
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[0]);
+			m_MyScene->m_isReady1 = true;
+		}
+
+		// Ready2(Right)
+		if (840 * ScaleConvert.x <= mousePosX && mousePosX <= 1140 * ScaleConvert.x
+			&& 600 * ScaleConvert.y <= mousePosY && mousePosY <= 690 * ScaleConvert.y
+			&& m_MyScene->m_isReady2 == false)
+		{
+			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[1]);
+			m_MyScene->m_isReady2 = true;
+		}
+
+#endif
 	}
 	InputHandler::ResetClickState();
 }

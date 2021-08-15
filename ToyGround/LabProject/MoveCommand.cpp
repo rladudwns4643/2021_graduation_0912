@@ -45,3 +45,8 @@ void MoveCommand::T_Pose()
 {
 	m_Owner->SetAnimationKeyState(AnimationController::PlayerState::STATE_T_POSE);
 }
+
+void MoveCommand::Death()
+{
+	m_Owner->SetAnimationKeyState(AnimationController::PlayerState::STATE_DEATH);
+}

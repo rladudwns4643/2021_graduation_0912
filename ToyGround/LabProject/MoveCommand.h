@@ -37,6 +37,9 @@ public:
 			case static_cast<int>(MoveState::T_Pose) :
 				T_Pose();
 				break;
+			case static_cast<int>(MoveState::Death) :
+				Death();
+				break;
 		}
 	}
 
@@ -49,5 +52,6 @@ private:
 	void Attack();
 	void Jump();
 	void T_Pose();
+	void Death();
 };
 

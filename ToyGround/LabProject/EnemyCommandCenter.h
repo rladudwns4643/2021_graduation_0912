@@ -68,6 +68,18 @@ public:
 			}
 		}
 
+		else if (m_StartDeathAnim)
+		{
+			m_DeathDeltaT += 60.f / (1.f / deltaT);
+
+			if (m_DeathAnimTime < m_DeathDeltaT)
+			{
+				m_DeathDeltaT = 0;
+				m_StartDeathAnim = false;
+				PopCommand(static_cast<int>(MoveState::Death));
+			}
+		}
+
 		m_FSM.back()->Execute();
 	}
 
@@ -77,11 +89,15 @@ private:
 public:
 	bool  m_StartAttackAnim = false;
 	bool  m_AttackCoolTimeSwitch = false;
-	float m_AttackAnimTime = 80.f;
+	float m_AttackAnimTime = 40.f;
 	float m_AttackDeltaT = 0;
 
 	bool	m_StartJumpAnim = false;
 	float	m_JumpAnimTime = 20.f;
 	float	m_JumpDeltaT = 0;
+
+	bool	m_StartDeathAnim = false;
+	float	m_DeathAnimTime = 80.f;
+	float	m_DeathDeltaT = 0;
 };
 

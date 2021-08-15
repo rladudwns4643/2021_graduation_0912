@@ -19,6 +19,7 @@ AnimationController::AnimationController(Character* owner, SkinnedModelInstance*
 	m_MapAnimData[KEY_ATTACK] = std::make_unique<AnimData>("Attack", 0.f);
 	m_MapAnimData[KEY_JUMP] = std::make_unique<AnimData>("Jump", 0.f);
 	m_MapAnimData[KEY_T_POSE] = std::make_unique<AnimData>("T_Pose", 0.f);
+	m_MapAnimData[KEY_DEATH] = std::make_unique<AnimData>("Death", 0.f);
 
 	m_MaxBlendFrames = 10.f;
 }
@@ -92,8 +93,13 @@ void AnimationController::SetState(const float deltaT)
 			m_MapAnimData[KEY_T_POSE]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
+		case STATE_DEATH:
+			m_PlayerState = STATE_IDLE_TO_DEATH;
+			m_MapAnimData[KEY_DEATH]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
-		break; // mPlayerState::STATE_IDLE
+		break; 
 	case STATE_FORWARD:
 		switch (m_KeyState)
 		{
@@ -127,6 +133,11 @@ void AnimationController::SetState(const float deltaT)
 			m_PlayerState = STATE_FORWARD_TO_JUMP;
 			m_MapAnimData[KEY_JUMP]->m_Time = 0.f;
 			m_BlendFrame = 1.f;
+			break;
+		case STATE_DEATH:
+			m_PlayerState = STATE_FORWARD_TO_DEATH;
+			m_MapAnimData[KEY_DEATH]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
 			break;
 		}
 		break;
@@ -164,6 +175,11 @@ void AnimationController::SetState(const float deltaT)
 			m_MapAnimData[KEY_JUMP]->m_Time = 0.f;
 			m_BlendFrame = 1.f;
 			break;
+		case STATE_DEATH:
+			m_PlayerState = STATE_BACKWARD_TO_DEATH;
+			m_MapAnimData[KEY_DEATH]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
 		break;
 	case STATE_LEFT_STRAFE:
@@ -199,6 +215,11 @@ void AnimationController::SetState(const float deltaT)
 			m_PlayerState = STATE_LEFT_STRAFE_TO_JUMP;
 			m_MapAnimData[KEY_JUMP]->m_Time = 0.f;
 			m_BlendFrame = 1.f;
+			break;
+		case STATE_DEATH:
+			m_PlayerState = STATE_LEFT_STRAFE_TO_DEATH;
+			m_MapAnimData[KEY_DEATH]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
 			break;
 		}
 		break;
@@ -236,6 +257,11 @@ void AnimationController::SetState(const float deltaT)
 			m_MapAnimData[KEY_JUMP]->m_Time = 0.f;
 			m_BlendFrame = 1.f;
 			break;
+		case STATE_DEATH:
+			m_PlayerState = STATE_RIGHT_STRAFE_TO_DEATH;
+			m_MapAnimData[KEY_DEATH]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
 		break;
 
@@ -270,6 +296,11 @@ void AnimationController::SetState(const float deltaT)
 		case STATE_JUMP:
 			m_PlayerState = STATE_ATTACK_TO_JUMP;
 			m_MapAnimData[KEY_JUMP]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
+		case STATE_DEATH:
+			m_PlayerState = STATE_ATTACK_TO_DEATH;
+			m_MapAnimData[KEY_DEATH]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
 		}
@@ -307,6 +338,11 @@ void AnimationController::SetState(const float deltaT)
 			m_MapAnimData[KEY_ATTACK]->m_Time = 0.0f;
 			m_BlendFrame = 1.0f;
 			break;
+		case STATE_DEATH:
+			m_PlayerState = STATE_JUMP_TO_DEATH;
+			m_MapAnimData[KEY_DEATH]->m_Time = 0.0f;
+			m_BlendFrame = 1.0f;
+			break;
 		}
 		break;
 	case STATE_T_POSE:
@@ -319,6 +355,43 @@ void AnimationController::SetState(const float deltaT)
 			break;
 		}
 		break;
+	case STATE_DEATH:
+		switch (m_KeyState)
+		{
+		case STATE_FORWARD:
+			m_PlayerState = STATE_DEATH_TO_FORWARD;
+			m_MapAnimData[KEY_FORWARD]->m_Time = 0.f;
+			m_BlendFrame = 1.f;
+			break;
+		case STATE_BACKWARD:
+			m_PlayerState = STATE_DEATH_TO_BACKWARD;
+			m_MapAnimData[KEY_BACKWARD]->m_Time = 0.f;
+			m_BlendFrame = 1.f;
+			break;
+		case STATE_LEFT_STRAFE:
+			m_PlayerState = STATE_DEATH_TO_LEFT_STRAFE;
+			m_MapAnimData[KEY_LEFT_STRAFE]->m_Time = 0.f;
+			m_BlendFrame = 1.f;
+			break;
+		case STATE_RIGHT_STRAFE:
+			m_PlayerState = STATE_DEATH_TO_RIGHT_STRAFE;
+			m_MapAnimData[KEY_RIGHT_STRAFE]->m_Time = 0.f;
+			m_BlendFrame = 1.f;
+			break;
+
+		case STATE_ATTACK:
+			m_PlayerState = STATE_DEATH_TO_ATTACK;
+			m_MapAnimData[KEY_ATTACK]->m_Time = 0.0f;
+			m_BlendFrame = 1.f;
+			break;
+		case STATE_JUMP:
+			m_PlayerState = STATE_DEATH_TO_JUMP;
+			m_MapAnimData[KEY_JUMP]->m_Time = 0.0f;
+			m_BlendFrame = 1.f;
+			break;
+		}
+		break;
+
 
 		/************************ Blending ****************************/
 			// IDLE
@@ -329,6 +402,7 @@ void AnimationController::SetState(const float deltaT)
 	case STATE_ATTACK_TO_IDLE:
 	case STATE_JUMP_TO_IDLE:
 	case STATE_T_POSE_TO_IDLE:
+	case STATE_DEATH_TO_IDLE:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_IDLE;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -341,6 +415,7 @@ void AnimationController::SetState(const float deltaT)
 	case STATE_RIGHT_STRAFE_TO_FORWARD:
 	case STATE_ATTACK_TO_FORWARD:
 	case STATE_JUMP_TO_FORWARD:
+	case STATE_DEATH_TO_FORWARD:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_FORWARD;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -353,6 +428,7 @@ void AnimationController::SetState(const float deltaT)
 	case STATE_RIGHT_STRAFE_TO_BACKWARD:
 	case STATE_ATTACK_TO_BACKWARD:
 	case STATE_JUMP_TO_BACKWARD:
+	case STATE_DEATH_TO_BACKWARD:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_BACKWARD;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -365,6 +441,7 @@ void AnimationController::SetState(const float deltaT)
 	case STATE_BACKWARD_TO_LEFT_STRAFE:
 	case STATE_ATTACK_TO_LEFT_STRAFE:
 	case STATE_JUMP_TO_LEFT_STRAFE:
+	case STATE_DEATH_TO_LEFT_STRAFE:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_LEFT_STRAFE;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -377,6 +454,7 @@ void AnimationController::SetState(const float deltaT)
 	case STATE_BACKWARD_TO_RIGHT_STRAFE:
 	case STATE_ATTACK_TO_RIGHT_STRAFE:
 	case STATE_JUMP_TO_RIGHT_STRAFE:
+	case STATE_DEATH_TO_RIGHT_STRAFE:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_RIGHT_STRAFE;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -389,6 +467,7 @@ void AnimationController::SetState(const float deltaT)
 	case STATE_RIGHT_STRAFE_TO_ATTACK:
 	case STATE_JUMP_TO_ATTACK:
 	case STATE_IDLE_TO_ATTACK:
+	case STATE_DEATH_TO_ATTACK:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_ATTACK;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -401,6 +480,7 @@ void AnimationController::SetState(const float deltaT)
 	case STATE_RIGHT_STRAFE_TO_JUMP:
 	case STATE_ATTACK_TO_JUMP:
 	case STATE_IDLE_TO_JUMP:
+	case STATE_DEATH_TO_JUMP:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_JUMP;
 		m_BlendFrame += 60.f / (1.f / deltaT);
@@ -410,6 +490,18 @@ void AnimationController::SetState(const float deltaT)
 	case STATE_IDLE_TO_T_POSE:
 		if (m_BlendFrame > m_MaxBlendFrames)
 			m_PlayerState = STATE_T_POSE;
+		m_BlendFrame += 60.f / (1.f / deltaT);
+		break;
+
+		// DEATH
+	case STATE_FORWARD_TO_DEATH:
+	case STATE_BACKWARD_TO_DEATH:
+	case STATE_LEFT_STRAFE_TO_DEATH:
+	case STATE_RIGHT_STRAFE_TO_DEATH:
+	case STATE_ATTACK_TO_DEATH:
+	case STATE_JUMP_TO_DEATH:
+		if (m_BlendFrame > m_MaxBlendFrames)
+			m_PlayerState = STATE_DEATH;
 		m_BlendFrame += 60.f / (1.f / deltaT);
 		break;
 	}
@@ -452,6 +544,10 @@ void AnimationController::UpdateBoneTransforms()
 	case STATE_T_POSE:
 		strState = KEY_T_POSE;
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(m_MapAnimData[KEY_T_POSE]->m_Name, m_MapAnimData[KEY_T_POSE]->m_Time);
+		break;
+	case STATE_DEATH:
+		strState = KEY_DEATH;
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(m_MapAnimData[KEY_DEATH]->m_Name, m_MapAnimData[KEY_DEATH]->m_Time);
 		break;
 
 		/************************ Blending ****************************/
@@ -498,6 +594,12 @@ void AnimationController::UpdateBoneTransforms()
 			m_MapAnimData[KEY_IDLE]->m_Name, m_MapAnimData[KEY_IDLE]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames));
 		break;
+	case STATE_IDLE_TO_DEATH:
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData[KEY_T_POSE]->m_Name, m_MapAnimData[KEY_T_POSE]->m_Time,
+			m_MapAnimData[KEY_DEATH]->m_Name, m_MapAnimData[KEY_DEATH]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames));
+		break;
 		// FORWARD
 	case STATE_FORWARD_TO_BACKWARD:
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
@@ -533,6 +635,12 @@ void AnimationController::UpdateBoneTransforms()
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData[KEY_FORWARD]->m_Name, m_MapAnimData[KEY_FORWARD]->m_Time,
 			m_MapAnimData[KEY_JUMP]->m_Name, m_MapAnimData[KEY_JUMP]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames));
+		break;
+	case STATE_FORWARD_TO_DEATH:
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData[KEY_FORWARD]->m_Name, m_MapAnimData[KEY_FORWARD]->m_Time,
+			m_MapAnimData[KEY_DEATH]->m_Name, m_MapAnimData[KEY_DEATH]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames));
 		break;
 		// BACKWARD
@@ -572,6 +680,12 @@ void AnimationController::UpdateBoneTransforms()
 			m_MapAnimData[KEY_JUMP]->m_Name, m_MapAnimData[KEY_JUMP]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames));
 		break;
+	case STATE_BACKWARD_TO_DEATH:
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData[KEY_BACKWARD]->m_Name, m_MapAnimData[KEY_BACKWARD]->m_Time,
+			m_MapAnimData[KEY_DEATH]->m_Name, m_MapAnimData[KEY_DEATH]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames));
+		break;
 		// LEFT_STRAFE
 	case STATE_LEFT_STRAFE_TO_RIGHT_STRAFE:
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
@@ -607,6 +721,12 @@ void AnimationController::UpdateBoneTransforms()
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData[KEY_LEFT_STRAFE]->m_Name, m_MapAnimData[KEY_LEFT_STRAFE]->m_Time,
 			m_MapAnimData[KEY_JUMP]->m_Name, m_MapAnimData[KEY_JUMP]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames));
+		break;
+	case STATE_LEFT_STRAFE_TO_DEATH:
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData[KEY_LEFT_STRAFE]->m_Name, m_MapAnimData[KEY_LEFT_STRAFE]->m_Time,
+			m_MapAnimData[KEY_DEATH]->m_Name, m_MapAnimData[KEY_DEATH]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames));
 		break;
 		// RIGHT_STRAFE
@@ -646,6 +766,12 @@ void AnimationController::UpdateBoneTransforms()
 			m_MapAnimData[KEY_JUMP]->m_Name, m_MapAnimData[KEY_JUMP]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames));
 		break;
+	case STATE_RIGHT_STRAFE_TO_DEATH:
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData[KEY_RIGHT_STRAFE]->m_Name, m_MapAnimData[KEY_RIGHT_STRAFE]->m_Time,
+			m_MapAnimData[KEY_DEATH]->m_Name, m_MapAnimData[KEY_DEATH]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames));
+		break;
 		// ATTACK
 	case STATE_ATTACK_TO_IDLE:
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
@@ -681,6 +807,12 @@ void AnimationController::UpdateBoneTransforms()
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData[KEY_ATTACK]->m_Name, m_MapAnimData[KEY_ATTACK]->m_Time,
 			m_MapAnimData[KEY_JUMP]->m_Name, m_MapAnimData[KEY_JUMP]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames));
+		break;
+	case STATE_ATTACK_TO_DEATH:
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData[KEY_ATTACK]->m_Name, m_MapAnimData[KEY_ATTACK]->m_Time,
+			m_MapAnimData[KEY_DEATH]->m_Name, m_MapAnimData[KEY_DEATH]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames));
 		break;
 		// JUMP
@@ -720,6 +852,13 @@ void AnimationController::UpdateBoneTransforms()
 			m_MapAnimData[KEY_ATTACK]->m_Name, m_MapAnimData[KEY_ATTACK]->m_Time,
 			(m_BlendFrame / m_MaxBlendFrames));
 		break;
+	case STATE_JUMP_TO_DEATH:
+		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
+			m_MapAnimData[KEY_JUMP]->m_Name, m_MapAnimData[KEY_JUMP]->m_Time,
+			m_MapAnimData[KEY_DEATH]->m_Name, m_MapAnimData[KEY_DEATH]->m_Time,
+			(m_BlendFrame / m_MaxBlendFrames));
+		break;
+		// T_POSE
 	case STATE_T_POSE_TO_IDLE:
 		m_CopySkinnedModelInst->ChangeSkinnedAnimation(
 			m_MapAnimData[KEY_T_POSE]->m_Name, m_MapAnimData[KEY_T_POSE]->m_Time,
