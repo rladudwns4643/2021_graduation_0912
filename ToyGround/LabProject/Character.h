@@ -5,6 +5,7 @@
 
 class Camera;
 class CharacterParts;
+class Particle;
 class Character : public GameObject
 {
 	friend class PlayerController;
@@ -33,6 +34,8 @@ public:
 	void UpdateStateUI();
 
 public:
+	// 파티클 관련
+	void RespwanParticle(bool isCapture = false);
 
 public:
 	void SetMapName(std::string mapName);
@@ -40,6 +43,7 @@ public:
 	void SetCamera(CameraType cameraType);
 	void SetController();
 	void SetParts(CharacterParts* parts);
+	void SetParticle(std::string particleName, std::string instID);
 
 	virtual bool	SetMesh(std::string meshName, std::string submeshName) override;
 	void			SetMaterial(int materialIndex);
@@ -80,6 +84,7 @@ public:
 	std::unique_ptr<PlayerController>		m_PlayerController;
 	std::unique_ptr<AnimationController>	m_AnimationController;
 	std::map<std::string, CharacterParts*>	m_Parts;
+	std::map<std::string, Particle*>		m_Particles;
 
 	int m_PlayerID = 0;
 
@@ -152,7 +157,5 @@ private:
 	int m_tempHp;
 	int m_tempAttackGauge;
 	int m_tempSkillGauge;
-
-	int test = 0;
 };
 

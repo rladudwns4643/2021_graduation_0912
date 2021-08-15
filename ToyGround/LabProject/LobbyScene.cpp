@@ -178,7 +178,6 @@ void LobbyScene::Update(const float& fDeltaTime)
 
 	if (m_isMatching)
 	{
-		SoundManager::GetApp()->PlaySoundLoop(L"testWav.wav", SoundManager::CHANNEL_ID::TEST_LOOP, 0.8f);
 		GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_LOADINGUI], AppContext->m_RItemsVec);
 		GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_LOADINGUI], AppContext->m_RItemsVec);
 

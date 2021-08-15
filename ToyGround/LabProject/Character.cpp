@@ -9,6 +9,7 @@
 #include "netCore.h"
 #include "Service.h"
 #include "Map.h"
+#include "Particle.h"
 
 Character::Character(std::string type, std::string id) :
 	GameObject(type, id),
@@ -41,7 +42,6 @@ Character::Character(std::string type, std::string id) :
 Character::~Character()
 {
 }
-
 void Character::InitializeTransform()
 {
 	GameObject::InitializeTransform();
@@ -904,4 +904,19 @@ void Character::Rotate(float pitch, float yaw, float roll)
 
 	XMFLOAT3 t_look{ m_Look };
 	Service::GetApp()->AddEvent(EVENT_GAME_MAKE_MOUSE, 1, t_look);
+}
+
+void Character::SetParticle(std::string particleName, std::string instID)
+{
+	Particle* particle = AppContext->FindObject<Particle>(particleName, instID);
+	if (!particle) return;
+
+	particle->SetOwner(this);
+	m_Particles[particleName] = particle;
+}
+
+void Character::RespwanParticle(bool isCapture)
+{
+	// 변신시 파티클 on
+	AppContext->DisplayParticle(PARTICLE_NAME_SMOKE, m_MeshName, GetPosition(), true, isCapture);
 }

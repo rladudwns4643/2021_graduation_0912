@@ -89,6 +89,15 @@
     <Filter Include="Scene\MatchingRoom">
       <UniqueIdentifier>{51b3ea27-5758-43dd-b191-e5e791f0c99e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\Particle">
+      <UniqueIdentifier>{cf611de2-7851-41ff-9f3c-505ce9491e4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Sound">
+      <UniqueIdentifier>{f2562095-bdcf-4799-ae4f-09c7dcbe72f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Particle">
+      <UniqueIdentifier>{5f09f013-ad46-4fb7-905d-5e36411eedd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Service.h">
@@ -260,8 +269,14 @@
     <ClInclude Include="EnemyCommandCenter.h">
       <Filter>Command</Filter>
     </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>GameObject\Particle</Filter>
+    </ClInclude>
     <ClInclude Include="SoundManager.h">
-      <Filter>App</Filter>
+      <Filter>App\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>App\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -422,8 +437,14 @@
     <ClCompile Include="EnemyCommandCenter.cpp">
       <Filter>Command</Filter>
     </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>GameObject\Particle</Filter>
+    </ClCompile>
     <ClCompile Include="SoundManager.cpp">
-      <Filter>App</Filter>
+      <Filter>App\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>App\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -449,6 +470,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\Blur.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
