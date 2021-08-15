@@ -48,6 +48,8 @@ private:
 	// 플레이어들
 	std::map<int, Character*> m_Users;
 	int m_PlayerID;
+	string playername;
+	string enemyname;
 
 	std::vector<int> m_player_in_room;
 
@@ -57,6 +59,6 @@ private:
 
 private:
 	bool m_IsGameOver = false;
-
+	int m_Winner{ 0 };
 };
 

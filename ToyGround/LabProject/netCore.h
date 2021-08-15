@@ -73,8 +73,9 @@ public:
 	void SendBulletPacket(XMFLOAT3& dir, short bullet_type);
 
 	void SendUpdateUserInfo(int mmr);
-
 	void errorDisplay(const char* msg);
+
+	string GetPlayerName(int battle_id);
 
 private:
 	std::vector<PTC_ROOM> m_recved_room_list{};

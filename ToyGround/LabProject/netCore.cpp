@@ -318,12 +318,13 @@ void NetCore::ProcessPacket(char* packet_buf) {
 
 		std::unique_ptr<BattleClient> battleClient = std::make_unique<BattleClient>(p->id);
 		memcpy(battleClient->name, p->name, sizeof(char) * MAX_ID_LEN);
+		string name(p->name);
 		battleClient->mmr = p->mmr;
 		battleClient->m_host = p->isManager;
 		battleClient->m_player_num = p->player_no;
 		battleClient->m_ready = p->ready;
 		m_battle_clients[p->id] = std::move(battleClient);
-		Service::GetApp()->AddEvent(EVENT_ROOM_ENTER, 1, p->id);
+		Service::GetApp()->AddEvent(EVENT_ROOM_ENTER, 2, p->id, name);
 		break;
 	}
 	case BC_ROOM_LEAVED: {
@@ -571,6 +572,14 @@ void NetCore::errorDisplay(const char* msg)
 	std::cout << msg;
 	std::wcout << L"Error! - " << lpMsgBuf << std::endl;
 	LocalFree(lpMsgBuf);
+}
+
+string NetCore::GetPlayerName(int id) {
+	for (auto& a : m_battle_clients) {
+		if (a.second.get()-> == battle_id) {
+			return a.second.get()->name;
+		}
+	}
 }
 
 //sendPacket

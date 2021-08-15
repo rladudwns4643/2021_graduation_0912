@@ -47,11 +47,15 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		m_Users[arg_bt_id]->m_PlayerID = arg_bt_id;
 		if (Service::GetApp()->GetMyBattleID() == 1) {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[1]);
+			playername = SceneManager::GetApp()->p1name;
 			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[2]);
+			enemyname = SceneManager::GetApp()->p2name;
 		}
 		else {
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[2]);
+			playername = SceneManager::GetApp()->p2name;
 			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[1]);
+			enemyname = SceneManager::GetApp()->p1name;
 		}
 		break;
 	}
@@ -77,6 +81,13 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 			}
 		}
 		m_IsGameOver = true;
+		m_Winner = arg_winner;
+		if (arg_winner == 1) {
+			cout << "winner: " << SceneManager::GetApp()->p1name << " looser: " << SceneManager::GetApp()->p2name << endl;
+		}
+		if (arg_winner == 2) {
+			cout << "winner: " << SceneManager::GetApp()->p2name << " looser: " << SceneManager::GetApp()->p1name << endl;
+		}
 		break;
 	}
 	case EVENT_GAME_TIMER: {
