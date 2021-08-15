@@ -420,6 +420,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 //#endif
 		bc_packet_update_coin* p = reinterpret_cast<bc_packet_update_coin*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_COIN, 3, p->id, p->coin_cnt, p->delete_coin_id);
+		break;
 	}
 
 	case BC_WIN_SATISFACTION: {
@@ -428,6 +429,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		//#endif
 		bc_packet_win_satisfaction* p = reinterpret_cast<bc_packet_win_satisfaction*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_WIN_SATISFACTION, 1, p->satisfaction_id);
+		break;
 	}
 	case BC_PLAYER_POS: {
 //#ifdef DEB
