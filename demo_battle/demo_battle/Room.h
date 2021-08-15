@@ -45,6 +45,8 @@ public:
 	bool IsRoomStarted();
 
 	void CreateAddCoinEvent();
+	void AddCoinByDie(int die_id);
+
 	void CreateReloadBulletEvent();
 	void SendLeftTimePacket();
 

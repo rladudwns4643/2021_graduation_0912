@@ -504,12 +504,12 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_HIT, 1, p->id);
 		break;
 	}
-	case BC_DIE: {
+	case BC_CALLBACK_DIE: {
 #ifdef DEB
-		cout << "BC_DIE\n";
+		cout << "BC_CALLBACK_DIE\n";
 #endif
-		bc_packet_die* p = reinterpret_cast<bc_packet_die*>(packet_buf);
-		Service::GetApp()->AddEvent(EVENT_GAME_DIE, 1, p->id);
+		bc_packet_callback_die* p = reinterpret_cast<bc_packet_callback_die*>(packet_buf);
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_DIE, 1, p->id);
 		break;
 	}
 	case BC_ANIM_PUSH: {
@@ -710,6 +710,14 @@ void NetCore::SendLookVectorPacket(XMFLOAT3& look) {
 	p.look.x = look.x;
 	p.look.y = look.y;
 	p.look.z = look.z;
+	SendPacket(&p, SV_BATTLE);
+}
+
+void NetCore::SendRequestDiePacket(int id) {
+	cb_packet_request_die p;
+	p.size = sizeof(p);
+	p.type = CB_REQUEST_DIE;
+	p.id = id;
 	SendPacket(&p, SV_BATTLE);
 }
 

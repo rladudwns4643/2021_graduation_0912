@@ -281,6 +281,15 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		msg.anim_type = p->anim_type;
 		break;
 	}
+	case CB_REQUEST_DIE: {
+		cb_packet_request_die* p = reinterpret_cast<cb_packet_request_die*>(inputPacket);
+		if (p == nullptr) {
+			msg.type = NO_MSG;
+			break;
+		}
+		msg.id = p->id;
+		break;
+	}
 	case CB_POSITION_VECTOR: {
 		cb_packet_position* p = reinterpret_cast<cb_packet_position*>(inputPacket);
 		if (p == nullptr) {
