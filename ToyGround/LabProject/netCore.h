@@ -74,9 +74,6 @@ public:
 
 	void SendUpdateUserInfo(int mmr);
 	void errorDisplay(const char* msg);
-
-	string GetPlayerName(int battle_id);
-
 private:
 	std::vector<PTC_ROOM> m_recved_room_list{};
 	int m_map_info;

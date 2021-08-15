@@ -574,14 +574,6 @@ void NetCore::errorDisplay(const char* msg)
 	LocalFree(lpMsgBuf);
 }
 
-string NetCore::GetPlayerName(int id) {
-	for (auto& a : m_battle_clients) {
-		if (a.second.get()-> == battle_id) {
-			return a.second.get()->name;
-		}
-	}
-}
-
 //sendPacket
 
 void NetCore::SendLobbyLoginPacket(const std::string& id, const std::string& pw) {
