@@ -546,16 +546,13 @@ void Room::PushRemoveBulletMsg(int bullet_id) {
 	}
 }
 
-void Room::PushHitMsg(int hit_id, int dmg) {
-	bc_packet_hit p;
-	p.type = BC_HIT;
-	p.hp = dmg;
-	p.id = hit_id;
+void Room::PushCallBackHitMsg(int be_hit_id) {
+	bc_packet_callback_hit p;
+	p.type = BC_CALLBACK_HIT;
+	p.id = be_hit_id;
 
-	int id{};
 	for (const auto& pl : m_players) {
-		id = pl->GetID();
-		if (id != -1) PushSendMsg(id, &p);
+		PushSendMsg(pl->GetID(), &p);
 	}
 }
 

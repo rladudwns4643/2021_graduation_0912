@@ -66,7 +66,7 @@ public:		//send msg
 	void PushObjectPositionMsg(int id, short type_id, int obj_id, PTC_VECTOR* position_info);
 	void PushShootBulletMsg(int from, short bullet_type, short bullet_idx, PTC_VECTOR look, PTC_VECTOR pos);
 	void PushRemoveBulletMsg(int bullet_id);
-	void PushHitMsg(int hit_id, int dmg);
+	void PushCallBackHitMsg(int be_hit_id);
 	void PushDieMsg(int die_id);
 	void PushAddCoinMsg(PTC_VECTOR coin_pos, int coin_id);
 	void PushUpdateCoinMsg(int update_id, int update_cnt, int delete_coin_id);

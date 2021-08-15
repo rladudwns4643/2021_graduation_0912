@@ -290,17 +290,15 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_REMOVE_BULLET, argsCount, arg_bullet_id);
 		break;
 	}
-	case EVENT_GAME_HIT: {
+	case EVENT_GAME_CALLBACK_HIT: {
 		int arg_id;
-		float arg_hp;
 
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
-		arg_hp = va_arg(ap, float);
 		va_end(ap);
 
-		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_HIT, argsCount, arg_id, arg_hp);
+		SceneManager::GetApp()->SendEventArgs(SceneType::eGamePlay, EVENT_GAME_CALLBACK_HIT, argsCount, arg_id);
 		break;
 	}
 	case EVENT_GAME_DIE: {

@@ -493,16 +493,13 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_GAME_REMOVE_BULLET, 1, p->bullet_id);
 		break;
 	}
-	case BC_HIT: {
+	case BC_CALLBACK_HIT: {
 #ifdef DEB
 		cout << "BC_HIT\n";
 #endif
-		bc_packet_hit* p = reinterpret_cast<bc_packet_hit*>(packet_buf);
+		bc_packet_callback_hit* p = reinterpret_cast<bc_packet_callback_hit*>(packet_buf);
 
-		float arg_hp = p->hp;
-		arg_hp = round(arg_hp); // * 100 / 100;
-
-		Service::GetApp()->AddEvent(EVENT_GAME_HIT, 2, p->id, arg_hp);
+		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_HIT, 1, p->id);
 		break;
 	}
 	case BC_DIE: {

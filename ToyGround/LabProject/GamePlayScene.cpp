@@ -132,6 +132,16 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		AppContext->HiddenGem(arg_delete_coin_id, false);
 		break;
 	}
+	case EVENT_GAME_CALLBACK_HIT: {
+		int arg_id;
+
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		va_end(ap);
+		//m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id);
+		break;
+	}
 	case EVENT_GAME_CALLBACK_BULLET: {
 		cout << "EVENT_GAME_CALLBACK_BULLET" << endl;
 		int arg_shootter;

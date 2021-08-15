@@ -193,7 +193,7 @@ struct cl_packet_cancel_automatch {
 #define BC_CALLBACK_BULLET		37
 #define BC_REMOVE_BULLET		38
 
-#define BC_HIT					39
+#define BC_CALLBACK_HIT			39
 #define BC_DIE					40
 
 #define BC_UPDATED_USER_INFO	41
@@ -371,12 +371,11 @@ struct bc_packet_remove_bullet {
 	char bullet_id;
 	PTC_VECTOR pos; //사라지는 위치 이팩트 발생 위치
 };
-struct bc_packet_hit {
+struct bc_packet_callback_hit {
 	BYTE size;
 	BYTE type;
 
 	int id;
-	int hp;
 };
 struct bc_packet_die {
 	BYTE size;

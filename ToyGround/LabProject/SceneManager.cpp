@@ -183,16 +183,14 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_bullet_id);
 		break;
 	}
-	case EVENT_GAME_HIT: {
+	case EVENT_GAME_CALLBACK_HIT: {
 		int arg_id;
-		float arg_hp;
 
 		va_list ap;
 		va_start(ap, argsCount);
 		arg_id = va_arg(ap, int);
-		arg_hp = va_arg(ap, float);
 		va_end(ap);
-		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id, arg_hp);
+		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id);
 		break;
 	}
 	case EVENT_GAME_DIE: {
