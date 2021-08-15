@@ -49,7 +49,7 @@ void SoundManager::PlaySoundOnce(const TCHAR* pSoundKey, CHANNEL_ID eID, float v
 	// deltaT= 0;
 }
 
-void SoundManager::PlaySoundLoop(const TCHAR* pSoundKey, CHANNEL_ID eID)
+void SoundManager::PlaySoundLoop(const TCHAR* pSoundKey, CHANNEL_ID eID, float volume)
 {
 	if (m_MapSound.empty()) {
 		cout << "mapSound empty" << endl;
@@ -70,6 +70,7 @@ void SoundManager::PlaySoundLoop(const TCHAR* pSoundKey, CHANNEL_ID eID)
 
 	FMOD_System_PlaySound(m_pSystem, iter->second, NULL, 0, &m_pChannelArr[eID]);
 	FMOD_Channel_SetMode(m_pChannelArr[eID], FMOD_LOOP_NORMAL);
+	FMOD_Channel_SetVolume(m_pChannelArr[eID], volume);
 }
 
 void SoundManager::PlayBGM(const TCHAR* pSoundKey, float volume)
@@ -122,7 +123,9 @@ void SoundManager::LoadSoundFile(const char* pParentFolderPath)
 	}
 
 	if (handle == -1)
+	{
 		goto FIND_WAVE;
+	}
 
 	int iResult = 0;
 	char szFullPath[128] = "";
@@ -135,6 +138,7 @@ void SoundManager::LoadSoundFile(const char* pParentFolderPath)
 		FMOD_SOUND* pSound = nullptr;
 		FMOD_RESULT eRes = FMOD_System_CreateSound(m_pSystem, szFullPath, FMOD_DEFAULT, NULL, &pSound);
 
+		//cout << szFullPath << endl;
 		if (FMOD_OK == eRes)
 		{
 			int iLength = static_cast<int>(strlen(fd.name)) + 1;
@@ -171,6 +175,7 @@ FIND_WAVE:
 		FMOD_SOUND* pSound = nullptr;
 		FMOD_RESULT eRes = FMOD_System_CreateSound(m_pSystem, szFullPath, FMOD_DEFAULT, NULL, &pSound);
 
+		//cout << szFullPath << endl;
 		if (FMOD_OK == eRes)
 		{
 			int iLength = static_cast<int>(strlen(fd.name)) + 1;

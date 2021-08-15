@@ -138,11 +138,18 @@ bool LobbyScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_TYPE_LOADINGUI, OBJECT_NAME_LOBBY_LOADINGUI, XMFLOAT2(0.f, -280.f), XMFLOAT2(500.f, 270.f), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR, XMFLOAT2(-253.f, -411.f), XMFLOAT2(88.f, 62.f), TextAlignType::Center);
 
+	// BGM Àç»ý
+	//SoundManager::GetApp()->PlayBGM(L"testBGM.mp3", 1.0f);
+	//SoundManager::GetApp()->PlaySoundOnce(L"testMp3.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
+	//SoundManager::GetApp()->PlaySoundOnce(L"testMp3.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
+
 	return false;
 }
 
 void LobbyScene::Exit()
 {
+	SoundManager::GetApp()->StopAll();
+
 	Core::g_InputSwitch = false;
 
 	AppContext->HiddenUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND);
@@ -171,6 +178,7 @@ void LobbyScene::Update(const float& fDeltaTime)
 
 	if (m_isMatching)
 	{
+		SoundManager::GetApp()->PlaySoundLoop(L"testWav.wav", SoundManager::CHANNEL_ID::TEST_LOOP, 0.8f);
 		GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_LOADINGUI], AppContext->m_RItemsVec);
 		GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_LOADINGUI], AppContext->m_RItemsVec);
 
