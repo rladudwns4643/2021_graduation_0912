@@ -142,7 +142,6 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_CALLBACK_BULLET: {
-		cout << "EVENT_GAME_CALLBACK_BULLET" << endl;
 		int arg_shootter;
 		short arg_bullet_type;
 		short arg_bullet_idx;
@@ -158,7 +157,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_bullet_pos = va_arg(ap, XMFLOAT3);
 		va_end(ap);
 
-		cout << "arg_bullet_idx: " << arg_bullet_idx << " arg_shootter: " << arg_shootter << endl;
+		//cout << "arg_bullet_idx: " << arg_bullet_idx << " arg_shootter: " << arg_shootter << endl;
 		AppContext->DisplayBullet(arg_bullet_idx, arg_bullet_pos, arg_cam_look, arg_shootter, arg_bullet_type);
 		AppContext->m_ActiveBulletCheck[arg_bullet_idx] = true;
 		AppContext->m_ActiveBullet[AppContext->m_ActiveBulletCnt] = arg_bullet_idx;
@@ -172,13 +171,18 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		va_end(ap);
 
+		cout << "CALLBACK DIE" << endl;
 		if (arg_id == Service::GetApp()->GetMyBattleID()) {
+			CommandCenter::GetApp()->ResetCommand();
+			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[arg_id]);
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), m_Users[arg_id]);
 			m_Users[arg_id]->m_isLive = false;
 			CommandCenter::GetApp()->m_StartDeathAnim = true;
 		}
 		else {
+			EnemyCommandCenter::GetApp()->ResetCommand();
 			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_Users[arg_id]);
+			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), m_Users[arg_id]);
 			m_Users[arg_id]->m_isLive = false;
 			EnemyCommandCenter::GetApp()->m_StartDeathAnim = true;
 		}
