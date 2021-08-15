@@ -195,7 +195,7 @@ void SceneManager::SendEventArgs(SceneType st, int sEvent, int argsCount, ...) {
 		m_Scenes[static_cast<int>(st)]->ProcessEvent(sEvent, argsCount, arg_id);
 		break;
 	}
-	case EVENT_GAME_DIE: {
+	case EVENT_GAME_CALLBACK_DIE: {
 		int arg_id;
 		va_list ap;
 		va_start(ap, argsCount);
