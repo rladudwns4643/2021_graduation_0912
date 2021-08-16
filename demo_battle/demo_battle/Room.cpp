@@ -334,7 +334,10 @@ void Room::CreateAddCoinEvent() {
 	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(ADD_COIN_TIME), EVENT_TYPE::EV_ADD_COIN };
 	BattleServer::GetInstance()->AddTimer(ev);
 	
-	PTC_VECTOR coin_pos{ static_cast<float>(rand() % 400 - 200) , 0, static_cast<float>(rand() % 400 - 200) };
+	mt19937 gen(SR::g_rd());
+	uniform_int_distribution<int> dis(-200, 200);
+
+	PTC_VECTOR coin_pos{ static_cast<float>(dis(gen)) , 0, static_cast<float>(dis(gen)) };
 	m_coins[m_coin_cur] = true;
 	PushAddCoinMsg(coin_pos, m_coin_cur);
 	m_coin_cur++;
@@ -345,12 +348,16 @@ void Room::AddCoinByDie(int die_id) {
 	if (!IsGameStarted()) return;
 
 	cout << "DIE COIN" << endl;
+	
+	mt19937 gen(SR::g_rd());
+	uniform_int_distribution<int> dis(-200, 200);
+
 	for (auto& pl : m_players) {
 		if (pl->GetID() == die_id) {
 			PTC_VECTOR coin_pos{
-				static_cast<float>(pl->GetPosition().x + rand() % 400 - 200),
+				static_cast<float>(pl->GetPosition().x + dis(gen)),
 				static_cast<float>(pl->GetPosition().y),
-				static_cast<float>(pl->GetPosition().z + rand() % 400 - 200) };
+				static_cast<float>(pl->GetPosition().z + dis(gen)) };
 
 			m_coins[m_coin_cur] = true;
 			PushAddCoinMsg(coin_pos, m_coin_cur);
