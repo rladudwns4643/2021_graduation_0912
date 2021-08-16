@@ -276,16 +276,16 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 #define CHARACTER_GUNMAN "GunMan"
 
 // Animation KeyState
-#define KEY_IDLE "Idle"
-#define KEY_FORWARD "Running"
-#define KEY_BACKWARD "Backward"
-#define KEY_LEFT_STRAFE "Left_Strafe"
+#define KEY_IDLE		 "Idle"
+#define KEY_FORWARD		 "Running"
+#define KEY_BACKWARD	 "Backward"
+#define KEY_LEFT_STRAFE	 "Left_Strafe"
 #define KEY_RIGHT_STRAFE "Right_Strafe"
 
-#define KEY_ATTACK "Attack"
-#define KEY_JUMP "Jump"
-#define KEY_T_POSE "T_Pose"
-#define KEY_DEATH "Death"
+#define KEY_ATTACK		 "Attack"
+#define KEY_JUMP		 "Jump"
+#define KEY_T_POSE		 "T_Pose"
+#define KEY_DEATH		 "Death"
 
 #define MAX_ID_LEN 10
 
