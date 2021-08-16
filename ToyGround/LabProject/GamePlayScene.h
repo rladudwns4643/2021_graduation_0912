@@ -67,6 +67,6 @@ private:
 private:
 	int m_Winner{ 1 };
 
-	int m_StartCount = 1;
+	int m_StartCount = 4;
 };
 

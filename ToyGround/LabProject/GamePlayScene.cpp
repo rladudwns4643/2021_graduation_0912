@@ -56,6 +56,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_GAME_ROUND_START: {
+		m_isCountDownOn = false;
 		m_PauseScene = false;
 		break;
 	}
@@ -87,6 +88,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		t = va_arg(ap, int);
 		va_end(ap);
 		m_Timer = t;
+		if (m_StartCount > 0) {
+			m_StartCount--;
+		}
 		break;
 	}
 	case EVENT_GAME_ADD_COIN: {
@@ -112,6 +116,8 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		va_end(ap);
 
+		//todo: 승리조건 달성한 id -> arg_id
+
 		cout << "WIN_SATISFACTION: " << arg_id << endl;
 		break;
 	}
@@ -128,6 +134,12 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 //#ifdef LOG_ON
 		cout << "Get coin ID: " << arg_id << " ID COIN COUNT: " << arg_coin_cnt << " delete CoinID: " << arg_delete_coin_id << endl;
 //#endif LOG_ON
+		if (arg_id == 1) {
+			m_CowBoyGemNum = arg_coin_cnt;
+		}
+		else {
+			m_GunManGemNum = arg_coin_cnt;
+		}
 		AppContext->HiddenGem(arg_delete_coin_id, false);
 		break;
 	}
@@ -394,7 +406,7 @@ bool GameplayScene::Enter()
 	m_countDown = 0;
 	m_CowBoyGemNum = 0;
 	m_GunManGemNum = 0;
-	m_StartCount = 1;
+	m_StartCount = 4;
 
 	return false;
 }
@@ -642,7 +654,7 @@ void GameplayScene::RenderText()
 
 	UITextInfo UIHealth = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_HEALTH);
 	// StartCount
-	if (m_StartCount > 2)
+	if (m_StartCount > 0)
 	{
 		auto sc = to_wstring(m_StartCount);
 		GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 3.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
