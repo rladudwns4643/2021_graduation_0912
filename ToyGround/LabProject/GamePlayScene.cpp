@@ -214,6 +214,7 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_cam_look = va_arg(ap, XMFLOAT3);
 		arg_bullet_pos = va_arg(ap, XMFLOAT3);
 		va_end(ap);
+		SoundManager::GetApp()->PlaySoundOnce(L"Shot.mp3", SoundManager::CHANNEL_ID::Bullet, 0.8f);
 
 		//cout << "arg_bullet_idx: " << arg_bullet_idx << " arg_shootter: " << arg_shootter << endl;
 		if (arg_bullet_type == 1) {
@@ -263,7 +264,6 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
 		//cout << "EVENT_GAME_CALLBACK_PUSH_ANIM: " << arg_id << "type: " << arg_anim_type << endl;
-		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[arg_id]);
 		if (arg_anim_type == static_cast<int>(MoveState::Jump)) {
 			EnemyCommandCenter::GetApp()->m_StartJumpAnim = true;
 		}

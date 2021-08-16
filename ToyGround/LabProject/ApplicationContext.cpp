@@ -9,6 +9,7 @@
 #include "Button.h"
 #include "ImageView.h"
 #include "Particle.h"
+#include "SoundManager.h"
 
 #define WIDTH_NORMALIZE_LT(x) (x + (1280.f / 2.f))
 #define HEIGHT_NORMALIZE_LT(y) (-y + (720.f / 2.f))
@@ -380,6 +381,7 @@ void ApplicationContext::UpdateBullet()
 							player1Min.y <= bulletMax.y && player1Max.y >= bulletMin.y &&
 							player1Min.z <= bulletMax.z && player1Max.z >= bulletMin.z)
 						{
+							SoundManager::GetApp()->PlaySoundOnce(L"Too.mp3", SoundManager::CHANNEL_ID::BulletCol, 1.0f);
 							hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 							bulletCollObj = true;
 							player1->m_hp -= 450;
@@ -425,6 +427,7 @@ void ApplicationContext::UpdateBullet()
 							player2Min.y <= bulletMax.y && player2Max.y >= bulletMin.y &&
 							player2Min.z <= bulletMax.z && player2Max.z >= bulletMin.z)
 						{
+							SoundManager::GetApp()->PlaySoundOnce(L"Too.mp3", SoundManager::CHANNEL_ID::BulletCol, 1.0f);
 							hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 							bulletCollObj = true;
 							player2->m_hp -= 450;
@@ -471,6 +474,7 @@ void ApplicationContext::UpdateBullet()
 						objMin.y <= bulletMax.y && objMax.y >= bulletMin.y &&
 						objMin.z <= bulletMax.z && objMax.z >= bulletMin.z)
 					{
+						SoundManager::GetApp()->PlaySoundOnce(L"Too.mp3", SoundManager::CHANNEL_ID::BulletCol, 1.0f);
 						hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 						bulletCollObj = true;
 						break;
@@ -572,6 +576,7 @@ void ApplicationContext::UpdateBullet()
 							player1Min.y <= bulletMax.y && player1Max.y >= bulletMin.y &&
 							player1Min.z <= bulletMax.z && player1Max.z >= bulletMin.z)
 						{
+							SoundManager::GetApp()->PlaySoundOnce(L"Too.mp3", SoundManager::CHANNEL_ID::BulletCol, 1.0f);
 							hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
 							bulletCollObj = true;
 							player1->m_hp -= 450;
@@ -617,6 +622,7 @@ void ApplicationContext::UpdateBullet()
 							player2Min.y <= bulletMax.y && player2Max.y >= bulletMin.y &&
 							player2Min.z <= bulletMax.z && player2Max.z >= bulletMin.z)
 						{
+							SoundManager::GetApp()->PlaySoundOnce(L"Too.mp3", SoundManager::CHANNEL_ID::BulletCol, 1.0f);
 							hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
 							bulletCollObj = true;
 							player2->m_hp -= 450;
@@ -665,6 +671,7 @@ void ApplicationContext::UpdateBullet()
 					{
 						if (p.canBroken)
 						{
+							SoundManager::GetApp()->PlaySoundOnce(L"Boom.mp3", SoundManager::CHANNEL_ID::BulletCol, 0.6f);
 							ZeroMemory(&obj->m_World, sizeof(obj->m_World));
 							ZeroMemory(&obj->m_TexTransform, sizeof(obj->m_TexTransform));
 							obj->m_IsVisible = false;
@@ -690,6 +697,7 @@ void ApplicationContext::UpdateBullet()
 
 void ApplicationContext::DisplayBullet(int instID, XMFLOAT3 startPos, XMFLOAT3 look, int firedPlayerID, int bulletNum)
 {
+	SoundManager::GetApp()->PlaySoundOnce(L"Shot.mp3", SoundManager::CHANNEL_ID::Bullet, 0.6f);
 	if (bulletNum == 1)
 	{
 		GameObject* obj = FindObject<GameObject>(OBJECT_MESH_STR_BULLET_01, std::to_string(OBJECT_START_INDEX_BULLET_01 + instID));
