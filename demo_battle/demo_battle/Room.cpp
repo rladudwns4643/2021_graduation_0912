@@ -683,6 +683,7 @@ void Room::PushNewWinSatisfaction(int satisfaction_id) {
 	p.size = sizeof(p);
 	p.type = BC_WIN_SATISFACTION;
 	p.satisfaction_id = satisfaction_id;
+	
 	for (const auto& pl : m_players) {
 		PushSendMsg(pl->GetID(), &p);
 	}
@@ -926,12 +927,15 @@ void Room::ProcMsg(message msg) {
 					AddCoinByDie(t_id);
 				}
 				pl->SetCoin(0);
+				pl->SetWinSatisfaction(false);
+				pl->SetWinTime(999);
 				break;
 			}
 		}
 		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(RESPAWN_TIME), EVENT_TYPE::EV_RESPAWN };
 		BattleServer::GetInstance()->AddTimer(ev);
 		PushDieMsg(t_id);
+		PushNewWinSatisfaction()
 		break;
 	}
 	case CB_GET_COIN: {
