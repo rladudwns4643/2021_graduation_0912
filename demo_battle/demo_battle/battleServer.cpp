@@ -229,13 +229,16 @@ void BattleServer::SendRoomEnterPacket(int to, int enterer, bool ready, char pla
 	SendPacket(to, &p);
 }
 
-void BattleServer::SendUpdateUserInfoPacket(const int& id, const int& mmr) {
+void BattleServer::SendUpdateUserInfoPacket(string id_str, const int& mmr) {
 #ifdef LOG_ON
 	cout << "SendUpdateUserInfoPacket: " << id << " newmmr: " << mmr << endl;
 #endif
-	bc_packet_updated_user_info p;
+	bl_packet_update_db p;
 	p.size = sizeof(p);
-	p.type = BC_UPDATED_USER_INFO;
+	p.type = BL_UPDATE_DB;
+	string w;
+	w.assign(id_str.begin(), id_str.end());
+	memcpy(p.id, w.c_str(), sizeof(char) * MAX_ID_LEN);
 	p.mmr = mmr;
-	SendPacket(id, &p);
+	SendPacket(LOBBY_SERVER_KEY, &p);
 }

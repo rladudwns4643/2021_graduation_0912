@@ -143,7 +143,7 @@ void WorkerThread::ProcThread() {
 			break;
 		}
 		case EVENT_TYPE::EV_UPDATE_DB: {
-			BattleServer::GetInstance()->SendUpdateUserInfoPacket(key, SR::g_clients[key]->mmr);
+			BattleServer::GetInstance()->SendUpdateUserInfoPacket(SR::g_clients[key]->id_str, SR::g_clients[key]->mmr);
 			delete ex_over;
 			break;
 		}

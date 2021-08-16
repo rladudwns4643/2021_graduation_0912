@@ -24,7 +24,6 @@ public:
 
 public:
 	void SendPacket(int id, void* buff);
-	void SendCheckConnect();
 	void SendBattleLoginOKPacket(int id);
 	void SendBattleLoginFailPacket(int id);
 	void SendAutoRoomReadyPacket(int id_1, int id_2, int room_no);
@@ -33,7 +32,7 @@ public:
 	void SendRoomEnterPacket(int to, int enterer, bool ready, char playerNo, char* name, int mmr, bool isManager);
 	
 	//¿Œ∞‘¿”
-	void SendUpdateUserInfoPacket(const int& id, const int& mmr);
+	void SendUpdateUserInfoPacket(string id_str, const int& mmr);
 
 private:
 	ThreadHandler* m_ThreadHandler;

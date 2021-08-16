@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "DataBase.h"
 
-#define LOG_ON
+//#define LOG_ON
 
 LobbyServer::LobbyServer()
 {
@@ -206,7 +206,7 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		cl_packet_signup* p = reinterpret_cast<cl_packet_signup*>(packet);
 		int is_overlap{ false };
 		DataBase::GetInstance()->CheckId(p->id, &is_overlap);
-		if (is_overlap == 0) {
+		if (is_overlap == false) {
 			if (DataBase::GetInstance()->SignUpPlayer(p->id, p->pw)) {
 				SendSignUpOkPacket(id, MMRDEFAULT);
 				break;
@@ -223,10 +223,13 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		SendUserInfoPacket(id);
 		break;
 	}
-	case CL_UPDATE_USER_INFO: {
+	case BL_UPDATE_DB: {
 #ifdef LOG_ON
-		cout << "GET CL_UPDATE_USER_INFO" << endl;
+		cout << "BL_UPDATE_DB" << endl;
 #endif
+		bl_packet_update_db* p = reinterpret_cast<bl_packet_update_db*>(packet);
+		string t(p->id);
+		DataBase::GetInstance()->SetUserInfo(t, p->mmr);
 		break;
 	}
 	case CL_FIND_ROOM: { //22
@@ -298,7 +301,7 @@ void LobbyServer::SendUserInfoPacket(int id) {
 	p.size = sizeof(p);
 	p.type = LC_USERINFO;
 	
-	memcpy(p.id_str, userList[id]->user_info->GetPlayerID().c_str(), MAX_ID_LEN);//db¿¡¼­ ºÒ·¯¿È
+	memcpy(p.id_str, userList[id]->user_info->GetPlayerID().c_str(), sizeof(char) * MAX_ID_LEN);//db¿¡¼­ ºÒ·¯¿È
 	p.mmr = userList[id]->user_info->GetPlayerMMR(); //db¿¡¼­ ºÒ·¯¿È
 	SendPacket(id, &p);
 }
