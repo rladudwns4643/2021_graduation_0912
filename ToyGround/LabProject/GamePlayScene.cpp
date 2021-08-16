@@ -452,6 +452,11 @@ bool GameplayScene::Enter()
 
 void GameplayScene::Exit()
 {
+	if(m_Users[1]->m_isLive == false)
+		m_Users[1]->Respawn();
+	if (m_Users[2]->m_isLive == false)
+		m_Users[2]->Respawn();
+
 	m_Users.clear();
 	m_player_in_room.clear();
 
@@ -473,6 +478,8 @@ void GameplayScene::Exit()
 	// ÆÄÆ¼Å¬
 	AppContext->HiddenParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_COWBOY);
 	AppContext->HiddenParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_GUNMAN);
+	AppContext->HiddenParticle(PARTICLE_NAME_DAMAGE_CHARACTER, CHARACTER_COWBOY);
+	AppContext->HiddenParticle(PARTICLE_NAME_DAMAGE_CHARACTER, CHARACTER_GUNMAN);
 	AppContext->HiddenParticle(PARTICLE_NAME_SMOKE, PARTICLE_NAME_SMOKE);
 
 	for (int i = 0; i < MAX_GEM_COUNT; ++i)
@@ -552,6 +559,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	// Particle
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[PARTICLE_NAME_SKILL_ON_CHARACTER], AppContext->m_RItemsVec, false, true);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[PARTICLE_NAME_SMOKE], AppContext->m_RItemsVec, false, true);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[PARTICLE_NAME_DAMAGE_CHARACTER], AppContext->m_RItemsVec, false, true);
 
 	// Shadow
 	GraphicsContext::GetApp()->UpdateShadowTransform(TOY_GROUND::GetApp()->m_pLights[LIGHT_NAME_DIRECTIONAL].get(), m_SceneBounds);
@@ -622,6 +630,7 @@ void GameplayScene::Render()
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_ParticlePSO.Get());
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[PARTICLE_NAME_SMOKE], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[PARTICLE_NAME_SKILL_ON_CHARACTER], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[PARTICLE_NAME_DAMAGE_CHARACTER], AppContext->m_RItemsVec);
 
 	// UI
 	GraphicsContext::GetApp()->SetPipelineState(Graphics::g_UIPSO.Get());

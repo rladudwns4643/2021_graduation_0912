@@ -107,7 +107,7 @@ public:
 	float	m_JumpDeltaT = 0;
 
 	bool	m_StartDeathAnim = false;
-	float	m_DeathAnimTime = 160.f;
+	float	m_DeathAnimTime = 120.f;
 	float	m_DeathDeltaT = 0;
 };
 

@@ -38,7 +38,7 @@ public:
 
 public:
 	// 파티클 관련
-	void RespwanParticle(bool isCapture = false);
+	void DamageParticle(bool isCapture = false);
 
 public:
 	void SetMapName(std::string mapName);

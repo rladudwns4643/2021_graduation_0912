@@ -138,6 +138,7 @@ void GraphicsRenderer::LoadTextures()
 		"UI_GAMEPLAY_WINNERBOARD2",
 		"T_Smoke",
 		"P_SKILL_ON",
+		"T_DAMAGE",
 	};
 
 	std::vector<std::wstring> texFilenames =
@@ -176,6 +177,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/GamePlay/GamePlay_WinnerBoard2.dds",
 		L"./Textures/Particle/T_Smoke.dds",
 		L"./Textures/Particle/P_Skill_On.dds",
+		L"./Textures/Particle/T_Damage.dds",
 	};
 
 	for (int i = 0; i < (int)texNames.size(); ++i)
@@ -246,6 +248,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD2]->Resource,
 		m_Textures[TEXTURE_STR_T_Smoke]->Resource,
 		m_Textures[TEXTURE_STR_P_SKILL_ON]->Resource,
+		m_Textures[TEXTURE_STR_T_DAMAGE]->Resource,
 	};
 
 	auto SkyBox = m_Textures["SkyBox"]->Resource;

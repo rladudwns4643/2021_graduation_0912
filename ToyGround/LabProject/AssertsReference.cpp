@@ -859,6 +859,14 @@ void AssertsReference::BuildMaterials()
 	P_SKILL_ON->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
 	P_SKILL_ON->Roughness = 0.9;
 
+	auto T_DAMAGE = std::make_unique<Material>();
+	T_DAMAGE->MatCBIndex = TEXTURE_INDEX_T_DAMAGE;
+	T_DAMAGE->DiffuseSrvHeapIndex = TEXTURE_INDEX_T_DAMAGE;
+	T_DAMAGE->DiffuseAlbedo = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+	T_DAMAGE->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
+	T_DAMAGE->Roughness = 0.9;
+
+
 	// ------------------------------------------------------------------------------------
 
 	m_Materials["SkyBox"] = std::move(sky);
@@ -899,6 +907,7 @@ void AssertsReference::BuildMaterials()
 
 	m_Materials[TEXTURE_STR_T_Smoke] = std::move(T_Smoke);
 	m_Materials[TEXTURE_STR_P_SKILL_ON] = std::move(P_SKILL_ON);
+	m_Materials[TEXTURE_STR_T_DAMAGE] = std::move(T_DAMAGE);
 }
 
 void AssertsReference::BuildGeoMeshes(ID3D12Device* pDevice, ID3D12GraphicsCommandList* pCommandList)

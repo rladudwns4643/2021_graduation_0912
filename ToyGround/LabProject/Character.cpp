@@ -920,6 +920,8 @@ void Character::Attack()
 	else
 	{
 		m_attackGauge -= ONE_SHOT_GAUGE;
+		XMFLOAT3 bStartPos = GetPosition();
+		bStartPos.y += 90.f;
 		int bIndex = 0;
 		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 		{
@@ -931,11 +933,30 @@ void Character::Attack()
 				break;
 			}
 		}
-		XMFLOAT3 bStartPos = GetPosition();
-		bStartPos.y += 90.f;
 		//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
 		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
 		AppContext->DisplayBullet(bIndex, bStartPos, m_attackDirection, m_PlayerID, 1);
+
+		for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+		{
+			if (AppContext->m_ActiveBulletCheck[i] == false)
+			{
+				bIndex = i;
+				AppContext->m_ActiveBullet[AppContext->m_ActiveBulletCnt++] = bIndex;
+				AppContext->m_ActiveBulletCheck[i] = true;
+				break;
+			}
+		}
+		bStartPos = GetPosition();
+		XMFLOAT3 T{ 0.f, 0.f, 0.f };
+		T = MathHelper::Add(T, m_attackDirection, 200);
+		XMFLOAT3 t_pos{};
+		t_pos.x = bStartPos.x + T.x;
+		t_pos.y = bStartPos.y + 90.f + T.y;
+		t_pos.z = bStartPos.z + T.z;
+		//cout << "AtiveBulletCnt: " << AppContext->m_AtiveBulletCnt << endl;
+		//cout << "Position x: " << bStartPos.x << ", y: " << bStartPos.y << ", z: " << bStartPos.z << endl;
+		AppContext->DisplayBullet(bIndex, t_pos, m_attackDirection, m_PlayerID, 1);
 	}
 #endif
 }
@@ -1020,8 +1041,7 @@ void Character::SetParticle(std::string particleName, std::string instID)
 	m_Particles[particleName] = particle;
 }
 
-void Character::RespwanParticle(bool isCapture)
+void Character::DamageParticle(bool isCapture)
 {
-	// 변신시 파티클 on
-//	AppContext->DisplayParticle(PARTICLE_NAME_SMOKE, m_MeshName, GetPosition(), true, isCapture);
+	AppContext->DisplayParticle(PARTICLE_NAME_DAMAGE_CHARACTER, m_MeshName, GetPosition(), true, isCapture);
 }

@@ -206,6 +206,16 @@ void TOY_GROUND::BuildAsserts()
 		DirectX::XMFLOAT2(18.f, 20.f),
 		50.f);
 
+	AssertsReference::GetApp()->BuildBasicParticle(g_Device.Get(), g_CommandList.Get(),
+		PARTICLE_NAME_DAMAGE_CHARACTER, 5,
+		DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0),
+		DirectX::XMFLOAT2(118, 65),
+		DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(65, 70), DirectX::XMFLOAT2(0, 0),
+		DirectX::XMFLOAT2(0.f, 0.f),
+		DirectX::XMFLOAT2(0.f, 4.f),
+		DirectX::XMFLOAT2(1.f, 2.f),
+		DirectX::XMFLOAT2(18.f, 20.f));
+
 	// Build Materials
 	AssertsReference::GetApp()->BuildMaterials();
 }
@@ -223,6 +233,11 @@ void TOY_GROUND::BuildParticles()
 	ParticleSystem::GetApp()->SetCharacterParticle(CHARACTER_COWBOY, CHARACTER_COWBOY, PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_COWBOY);
 	AppContext->CreateParticle(PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_GUNMAN, TEXTURE_STR_P_SKILL_ON, true, XMFLOAT3(0, PLAYER_SIZE_Y, 0), 3.f);
 	ParticleSystem::GetApp()->SetCharacterParticle(CHARACTER_GUNMAN, CHARACTER_GUNMAN, PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_GUNMAN);
+
+	AppContext->CreateParticle(PARTICLE_NAME_DAMAGE_CHARACTER, CHARACTER_COWBOY, TEXTURE_STR_T_DAMAGE, false, XMFLOAT3(0, PLAYER_SIZE_Y - 10, 0), 4.f);
+	ParticleSystem::GetApp()->SetCharacterParticle(CHARACTER_COWBOY, CHARACTER_COWBOY, PARTICLE_NAME_DAMAGE_CHARACTER, CHARACTER_COWBOY);
+	AppContext->CreateParticle(PARTICLE_NAME_DAMAGE_CHARACTER, CHARACTER_GUNMAN, TEXTURE_STR_T_DAMAGE, false , XMFLOAT3(0, PLAYER_SIZE_Y - 10, 0), 4.f);
+	ParticleSystem::GetApp()->SetCharacterParticle(CHARACTER_GUNMAN, CHARACTER_GUNMAN, PARTICLE_NAME_DAMAGE_CHARACTER, CHARACTER_GUNMAN);
 	
 	// 기본 파티클
 	AppContext->CreateParticle(PARTICLE_NAME_SMOKE, PARTICLE_NAME_SMOKE, TEXTURE_STR_T_Smoke, false, XMFLOAT3(0, 50, 0), 3.f);

@@ -321,12 +321,15 @@ void ApplicationContext::UpdateBullet()
 							hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 							bulletCollObj = true;
 							player1->m_hp -= 450;
+							player1->DamageParticle();
 							if (player1->m_hp <= 0) {
 								player1->m_hp = 0;
 								if (Service::GetApp()->GetMyBattleID() == 1) {
 									Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_DIE, 1, 1);
 								}
-								//player1->Death();
+#ifdef DEBUG_CLIENT
+								player1->Death();
+#endif
 							}
 							if (player2->m_skillGauge < MAX_SKILLGAUGE)
 								player2->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
@@ -363,13 +366,16 @@ void ApplicationContext::UpdateBullet()
 							hiddenBulletIndex[hiddenBulletCount++] = m_ActiveBullet[i];
 							bulletCollObj = true;
 							player2->m_hp -= 450;
+							player2->DamageParticle();
 							if (player2->m_hp <= 0) {
 								player2->m_hp = 0;
 								if (Service::GetApp()->GetMyBattleID() == 2) {
 									Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_DIE, 1, 2);
 								}
+#ifdef DEBUG_CLIENT
+								player2->Death();
+#endif
 							}
-								//player2->Death();
 							if (player1->m_skillGauge < MAX_SKILLGAUGE)
 								player1->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
 							else
@@ -507,11 +513,15 @@ void ApplicationContext::UpdateBullet()
 							hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
 							bulletCollObj = true;
 							player1->m_hp -= 450;
+							player1->DamageParticle();
 							if (player1->m_hp <= 0) {
 								player1->m_hp = 0;
 								if (Service::GetApp()->GetMyBattleID() == 1) {
 									Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_DIE, 1, 1);
 								}
+#ifdef DEBUG_CLIENT
+								player1->Death();
+#endif
 							}
 							if (player2->m_skillGauge < MAX_SKILLGAUGE)
 								player2->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;
@@ -548,11 +558,15 @@ void ApplicationContext::UpdateBullet()
 							hiddenSkillBulletIndex[hiddenSkillBulletCount++] = m_AtiveSkillBullet[i];
 							bulletCollObj = true;
 							player2->m_hp -= 450;
+							player2->DamageParticle();
 							if (player2->m_hp <= 0) {
 								player2->m_hp = 0;
 								if (Service::GetApp()->GetMyBattleID() == 2) {
 									Service::GetApp()->AddEvent(EVENT_GAME_REQUEST_DIE, 1, 2);
 								}
+#ifdef DEBUG_CLIENT
+								player2->Death();
+#endif
 							}
 							if (player1->m_skillGauge < MAX_SKILLGAUGE)
 								player1->m_skillGauge += ONE_HIT_CHARGE_SKILLGAUGE;

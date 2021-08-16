@@ -86,8 +86,9 @@
 #define TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD2					31
 
 // 파티클
-#define TEXTURE_INDEX_T_Smoke							32
+#define TEXTURE_INDEX_T_Smoke									32
 #define TEXTURE_INDEX_P_SKILL_ON								33
+#define TEXTURE_INDEX_T_DAMAGE									34
 
 
 
@@ -127,8 +128,9 @@
 #define TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD				"UI_GAMEPLAY_WINNERBOARD"
 #define TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD2			"UI_GAMEPLAY_WINNERBOARD2"
 
-#define TEXTURE_STR_T_Smoke						"T_Smoke"
+#define TEXTURE_STR_T_Smoke								"T_Smoke"
 #define TEXTURE_STR_P_SKILL_ON							"P_SKILL_ON"
+#define TEXTURE_STR_T_DAMAGE							"T_DAMAGE"
 
 
 
@@ -187,6 +189,7 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 // 파티클
 #define PARTICLE_NAME_SMOKE						"Particle_smoke"
 #define PARTICLE_NAME_SKILL_ON_CHARACTER		"Particle_Skill_On_character"
+#define PARTICLE_NAME_DAMAGE_CHARACTER			"Particle_Damage_character"
 
 
 // UI Layer
@@ -295,5 +298,5 @@ enum class TextAlignType { NONE, Center, Left, Right, Top, Bottom, LT, LB, RT, R
 #define MAX_ATTACKGAUGE 300
 #define ONE_SHOT_GAUGE 50
 #define MAX_SKILLGAUGE 120
-#define ONE_HIT_CHARGE_SKILLGAUGE 40
+#define ONE_HIT_CHARGE_SKILLGAUGE 30
 #define MAXGAUGE_SIZE_X 245
