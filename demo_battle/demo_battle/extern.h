@@ -13,6 +13,8 @@ namespace SR {
 	extern std::array<CLIENT*, MAX_CLIENT> g_clients;
 	extern std::priority_queue<EVENT> g_timer_queue;		//우선순위 queue, 내림차순 기준
 
+	extern std::random_device g_rd;
+
 	extern Map g_map;
 	extern std::map<int, Boundary*> g_boundaries;
 	extern SpawnPosition g_spawn_pos;
