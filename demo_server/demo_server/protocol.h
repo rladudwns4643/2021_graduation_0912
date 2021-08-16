@@ -525,6 +525,7 @@ struct lb_packet_request_room {
 
 //-------------------------------B->L-------------------------------
 #define BL_ROOMREADY			56
+#define BL_UPDATE_DB			57
 #pragma pack (push, 1)
 struct bl_packet_room_ready {
 	BYTE size;
@@ -533,6 +534,13 @@ struct bl_packet_room_ready {
 	short id_1;
 	short id_2;
 	int room_no;
+};
+struct bl_packet_update_db {
+	BYTE size;
+	BYTE type;
+
+	char id[MAX_ID_LEN];
+	int mmr;
 };
 //------------------------------------------------------------------
 #pragma pack (pop)

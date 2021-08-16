@@ -349,7 +349,7 @@ void Room::AddCoinByDie(int die_id) {
 		if (pl->GetID() == die_id) {
 			PTC_VECTOR coin_pos{
 				static_cast<float>(pl->GetPosition().x + rand() % 400 - 200),
-				0,
+				static_cast<float>(pl->GetPosition().y),
 				static_cast<float>(pl->GetPosition().z + rand() % 400 - 200) };
 
 			m_coins[m_coin_cur] = true;
@@ -436,14 +436,19 @@ void Room::RoundStart() {
 
 void Room::GameOver(int winner) {
 	cout << winner << " winner!\n";
-	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EVENT_TYPE::EV_RESET_ROOM };
-	BattleServer::GetInstance()->AddTimer(ev);
+	if (winner != 0) {
+		UpdateUserInfo_DB(winner);
+	}
 	m_isGameStarted = false;
 	m_isEnterable = true;
+
+	EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(5), EVENT_TYPE::EV_RESET_ROOM };
+	BattleServer::GetInstance()->AddTimer(ev);
 	PushGameOverMsg(winner);
 }
 
 void Room::UpdateUserInfo_DB(int winner) {
+	cout << "DBUPDATE" << endl;
 	for (auto& p : m_players) {
 		const int& id = p->GetID();
 		if (id != -1) {

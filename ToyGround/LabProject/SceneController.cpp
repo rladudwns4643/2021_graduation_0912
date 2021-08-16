@@ -170,7 +170,7 @@ void LobbyController::MouseCallback()
 			string pw;
 			id.assign(m_MyScene->m_ID.begin(), m_MyScene->m_ID.end());
 			pw.assign(m_MyScene->m_Password.begin(), m_MyScene->m_Password.end());
-			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST, 2, id, pw);
+			Service::GetApp()->AddEvent(EVENT_LOBBY_REQUEST_SIGNUP, 2, id, pw);
 		}
 		// Login Button
 		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 710 * ScaleConvert.x

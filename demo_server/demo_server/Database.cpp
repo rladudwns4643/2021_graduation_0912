@@ -90,7 +90,10 @@ bool DataBase::SignUpPlayer(std::string id, std::string pw)
 
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
 	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)q.c_str(), SQL_NTS);
-	return retSuccess(retcode);
+	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO)
+		return true;
+	else
+		return false;
 }
 
 bool DataBase::CheckId(std::string id, int* is_exist)
@@ -151,17 +154,17 @@ bool DataBase::GetUserInfo(std::string& id, int& mmr)
 void DataBase::SetUserInfo(std::string& id, int& mmr)
 {
 	std::wstring q{L"EXEC set_user_info "};
-	q += 
-		L", " + StringToWstring(id) 
+	q += StringToWstring(id) 
 		+ L", " + std::to_wstring(mmr);
 	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+	retcode = SQLExecDirect(hstmt, (SQLWCHAR*)q.c_str(), SQL_NTS);
 	if (retSuccess(retcode)) {
 		std::cout << "set_user_info: " << id << std::endl;
 		if (retcode != SQL_SUCCESS) {
 			HandleDiagnosticRecord(hstmt, SQL_HANDLE_STMT, retcode);
 		}
 		if (retcode == SQL_ERROR) assert(!"set_user_info");
-		else SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 	}
 	else {
 		HandleDiagnosticRecord(hstmt, SQL_HANDLE_STMT, retcode);
