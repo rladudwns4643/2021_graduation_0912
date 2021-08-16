@@ -73,7 +73,7 @@ public:
 
 	int m_ZLayer = -1;
 
-	bool m_IsVisible = true;
+	bool m_IsVisible = false;
 	bool m_IsVisibleOnePassCheck = false;	// 무조건 보이게 하기
 
 	// 월드좌표 및 텍스쳐좌표

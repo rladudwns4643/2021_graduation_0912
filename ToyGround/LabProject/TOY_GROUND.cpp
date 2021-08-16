@@ -186,7 +186,7 @@ void TOY_GROUND::BuildAsserts()
 
 	// Build Particle
 	AssertsReference::GetApp()->BuildBasicParticle(g_Device.Get(), g_CommandList.Get(),
-		PARTICLE_NAME_SMOKE, 400,
+		PARTICLE_NAME_SMOKE, 350,
 		DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0, 0),
 		DirectX::XMFLOAT2(50, 40),
 		DirectX::XMFLOAT2(-45, 45), DirectX::XMFLOAT2(-45, 45), DirectX::XMFLOAT2(-45, 45),
@@ -198,7 +198,7 @@ void TOY_GROUND::BuildAsserts()
 	AssertsReference::GetApp()->BuildCircleParticle(g_Device.Get(), g_CommandList.Get(),
 		PARTICLE_NAME_SKILL_ON_CHARACTER, 70,
 		DirectX::XMFLOAT3(0, 0, 0),
-		DirectX::XMFLOAT2(15, 15),
+		DirectX::XMFLOAT2(30, 30),
 		DirectX::XMFLOAT2(-5, 5), DirectX::XMFLOAT2(-65, -70), DirectX::XMFLOAT2(-5, 5),
 		DirectX::XMFLOAT2(0.f, 6.f),
 		DirectX::XMFLOAT2(5.5f, 7.5f),
@@ -225,6 +225,6 @@ void TOY_GROUND::BuildParticles()
 	ParticleSystem::GetApp()->SetCharacterParticle(CHARACTER_GUNMAN, CHARACTER_GUNMAN, PARTICLE_NAME_SKILL_ON_CHARACTER, CHARACTER_GUNMAN);
 	
 	// 기본 파티클
-	AppContext->CreateParticle(PARTICLE_NAME_SMOKE, PARTICLE_NAME_SMOKE, TEXTURE_STR_T_Smoke_Tiled_D, false, XMFLOAT3(0, 50, 0), 3.f);
+	AppContext->CreateParticle(PARTICLE_NAME_SMOKE, PARTICLE_NAME_SMOKE, TEXTURE_STR_T_Smoke, false, XMFLOAT3(0, 50, 0), 3.f);
 	ParticleSystem::GetApp()->SetParticle(PARTICLE_NAME_SMOKE, PARTICLE_NAME_SMOKE);
 }

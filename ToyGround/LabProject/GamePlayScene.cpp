@@ -645,14 +645,14 @@ void GameplayScene::Render()
 
 	// Enemy State
 #ifdef DEBUG_CLIENT
-	if (m_Users[2]->m_hp < MAX_HP)
+	if (m_Users[2]->m_hp < MAX_HP && m_Users[2]->m_isLive)
 	{
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_BACK], AppContext->m_RItemsVec);
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_FRONT], AppContext->m_RItemsVec);
 	}
 #elif DEBUG_SERVER
-	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP)
+	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP && m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_isLive)
 	{
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_BACK], AppContext->m_RItemsVec);
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
@@ -693,6 +693,7 @@ void GameplayScene::RenderText()
 
 	UITextInfo UIHealth = GraphicsContext::GetApp()->GetUIPosAndSize(AppContext->m_RItemsMap[OBJECT_TYPE_UI2D + m_SceneName], AppContext->m_RItemsVec, OBJECT_NAME_GAMEPLAY_HEALTH);
 	// StartCount
+#ifdef DEBUG_SERVER
 	if (m_StartCount > 0)
 	{
 		auto sc = to_wstring(m_StartCount);
@@ -700,6 +701,7 @@ void GameplayScene::RenderText()
 		GraphicsContext::GetApp()->SetColor(D2D1::ColorF::White);
 		GraphicsContext::GetApp()->DrawD2DText(sc, Core::g_DisplayWidth / 2 - 20, Core::g_DisplayHeight / 2, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 	}
+#endif
 
 	// HP
 	GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 9.f , DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
@@ -721,7 +723,7 @@ void GameplayScene::RenderText()
 		ehpPosX += 15;
 	GraphicsContext::GetApp()->DrawD2DText(hp, hpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 #ifdef DEBUG_CLIENT
-	if (m_Users[2]->m_hp < MAX_HP)
+	if (m_Users[2]->m_hp < MAX_HP && m_Users[2]->m_isLive)
 	{
 		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 		wstring en;
@@ -732,7 +734,7 @@ void GameplayScene::RenderText()
 		GraphicsContext::GetApp()->DrawD2DText(en, ehpPosX * 0.95f, UIHealth.size.y * 1.43f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 	}
 #elif DEBUG_SERVER
-	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP)
+	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP && &&m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_isLive)
 	{
 		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 		wstring en;

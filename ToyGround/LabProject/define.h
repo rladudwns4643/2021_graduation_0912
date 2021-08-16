@@ -86,7 +86,7 @@
 #define TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD2					31
 
 // ÆÄÆ¼Å¬
-#define TEXTURE_INDEX_T_Smoke_Tiled_D							32
+#define TEXTURE_INDEX_T_Smoke							32
 #define TEXTURE_INDEX_P_SKILL_ON								33
 
 
@@ -127,7 +127,7 @@
 #define TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD				"UI_GAMEPLAY_WINNERBOARD"
 #define TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD2			"UI_GAMEPLAY_WINNERBOARD2"
 
-#define TEXTURE_STR_T_Smoke_Tiled_D						"T_Smoke_Tiled_D"
+#define TEXTURE_STR_T_Smoke						"T_Smoke"
 #define TEXTURE_STR_P_SKILL_ON							"P_SKILL_ON"
 
 

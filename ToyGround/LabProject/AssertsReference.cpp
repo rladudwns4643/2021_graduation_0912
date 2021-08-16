@@ -392,7 +392,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 						preInfo.position.z = startZ + (STD_CUBE_SIZE * i) + shiftZ;
 						preInfo.typeID = ++typeIDCount;
 						map->mapInfoVector.emplace_back(preInfo);
-						AppContext->m_MapArray[k][i][j] = typeIDCount;
+						AppContext->m_MapArray[k][i][j] = preInfo.typeID;
 
 						if (i < MAP_DEPTH_BLOCK_NUM / 2)
 						{
@@ -401,7 +401,7 @@ Map* AssertsReference::LoadMapInfo(string mapName)
 							preInfo.position.z = -(startZ + (STD_CUBE_SIZE * i)) - shiftZ;
 							preInfo.typeID = ++typeIDCount;
 							map->mapInfoVector.emplace_back(preInfo);
-							AppContext->m_MapArray[rk][ri][rj] = typeIDCount;
+							AppContext->m_MapArray[rk][ri][rj] = preInfo.typeID;
 						}
 					}
 				}
@@ -845,12 +845,12 @@ void AssertsReference::BuildMaterials()
 
 	// ------------------------------------------------------------------------------------
 
-	auto T_Smoke_Tiled_D = std::make_unique<Material>();
-	T_Smoke_Tiled_D->MatCBIndex = TEXTURE_INDEX_T_Smoke_Tiled_D;
-	T_Smoke_Tiled_D->DiffuseSrvHeapIndex = TEXTURE_INDEX_T_Smoke_Tiled_D;
-	T_Smoke_Tiled_D->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	T_Smoke_Tiled_D->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	T_Smoke_Tiled_D->Roughness = 0.9;
+	auto T_Smoke = std::make_unique<Material>();
+	T_Smoke->MatCBIndex = TEXTURE_INDEX_T_Smoke;
+	T_Smoke->DiffuseSrvHeapIndex = TEXTURE_INDEX_T_Smoke;
+	T_Smoke->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	T_Smoke->FresnelR0 = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	T_Smoke->Roughness = 0.9;
 
 	auto P_SKILL_ON = std::make_unique<Material>();
 	P_SKILL_ON->MatCBIndex = TEXTURE_INDEX_P_SKILL_ON;
@@ -897,7 +897,7 @@ void AssertsReference::BuildMaterials()
 	m_Materials[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD] = std::move(GAMEPLAY_WINNERBOARD);
 	m_Materials[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD2] = std::move(GAMEPLAY_WINNERBOARD2);
 
-	m_Materials[TEXTURE_STR_T_Smoke_Tiled_D] = std::move(T_Smoke_Tiled_D);
+	m_Materials[TEXTURE_STR_T_Smoke] = std::move(T_Smoke);
 	m_Materials[TEXTURE_STR_P_SKILL_ON] = std::move(P_SKILL_ON);
 }
 

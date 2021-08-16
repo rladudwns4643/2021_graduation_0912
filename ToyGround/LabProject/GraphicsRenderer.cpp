@@ -136,7 +136,7 @@ void GraphicsRenderer::LoadTextures()
 		"UI_GAMEPLAY_ENEMY_STATE_BACK",
 		"UI_GAMEPLAY_WINNERBOARD",
 		"UI_GAMEPLAY_WINNERBOARD2",
-		"T_Smoke_Tiled_D",
+		"T_Smoke",
 		"P_SKILL_ON",
 	};
 
@@ -174,7 +174,7 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/GamePlay/GamePlay_Enemy_UI_Back.dds",
 		L"./Textures/GamePlay/GamePlay_WinnerBoard.dds",
 		L"./Textures/GamePlay/GamePlay_WinnerBoard2.dds",
-		L"./Textures/Particle/T_Smoke_Tiled_D.dds",
+		L"./Textures/Particle/T_Smoke.dds",
 		L"./Textures/Particle/P_Skill_On.dds",
 	};
 
@@ -244,7 +244,7 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_ENEMY_STATE_BACK]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD2]->Resource,
-		m_Textures[TEXTURE_STR_T_Smoke_Tiled_D]->Resource,
+		m_Textures[TEXTURE_STR_T_Smoke]->Resource,
 		m_Textures[TEXTURE_STR_P_SKILL_ON]->Resource,
 	};
 
