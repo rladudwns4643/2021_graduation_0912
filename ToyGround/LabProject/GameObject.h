@@ -100,7 +100,6 @@ public:
 	UINT m_StartIndexLocationBb;
 	int m_BaseVertexLocationBb;
 	bool m_IsAABB = true;		// false면 OBB
-
 	BoundingBox m_Bounds;
 
 	// 재질정보
@@ -115,5 +114,9 @@ public:
 	XMFLOAT3 m_Speed;
 	int m_FiredPlayerID;
 	XMFLOAT3 m_EndPos;
+
+	// 보석
+	float addY = 0.f;
+	int directY = 1;
 };
 

@@ -452,9 +452,9 @@ bool GameplayScene::Enter()
 
 void GameplayScene::Exit()
 {
-	if(m_Users[1]->m_isLive == false)
+	if(m_Users[1] && m_Users[1]->m_isLive == false)
 		m_Users[1]->Respawn();
-	if (m_Users[2]->m_isLive == false)
+	if (m_Users[2] && m_Users[2]->m_isLive == false)
 		m_Users[2]->Respawn();
 
 	m_Users.clear();
@@ -526,7 +526,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_GUNMAN], AppContext->m_RItemsVec, true);
 
 	// Gem
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateGemInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
 
 	// Bullet
 	AppContext->UpdateBullet();
@@ -743,7 +743,7 @@ void GameplayScene::RenderText()
 		GraphicsContext::GetApp()->DrawD2DText(en, ehpPosX * 0.95f, UIHealth.size.y * 1.43f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 	}
 #elif DEBUG_SERVER
-	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP && &&m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_isLive)
+	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP && m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_isLive)
 	{
 		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 		wstring en;
