@@ -132,17 +132,14 @@ bool LobbyScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR, XMFLOAT2(-253.f, -411.f), XMFLOAT2(88.f, 62.f), TextAlignType::Center);
 
 	// BGM Àç»ý
-	SoundManager::GetApp()->PlayBGM(L"testBGM.mp3", 1.0f);
-	//SoundManager::GetApp()->PlaySoundOnce(L"testMp3.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
-	//SoundManager::GetApp()->PlaySoundOnce(L"testMp3.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
+	SoundManager::GetApp()->StopAll();
+	SoundManager::GetApp()->PlayBGM(L"MainBGM.mp3", 1.0f);
 
 	return false;
 }
 
 void LobbyScene::Exit()
 {
-	SoundManager::GetApp()->StopAll();
-
 	Core::g_InputSwitch = false;
 
 	AppContext->HiddenUI2D(OBJECT_NAME_LOBBY_BACKGROUND, OBJECT_NAME_LOBBY_BACKGROUND);

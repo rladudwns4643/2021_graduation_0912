@@ -46,6 +46,8 @@ public:
 		m_isCountDownOn = false;
 		m_countDown = 15;
 		m_countDownID = 1;
+		SoundManager::GetApp()->StopBGM();
+		SoundManager::GetApp()->PlayBGM(L"MainBGM.mp3", 1.0f);
 	}
 
 public:
