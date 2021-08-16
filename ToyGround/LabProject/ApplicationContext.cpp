@@ -851,9 +851,13 @@ void ApplicationContext::HiddenCharacter(std::string userName)
 	user->m_IsVisibleOnePassCheck = false;
 }
 
-void ApplicationContext::UpdateStateUI2D(std::string ui2dLayer, std::string ui2dName, int nowGauge)
+void ApplicationContext::UpdateStateUI2D(std::string ui2dLayer, std::string ui2dName, int nowGauge, bool addSceneName)
 {
-	string ts = "GamePlay";
+	string ts = "";
+	if (addSceneName)
+	{
+		ts += "GamePlay";
+	}
 	UserInterface* ui = FindObject<UserInterface>(ui2dLayer + ts, ui2dName);
 	if (!ui) return;
 
@@ -883,6 +887,14 @@ void ApplicationContext::UpdateStateUI2D(std::string ui2dLayer, std::string ui2d
 		sizeX = sx * 15.f;
 		sizeY = 35.f * 15.f;
 		pos = XMFLOAT2(-730.f, -495.f);
+		posXGap = pos.x - ((float)MAXGAUGE_SIZE_X / 2 * 1.5f) + (sx / 2 * 1.5f);
+	}
+	else if (ui2dName == OBJECT_NAME_GAMEPLAY_ENEMY_HEALTH)
+	{
+		float sx = (float)(MAXGAUGE_SIZE_X * nowGauge) / MAX_HP;
+		sizeX = sx * 15.f;
+		sizeY = 45.f * 15.f;
+		pos = XMFLOAT2(730.f, -360.f);
 		posXGap = pos.x - ((float)MAXGAUGE_SIZE_X / 2 * 1.5f) + (sx / 2 * 1.5f);
 	}
 	else

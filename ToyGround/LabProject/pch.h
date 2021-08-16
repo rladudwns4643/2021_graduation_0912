@@ -16,12 +16,12 @@
 #include "../../demo_server/demo_server/protocol.h"
 
 // 클라 서버 작업분리
-//#define DEBUG_CLIENT 0x00FF1
-#define DEBUG_SERVER 0x00FF2
+#define DEBUG_CLIENT 0x00FF1
+//#define DEBUG_SERVER 0x00FF2
 
 //#define FRUSTUM_CULLMODE 0x00FF3
 // 풀스크린 모드
-#define FULLSCREEN_MODE 0x00FF4
+//#define FULLSCREEN_MODE 0x00FF4
 #define ON_PAUSE 0x00FF5
 //#define SOUND_ON 0x00FF6
 

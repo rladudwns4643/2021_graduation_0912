@@ -77,6 +77,13 @@ bool Character::ReleaseTransform()
 
 void Character::Update(const float deltaT)
 {
+	if (m_hp < MAX_HP)
+	{
+		m_hp += HP_HEALING;
+		if (m_hp > MAX_HP)
+			m_hp = MAX_HP;
+	}
+
 	if (m_PlayerID == 100)
 	{
 		m_AnimationController->Update(deltaT);
@@ -93,6 +100,8 @@ void Character::Update(const float deltaT)
 			m_PlayerController->Update(deltaT);
 		Falling();
 	}
+	else if(m_PlayerID == 2)
+		UpdateHPUI();
 
 #elif DEBUG_SERVER
 	m_AnimationController->Update(deltaT);
@@ -104,6 +113,8 @@ void Character::Update(const float deltaT)
 			m_PlayerController->Update(deltaT);
 		Falling();
 	}
+	else if(m_PlayerID<3)
+		UpdateHPUI();
 #endif
 
 	//cout << m_PlayerID << ": " << m_AnimationController->m_KeyState << endl;
@@ -185,6 +196,24 @@ void Character::UpdateStateUI()
 	{
 		m_tempSkillGauge = m_skillGauge;
 		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, m_tempSkillGauge);
+	}
+}
+
+void Character::UpdateHPUI()
+{
+	if (m_tempHp < m_hp)
+	{
+		m_tempHp += 30;
+		if (m_tempHp >= m_hp)
+			m_tempHp = m_hp;
+		AppContext->UpdateStateUI2D(OBJECT_TYPE_ENEMY_HEALTH, OBJECT_NAME_GAMEPLAY_ENEMY_HEALTH, m_tempHp, false);
+	}
+	else if (m_tempHp > m_hp)
+	{
+		m_tempHp -= 30;
+		if (m_tempHp <= m_hp)
+			m_tempHp = m_hp;
+		AppContext->UpdateStateUI2D(OBJECT_TYPE_ENEMY_HEALTH, OBJECT_NAME_GAMEPLAY_ENEMY_HEALTH, m_tempHp, false);
 	}
 }
 

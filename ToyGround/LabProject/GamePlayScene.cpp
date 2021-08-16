@@ -270,10 +270,12 @@ void GameplayScene::Initialize()
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_PLAYER2_SCORE, TEXTURE_INDEX_UI_GAMEPLAY_PLAYER2_SCORE);
 	AppContext->CreateUI2D(OBJECT_TYPE_COUNTDOWN, OBJECT_NAME_GAMEPLAY_TIMER, TEXTURE_INDEX_UI_GAMEPLAY_TIMER);
 	AppContext->CreateUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK, TEXTURE_INDEX_UI_GAMEPLAY_STATE_BACK);
+	AppContext->CreateUI2D(OBJECT_TYPE_ENEMY_STATE_BACK, OBJECT_NAME_GAMEPLAY_ENEMY_STATE_BACK, TEXTURE_INDEX_UI_GAMEPLAY_ENEMY_STATE_BACK);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_HEALTH, TEXTURE_INDEX_UI_GAMEPLAY_HEALTH);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, TEXTURE_INDEX_UI_GAMEPLAY_ATTACK_GAUGE);
 	AppContext->CreateUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, TEXTURE_INDEX_UI_GAMEPLAY_SKILL_GAUGE);
 	AppContext->CreateUI2D(OBJECT_TYPE_STATE_FRONT, OBJECT_NAME_GAMEPLAY_STATE_FRONT, TEXTURE_INDEX_UI_GAMEPLAY_STATE_FRONT);
+	AppContext->CreateUI2D(OBJECT_TYPE_ENEMY_STATE_FRONT, OBJECT_NAME_GAMEPLAY_ENEMY_STATE_FRONT, TEXTURE_INDEX_UI_GAMEPLAY_ENEMY_STATE_FRONT);
 	AppContext->CreateUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD, TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD);
 	AppContext->CreateUI2D(OBJECT_TYPE_WINNERBOARD2, OBJECT_NAME_GAMEPLAY_WINNERBOARD2, TEXTURE_INDEX_UI_GAMEPLAY_WINNERBOARD2);
 	AppContext->CreateUI2D(OBJECT_TYPE_ENEMY_HEALTH, OBJECT_NAME_GAMEPLAY_ENEMY_HEALTH, TEXTURE_INDEX_UI_GAMEPLAY_HEALTH);
@@ -362,6 +364,8 @@ bool GameplayScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE, XMFLOAT2(-730.f, -495.f), XMFLOAT2(0, 35), TextAlignType::Center, -1, true);
 	AppContext->DisplayUI2D(OBJECT_TYPE_STATE_FRONT, OBJECT_NAME_GAMEPLAY_STATE_FRONT, XMFLOAT2(-730.f, -423.f), XMFLOAT2(255, 140), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK, XMFLOAT2(-730.f, -423.f), XMFLOAT2(255, 140), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_ENEMY_STATE_FRONT, OBJECT_NAME_GAMEPLAY_ENEMY_STATE_FRONT, XMFLOAT2(730.f, -423.f), XMFLOAT2(255, 140), TextAlignType::Center);
+	AppContext->DisplayUI2D(OBJECT_TYPE_ENEMY_STATE_BACK, OBJECT_NAME_GAMEPLAY_ENEMY_STATE_BACK, XMFLOAT2(730.f, -423.f), XMFLOAT2(255, 140), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD, XMFLOAT2(0, 0), XMFLOAT2(500.f, 150.f), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_WINNERBOARD2, OBJECT_NAME_GAMEPLAY_WINNERBOARD2, XMFLOAT2(0, 0), XMFLOAT2(500.f, 150.f), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_ENEMY_HEALTH, OBJECT_NAME_GAMEPLAY_ENEMY_HEALTH, XMFLOAT2(730.f, -360.f), XMFLOAT2(245, 45), TextAlignType::Center, -1, true);
@@ -409,6 +413,8 @@ void GameplayScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_GAMEPLAY_SKILL_GAUGE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_STATE_FRONT, OBJECT_NAME_GAMEPLAY_STATE_FRONT);
 	AppContext->HiddenUI2D(OBJECT_TYPE_STATE_BACK, OBJECT_NAME_GAMEPLAY_STATE_BACK);
+	AppContext->HiddenUI2D(OBJECT_TYPE_ENEMY_STATE_FRONT, OBJECT_NAME_GAMEPLAY_ENEMY_STATE_FRONT);
+	AppContext->HiddenUI2D(OBJECT_TYPE_ENEMY_STATE_BACK, OBJECT_NAME_GAMEPLAY_ENEMY_STATE_BACK);
 	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD, OBJECT_NAME_GAMEPLAY_WINNERBOARD);
 	AppContext->HiddenUI2D(OBJECT_TYPE_WINNERBOARD2, OBJECT_NAME_GAMEPLAY_WINNERBOARD2);
 	AppContext->HiddenUI2D(OBJECT_TYPE_ENEMY_HEALTH, OBJECT_NAME_GAMEPLAY_ENEMY_HEALTH);
@@ -486,6 +492,10 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_COUNTDOWN], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_FRONT], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_FRONT], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->Update2DPosition(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_BACK], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_BACK], AppContext->m_RItemsVec);
 	
 
 	// Particle
@@ -581,7 +591,23 @@ void GameplayScene::Render()
 		else
 			GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_WINNERBOARD2], AppContext->m_RItemsVec);
 	}
-	GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
+
+	// Enemy State
+#ifdef DEBUG_CLIENT
+	if (m_Users[2]->m_hp < MAX_HP)
+	{
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_BACK], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_FRONT], AppContext->m_RItemsVec);
+	}
+#elif DEBUG_SERVER
+	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP)
+	{
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_BACK], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
+		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_FRONT], AppContext->m_RItemsVec);
+	}
+#endif
 }
 
 void GameplayScene::RenderText()
@@ -643,7 +669,13 @@ void GameplayScene::RenderText()
 	for (int i = 0; i < 4 - ehp.size(); ++i)
 		ehpPosX += 15;
 	GraphicsContext::GetApp()->DrawD2DText(hp, hpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
-	GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+#ifdef DEBUG_CLIENT
+	if (m_Users[2]->m_hp < MAX_HP)
+		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+#elif DEBUG_SERVER
+	if(m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP)
+		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+#endif
 }
 
 void GameplayScene::WriteShadow()

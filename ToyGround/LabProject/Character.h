@@ -34,6 +34,7 @@ public:
 	void Update(const float deltaT);
 	void WeaponUpdate();
 	void UpdateStateUI();
+	void UpdateHPUI();
 
 public:
 	// 파티클 관련

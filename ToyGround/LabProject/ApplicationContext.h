@@ -83,7 +83,7 @@ public:
 	void HiddenCharacter(Character* user);
 	void HiddenCharacter(std::string userName);
 
-	void UpdateStateUI2D(std::string ui2dLayer, std::string ui2dName, int nowGauge);
+	void UpdateStateUI2D(std::string ui2dLayer, std::string ui2dName, int nowGauge, bool addSceneName = true);
 
 	void UpdateLoadingBarUI2D(XMFLOAT2 nowPos);
 

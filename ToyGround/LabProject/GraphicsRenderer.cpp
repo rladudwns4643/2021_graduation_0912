@@ -132,6 +132,8 @@ void GraphicsRenderer::LoadTextures()
 		"UI_GAMEPLAY_SKILL_GAUGE",
 		"UI_GAMEPLAY_STATE_FRONT",
 		"UI_GAMEPLAY_STATE_BACK",
+		"UI_GAMEPLAY_ENEMY_STATE_FRONT",
+		"UI_GAMEPLAY_ENEMY_STATE_BACK",
 		"UI_GAMEPLAY_WINNERBOARD",
 		"UI_GAMEPLAY_WINNERBOARD2",
 		"T_Smoke_Tiled_D",
@@ -168,6 +170,8 @@ void GraphicsRenderer::LoadTextures()
 		L"./Textures/GamePlay/SkillGauge.dds",
 		L"./Textures/GamePlay/GamePlay_StateUI_Front.dds",
 		L"./Textures/GamePlay/GamePlay_StateUI_Back.dds",
+		L"./Textures/GamePlay/GamePlay_Enemy_UI_Front.dds",
+		L"./Textures/GamePlay/GamePlay_Enemy_UI_Back.dds",
 		L"./Textures/GamePlay/GamePlay_WinnerBoard.dds",
 		L"./Textures/GamePlay/GamePlay_WinnerBoard2.dds",
 		L"./Textures/Particle/T_Smoke_Tiled_D.dds",
@@ -236,6 +240,8 @@ void GraphicsRenderer::BuildDescriptorHeaps()
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_SKILL_GAUGE]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_STATE_FRONT]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_STATE_BACK]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_ENEMY_STATE_FRONT]->Resource,
+		m_Textures[TEXTURE_STR_UI_GAMEPLAY_ENEMY_STATE_BACK]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD]->Resource,
 		m_Textures[TEXTURE_STR_UI_GAMEPLAY_WINNERBOARD2]->Resource,
 		m_Textures[TEXTURE_STR_T_Smoke_Tiled_D]->Resource,
@@ -387,7 +393,7 @@ void GraphicsRenderer::BuildRootSignatures()
 
 	// Texture - 앞의 숫자가 테스쳐 개수
 	CD3DX12_DESCRIPTOR_RANGE texTable1;
-	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 32, 2, 0);
+	texTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 34, 2, 0);
 
 	// Shadow
 	CD3DX12_DESCRIPTOR_RANGE texTable2;
