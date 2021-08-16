@@ -170,7 +170,7 @@ void Character::UpdateStateUI()
 		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_HEALTH, m_tempHp);
 	}
 
-	if (m_tempAttackGauge < m_attackGauge)
+	if (m_tempAttackGauge <= m_attackGauge)
 	{
 		m_tempAttackGauge += 1;
 		if (m_tempAttackGauge >= m_attackGauge)
@@ -183,7 +183,7 @@ void Character::UpdateStateUI()
 		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_ATTACK_GAUGE, m_tempAttackGauge);
 	}
 
-	if (m_tempSkillGauge < m_skillGauge)
+	if (m_tempSkillGauge <= m_skillGauge)
 	{
 		m_tempSkillGauge += 4;
 		if (m_tempSkillGauge > m_skillGauge)
