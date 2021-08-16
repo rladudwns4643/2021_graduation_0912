@@ -5,7 +5,7 @@
 class SoundManager : public TemplateSingleton<SoundManager>
 {
 public:
-	enum CHANNEL_ID { BGM, TEST_LOOP, UI_BUTTON, MAX_CHANNEL };
+	enum CHANNEL_ID { BGM, GEM, UI_BUTTON, MAX_CHANNEL };
 	void DestroyAll();
 
 public:

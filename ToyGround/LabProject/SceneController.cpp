@@ -56,6 +56,7 @@ void MatchingRoomController::MouseCallback()
 				CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[0]);
 				m_MyScene->m_isReady1 = true;
 			}
+			SoundManager::GetApp()->PlaySoundOnce(L"ReadyButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 
 		// Ready2(Right)
@@ -68,6 +69,7 @@ void MatchingRoomController::MouseCallback()
 				EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[1]);
 				m_MyScene->m_isReady2 = true;
 			}
+			SoundManager::GetApp()->PlaySoundOnce(L"ReadyButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 #elif DEBUG_CLIENT
 		// Ready1(Left)
@@ -77,6 +79,7 @@ void MatchingRoomController::MouseCallback()
 		{
 			CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[0]);
 			m_MyScene->m_isReady1 = true;
+			SoundManager::GetApp()->PlaySoundOnce(L"ReadyButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 
 		// Ready2(Right)
@@ -86,6 +89,7 @@ void MatchingRoomController::MouseCallback()
 		{
 			EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), m_MyScene->m_Toys[1]);
 			m_MyScene->m_isReady2 = true;
+			SoundManager::GetApp()->PlaySoundOnce(L"ReadyButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 
 #endif
@@ -145,9 +149,10 @@ void LobbyController::MouseCallback()
 			Core::g_Chating = 2;
 			m_MyScene->m_ID.clear();
 			m_MyScene->m_ChatType = 1;
+			SoundManager::GetApp()->PlaySoundOnce(L"BasicButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 		// PW Input
-		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+		else if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
 			&& 515 * ScaleConvert.y <= mousePosY && mousePosY <= 580 * ScaleConvert.y)
 		{
 			//cout << "PW Input Click" << endl;
@@ -159,10 +164,11 @@ void LobbyController::MouseCallback()
 			Core::g_Chating = 2;
 			m_MyScene->m_Password.clear();
 			m_MyScene->m_ChatType = 2;
+			SoundManager::GetApp()->PlaySoundOnce(L"BasicButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 
 		// NewID Button
-		if (410 * ScaleConvert.x <= mousePosX && mousePosX <= 550 * ScaleConvert.x
+		else if (410 * ScaleConvert.x <= mousePosX && mousePosX <= 550 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "New Id Button Click" << endl;
@@ -171,9 +177,10 @@ void LobbyController::MouseCallback()
 			id.assign(m_MyScene->m_ID.begin(), m_MyScene->m_ID.end());
 			pw.assign(m_MyScene->m_Password.begin(), m_MyScene->m_Password.end());
 			Service::GetApp()->AddEvent(EVENT_LOBBY_REQUEST_SIGNUP, 2, id, pw);
+			SoundManager::GetApp()->PlaySoundOnce(L"BasicButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 		// Login Button
-		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 710 * ScaleConvert.x
+		else if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 710 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "Login Button Click" << endl;
@@ -183,14 +190,16 @@ void LobbyController::MouseCallback()
 			id.assign(m_MyScene->m_ID.begin(), m_MyScene->m_ID.end());
 			pw.assign(m_MyScene->m_Password.begin(), m_MyScene->m_Password.end());
 			Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_REQUEST, 2, id, pw);
+			SoundManager::GetApp()->PlaySoundOnce(L"BasicButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 		// Start Button
-		if (730 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+		else if (730 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "Exit Button Click" << endl;
 			NetCore::GetApp()->SendFindRoomPacket();
 			m_MyScene->m_isMatching = true;
+			SoundManager::GetApp()->PlaySoundOnce(L"StartButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 	}
 #endif
@@ -220,9 +229,10 @@ void LobbyController::MouseCallback()
 			Core::g_Chating = 2;
 			m_MyScene->m_ID.clear();
 			m_MyScene->m_ChatType = 1;
+			SoundManager::GetApp()->PlaySoundOnce(L"BasicButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 		// PW Input
-		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+		else if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
 			&& 515 * ScaleConvert.y <= mousePosY && mousePosY <= 580 * ScaleConvert.y)
 		{
 			//cout << "PW Input Click" << endl;
@@ -234,28 +244,32 @@ void LobbyController::MouseCallback()
 			Core::g_Chating = 2;
 			m_MyScene->m_Password.clear();
 			m_MyScene->m_ChatType = 2;
+			SoundManager::GetApp()->PlaySoundOnce(L"BasicButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 
 		// NewID Button
-		if (410 * ScaleConvert.x <= mousePosX && mousePosX <= 550 * ScaleConvert.x
+		else if (410 * ScaleConvert.x <= mousePosX && mousePosX <= 550 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "New Id Button Click" << endl;
+			SoundManager::GetApp()->PlaySoundOnce(L"BasicButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 		// Login Button
-		if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 710 * ScaleConvert.x
+		else if (570 * ScaleConvert.x <= mousePosX && mousePosX <= 710 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			//cout << "Login Button Click" << endl;
 			Core::g_Chating = 0;
 			SceneManager::GetApp()->ChangeScene(SceneType::eGamePlay);
+			SoundManager::GetApp()->PlaySoundOnce(L"BasicButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 		// Start Button
-		if (730 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
+		else if (730 * ScaleConvert.x <= mousePosX && mousePosX <= 870 * ScaleConvert.x
 			&& 605 * ScaleConvert.y <= mousePosY && mousePosY <= 665 * ScaleConvert.y)
 		{
 			m_MyScene->m_isMatching = true;
 			//cout << "Start Button Click" << endl;
+			SoundManager::GetApp()->PlaySoundOnce(L"StartButton.mp3", SoundManager::CHANNEL_ID::UI_BUTTON, 0.8f);
 		}
 	}
 #endif
