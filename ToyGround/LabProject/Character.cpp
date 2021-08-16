@@ -155,16 +155,16 @@ void Character::UpdateStateUI()
 			m_attackGauge = MAX_ATTACKGAUGE;
 	}
 
-	if (m_tempHp < m_hp)
+	if (m_tempHp <= m_hp)
 	{
-		m_tempHp += 30;
+		m_tempHp += 50;
 		if (m_tempHp >= m_hp)
 			m_tempHp = m_hp;
 		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_HEALTH, m_tempHp);
 	}
 	else if (m_tempHp > m_hp)
 	{
-		m_tempHp -= 30;
+		m_tempHp -= 50;
 		if (m_tempHp <= m_hp)
 			m_tempHp = m_hp;
 		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_HEALTH, m_tempHp);
@@ -551,7 +551,6 @@ void Character::Death()
 	//todo: death packet
 	if (NetCore::GetApp()->GetBattleID() == m_PlayerID)
 	{
-		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_HEALTH, MAX_HP);
 		CommandCenter::GetApp()->ResetCommand();
 		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), this);
 		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);

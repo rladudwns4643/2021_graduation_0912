@@ -765,8 +765,10 @@ void GameplayScene::RenderText()
 	float ehpPosX = UIHealth.size.y * 2.38f;
 	for (int i = 0; i < 4 - ehp.size(); ++i)
 		ehpPosX += 15;
-	GraphicsContext::GetApp()->DrawD2DText(hp, hpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+
 #ifdef DEBUG_CLIENT
+	if (m_Users[1]->m_isLive)
+		GraphicsContext::GetApp()->DrawD2DText(hp, hpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 	if (m_Users[2]->m_hp < MAX_HP && m_Users[2]->m_isLive)
 	{
 		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
@@ -778,6 +780,8 @@ void GameplayScene::RenderText()
 		GraphicsContext::GetApp()->DrawD2DText(en, ehpPosX * 0.95f, UIHealth.size.y * 1.43f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 	}
 #elif DEBUG_SERVER
+	if (m_Users[NetCore::GetApp()->GetBattleID()]->m_isLive)
+		GraphicsContext::GetApp()->DrawD2DText(hp, hpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP && m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_isLive)
 	{
 		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);

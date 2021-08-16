@@ -905,7 +905,6 @@ void ApplicationContext::DisplayCharacter(std::string mapName, std::string userN
 			user->ResetCharacterState();
 			user->SetPosition(p.position);
 			user->Rotate(0, XMConvertToRadians(p.rotY), 0);
-
 			return;
 		}
 	}
