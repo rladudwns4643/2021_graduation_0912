@@ -736,7 +736,7 @@ void GameplayScene::RenderText()
 	{
 		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 		wstring en;
-		string pn = m_Users[2]->GetMeshName();
+		string pn = m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->GetMeshName();
 		pn += " HP";
 		en.assign(pn.begin(), pn.end());
 		GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 12.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);

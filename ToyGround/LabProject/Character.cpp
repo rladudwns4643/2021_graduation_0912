@@ -49,8 +49,6 @@ void Character::ResetCharacterState()
 	m_tempSkillGauge = m_skillGauge;
 
 	SetIndexPos(m_Position);
-
-	UpdateStateUI();
 }
 void Character::InitializeTransform()
 {
@@ -558,7 +556,7 @@ void Character::Death()
 		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);
 		CommandCenter::GetApp()->m_StartDeathAnim = true;
 	}
-	else if (NetCore::GetApp()->GetBattleID() != m_PlayerID && m_PlayerID < 3)
+	else if ((NetCore::GetApp()->GetBattleID() % 2 + 1) == m_PlayerID)
 	{
 		EnemyCommandCenter::GetApp()->ResetCommand();
 		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), this);
