@@ -49,6 +49,7 @@ public:
 
 	int m_CowBoyGemNum = 0;
 	int m_GunManGemNum = 0;
+	bool m_IsGameOver = false;
 
 private:
 	// 플레이어들
@@ -64,8 +65,7 @@ private:
 	int			m_Timer{};
 
 private:
-	bool m_IsGameOver = false;
-	int m_Winner{ 0 };
+	int m_Winner{ 1 };
 
 	int m_StartCount = 1;
 };

@@ -294,5 +294,7 @@ void GameplayController::MouseCallback()
 {
 	if (InputHandler::g_LeftMouseClick)
 	{
-	}
+		if (m_MyScene->m_IsGameOver)
+			SceneManager::GetApp()->ChangeScene(SceneType::eLobby);
+	};
 }
