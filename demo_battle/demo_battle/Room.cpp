@@ -345,13 +345,19 @@ void Room::AddCoinByDie(int die_id) {
 	if (!IsGameStarted()) return;
 
 	cout << "DIE COIN" << endl;
-	PTC_VECTOR coin_pos{ 
-		static_cast<float>(m_players[die_id]->GetPosition().x + rand() % 400 - 200),
-		0, 
-		static_cast<float>(m_players[die_id]->GetPosition().z + rand() % 400 - 200) };
-	m_coins[m_coin_cur] = true;
-	PushAddCoinMsg(coin_pos, m_coin_cur);
-	m_coin_cur++;
+	for (auto& pl : m_players) {
+		if (pl->GetID() == die_id) {
+			PTC_VECTOR coin_pos{
+				static_cast<float>(pl->GetPosition().x + rand() % 400 - 200),
+				0,
+				static_cast<float>(pl->GetPosition().z + rand() % 400 - 200) };
+
+			m_coins[m_coin_cur] = true;
+			PushAddCoinMsg(coin_pos, m_coin_cur);
+			m_coin_cur++;
+			break;
+		}
+	}
 }
 
 void Room::CreateReloadBulletEvent(){
@@ -935,7 +941,7 @@ void Room::ProcMsg(message msg) {
 		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(RESPAWN_TIME), EVENT_TYPE::EV_RESPAWN };
 		BattleServer::GetInstance()->AddTimer(ev);
 		PushDieMsg(t_id);
-		PushNewWinSatisfaction()
+		PushNewWinSatisfaction(t_id);
 		break;
 	}
 	case CB_GET_COIN: {
