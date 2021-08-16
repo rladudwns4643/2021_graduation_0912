@@ -551,6 +551,7 @@ void Character::Death()
 	//todo: death packet
 	if (NetCore::GetApp()->GetBattleID() == m_PlayerID)
 	{
+		AppContext->UpdateStateUI2D(OBJECT_TYPE_UI2D, OBJECT_NAME_GAMEPLAY_HEALTH, MAX_HP);
 		CommandCenter::GetApp()->ResetCommand();
 		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Idle), this);
 		CommandCenter::GetApp()->PushCommand<MoveCommand>(static_cast<int>(MoveState::Death), this);

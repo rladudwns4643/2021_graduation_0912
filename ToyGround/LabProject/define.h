@@ -139,6 +139,7 @@ enum BoneIndex { Cowboy = 0, GunMan, Count };
 
 // UI
 #define OBJECT_TYPE_UI2D						"UI_2D"
+#define OBJECT_TYPE_SCORE						"UI_SCORE"
 #define OBJECT_TYPE_UI2D_PLAYBOARD				"UI_2D_PLAYBOARD"
 #define OBJECT_TYPE_AIM							"UI_AIM"
 #define OBJECT_TYPE_ID_INPUTATIVATE				"UI_ID_INPUTATiVATE"
