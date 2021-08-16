@@ -94,6 +94,10 @@ void SoundManager::PlayBGM(const TCHAR* pSoundKey, float volume)
 	FMOD_Channel_SetMode(m_pChannelArr[BGM], FMOD_LOOP_NORMAL);
 	FMOD_Channel_SetVolume(m_pChannelArr[BGM], volume);
 }
+void  SoundManager::StopBGM()
+{
+	FMOD_Channel_Stop(m_pChannelArr[BGM]);
+}
 
 void SoundManager::StopSound(CHANNEL_ID eID)
 {

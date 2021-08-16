@@ -16,6 +16,7 @@ public:
 	void PlaySoundOnce(const TCHAR* pSoundKey, CHANNEL_ID eID, float volume = 1.f);
 	void PlaySoundLoop(const TCHAR* pSoundKey, CHANNEL_ID eID, float volume = 1.f);
 	void PlayBGM(const TCHAR* pSoundKey, float volume = 1.f); // PlayBGM 노래 무한반복
+	void StopBGM();
 	void StopSound(CHANNEL_ID eID);
 	void StopAll();
 

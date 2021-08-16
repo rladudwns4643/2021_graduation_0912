@@ -583,7 +583,7 @@ void AssertsReference::CreateBB()
 	{
 		auto bb = make_unique<BoundingBox>();
 		bb->Center = XMFLOAT3(0.f, 0.f, 0.f);
-		bb->Extents = XMFLOAT3(20.f, 40.f, 20.f);
+		bb->Extents = XMFLOAT3(25.f, 60.f, 25.f);
 		m_PropBoundingBox[OBJECT_MESH_STR_GEM] = std::move(bb);
 	}
 	{

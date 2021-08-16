@@ -165,7 +165,69 @@ void ApplicationContext::DisplayGem(int instID, float posX, float posY, float po
 	obj->m_IsVisibleOnePassCheck = true;
 	obj->InitializeTransform();
 	obj->Scale(1, 1, 1);
-	obj->SetPosition(posX, posY, posZ);
+	obj->addY = MathHelper::RandF(0.f, 20.f);
+	obj->directY = 1;
+
+	XMFLOAT3 pos{ posX, posY, posZ };
+	if (pos.x >= (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE)
+		pos.x = (MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE;
+	if (pos.x <= -((MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE))
+		pos.x = -((MAP_WIDTH_BLOCK_NUM / 2) * STD_CUBE_SIZE);
+	if (pos.z >= (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE)
+		pos.z = (MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE;
+	if (pos.z <= -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE))
+		pos.z = -((MAP_DEPTH_BLOCK_NUM / 2) * STD_CUBE_SIZE);
+
+	float m_IndexPosX = (int)((posX + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_WIDTH_BLOCK_NUM / 2));
+	float m_IndexPosY = (int)(posY / STD_CUBE_SIZE) + 1;
+	float m_IndexPosZ = (int)((posZ + (STD_CUBE_SIZE / 2)) / STD_CUBE_SIZE + (MAP_DEPTH_BLOCK_NUM / 2));
+
+	BoundingBox m_GemBound = obj->GetBoundingBox();
+
+	Map* originMap = AppContext->m_Maps[MAP_STR_GAME_MAP];
+	for (auto& p : originMap->mapInfoVector)
+	{
+		for (int i = 0; i < 27; i += 3)
+		{
+			int aX = m_IndexPosX + shiftGemArr[i];
+			int aY = m_IndexPosY + shiftGemArr[i + 1];
+			int aZ = m_IndexPosZ + shiftGemArr[i + 2];
+
+			if (aX < 0 || aX >= MAP_WIDTH_BLOCK_NUM
+				|| aY <= 0 || aY >= MAP_HEIGHT_BLOCK_NUM
+				|| aZ < 0 || aZ >= MAP_DEPTH_BLOCK_NUM)
+				continue;
+
+			if (p.typeID == AppContext->m_MapArray[aY][aZ][aX] && p.colWithChar)
+			{
+				GameObject* otherObj = AppContext->FindObject<GameObject>(p.meshName, std::to_string(p.typeID));
+
+				XMFLOAT3 otherObjPos = otherObj->GetPosition();
+				XMFLOAT3 otherObjMin(otherObjPos.x + otherObj->m_Bounds.Center.x - (otherObj->m_Bounds.Extents.x / 2),
+					otherObjPos.y + otherObj->m_Bounds.Center.y,
+					otherObjPos.z + otherObj->m_Bounds.Center.z - (otherObj->m_Bounds.Extents.z / 2));
+				XMFLOAT3 otherObjMax(otherObjPos.x + otherObj->m_Bounds.Center.x + (otherObj->m_Bounds.Extents.x / 2),
+					otherObjPos.y + otherObj->m_Bounds.Center.y + otherObj->m_Bounds.Extents.y,
+					otherObjPos.z + otherObj->m_Bounds.Center.z + (otherObj->m_Bounds.Extents.z / 2));
+				XMFLOAT3 GemMin(pos.x + m_GemBound.Center.x - (m_GemBound.Extents.x / 2),
+					pos.y + m_GemBound.Center.y,
+					pos.z + m_GemBound.Center.z - (m_GemBound.Extents.z / 2));
+				XMFLOAT3 GemMax(pos.x + m_GemBound.Center.x + (m_GemBound.Extents.x / 2),
+					pos.y + m_GemBound.Center.y + m_GemBound.Extents.y,
+					pos.z + m_GemBound.Center.z + (m_GemBound.Extents.z / 2));
+
+				if (otherObjMin.x < GemMax.x && otherObjMax.x > GemMin.x &&
+					otherObjMin.y < GemMax.y && otherObjMax.y > GemMin.y &&
+					otherObjMin.z < GemMax.z && otherObjMax.z > GemMin.z)
+				{
+					XMFLOAT3 addPos(0.f, otherObj->m_Bounds.Extents.y, 0.f);
+					pos = MathHelper::Add(pos, addPos);
+					m_IndexPosY++;
+				}
+			}
+		}
+	}
+	obj->SetPosition(pos.x, pos.y, pos.z);
 }
 
 void ApplicationContext::HiddenGem(int instID, bool isVisible)
@@ -183,7 +245,7 @@ void ApplicationContext::HiddenGem(int instID, bool isVisible)
 
 	if (isVisible)
 	{
-		GraphicsContext::GetApp()->UpdateInstanceData(m_RItemsMap[OBJECT_MESH_STR_GEM], m_RItemsVec);
+		GraphicsContext::GetApp()->UpdateGemInstanceData(m_RItemsMap[OBJECT_MESH_STR_GEM], m_RItemsVec);
 	}
 }
 

@@ -78,6 +78,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 			}
 		}
 		m_IsGameOver = true;
+
+		SoundManager::GetApp()->StopBGM();
+		SoundManager::GetApp()->PlayBGM(L"WinBGM.mp3", 1.0f);
 		m_Winner = arg_winner;
 		break;
 	}
@@ -112,11 +115,17 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 			{
 				m_isCountDownOn = true;
 				m_countDownID = 2;
+
+				SoundManager::GetApp()->StopBGM();
+				SoundManager::GetApp()->PlayBGM(L"CountDownBGM.mp3", 1.0f);
 			}
 			else
 			{
 				m_isCountDownOn = true;
 				m_countDownID = 1;
+
+				SoundManager::GetApp()->StopBGM();
+				SoundManager::GetApp()->PlayBGM(L"CountDownBGM.mp3", 1.0f);
 			}
 		}
 
@@ -134,6 +143,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		{
 			m_isCountDownOn = true;
 			m_countDownID = arg_id;
+
+			SoundManager::GetApp()->StopBGM();
+			SoundManager::GetApp()->PlayBGM(L"CountDownBGM.mp3", 1.0f);
 		}
 
 		cout << "WIN_SATISFACTION: " << arg_id << endl;
@@ -447,14 +459,17 @@ bool GameplayScene::Enter()
 	m_StartCount = 4;
 	CountDownReset();
 
+	SoundManager::GetApp()->StopAll();
+	SoundManager::GetApp()->PlayBGM(L"BattleBGM.mp3", 1.0f);
+
 	return false;
 }
 
 void GameplayScene::Exit()
 {
-	if(m_Users[1]->m_isLive == false)
+	if(m_Users[1] && m_Users[1]->m_isLive == false)
 		m_Users[1]->Respawn();
-	if (m_Users[2]->m_isLive == false)
+	if (m_Users[2] && m_Users[2]->m_isLive == false)
 		m_Users[2]->Respawn();
 
 	m_Users.clear();
@@ -494,6 +509,7 @@ void GameplayScene::Exit()
 	}
 	AppContext->BulletReset();
 
+	SoundManager::GetApp()->StopAll();
 	cout << "===========================================" << endl << endl;
 }
 
@@ -526,7 +542,7 @@ void GameplayScene::Update(const float& fDeltaTime)
 	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[CHARACTER_GUNMAN], AppContext->m_RItemsVec, true);
 
 	// Gem
-	GraphicsContext::GetApp()->UpdateInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
+	GraphicsContext::GetApp()->UpdateGemInstanceData(AppContext->m_RItemsMap[OBJECT_MESH_STR_GEM], AppContext->m_RItemsVec);
 
 	// Bullet
 	AppContext->UpdateBullet();

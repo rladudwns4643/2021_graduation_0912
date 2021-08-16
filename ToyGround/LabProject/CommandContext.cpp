@@ -76,6 +76,44 @@ void GraphicsContext::UpdateInstanceData(ObjectInfo* objInfo, std::vector<GameOb
 		}
 	}
 }
+
+void GraphicsContext::UpdateGemInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
+{
+	if (!objInfo) return;
+
+	const std::map<std::string, UINT>& info = objInfo->GetInstanceKeyMap();
+
+	int InstanceCount = 0;
+	for (auto& i : info)
+	{
+		if (rItems[i.second]->m_IsVisible)
+		{
+			rItems[i.second]->addY += rItems[i.second]->directY;
+			if (rItems[i.second]->addY > 19.f)
+				rItems[i.second]->directY = -1;
+			else if(rItems[i.second]->addY < 1.f)
+				rItems[i.second]->directY = 1;
+			DirectX::XMFLOAT4X4 tWorld = rItems[i.second]->m_World;
+			tWorld._42 += (10.f + rItems[i.second]->addY);
+			XMMATRIX world = XMLoadFloat4x4(&tWorld);
+			XMMATRIX texTransform = XMLoadFloat4x4(&rItems[i.second]->m_TexTransform);
+			XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(world), world);
+#ifdef FRUSTUM_CULLMODE
+			if (rItems[i.second]->m_IsCulling)
+			{
+				if (!TOY_GROUND::GetApp()->m_Camera->IsInFrustum(invWorld, rItems[i.second]->m_Bounds)) continue;
+			}
+#endif
+			ShaderResource::InstanceData data;
+			DirectX::XMStoreFloat4x4(&data.World, XMMatrixTranspose(world));
+			DirectX::XMStoreFloat4x4(&data.TexTransform, XMMatrixTranspose(texTransform));
+			data.MaterialIndex = rItems[i.second]->m_MaterialIndex;
+			data.particleTime = 0.f;
+			data.particleIsLoop = false;
+			m_InstanceBuffers[objInfo->m_Type]->CopyData(InstanceCount++, data);
+		}
+	}
+}
 void GraphicsContext::UpdateBulletInstanceData(ObjectInfo* objInfo, std::vector<GameObject*>& rItems)
 {
 	if (!objInfo) return;
