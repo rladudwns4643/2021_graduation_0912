@@ -41,11 +41,19 @@ public:
 	virtual void RenderText() override;
 	virtual void WriteShadow() override;
 
+	void CountDownReset()
+	{
+		m_isCountDownOn = false;
+		m_countDown = 15;
+		m_countDownID = 1;
+	}
+
 public:
 	bool m_PauseScene = true;
 
 	bool m_isCountDownOn = false;
 	int m_countDown;
+	int m_countDownID;
 
 	int m_CowBoyGemNum = 0;
 	int m_GunManGemNum = 0;

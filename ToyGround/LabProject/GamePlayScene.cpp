@@ -91,6 +91,52 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		if (m_StartCount > 0) {
 			m_StartCount--;
 		}
+		if (m_isCountDownOn)
+		{
+			m_countDown--;
+
+			if (m_countDownID == 1)
+			{
+				if(m_CowBoyGemNum < 10) CountDownReset();
+				else if (m_CowBoyGemNum <= m_GunManGemNum) CountDownReset();
+			}
+			else
+			{
+				if (m_GunManGemNum < 10) CountDownReset();
+				else if (m_CowBoyGemNum >= m_GunManGemNum) CountDownReset();
+			}
+		}
+		else if(m_CowBoyGemNum >= 10 && m_GunManGemNum >= 10)
+		{
+			if (m_CowBoyGemNum < m_GunManGemNum)
+			{
+				m_isCountDownOn = true;
+				m_countDownID = 2;
+			}
+			else
+			{
+				m_isCountDownOn = true;
+				m_countDownID = 1;
+			}
+		}
+
+		break;
+	}
+	case EVENT_GAME_WIN_SATISFACTION: {
+		int arg_id;
+		va_list ap;
+		va_start(ap, argsCount);
+		arg_id = va_arg(ap, int);
+		va_end(ap);
+
+		//todo: 승리조건 달성한 id -> arg_id
+		if (!m_isCountDownOn)
+		{
+			m_isCountDownOn = true;
+			m_countDownID = arg_id;
+		}
+
+		cout << "WIN_SATISFACTION: " << arg_id << endl;
 		break;
 	}
 	case EVENT_GAME_ADD_COIN: {
@@ -107,18 +153,6 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 //#ifdef LOG_ON
 		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
 //#endif LOG_ON
-		break;
-	}
-	case EVENT_GAME_WIN_SATISFACTION: {
-		int arg_id;
-		va_list ap;
-		va_start(ap, argsCount);
-		arg_id = va_arg(ap, int);
-		va_end(ap);
-
-		//todo: 승리조건 달성한 id -> arg_id
-
-		cout << "WIN_SATISFACTION: " << arg_id << endl;
 		break;
 	}
 	case EVENT_GAME_UPDATE_COIN: {
@@ -192,6 +226,12 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		va_end(ap);
 
 		m_Users[arg_id]->Death();
+		if (arg_id == 1) {
+			m_CowBoyGemNum = 0;
+		}
+		else {
+			m_GunManGemNum = 0;
+		}
 
 		break;
 	}
@@ -402,11 +442,10 @@ bool GameplayScene::Enter()
 	AppContext->BulletReset();
 	
 	m_IsGameOver = false;
-	m_isCountDownOn = false;
-	m_countDown = 0;
 	m_CowBoyGemNum = 0;
 	m_GunManGemNum = 0;
 	m_StartCount = 4;
+	CountDownReset();
 
 	return false;
 }
@@ -683,10 +722,26 @@ void GameplayScene::RenderText()
 	GraphicsContext::GetApp()->DrawD2DText(hp, hpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 #ifdef DEBUG_CLIENT
 	if (m_Users[2]->m_hp < MAX_HP)
+	{
 		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+		wstring en;
+		string pn = m_Users[2]->GetMeshName();
+		pn += " HP";
+		en.assign(pn.begin(), pn.end());
+		GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 12.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+		GraphicsContext::GetApp()->DrawD2DText(en, ehpPosX * 0.95f, UIHealth.size.y * 1.43f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	}
 #elif DEBUG_SERVER
-	if(m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP)
+	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP)
+	{
 		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+		wstring en;
+		string pn = m_Users[2]->GetMeshName();
+		pn += " HP";
+		en.assign(pn.begin(), pn.end());
+		GraphicsContext::GetApp()->SetTextSize(UIHealth.size.y / 12.f, DWRITE_TEXT_ALIGNMENT_LEADING, D2D1::ColorF::White);
+		GraphicsContext::GetApp()->DrawD2DText(en, ehpPosX * 0.95f, UIHealth.size.y * 1.43f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
+	}
 #endif
 }
 
