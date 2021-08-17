@@ -41,8 +41,10 @@ void Room::Initialize(int room_no) {
 	m_lastUpdate = std::chrono::system_clock::now();
 
 	for (auto& p : m_players) p = new Toy();
-
 	for (auto& a : m_bullets) {
+		a = false;
+	}
+	for (auto& a : m_coins) {
 		a = false;
 	}
 	while (!m_q_bullet.empty()) {
@@ -960,14 +962,14 @@ void Room::ProcMsg(message msg) {
 		if (!IsGameStarted()) break;
 		int t_id{ msg.id };
 		int t_delete_coin_id{ (int)msg.vec.x };
-		cout << "delete coin id: " << t_delete_coin_id << endl;
 		for (auto& pl : m_players) {
 			if (pl->GetID() == t_id) {
 				pl->SetCoin(pl->GetCoin() + 1);
 				m_coins[t_delete_coin_id] = false;
 				PushUpdateCoinMsg(t_id, pl->GetCoin(), t_delete_coin_id);
+				cout << " PLAYER: " << pl->GetID() << " COIN: " << pl->GetCoin() << " " << t_delete_coin_id;
+				break;
 			}
-			cout << " PLAYER: " << pl->GetID() << " COIN: " << pl->GetCoin();
 		}
 		cout << endl;
 		break;

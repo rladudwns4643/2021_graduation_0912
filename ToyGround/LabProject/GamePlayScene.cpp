@@ -163,9 +163,9 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		
 		AppContext->DisplayGem(arg_coin_id, arg_pos.x, arg_pos.y, arg_pos.z);
 
-//#ifdef LOG_ON
+#ifdef LOG_ON
 		cout << "new Coin: [" << arg_pos.x << ", " << arg_pos.y << ", " << arg_pos.z << "]\n";
-//#endif LOG_ON
+#endif LOG_ON
 		break;
 	}
 	case EVENT_GAME_UPDATE_COIN: {
@@ -178,16 +178,16 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_coin_cnt = va_arg(ap, int);
 		arg_delete_coin_id = va_arg(ap, int);
 		va_end(ap);
-//#ifdef LOG_ON
+#ifdef LOG_ON
 		cout << "Get coin ID: " << arg_id << " ID COIN COUNT: " << arg_coin_cnt << " delete CoinID: " << arg_delete_coin_id << endl;
-//#endif LOG_ON
+#endif LOG_ON
+		AppContext->HiddenGem(arg_delete_coin_id, false);
 		if (arg_id == 1) {
 			m_CowBoyGemNum = arg_coin_cnt;
 		}
 		else {
 			m_GunManGemNum = arg_coin_cnt;
 		}
-		AppContext->HiddenGem(arg_delete_coin_id, false);
 		break;
 	}
 	case EVENT_GAME_CALLBACK_HIT: {
