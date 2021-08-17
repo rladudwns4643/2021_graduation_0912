@@ -11,6 +11,7 @@
 #include "EnemyCommandCenter.h"
 #include "CommandCenter.h"
 #include "MoveCommand.h"
+#include "SoundManager.h"
 
 #define WIDTH_NORMALIZE_UI(x) (x + (Core::g_DisplayWidth / 2.f))
 #define HEIGHT_NORMALIZE_UI(y) (-y + (Core::g_DisplayHeight / 2.f))
@@ -132,7 +133,7 @@ bool LobbyScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR, XMFLOAT2(-253.f, -411.f), XMFLOAT2(88.f, 62.f), TextAlignType::Center);
 
 	// BGM Àç»ý
-	SoundManager::GetApp()->StopAll();
+	SoundManager::GetApp()->StopBGM();
 	SoundManager::GetApp()->PlayBGM(L"MainBGM.mp3", 1.0f);
 
 	return false;
@@ -149,6 +150,7 @@ void LobbyScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_LOADINGUI, OBJECT_NAME_LOBBY_LOADINGUI);
 	AppContext->HiddenUI2D(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR);
+	SoundManager::GetApp()->StopAll();
 }
 
 void LobbyScene::Update(const float& fDeltaTime)

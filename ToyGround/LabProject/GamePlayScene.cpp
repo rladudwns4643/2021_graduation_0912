@@ -11,6 +11,7 @@
 #include "CommandCenter.h"
 #include "EnemyCommandCenter.h"
 #include "ParticleSystem.h"
+#include "SoundManager.h"
 
 #include "GameObject.h"
 #include "Character.h"
@@ -459,7 +460,7 @@ bool GameplayScene::Enter()
 	m_StartCount = 4;
 	CountDownReset();
 
-	SoundManager::GetApp()->StopAll();
+	SoundManager::GetApp()->StopBGM();
 	SoundManager::GetApp()->PlayBGM(L"BattleBGM.mp3", 1.0f);
 
 	return false;

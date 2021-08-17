@@ -723,7 +723,7 @@ void Character::Move(const XMFLOAT3& xmf3Shift, bool bVelocity)
 				objMin.y <= playerMax.y && objMax.y >= playerMin.y &&
 				objMin.z <= playerMax.z && objMax.z >= playerMin.z)
 			{
-				SoundManager::GetApp()->PlaySoundOnce(L"GetGem.wav", SoundManager::CHANNEL_ID::GEM, 0.8f);
+				SoundManager::GetApp()->PlaySoundOnce(L"GetGem.mp3", SoundManager::CHANNEL_ID::GEM, 0.8f);
 				cout << "collison : " << to_string(OBJECT_START_INDEX_GEM + i) << endl;
 				AppContext->HiddenGem(i, false);
 				Service::GetApp()->AddEvent(EVENT_GAME_GET_COIN, 1, i);

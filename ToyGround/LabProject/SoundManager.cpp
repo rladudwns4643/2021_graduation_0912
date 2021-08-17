@@ -106,6 +106,7 @@ void SoundManager::StopSound(CHANNEL_ID eID)
 
 void SoundManager::StopAll()
 {
+	cout << "Stop" << endl;
 	for (int i = 0; i < MAX_CHANNEL; ++i)
 		FMOD_Channel_Stop(m_pChannelArr[i]);
 }
