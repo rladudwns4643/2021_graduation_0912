@@ -120,9 +120,6 @@ bool MatchingRoomScene::Enter()
 	AppContext->DisplayUI2D(OBJECT_TYPE_READY1_PRESSED, OBJECT_NAME_MATCHINGROOM_READY1_BUTTON_P, XMFLOAT2(-525.f, -430.f), XMFLOAT2(300.f, 90.f), TextAlignType::Center);
 	AppContext->DisplayUI2D(OBJECT_TYPE_READY2_PRESSED, OBJECT_NAME_MATCHINGROOM_READY2_BUTTON_P, XMFLOAT2(525.f, -430.f), XMFLOAT2(300.f, 90.f), TextAlignType::Center);
 
-	// BGM Àç»ý
-	SoundManager::GetApp()->StopBGM();
-	SoundManager::GetApp()->PlayBGM(L"MainBGM.mp3", 1.0f);
 	return false;
 }
 
@@ -136,7 +133,6 @@ void MatchingRoomScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_READY1_PRESSED, OBJECT_NAME_MATCHINGROOM_READY1_BUTTON_P);
 	AppContext->HiddenUI2D(OBJECT_TYPE_UI2D + m_SceneName, OBJECT_NAME_MATCHINGROOM_READY2_BUTTON_R);
 	AppContext->HiddenUI2D(OBJECT_TYPE_READY2_PRESSED, OBJECT_NAME_MATCHINGROOM_READY2_BUTTON_P);
-	SoundManager::GetApp()->StopAll();
 
 	cout << "===========================================" << endl << endl;
 }

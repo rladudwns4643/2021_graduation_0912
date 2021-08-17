@@ -23,7 +23,6 @@
 // 풀스크린 모드
 //#define FULLSCREEN_MODE 0x00FF4
 //#define ON_PAUSE 0x00FF5
-//#define SOUND_ON 0x00FF6
 
 // 콘솔창 띄우기
 #ifdef UNICODE

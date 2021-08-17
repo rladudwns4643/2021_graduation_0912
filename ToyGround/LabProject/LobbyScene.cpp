@@ -150,7 +150,6 @@ void LobbyScene::Exit()
 	AppContext->HiddenUI2D(OBJECT_TYPE_PW_INPUTATIVATE, OBJECT_NAME_LOBBY_PW_INPUTATIVATE);
 	AppContext->HiddenUI2D(OBJECT_TYPE_LOADINGUI, OBJECT_NAME_LOBBY_LOADINGUI);
 	AppContext->HiddenUI2D(OBJECT_TYPE_LOADING_BAR, OBJECT_NAME_LOBBY_LOADING_BAR);
-	SoundManager::GetApp()->StopAll();
 }
 
 void LobbyScene::Update(const float& fDeltaTime)
