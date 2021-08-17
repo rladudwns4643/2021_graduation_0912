@@ -99,9 +99,7 @@ void TOY_GROUND::Update(float deltaT)
 	EnemyCommandCenter::GetApp()->Order(deltaT);
 
 	// SoundManager
-#ifdef SOUND_ON
 	SoundManager::GetApp()->UpdateSoundManager();
-#endif
 
 	// ParticleSystem
 	if (m_ParticleSystem)
