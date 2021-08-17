@@ -117,16 +117,16 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 				m_isCountDownOn = true;
 				m_countDownID = 2;
 
-				SoundManager::GetApp()->StopBGM();
-				SoundManager::GetApp()->PlayBGM(L"CountDownBGM.mp3", 1.0f);
+			//	SoundManager::GetApp()->StopBGM();
+				//SoundManager::GetApp()->PlayBGM(L"CountDownBGM.mp3", 1.0f);
 			}
 			else
 			{
 				m_isCountDownOn = true;
 				m_countDownID = 1;
 
-				SoundManager::GetApp()->StopBGM();
-				SoundManager::GetApp()->PlayBGM(L"CountDownBGM.mp3", 1.0f);
+				//SoundManager::GetApp()->StopBGM();
+				//SoundManager::GetApp()->PlayBGM(L"CountDownBGM.mp3", 1.0f);
 			}
 		}
 
@@ -145,8 +145,8 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 			m_isCountDownOn = true;
 			m_countDownID = arg_id;
 
-			SoundManager::GetApp()->StopBGM();
-			SoundManager::GetApp()->PlayBGM(L"CountDownBGM.mp3", 1.0f);
+			//SoundManager::GetApp()->StopBGM();
+			//SoundManager::GetApp()->PlayBGM(L"CountDownBGM.mp3", 1.0f);
 		}
 
 		cout << "WIN_SATISFACTION: " << arg_id << endl;

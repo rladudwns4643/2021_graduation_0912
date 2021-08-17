@@ -954,6 +954,7 @@ void Room::ProcMsg(message msg) {
 		}
 		EVENT ev{ EVENT_KEY, m_roomNo, std::chrono::high_resolution_clock::now() + std::chrono::seconds(RESPAWN_TIME), EVENT_TYPE::EV_RESPAWN };
 		BattleServer::GetInstance()->AddTimer(ev);
+
 		PushDieMsg(t_id);
 		PushNewWinSatisfaction(t_id);
 		break;

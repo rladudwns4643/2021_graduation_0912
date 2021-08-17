@@ -57,7 +57,7 @@
 #define ADD_COIN_TIME 5 //second
 #define RELOAD_BULLET_TIME 2 //second
 #define MAKE_BULLET_EMPTY 5 //second
-#define RESPAWN_TIME 3 //second
+#define RESPAWN_TIME 5 //second
 //------------------------------------------------------------------
 
 
