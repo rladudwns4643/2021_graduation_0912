@@ -98,6 +98,7 @@ public:		//send msg
 
 	int GetEmptyBullet();
 	void SetEmptyBullet();
+
 	void Respawn();
 
 private:	//recv msg
@@ -126,7 +127,7 @@ private:
 	std::queue<int> m_q_bullet;
 
 	std::array<bool, MAX_COIN> m_coins;
-	int m_coin_cur{ 0 };
+	atomic_int m_coin_cur{ 0 };
 #pragma endregion
 
 #pragma region msg Queue
