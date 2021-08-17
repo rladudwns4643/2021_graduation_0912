@@ -653,9 +653,9 @@ void Room::PushAnimPushMsg(int to, int from, int animType) {
 	p.type = BC_ANIM_PUSH;
 	p.id = from;
 	p.anim_type = animType;
-//#ifdef LOG_ON
+#ifdef LOG_ON
 	cout << "push ANIM: " << from << " -> " << to << " type: " << animType << endl;
-//#endif LOG_ON
+#endif LOG_ON
 	PushSendMsg(to, &p);
 }
 
@@ -665,9 +665,9 @@ void Room::PushAnimPopMsg(int to, int from, int animType) {
 	p.type = BC_ANIM_POP;
 	p.id = from;
 	p.anim_type = animType;
-//#ifdef LOG_ON
+#ifdef LOG_ON
 	cout << "pop ANIM: " << from << " -> " << to << " type: " << animType << endl;
-//#endif LOG_ON
+#endif LOG_ON
 
 	PushSendMsg(to, &p);
 }
@@ -967,11 +967,10 @@ void Room::ProcMsg(message msg) {
 				pl->SetCoin(pl->GetCoin() + 1);
 				m_coins[t_delete_coin_id] = false;
 				PushUpdateCoinMsg(t_id, pl->GetCoin(), t_delete_coin_id);
-				cout << " PLAYER: " << pl->GetID() << " COIN: " << pl->GetCoin() << " " << t_delete_coin_id;
+				//cout << " PLAYER: " << pl->GetID() << " COIN: " << pl->GetCoin() << " " << t_delete_coin_id<<endl;
 				break;
 			}
 		}
-		cout << endl;
 		break;
 	}
 	case CB_LOOK_VECTOR: {
