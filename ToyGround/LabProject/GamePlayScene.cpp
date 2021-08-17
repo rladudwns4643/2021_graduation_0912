@@ -264,7 +264,8 @@ void GameplayScene::ProcessEvent(int sEvent, int argsCount, ...) {
 		arg_id = va_arg(ap, int);
 		arg_anim_type = va_arg(ap, int);
 		va_end(ap);
-		//cout << "EVENT_GAME_CALLBACK_PUSH_ANIM: " << arg_id << "type: " << arg_anim_type << endl;
+		cout << "EVENT_GAME_CALLBACK_PUSH_ANIM: " << arg_id << "type: " << arg_anim_type << endl;
+		EnemyCommandCenter::GetApp()->PushCommand<MoveCommand>(arg_anim_type, m_Users[arg_id]);
 		if (arg_anim_type == static_cast<int>(MoveState::Jump)) {
 			EnemyCommandCenter::GetApp()->m_StartJumpAnim = true;
 		}

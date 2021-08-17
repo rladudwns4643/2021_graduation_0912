@@ -651,9 +651,9 @@ void Room::PushAnimPushMsg(int to, int from, int animType) {
 	p.type = BC_ANIM_PUSH;
 	p.id = from;
 	p.anim_type = animType;
-#ifdef LOG_ON
+//#ifdef LOG_ON
 	cout << "push ANIM: " << from << " -> " << to << " type: " << animType << endl;
-#endif LOG_ON
+//#endif LOG_ON
 	PushSendMsg(to, &p);
 }
 
@@ -663,17 +663,17 @@ void Room::PushAnimPopMsg(int to, int from, int animType) {
 	p.type = BC_ANIM_POP;
 	p.id = from;
 	p.anim_type = animType;
-#ifdef LOG_ON
+//#ifdef LOG_ON
 	cout << "pop ANIM: " << from << " -> " << to << " type: " << animType << endl;
-#endif LOG_ON
+//#endif LOG_ON
 
 	PushSendMsg(to, &p);
 }
 
 void Room::PushAddCoinMsg(PTC_VECTOR coin_pos, int coin_id) {
-//#ifdef LOG_ON
+#ifdef LOG_ON
 	cout << "SendAddCoinPacket: coin_pos: [" << coin_pos.x << ", " << coin_pos.y << ", " << coin_pos.z << "]" << endl;
-//#endif LOG_ON
+#endif LOG_ON
 	bc_packet_add_coin p;
 	p.size = sizeof(p);
 	p.type = BC_ADD_COIN;
