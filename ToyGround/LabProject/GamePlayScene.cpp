@@ -698,7 +698,7 @@ void GameplayScene::Render()
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_FRONT], AppContext->m_RItemsVec);
 	}
 #elif DEBUG_SERVER
-	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP && m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_isLive)
+	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP && m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_isLive && m_IsGameOver == false)
 	{
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_STATE_BACK], AppContext->m_RItemsVec);
 		GraphicsContext::GetApp()->DrawRenderItem(AppContext->m_RItemsMap[OBJECT_TYPE_ENEMY_HEALTH], AppContext->m_RItemsVec);
@@ -784,7 +784,7 @@ void GameplayScene::RenderText()
 #elif DEBUG_SERVER
 	if (m_Users[NetCore::GetApp()->GetBattleID()]->m_isLive)
 		GraphicsContext::GetApp()->DrawD2DText(hp, hpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
-	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP && m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_isLive)
+	if (m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_hp < MAX_HP && m_Users[NetCore::GetApp()->GetBattleID() % 2 + 1]->m_isLive && m_IsGameOver == false)
 	{
 		GraphicsContext::GetApp()->DrawD2DText(ehp, ehpPosX, UIHealth.size.y * 1.33f, Core::g_DisplayWidth, Core::g_DisplayHeight, true);
 		wstring en;
