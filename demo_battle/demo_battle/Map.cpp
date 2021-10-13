@@ -13,13 +13,6 @@ Map::Map() {
 }
 
 Map::~Map() {
-	//for (int i = 0; i < ID_COUNT; ++i) {
-	//	size_t list_size = m_obj_list[i].size();
-	//
-	//	for (int j = 0; j < list_size; ++j) {
-	//		if (m_obj_list) delete m_obj_list[i][j];
-	//	}
-	//}
 	m_obj_type.clear();
 	for (int i = 0; i < eObjType::COUNT; ++i) {
 		m_obj_list[i].clear();
@@ -34,8 +27,6 @@ void Map::LoadMapInfo(string mapName) {
 	//todo: 맵 파일에서 불러와서 해야함 당장 임시
 	XMFLOAT4 t1{ 0.f, 0.f, -1500.f, 0.f };
 	XMFLOAT4 t2{ 0.f, 0.f, 1500.f, 90.f };
-	SR::g_spawn_pos.SetSpawnPosition(SpawnPosition::ePositionType::SPAWN_1P, t1);
-	SR::g_spawn_pos.SetSpawnPosition(SpawnPosition::ePositionType::SPAWN_2P, t2);
 
 	set<int> obj_type;
 	
@@ -62,13 +53,4 @@ void Map::LoadMapInfo(string mapName) {
 	for (auto& i : obj_type) {
 		m_obj_type.emplace_back(i);
 	}
-	//for (int k = 0; k < MAP_HEIGHT_BLOCK_NUM; ++k) {
-	//	for (int i = 0; i < MAP_DEPTH_BLOCK_NUM; ++i) {
-	//		for (int j = 0; j < MAP_WIDTH_BLOCK_NUM; ++j) {
-	//			cout << data[k][i][j];
-	//		}
-	//		cout << endl;
-	//	}
-	//	cout << endl;
-	//}
 }

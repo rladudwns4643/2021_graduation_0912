@@ -17,7 +17,6 @@ namespace SR {
 
 	extern Map g_map;
 	extern std::map<int, Boundary*> g_boundaries;
-	extern SpawnPosition g_spawn_pos;
 }
 
 namespace ATOMIC {

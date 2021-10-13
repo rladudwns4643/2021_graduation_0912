@@ -422,7 +422,6 @@ void Room::GameStart(){
 	for (int i = 0; i < MAX_PLAYER; ++i) {
 		PTC_START_INFO info;
 		info.id = m_players[i]->GetID();
-		info.spawn_pos = SR::g_spawn_pos.GetSpawnPosition(SpawnPosition::ePositionType(i));
 		PushGameStartMsg(info.id, &info);
 	}
 
