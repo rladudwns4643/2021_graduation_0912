@@ -159,6 +159,7 @@
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="SpawnPosition.cpp" />
     <ClCompile Include="TCPSocket.cpp" />
     <ClCompile Include="ThreadHandler.cpp" />
     <ClCompile Include="TimerThread.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SpawnPosition.h" />
     <ClInclude Include="TCPSocket.h" />
     <ClInclude Include="ThreadHandler.h" />
     <ClInclude Include="TimerThread.h" />

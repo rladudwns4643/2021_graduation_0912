@@ -70,6 +70,9 @@
     <Filter Include="Code\Physics">
       <UniqueIdentifier>{5cad76b1-5598-442d-a204-3507d95e11b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\SpawnPosition">
+      <UniqueIdentifier>{9282ae31-0d61-4dc7-9b5d-11d75cce4387}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Code\Map">
       <UniqueIdentifier>{fd38f94a-04d2-4f4f-a1a8-5d47167fe3a9}</UniqueIdentifier>
     </Filter>
@@ -119,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="Physics.cpp">
       <Filter>Code\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnPosition.cpp">
+      <Filter>Code\SpawnPosition</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>Code\Map</Filter>
@@ -190,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Physics.h">
       <Filter>Code\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnPosition.h">
+      <Filter>Code\SpawnPosition</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
       <Filter>Code\Map</Filter>
