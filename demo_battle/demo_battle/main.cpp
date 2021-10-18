@@ -3,7 +3,6 @@
 #include "battleServer.h"
 #include "Room.h"
 #include "Map.h"
-#include "SpawnPosition.h"
 #include "Boundary.h"
 
 #define LOG_ON
@@ -68,6 +67,5 @@ int main() {
 	
 	battleserver->ConncetLobbyServer();
 	battleserver->Run();
-
 }
 

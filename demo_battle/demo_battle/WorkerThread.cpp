@@ -212,6 +212,7 @@ message WorkerThread::ProcPacket(int id, void* buf) {
 		ATOMIC::g_dbInfo_lock.lock();
 		memcpy(&SR::g_clients[id]->id_str, &p->name, sizeof(char) * MAX_ID_LEN);
 		SR::g_clients[id]->mmr = p->mmr;
+		cout << "LOGIN ID: " << p->name <<"MMR: " << p->mmr << endl;
 		ATOMIC::g_dbInfo_lock.unlock();
 
 		BattleServer::GetInstance()->SendBattleLoginOKPacket(id);

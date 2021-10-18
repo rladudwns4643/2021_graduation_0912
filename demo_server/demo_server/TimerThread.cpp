@@ -34,10 +34,11 @@ bool TimerThread::MatchingUser()
 	for (const auto& u : SR::g_match_list) {
 		cur_id = u.first;
 		cur_mmr = u.second.mmr;
-		mmr_soft_gap = chrono::duration_cast<chrono::milliseconds>(now - u.second.wait_time).count();
+		mmr_soft_gap = chrono::duration_cast<chrono::seconds>(now - u.second.wait_time).count();
+		auto gp = abs(mmr_soft_gap);
 		for (const auto& u : SR::g_match_list) {
 			if (u.first == cur_id) continue;
-			if (abs(u.second.mmr - cur_mmr) < mmr_soft_gap + mmr_hard_gap) {
+			if (abs(u.second.mmr - cur_mmr) < gp + mmr_hard_gap) {
 				SendRequestRoomPacket(cur_id, u.first);
 				SR::g_match_list.erase(cur_id);
 				SR::g_match_list.erase(u.first);

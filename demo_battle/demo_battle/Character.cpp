@@ -2,7 +2,6 @@
 #include "Character.h"
 #include "Boundary.h"
 #include "extern.h"
-#include "SpawnPosition.h"
 
 //class SpawnPosition;
 

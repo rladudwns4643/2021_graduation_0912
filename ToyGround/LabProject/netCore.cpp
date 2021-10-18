@@ -86,13 +86,13 @@ bool NetCore::SendPacket(void* buf, eSERVER sv) {
 	char* p = reinterpret_cast<char*>(buf);
 	int psize = (BYTE)p[0];
 	int retval = send(m_client.socket[sv].socket, p, psize, 0);
-//#ifdef LOG_ON
-//	cout << "[NETCORE] SEND: " << (int)p[1] << " for " << (int)sv << endl;
-//#endif //LOG_ON
+#ifdef LOG_ON
+	cout << "[NETCORE] SEND: " << (int)p[1] << " for " << (int)sv << endl;
+#endif //LOG_ON
 	if (retval == SOCKET_ERROR) {
 		int error_no = WSAGetLastError();
 		if (error_no != WSA_IO_PENDING) {
-			//errorDisplay("Send error");
+			errorDisplay("Send error");
 		}
 		return false;
 	}
@@ -319,7 +319,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		std::unique_ptr<BattleClient> battleClient = std::make_unique<BattleClient>(p->id);
 		memcpy(battleClient->name, p->name, sizeof(char) * MAX_ID_LEN);
 		string name(p->name);
-		cout << "!!"<< name << endl;
+		//cout << "!!"<< name << endl;
 		battleClient->mmr = p->mmr;
 		battleClient->m_host = p->isManager;
 		battleClient->m_player_num = p->player_no;

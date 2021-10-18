@@ -36,13 +36,13 @@ public:
 private:
 	HANDLE iocp;
 	WSADATA WSAData;
-	SOCKET listenSocket;
+	SOCKET socket_listen;
 	SOCKADDR_IN serverAddr;
 	DWORD flags;
 	int addrlen = sizeof(SOCKADDR_IN);
 
-	SOCKADDR_IN clientAddr;
-	SOCKET clientSocket;
+	SOCKADDR_IN addr_client;
+	SOCKET socket_client;
 
 	SOCKADDR_IN addr_battle;
 	SOCKET socket_battle;

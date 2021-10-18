@@ -3,49 +3,51 @@
 #include "pch.h"
 #include "DataBase.h"
 
-//#define LOG_ON
+#define LOG_ON
 
 LobbyServer::LobbyServer()
 {
 	auto ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
-	listenSocket = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+	socket_listen = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 
 	memset(&serverAddr, 0, sizeof(SOCKADDR_IN));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(LOBBY_SERVER_PORT);
 	serverAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
-	::bind(listenSocket, reinterpret_cast<sockaddr*>(&serverAddr), sizeof(SOCKADDR_IN));
-	listen(listenSocket, SOMAXCONN);
+	::bind(socket_listen, reinterpret_cast<sockaddr*>(&serverAddr), sizeof(SOCKADDR_IN));
+	listen(socket_listen, SOMAXCONN);
 
 	memset(&addr_battle, 0, addrlen);
-	memset(&clientAddr, 0, addrlen);
+	memset(&addr_client, 0, addrlen);
 	iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
 }
 
 LobbyServer::~LobbyServer() {
-	closesocket(listenSocket);
+	closesocket(socket_listen);
 	WSACleanup();
 }
 
 void LobbyServer::ClientAccept(int id) {
-	clientSocket = accept(listenSocket, reinterpret_cast<sockaddr*>(&clientAddr), &addrlen);
-	CLIENT* new_user = new CLIENT;
-	new_user->id = id;
-	new_user->m_s = clientSocket;
-	new_user->m_recv_over.wsabuf[0].len = MAX_BUF_SIZE;
-	new_user->m_recv_over.wsabuf[0].buf = new_user->m_recv_over.io_buf;
-	new_user->m_recv_over.is_recv = true;
-	new_user->user_info = new User();
-	new_user->isActive = true;
-	new_user->m_curr_packet_size = 0;
-	new_user->m_prev_packet_data = 0;
+#ifdef LOG_ON
+	std::cout << "Client Connect..\n";
+#endif
+	socket_client = accept(socket_listen, reinterpret_cast<sockaddr*>(&addr_client), &addrlen);
+	CLIENT* new_client = new CLIENT;
+	new_client->id = id;
+	new_client->m_s = socket_client;
+	new_client->m_recv_over.wsabuf[0].len = MAX_BUF_SIZE;
+	new_client->m_recv_over.wsabuf[0].buf = new_client->m_recv_over.io_buf;
+	new_client->m_recv_over.is_recv = true;
+	new_client->user_info = new User();
+	new_client->isActive = true;
+	new_client->m_curr_packet_size = 0;
+	new_client->m_prev_packet_data = 0;
 	
-	userList[id] = new_user;
-	CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket), iocp, id, 0);
+	userList[id] = new_client;
+	CreateIoCompletionPort(reinterpret_cast<HANDLE>(socket_client), iocp, id, 0);
 	memset(&userList[id]->m_recv_over.over, 0, sizeof(WSAOVERLAPPED));
 	flags = 0;
-	int ret = WSARecv(clientSocket, userList[id]->m_recv_over.wsabuf, 1, NULL, &flags, &(userList[id]->m_recv_over.over), NULL);
-	if (ret != 0) {
+	if (WSARecv(socket_client, userList[id]->m_recv_over.wsabuf, 1, NULL, &flags, &(userList[id]->m_recv_over.over), NULL) != 0) {
 		int err_no = WSAGetLastError();
 		if (WSA_IO_PENDING != err_no) error_display("WSARecv Error: ", err_no);
 	}
@@ -56,19 +58,22 @@ void LobbyServer::ClientAccept(int id) {
 }
 
 void LobbyServer::BattleServerAccept() {
-	socket_battle = accept(listenSocket, reinterpret_cast<sockaddr*>(&addr_battle), &addrlen);
+#ifdef LOG_ON
+	std::cout << "BattleServer Connect..\n";
+#endif
+	socket_battle = accept(socket_listen, reinterpret_cast<sockaddr*>(&addr_battle), &addrlen);
 
-	CLIENT* new_btServer = new CLIENT;
-	new_btServer->id = 0;
-	new_btServer->m_s = socket_battle;
-	new_btServer->m_recv_over.wsabuf[0].len = MAX_BUF_SIZE;
-	new_btServer->m_recv_over.wsabuf[0].buf = new_btServer->m_recv_over.io_buf;
-	new_btServer->m_recv_over.is_recv = true;
-	new_btServer->isActive = true;
-	new_btServer->m_curr_packet_size = 0;
-	new_btServer->m_prev_packet_data = 0;
+	CLIENT* battle_server = new CLIENT;
+	battle_server->id = 0;
+	battle_server->m_s = socket_battle;
+	battle_server->m_recv_over.wsabuf[0].len = MAX_BUF_SIZE;
+	battle_server->m_recv_over.wsabuf[0].buf = battle_server->m_recv_over.io_buf;
+	battle_server->m_recv_over.is_recv = true;
+	battle_server->isActive = true;
+	battle_server->m_curr_packet_size = 0;
+	battle_server->m_prev_packet_data = 0;
 
-	userList[0] = new_btServer;
+	userList[0] = battle_server;
 
 	SR::g_battleSocket = socket_battle;
 
@@ -82,12 +87,11 @@ void LobbyServer::BattleServerAccept() {
 	};
 
 #ifdef LOG_ON
-	std::cout << "BattleServer Connect\n";
+	std::cout << "BattleServer Connect Complet\n";
 #endif
 }
 
-void LobbyServer::DoWorker()
-{
+void LobbyServer::DoWorker() {
 	while (true) {
 		DWORD io_byte;
 		ULONG key;
@@ -173,8 +177,10 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 
 		cout << "get ID: " << p->id << " PW: " << p->pw << endl;
 		if (DataBase::GetInstance()->LoginPlayer(p->id, p->pw, &mmr)) {
+			cout << "!!" << mmr << endl;
 			for (int i = 1; i < new_user_id; ++i) {
 				if (userList[i]->user_info->GetPlayerID() == p->id) {
+					cout << "cant find login info" << endl;
 					SendLoginFailPacket(id);
 					return;
 				}
@@ -185,6 +191,7 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 			SendLoginOKPacket(id);
 		}
 		else { //db에 정보가 없으면 
+			cout << "cant find db" << endl;
 			SendLoginFailPacket(id);
 		}
 		break;
@@ -248,7 +255,7 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 	case BL_ROOMREADY: {
 		bl_packet_room_ready p;
 		memcpy(&p, packet, sizeof(p));
-		cout << "SEND READY ROOM: " << p.room_no << "id_1: " << p.id_1 << "id_2: " << p.id_2 << endl;
+		cout << "SEND READY ROOM: " << p.room_no << " (id_1: " << p.id_1 << ") (id_2: " << p.id_2 << ")" << endl;
 		SendFindRoomPacket(p.id_1, p.room_no);
 		SendFindRoomPacket(p.id_2, p.room_no);
 		break;
@@ -300,6 +307,9 @@ void LobbyServer::SendUserInfoPacket(int id) {
 	lc_packet_userinfo p;
 	p.size = sizeof(p);
 	p.type = LC_USERINFO;
+	
+	cout << "ID: "<< userList[id]->user_info->GetPlayerID().c_str() <<
+		"MMR: " << userList[id]->user_info->GetPlayerMMR() << endl;
 	
 	memcpy(p.id_str, userList[id]->user_info->GetPlayerID().c_str(), sizeof(char) * MAX_ID_LEN);//db에서 불러옴
 	p.mmr = userList[id]->user_info->GetPlayerMMR(); //db에서 불러옴

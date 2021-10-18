@@ -2,7 +2,7 @@
 #include "battleServer.h"
 #include "extern.h"
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-//#define LOG_ON
+#define LOG_ON
 
 BattleServer::BattleServer() {
 	Initialize();
@@ -60,7 +60,7 @@ void BattleServer::ConncetLobbyServer() {
 		//SendCheckConnect();
 	}
 #ifdef LOG_ON
-	if (ret == 0) std::cout << "Connnect\n";
+	if (ret == 0) std::cout << "Lobby Connnect\n";
 #endif
 }
 
@@ -102,7 +102,7 @@ void BattleServer::Run() {
 
 		SR::g_clients[user_id] = new_client;
 #ifdef LOG_ON
-		std::cout << user_id << " : accept\n";
+		std::cout << "client[" << user_id << "] accept\n";
 #endif
 		CreateIoCompletionPort(reinterpret_cast<HANDLE>(clientSocket->GetSocket()), SR::g_iocp, user_id, 0);
 		memset(&SR::g_clients[user_id]->m_recv_over.over, 0, sizeof(WSAOVERLAPPED));
@@ -174,7 +174,7 @@ void BattleServer::SendBattleLoginFailPacket(int id) {
 
 void BattleServer::SendAutoRoomReadyPacket(int id_1, int id_2, int room_no) {
 #ifdef LOG_ON
-	cout << "SendAutoRoomReadyPacket: " << id << " room: "<< room_no << endl;
+	cout << "SendAutoRoomReadyPacket: " << id_1 << ", " << id_2 << " room: " << room_no << endl;
 #endif
 	bl_packet_room_ready p;
 	p.size = sizeof(p);
@@ -231,7 +231,7 @@ void BattleServer::SendRoomEnterPacket(int to, int enterer, bool ready, char pla
 
 void BattleServer::SendUpdateUserInfoPacket(string id_str, const int& mmr) {
 #ifdef LOG_ON
-	cout << "SendUpdateUserInfoPacket: " << id << " newmmr: " << mmr << endl;
+	cout << "SendUpdateUserInfoPacket: " << id_str << " newmmr: " << mmr << endl;
 #endif
 	bl_packet_update_db p;
 	p.size = sizeof(p);

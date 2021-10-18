@@ -1,21 +1,48 @@
 #include "DataBase.h"
 
+void HandleDiagnosticRecord(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE RetCode)
+{
+	SQLSMALLINT	iRec = 0;
+	SQLINTEGER	iError;
+	WCHAR	wszMessage[1000];
+	WCHAR wszState[SQL_SQLSTATE_SIZE + 1];
+	if (RetCode == SQL_INVALID_HANDLE){
+		fwprintf(stderr, L"Invalid handle! n");
+		return;
+	}
+	while (SQLGetDiagRec(hType, hHandle, iRec, wszState, &iError, wszMessage,
+		(SQLSMALLINT)(sizeof(wszMessage) / sizeof(WCHAR)), (SQLSMALLINT*)NULL) == SQL_SUCCESS) {
+		if (wcsncmp(wszState, L"01004", 5)) {
+			fwprintf(stderr, L"[%5.5s] %s (% n", wszState, wszMessage, iError);
+		}
+	}
+}
+
 void DataBase::Init()
 {
 	setlocale(LC_ALL, "korean");
+	std::wcout.imbue(std::locale("korean"));
 	std::cout << "INIT: DB\n";
 	retcode = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &henv);
-	if (!retSuccess(retcode)) assert(!"db: 1 ");
-	retcode = SQLSetEnvAttr(henv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER*)SQL_OV_ODBC3, 0);
-	if (!retSuccess(retcode)) assert(!"db: 2 ");
-	retcode = SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc);
-	if (!retSuccess(retcode)) assert(!"db: 3 ");
-	SQLSetConnectAttr(hdbc, SQL_LOGIN_TIMEOUT, (SQLPOINTER)5, 0);
-	//retcode = SQLConnect(hdbc, (SQLWCHAR*)L"ToyGround_DB", SQL_NTS, (SQLWCHAR*)NULL, SQL_NTS, NULL, SQL_NTS);
-	retcode = SQLConnect(hdbc, (SQLWCHAR*)L"ToyGround_DB", SQL_NTS, (SQLWCHAR*)L"admin", SQL_NTS, (SQLWCHAR*)L"210817", SQL_NTS);
-	if (!retSuccess(retcode)) assert(!"db: 4 ");
-	std::cout << "DB CONNECT\n";
-	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+	if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+		retcode = SQLSetEnvAttr(henv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER*)SQL_OV_ODBC3, 0);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			retcode = SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc);
+			if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+				SQLSetConnectAttr(hdbc, SQL_LOGIN_TIMEOUT, (SQLPOINTER)5, 0);
+				retcode = SQLConnect(hdbc, (SQLWCHAR*)L"DB_TG", SQL_NTS, (SQLWCHAR*)NULL, 0, NULL, 0);
+				//retcode = SQLConnect(hdbc, (SQLWCHAR*)L"ToyGround_DB", SQL_NTS, (SQLWCHAR*)L"admin", SQL_NTS, (SQLWCHAR*)L"210817", SQL_NTS);
+				if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+					std::cout << "DB CONNECT\n";
+					retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+				}
+				else {
+					HandleDiagnosticRecord(hdbc, SQL_HANDLE_DBC, retcode);
+					std::cout << "DB CONNECT FAIL:" << retcode << "\n";
+				}
+			}
+		}
+	}
 }
 
 DataBase::DataBase()
@@ -78,6 +105,7 @@ bool DataBase::LoginPlayer(std::string id, std::string pw, int* mmr) {
 			return false;
 		}
 	}
+	std::cout << "DB" << std::endl;
 	return false;
 }
 

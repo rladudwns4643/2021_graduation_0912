@@ -90,7 +90,7 @@ void Service::AddEvent(int sEvent, int argsCount, ...) {
 		break;
 	}
 	case EVENT_LOBBY_REQUEST_FIND_ROOM: {
-		NetCore::GetApp()->ConnectServer(SV_BATTLE);
+		NetCore::GetApp()->ConnectServer(eSERVER::SV_BATTLE);
 		NetCore::GetApp()->SendBattleLoginPacket();
 		battle_active = true;
 		break;
