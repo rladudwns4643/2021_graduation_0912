@@ -165,19 +165,13 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 	char* packet = reinterpret_cast<char*>(buf); 
 #ifdef LOG_ON
 	cout << "ProcessPacket: "<<(int)packet[1] << endl;
-#endif
+#endif LOG_ON
 	switch (packet[1]) {		//packet[0] = size/ packet[1] = type
 	case CL_LOGIN:{
-#ifdef LOG_ON
-		cout << "GET CL_LOGIN" << endl;
-#endif
 		cl_packet_login* p = reinterpret_cast<cl_packet_login*>(packet);
-		
 		int mmr{};
-
 		cout << "get ID: " << p->id << " PW: " << p->pw << endl;
 		if (DataBase::GetInstance()->LoginPlayer(p->id, p->pw, &mmr)) {
-			cout << "!!" << mmr << endl;
 			for (int i = 1; i < new_user_id; ++i) {
 				if (userList[i]->user_info->GetPlayerID() == p->id) {
 					cout << "cant find login info" << endl;
@@ -190,8 +184,10 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 
 			SendLoginOKPacket(id);
 		}
-		else { //db에 정보가 없으면 
+		else { //db에 정보가 없으면
+#ifdef LOG_ON
 			cout << "cant find db" << endl;
+#endif LOG_ON
 			SendLoginFailPacket(id);
 		}
 		break;
@@ -203,9 +199,6 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		newUser->SetPlayerMatch(false);
 		newUser->SetPlayerLoginOK("dummy");
 
-#ifdef LOG_ON
-		cout << "GET_DUMMY_LOGIN: "<< id << endl;
-#endif
 		SendLoginOKPacket(id);
 		break;
 	}
@@ -223,24 +216,17 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 		break;
 	}
 	case CL_REQUEST_USER_INFO: {
-#ifdef LOG_ON
-		cout << "GET CL_REQUEST_USER_INFO" << endl;
-#endif
 		//do check db info
 		SendUserInfoPacket(id);
 		break;
 	}
 	case BL_UPDATE_DB: {
-#ifdef LOG_ON
-		cout << "BL_UPDATE_DB" << endl;
-#endif
 		bl_packet_update_db* p = reinterpret_cast<bl_packet_update_db*>(packet);
 		string t(p->id);
 		DataBase::GetInstance()->SetUserInfo(t, p->mmr);
 		break;
 	}
 	case CL_FIND_ROOM: { //22
-		cout << "GET CL_FIND_ROOM" << endl;
 		cl_packet_find_room p;
 		memcpy(&p, packet, sizeof(p));
 		if (id != 0) {
@@ -248,27 +234,25 @@ void LobbyServer::ProcessPacket(int id, void* buf)
 				//todo matching
 			SR::g_match_list.insert(
 				pair<ID, MatchInfo>(id, MatchInfo(userList[id]->user_info->GetPlayerMMR(),
-					chrono::high_resolution_clock::now())));
+					chrono::high_resolution_clock::now()))
+			);
 		}
 		break;
 	}
 	case BL_ROOMREADY: {
 		bl_packet_room_ready p;
 		memcpy(&p, packet, sizeof(p));
-		cout << "SEND READY ROOM: " << p.room_no << " (id_1: " << p.id_1 << ") (id_2: " << p.id_2 << ")" << endl;
 		SendFindRoomPacket(p.id_1, p.room_no);
 		SendFindRoomPacket(p.id_2, p.room_no);
 		break;
 	}
 	default: {
+#ifdef LOG_ON
 		std::cout << "DONT KNOW PACKET TYPE" << (int)packet[1] << "\n";
+#endif LOG_ON
 		break;
 	}
 	}
-}
-
-void LobbyServer::SendDummyLoginOKPacket(int id)
-{
 }
 
 void LobbyServer::SendLoginOKPacket(int id) {
@@ -280,8 +264,7 @@ void LobbyServer::SendLoginOKPacket(int id) {
 	SendPacket(id, &p);
 }
 
-void LobbyServer::SendLoginFailPacket(int id)
-{
+void LobbyServer::SendLoginFailPacket(int id) {
 	lc_packet_login_fail p;
 	p.size = sizeof(p);
 	p.type = LC_LOGIN_FAIL;
@@ -325,10 +308,6 @@ void LobbyServer::SendFindRoomPacket(int id, short room_no) {
 	else p.isHost = false;
 	
 	SendPacket(id, &p);
-}
-
-void LobbyServer::SendCancelFindRoomPacket(int id)
-{
 }
 
 void LobbyServer::SendRequestRoomPacket() {

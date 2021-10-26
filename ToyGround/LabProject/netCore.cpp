@@ -27,8 +27,7 @@ void NetCore::Destory() {
 	WSACleanup();
 }
 
-int NetCore::GetBattleID()
-{
+int NetCore::GetBattleID() {
 	return m_client.battle_id;
 }
 
@@ -85,10 +84,10 @@ void NetCore::RecvLobbyServer() {
 bool NetCore::SendPacket(void* buf, eSERVER sv) {
 	char* p = reinterpret_cast<char*>(buf);
 	int psize = (BYTE)p[0];
-	int retval = send(m_client.socket[sv].socket, p, psize, 0);
 #ifdef LOG_ON
 	cout << "[NETCORE] SEND: " << (int)p[1] << " for " << (int)sv << endl;
 #endif //LOG_ON
+	int retval = send(m_client.socket[sv].socket, p, psize, 0);
 	if (retval == SOCKET_ERROR) {
 		int error_no = WSAGetLastError();
 		if (error_no != WSA_IO_PENDING) {
@@ -186,9 +185,6 @@ void NetCore::ProcessData(char* buf, size_t io_byte) {
 	static unsigned short saved_packet_size = 0;
 	static char packet_buffer[MAX_BUF]; // 완전한 패킷, 일부 패킷
 
-	/*if( saved_packet_size != 0 )
-		cout << "Saved PacketSize = " << saved_packet_size << endl;*/
-
 	static char tmpBuf[MAX_BUF]{};
 	memcpy(tmpBuf, buf, io_byte);
 	ZeroMemory(tmpBuf, io_byte);
@@ -217,16 +213,12 @@ void NetCore::ProcessData(char* buf, size_t io_byte) {
 	return;
 }
 
-//#define DEB
 void NetCore::ProcessPacket(char* packet_buf) {
 #ifdef LOG_ON
 	cout << "[NETCORE] procpacket: " << (int)packet_buf[1] << " LobbyID: " << m_client.lobby_id << " BattleID: " << m_client.battle_id << endl;
-#endif
+#endif LOG_ON
 	switch ((BYTE)packet_buf[1]) { //type
 	case LC_LOGIN_OK: {
-#ifdef DEB
-		cout << "LC_LOGIN_OK\n";
-#endif
 		lc_packet_login_ok* p = reinterpret_cast<lc_packet_login_ok*>(packet_buf);
 		m_client.lobby_id = p->id;
 		cout << "Lobby ID: " << m_client.lobby_id << endl;
@@ -234,30 +226,18 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case LC_LOGIN_FAIL: {
-#ifdef DEB
-		cout << "LC_LOGIN_FAIL\n";
-#endif
 		Service::GetApp()->AddEvent(EVENT_LOBBY_LOGIN_FAIL);
 		break;
 	}
 	case LC_SIGNUP_OK: {
-#ifdef DEB
-		cout << "LC_SIGNUP_OK\n";
-#endif
 		Service::GetApp()->AddEvent(EVENT_LOBBY_SIGNUP_OK);
 		break;
 	}
 	case LC_SIGNUP_FAIL: {
-#ifdef DEB
-		cout << "LC_SIGNUP_FAIL\n";
-#endif
 		Service::GetApp()->AddEvent(EVENT_LOBBY_SIGNUP_FAIL);
 		break;
 	}
 	case LC_USERINFO: {
-#ifdef DEB
-		cout << "LC_USERINFO\n";
-#endif
 		lc_packet_userinfo* p = reinterpret_cast<lc_packet_userinfo*>(packet_buf);
 		memcpy(m_client.id_str, p->id_str,sizeof(char) *  MAX_ID_LEN);
 		m_client.mmr = p->mmr;
@@ -265,9 +245,6 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case LC_FIND_ROOM: {
-#ifdef DEB
-		cout << "LC_FIND_ROOM\n";
-#endif
 		lc_packet_find_room* p = reinterpret_cast<lc_packet_find_room*>(packet_buf);
 		m_battle_clients[m_client.battle_id]->m_room_num = p->roomNum;
 		m_battle_clients[m_client.battle_id]->m_host = p->isHost;
@@ -278,16 +255,10 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case LC_CANCLE_FIND_ROOM: {
-#ifdef DEB
-		cout << "LC_CANCLE_FIND_ROOM\n";
-#endif
 		Service::GetApp()->AddEvent(EVENT_LOBBY_CANCLE_FIND_ROOM);
 		break;
 	}
 	case BC_BATTLE_LOGIN_OK: { //객체 생성, 나의 정보를 받아옴
-#ifdef DEB
-		cout << "BC_BATTLE_LOGIN_OK\n";
-#endif
 		bc_packet_battle_login_ok* p = reinterpret_cast<bc_packet_battle_login_ok*>(packet_buf);
 		m_client.battle_id = p->id;
 		cout << "battle ID: "<<m_client.battle_id << endl;
@@ -307,13 +278,9 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_BATTLE_LOGIN_FAIL: {
-		cout << "ACCEPT FAIL\n";
 		break;
 	}
 	case BC_ROOM_ENTERED: {
-#ifdef DEB
-		cout << "BC_ROOM_ENTERED\n";
-#endif
 		bc_packet_room_entered* p = reinterpret_cast<bc_packet_room_entered*>(packet_buf);
 
 		std::unique_ptr<BattleClient> battleClient = std::make_unique<BattleClient>(p->id);
@@ -329,9 +296,6 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_ROOM_LEAVED: {
-#ifdef DEB
-		cout << "BC_ROOM_LEAVED\n";
-#endif
 		bc_packet_room_leaved* p = reinterpret_cast<bc_packet_room_leaved*>(packet_buf);
 		if (m_client.battle_id != p->id) {
 			m_battle_clients[p->id].release();
@@ -340,9 +304,6 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		Service::GetApp()->AddEvent(EVENT_ROOM_LEAVE, 1, p->id);
 	}
 	case BC_JOIN_OK: {
-#ifdef DEB
-		cout << "BC_JOIN_OK\n";
-#endif
 		bc_packet_join_ok* p = reinterpret_cast<bc_packet_join_ok*>(packet_buf);
 		int& id = m_client.battle_id;
 		m_battle_clients[id]->m_player_num = p->player_no;
@@ -351,36 +312,23 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_JOIN_FAIL: {
-#ifdef DEB
-		cout << "BC_JOIN_FAIL\n";
-#endif
 		bc_packet_join_fail* p = reinterpret_cast<bc_packet_join_fail*>(packet_buf);
 		m_battle_clients[m_client.battle_id]->Initialize();
 		Service::GetApp()->AddEvent(EVENT_ROOM_JOIN_FAIL);
 		break;
 	}
 	case BC_READY: {
-#ifdef DEB
-		cout << "BC_READY\n";
-#endif
 		bc_packet_ready* p = reinterpret_cast<bc_packet_ready*>(packet_buf);
-		//m_battle_clients[p->id]->m_ready = p->ready;
 
 		Service::GetApp()->AddEvent(EVENT_ROOM_READY, 2, p->id, p->ready);
 		break;
 	}
 	case BC_ROOM_START_AVAILABLE: {
-#ifdef DEB
-		cout << "BC_ROOM_START_AVAILABLE\n";
-#endif
 		bc_packet_room_start_available* p = reinterpret_cast<bc_packet_room_start_available*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_ROOM_START_AVAILABLE, 1, p->available);
 		break;
 	}
 	case BC_ROOM_START: {
-#ifdef DEB
-		cout << "BC_ROOM_START\n";
-#endif
 		bc_packet_room_start* p = reinterpret_cast<bc_packet_room_start*>(packet_buf);
 		for (auto& st : p->start_info) {
 			if (m_battle_clients.count(st.id)) {
@@ -394,18 +342,12 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_ROUND_START: {
-#ifdef DEB
-		cout << "BC_ROUND_START\n";
-#endif
 		bc_packet_round_start* p = reinterpret_cast<bc_packet_round_start*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_ROUND_START);
 		break;
 	}
 	//in game
 	case BC_ADD_COIN: {
-#ifdef DEB
-		cout << "BC_ADD_COIN\n";
-#endif
 		bc_packet_add_coin* p = reinterpret_cast<bc_packet_add_coin*>(packet_buf);
 		XMFLOAT3 arg_pos;
 		int arg_coin_id{ p->coin_id };
@@ -417,26 +359,17 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_UPDATE_COIN: {
-#ifdef DEB
-		cout << "BC_UPDATE_COIN\n";
-#endif
 		bc_packet_update_coin* p = reinterpret_cast<bc_packet_update_coin*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_COIN, 3, p->id, p->coin_cnt, p->delete_coin_id);
 		break;
 	}
 
 	case BC_WIN_SATISFACTION: {
-#ifdef DEB
-		cout << "BC_WIN_SATISFACTION\n";
-#endif
 		bc_packet_win_satisfaction* p = reinterpret_cast<bc_packet_win_satisfaction*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_WIN_SATISFACTION, 1, p->satisfaction_id);
 		break;
 	}
 	case BC_PLAYER_POS: {
-#ifdef DEB
-		cout << "BC_PLAYER_POS\n";
-#endif
 		bc_packet_player_pos* p = reinterpret_cast<bc_packet_player_pos*>(packet_buf);
 
 		XMFLOAT3 arg_pos;
@@ -448,9 +381,6 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_PLAYER_ROT: {
-#ifdef DEB
-		cout << "BC_PLAYER_ROT\n";
-#endif
 		bc_packet_player_rot* p = reinterpret_cast<bc_packet_player_rot*>(packet_buf);
 
 		XMFLOAT3 arg_look;
@@ -462,18 +392,12 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_RESPAWN: {
-#ifdef DEB
-		cout << "BC_RESPAWN\n";
-#endif
 		bc_packet_respawn* p = reinterpret_cast<bc_packet_respawn*>(packet_buf);
 
 		Service::GetApp()->AddEvent(EVENT_GAME_RESPAWN);
 		break;
 	}
 	case BC_CALLBACK_BULLET: {
-#ifdef DEB
-		cout << "BC_CALLBACK_BULLET\n";
-#endif
 		bc_packet_callback_bullet* p = reinterpret_cast<bc_packet_callback_bullet*>(packet_buf);
 
 		int arg_shootter;
@@ -497,59 +421,38 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_REMOVE_BULLET: {
-#ifdef DEB
-		cout << "BC_REMOVE_BULLET\n";
-#endif
 		bc_packet_remove_bullet* p = reinterpret_cast<bc_packet_remove_bullet*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_REMOVE_BULLET, 1, p->bullet_id);
 		break;
 	}
 	case BC_CALLBACK_HIT: {
-#ifdef DEB
-		cout << "BC_HIT\n";
-#endif
 		bc_packet_callback_hit* p = reinterpret_cast<bc_packet_callback_hit*>(packet_buf);
 
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_HIT, 1, p->id);
 		break;
 	}
 	case BC_CALLBACK_DIE: {
-#ifdef DEB
-		cout << "BC_CALLBACK_DIE\n";
-#endif
 		bc_packet_callback_die* p = reinterpret_cast<bc_packet_callback_die*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_DIE, 1, p->id);
 		break;
 	}
 	case BC_ANIM_PUSH: {
 		bc_packet_push_anim_type* p = reinterpret_cast<bc_packet_push_anim_type*>(packet_buf);
-#ifdef DEB
-		cout << "BC_ANIM_PUSH: " << p->id << p->anim_type << endl;
-#endif
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_PUSH_ANIM, 2, p->id, p->anim_type);
 		break;
 	}
 	case BC_ANIM_POP: {
 		bc_packet_pop_anim_type* p = reinterpret_cast<bc_packet_pop_anim_type*>(packet_buf);
-#ifdef DEB
-		cout << "BC_ANIM_POP: " << p->id << p->anim_type << endl;
-#endif
 		Service::GetApp()->AddEvent(EVENT_GAME_CALLBACK_POP_ANIM, 2, p->id, p->anim_type);
 		break;
 	}
 	case BC_LEFT_TIME: {
-#ifdef DEB
-		cout << "BC_LEFT_TIME\n";
-#endif
 		bc_packet_left_time* p = reinterpret_cast<bc_packet_left_time*>(packet_buf);
 		int time{ p->left_time }; //unsigned char 로 type cast 필요할까
 		Service::GetApp()->AddEvent(EVENT_GAME_TIMER, 1, time);
 		break;
 	}
 	case BC_GAME_OVER: {
-#ifdef DEB
-		cout << "BC_GAME_OVER\n";
-#endif
 		bc_packet_game_over* p = reinterpret_cast<bc_packet_game_over*>(packet_buf);
 		m_winner = p->win_team;
 
@@ -557,9 +460,6 @@ void NetCore::ProcessPacket(char* packet_buf) {
 		break;
 	}
 	case BC_UPDATED_USER_INFO: {
-#ifdef DEB
-		cout << "BC_UPDATED_USER_INFO\n";
-#endif
 		bc_packet_updated_user_info* p = reinterpret_cast<bc_packet_updated_user_info*>(packet_buf);
 		Service::GetApp()->AddEvent(EVENT_GAME_UPDATE_SERVER_USERINFO, 1, p->mmr);
 		break;
@@ -572,8 +472,7 @@ void NetCore::ProcessPacket(char* packet_buf) {
 	}
 }
 
-void NetCore::errorDisplay(const char* msg)
-{
+void NetCore::errorDisplay(const char* msg) {
 	WCHAR* lpMsgBuf;
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL, WSAGetLastError(),
@@ -587,23 +486,15 @@ void NetCore::errorDisplay(const char* msg)
 //sendPacket
 void NetCore::SendLobbyLoginPacket(const std::string& id, const std::string& pw) {
 	memcpy(m_client.id_str, id.c_str(), sizeof(char) * MAX_ID_LEN);
-
-	//todo: 나중에 login으로 바꿔야함
 	cl_packet_login p;
 	p.size = sizeof(p);
 	p.type = CL_LOGIN;
 	memcpy(p.id, id.c_str(), sizeof(char) * MAX_ID_LEN);
 	memcpy(p.pw, pw.c_str(), sizeof(char) * MAX_ID_LEN);
 	SendPacket(&p, SV_LOBBY);
-
-	//cl_packet_dummy_login p;
-	//p.size = sizeof(p);
-	//p.type = CL_DUMMY_LOGIN;
-	//SendPacket(&p, SV_LOBBY);
 }
 
 void NetCore::SendLobbySignUpPacket(const std::string& id, const std::string& pw) {
-	//DB 업뎃 이후 
 	cl_packet_signup p;
 	p.size = sizeof(p);
 	p.type = CL_SIGNUP;
@@ -664,7 +555,6 @@ bool NetCore::SendBattleLoginPacket() {
 }
 
 void NetCore::SendBattleRoomJoinPacket() {
-	//m_battle_clients[m_client.battle_id]->m_room_num = m_room_no;
 	cb_packet_join p;
 	p.size = sizeof(p);
 	p.type = CB_JOIN;
@@ -723,7 +613,6 @@ void NetCore::SendLookVectorPacket(XMFLOAT3& look) {
 }
 
 void NetCore::SendRequestDiePacket(int id) {
-	cout << "SEND REQUEST DIE" << endl;
 	cb_packet_request_die p;
 	p.size = sizeof(p);
 	p.type = CB_REQUEST_DIE;

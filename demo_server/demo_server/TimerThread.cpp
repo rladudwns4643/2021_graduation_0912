@@ -48,6 +48,7 @@ bool TimerThread::MatchingUser()
 	}
 	return false;
 }
+
 void TimerThread::SendRequestRoomPacket(int id_1, int id_2) {
 	cout << "SEND REQUEST ROOM PACKET\n";
 	lb_packet_request_room p;

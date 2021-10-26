@@ -8,7 +8,6 @@ void Service::Clear() {
 void Service::ActiveService() {
 	NetCore::GetApp()->CreateSocket(eSERVER::SV_LOBBY);
 	NetCore::GetApp()->CreateSocket(eSERVER::SV_BATTLE);
-			 
 	NetCore::GetApp()->ConnectServer(eSERVER::SV_LOBBY);
 
 	while (active) {

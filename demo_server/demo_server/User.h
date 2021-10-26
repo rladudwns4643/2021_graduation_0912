@@ -9,19 +9,19 @@ public:
 	User() {
 		name = "null";
 		mmr = UNSETMMR;
-		lobbyID = LOBBY_ID;
+		lobbyID = UNSETID;
 		isMatching = false;
 	}
 	~User() {};
 
-	void SetPlayerLoginOK(std::string _name) { name = _name; };
-	std::string GetPlayerID() { return name; };
+	void SetPlayerLoginOK(const std::string& _name) { name = _name; };
+	std::string GetPlayerID() const { return name; };
 	
-	void SetPlayerMMR(int _mmr) { mmr = _mmr; };
-	int GetPlayerMMR() { return mmr; };
+	void SetPlayerMMR(const int& _mmr) { mmr = _mmr; };
+	int GetPlayerMMR() const { return mmr; };
 
-	void SetPlayerMatch(bool _m) { isMatching = _m; };
-	bool GetPlayerMatch() { return isMatching; };
+	void SetPlayerMatch(const bool& _m) { isMatching = _m; };
+	bool GetPlayerMatch() const { return isMatching; };
 
 private:
 	std::string name;

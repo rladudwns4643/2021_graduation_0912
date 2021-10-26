@@ -15,23 +15,20 @@ public:
 
 public:
 #pragma region Sender
-	void SendDummyLoginOKPacket(int id);
 	void SendLoginOKPacket(int id);
 	void SendLoginFailPacket(int id);
 	void SendSignUpOkPacket(int id, int mmr);
 	void SendSignUpFailPacket(int id);
 	void SendUserInfoPacket(int id);
-	void SendCancelFindRoomPacket(int id);
 	void SendFindRoomPacket(int id, short room_no);
-	
 	void SendRequestRoomPacket();
 #pragma endregion
 
 	void SendPacket(int id, void* buf);
 	void error_display(const char* msg, int err_no);
 
-	std::uniform_int_distribution<int> uid{ 0, 5000 };
-	std::default_random_engine dre;
+	//std::uniform_int_distribution<int> uid{ 0, 5000 };
+	//std::default_random_engine dre;
 
 private:
 	HANDLE iocp;
