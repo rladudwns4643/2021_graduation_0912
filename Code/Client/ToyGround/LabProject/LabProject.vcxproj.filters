@@ -1,0 +1,482 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{44744847-ef9c-463f-b73a-d44ec615a049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Lobby">
+      <UniqueIdentifier>{522a3029-169d-420d-b249-33634ecc3228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Battle">
+      <UniqueIdentifier>{786a3a63-717e-4a0b-8f27-d2de0c1c5265}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Controller">
+      <UniqueIdentifier>{5edeaf4f-9469-4acb-9fb5-7d9d5ea5c0c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Manager">
+      <UniqueIdentifier>{1e6af721-7d84-4637-b347-cd9f88e9a6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Interface">
+      <UniqueIdentifier>{86ea8961-cf7b-4958-87be-71ef4c97887b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{199cd19f-6de3-45d8-8e3d-4b030ad1ad16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{1689203c-dfd1-47d2-8d15-f2e6cb1857c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Character">
+      <UniqueIdentifier>{22f85f52-31d5-4dfb-8bd2-dd760a302212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\UI">
+      <UniqueIdentifier>{035a96d5-dbb4-4947-8d30-16a3867321c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{c1ea936b-925c-451b-9533-c13b69e4114d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{318a489d-ff30-4141-a018-9454274955c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Context">
+      <UniqueIdentifier>{fab037a9-a9ac-48c6-ada0-3f27d97ea6ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{ade07e57-30f1-40f1-8556-d77efd82d39d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\Service">
+      <UniqueIdentifier>{3f9440bd-80bb-4bce-ad11-6932af57a626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\BattleClient">
+      <UniqueIdentifier>{c9fbe54b-5110-4ec8-b24b-c38ca7a058aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network\NetCore">
+      <UniqueIdentifier>{b0c2564e-dd7a-45e0-b255-b7cdbd5000a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{2242ccab-735e-43e6-b1f7-eddcd4f6b664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command">
+      <UniqueIdentifier>{9e99020f-07a2-49ec-a48c-0a948b8c4ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{010ada0b-9820-4d54-8bf8-0cee1bc53d03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{58b10730-bbb1-4fff-9de2-3687dff4a447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App">
+      <UniqueIdentifier>{3729c138-71bf-4c21-99a0-d5a02531b638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{e4a48aef-a737-482f-af33-064ebf7111b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Headers">
+      <UniqueIdentifier>{902e6278-7ef2-49b4-a6fc-01c3e5da87f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Utill">
+      <UniqueIdentifier>{d1e8dd0d-bc1e-47ed-974e-a509277624cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Shadow">
+      <UniqueIdentifier>{22c3ca09-107a-4a02-8d55-036097b96aa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Blur">
+      <UniqueIdentifier>{b762dac1-9fbd-4c76-ab31-009bb2f1b103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\MatchingRoom">
+      <UniqueIdentifier>{51b3ea27-5758-43dd-b191-e5e791f0c99e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Particle">
+      <UniqueIdentifier>{cf611de2-7851-41ff-9f3c-505ce9491e4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Sound">
+      <UniqueIdentifier>{f2562095-bdcf-4799-ae4f-09c7dcbe72f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Particle">
+      <UniqueIdentifier>{5f09f013-ad46-4fb7-905d-5e36411eedd4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Service.h">
+      <Filter>Network\Service</Filter>
+    </ClInclude>
+    <ClInclude Include="netCore.h">
+      <Filter>Network\NetCore</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleClient.h">
+      <Filter>Network\BattleClient</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyScene.h">
+      <Filter>Scene\Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayScene.h">
+      <Filter>Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneController.h">
+      <Filter>Scene\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Scene\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsRenderer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterParts.h">
+      <Filter>GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBoxMesh.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Objectinfo.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationContext.h">
+      <Filter>Context</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandContext.h">
+      <Filter>Context</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryMesh.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommand.h">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandCenter.h">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveCommand.h">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedModelInstance.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedData.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameApp.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="TOY_GROUND.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="AssertsReference.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="global.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dUtil.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="UploadBuffer.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Header\Utill</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryGenerator.h" />
+    <ClInclude Include="Button.h">
+      <Filter>GameObject\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageView.h">
+      <Filter>GameObject\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface.h">
+      <Filter>GameObject\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimation.h">
+      <Filter>GameObject\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Picking.h">
+      <Filter>GameObject\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMap.h">
+      <Filter>Resource\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurFilter.h">
+      <Filter>Resource\Blur</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchingRoomScene.h">
+      <Filter>Scene\MatchingRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCommandCenter.h">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>GameObject\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>App\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>App\Particle</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LabProject.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="LabProject.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Service.cpp">
+      <Filter>Network\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="netCore.cpp">
+      <Filter>Network\NetCore</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleClient.cpp">
+      <Filter>Network\BattleClient</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyScene.cpp">
+      <Filter>Scene\Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayScene.cpp">
+      <Filter>Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneController.cpp">
+      <Filter>Scene\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Scene\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCore.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsRenderer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>GameObject\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterParts.cpp">
+      <Filter>GameObject\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBoxMesh.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Objectinfo.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationContext.cpp">
+      <Filter>Context</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandContext.cpp">
+      <Filter>Context</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryMesh.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="ICommand.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandCenter.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveCommand.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedData.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedModelInstance.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="IGameApp.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="TOY_GROUND.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="AssertsReference.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Header\Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="d3dUtil.cpp">
+      <Filter>Header\Utill</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Header\Utill</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelper.cpp">
+      <Filter>Header\Utill</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageView.cpp">
+      <Filter>GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface.cpp">
+      <Filter>GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnimation.cpp">
+      <Filter>GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Picking.cpp">
+      <Filter>GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMap.cpp">
+      <Filter>Resource\Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="BlurFilter.cpp">
+      <Filter>Resource\Blur</Filter>
+    </ClCompile>
+    <ClCompile Include="MatchingRoomScene.cpp">
+      <Filter>Scene\MatchingRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCommandCenter.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>GameObject\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>App\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>App\Particle</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\BBox.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Common.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Default.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\LightingUtil.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Sky.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="UI.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Shadows.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Blur.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+</Project>
